@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Sayfa genel düzeni - Kaydırma sorunlarını ve taşmaları önler */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle, #ffffff 0%, #f0f2f5 100%);
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 10px;
+            box-sizing: border-box;
+        }
+
+        /* Başlık Alanı - Güncellendi */
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+
+        .page-title h1 {
+            font-size: 34px;
+            color: #2c3e50;
+            margin: 0;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(to right, #2c3e50, #4ca1af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
+            line-height: 1.2;
+        }
+
+        /* İkinci satır: SECONDARY SCHOOL (orta boy, kalın, renkli) */
+        .page-title .sub-main {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 6px 0 2px 0;
+            background: linear-gradient(to right, #4ca1af, #2c3e50);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(1px 2px 4px rgba(0,0,0,0.08));
+            letter-spacing: 2px;
+        }
+
+        /* Üçüncü satır: Online Tests and Activities (daha küçük, sade) */
+        .page-title .sub-desc {
+            font-size: 16px;
+            font-weight: 400;
+            color: #5d6d7e;
+            margin: 2px 0 0 0;
+            letter-spacing: 1px;
+            text-shadow: none;
+            background: none;
+            -webkit-text-fill-color: #5d6d7e; /* Önceki gradienti ezer */
+        }
+
+        /* Kart Konteynırı */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 700px;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        /* Buton Kartları */
+        .card {
+            width: 140px;
+            height: 120px;
+            text-decoration: none;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .card:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+        }
+
+        .icon {
+            font-size: 36px;
+            margin-bottom: 6px;
+        }
+
+        .label {
+            font-size: 18px;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        /* Sınıf Renkleri */
+        .grade-5 { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
+        .grade-6 { background: linear-gradient(135deg, #4ECDC4, #5563FF); }
+        .grade-7 { background: linear-gradient(135deg, #A8E063, #56AB76); }
+        .grade-8 { background: linear-gradient(135deg, #F77F00, #FCFF44); color: #333; }
+
+        /* Mobil Ekran Uyum Ayarları (600px ve altı) */
+        @media (max-width: 600px) {
+            .page-title h1 { 
+                font-size: 24px; 
+            }
+            .page-title .sub-main { 
+                font-size: 17px; 
+                letter-spacing: 1px;
+            }
+            .page-title .sub-desc {
+                font-size: 14px;
+            }
+            .container { gap: 12px; }
+            .card { 
+                width: calc(50% - 12px); 
+                max-width: 140px; 
+                height: 110px; 
+            }
+            .icon { font-size: 30px; }
+            .label { font-size: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-title">
+    <h1>TEACHER MURAT</h1>
+    <p class="sub-desc">Online Tests and Activities</p>
+</div>
+
+<div class="container">
+    <a href="https://sites.google.com/view/teachermurat/grade-5" target="_top" class="card grade-5">
+        <div class="icon">📝</div>
+        <div class="label">Grade 5</div>
+    </a>
+    <a href="GRADE_6_SAYFA_URL" class="card grade-6">
+        <div class="icon">📝</div>
+        <div class="label">Grade 6</div>
+    </a>
+    <a href="GRADE_7_SAYFA_URL" class="card grade-7">
+        <div class="icon">📝</div>
+        <div class="label">Grade 7</div>
+    </a>
+    <a href="GRADE_8_SAYFA_URL" class="card grade-8">
+        <div class="icon">📝</div>
+        <div class="label">Grade 8</div>
+    </a>
+</div>
+
+</body>
+</html>
