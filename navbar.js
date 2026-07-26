@@ -3,7 +3,7 @@ document.getElementById('navbar-placeholder').innerHTML = `
     .tm-navbar {
       position: fixed; top: 0; left: 0; width: 100%;
       background: #eaf4fb;
-      border-bottom: 1px solid #d7e9f7;
+      border-bottom: 1px solid #91BCED;
       box-sizing: border-box;
       z-index: 1000;
     }
@@ -31,7 +31,7 @@ document.getElementById('navbar-placeholder').innerHTML = `
       transition: background 0.2s ease, color 0.2s ease;
     }
     .tm-links a:hover {
-      background: #bfe0f5;
+      background: #91BCED;
       color: #1c3f5c;
     }
   </style>
