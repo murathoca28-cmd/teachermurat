@@ -152,13 +152,31 @@
     padding: 15px;
   }
   
-  .modal-content {
-    max-width: 98%;
-    max-height: 90vh; /* Ekrandan taşmasını engeller */
-    object-fit: contain;
-    border-radius: 8px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-  }
+     /* Arka plan KESİNLİKLE tam ekran kalsın */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 99999;
+      left: 0;
+      top: 0;
+      width: 100%;   /* SAKIN DEĞİŞTİRMEYİN */
+      height: 100%;  /* SAKIN DEĞİŞTİRMEYİN */
+      background-color: rgba(15, 23, 42, 0.9);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;  /* Kenarlardan boşluk vermek için */
+    }
+
+    /* SADECE RESMİ boyutlandırın */
+    .modal-content {
+      display: block;
+      max-width: 90%;   /* İstediğiniz boyut: %80 */
+      max-height: 90%;  /* İstediğiniz boyut: %80 */
+      object-fit: contain;
+      margin: auto;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
 
   .close-modal {
     position: absolute;
