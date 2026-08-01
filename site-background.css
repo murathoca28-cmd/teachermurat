@@ -1,0 +1,79 @@
+/* ==========================================================================
+   TEACHER MURAT – SADE ARKAPLAN SİSTEMİ
+   Eski background.js'in yerini alır. Artık JS'e hiç gerek yok:
+   tarayıcı bu dosyayı statik CSS olarak indirir ve önbelleğe (cache) alır.
+   ========================================================================== */
+
+/* 1) Marka renkleri: Grade 5-8 kartlarınızla aynı renkler, tek yerden yönetilir */
+:root {
+  --tm-red: 255, 107, 107;      /* Grade 5 */
+  --tm-blue: 85, 99, 255;       /* Grade 6 */
+  --tm-green: 168, 224, 99;     /* Grade 7 */
+  --tm-orange: 247, 127, 0;     /* Grade 8 */
+  --tm-sky: #CDEFFF;
+}
+
+/* 2) Ana arkaplan katmanı.
+   Bunu <body> etiketine veya sayfayı saran tek bir div'e class="tm-bg" olarak ekleyin.
+   DİKKAT: html/body'ye değil, sadece bu class'a uygulanıyor -> başka hiçbir şeyi bozmaz. */
+.tm-bg {
+  position: relative;      /* aşağıdaki .tm-dot'ların "kendi içinde" kalmasını sağlar */
+  min-height: 100vh;
+  background:
+    radial-gradient(circle closest-side at 6% 8%,   rgba(var(--tm-red), .30),    transparent 70%),
+    radial-gradient(circle closest-side at 94% 6%,   rgba(var(--tm-blue), .26),   transparent 70%),
+    radial-gradient(circle closest-side at 4% 94%,   rgba(var(--tm-green), .28), transparent 70%),
+    radial-gradient(circle closest-side at 96% 92%,  rgba(var(--tm-orange), .24), transparent 70%),
+    radial-gradient(circle at center, #ffffff 0%, var(--tm-sky) 100%);
+}
+
+/* Not: Buradaki renkli "leke"ler ayrı bir katman/pseudo-element DEĞİL,
+   .tm-bg'nin kendi background'ı. Bu yüzden içerik (header, kartlar, metin)
+   otomatik olarak bunların ÜSTÜNDE görünür -- eski koddaki
+   "body > *:not(...) { z-index:1 }" hilesine hiç gerek kalmaz. */
+
+/* 3) İsteğe bağlı: hafif "canlılık" için küçük yüzen noktalar.
+   HTML'de .tm-bg içine 4 tane <span class="tm-dot"></span> eklersiniz. */
+.tm-bg .tm-dot {
+  position: absolute;
+  z-index: -1;             /* .tm-bg'nin arkaplanının önünde, ama gerçek içeriğin arkasında kalır */
+  border-radius: 50%;
+  opacity: .35;
+  pointer-events: none;
+  animation: tm-float 7s ease-in-out infinite;
+}
+.tm-bg .tm-dot:nth-child(1) { top: 18%; left: 14%; width: 10px; height: 10px; background: rgb(var(--tm-red));    animation-delay: 0s; }
+.tm-bg .tm-dot:nth-child(2) { top: 65%; left: 90%; width: 14px; height: 14px; background: rgb(var(--tm-blue));   animation-delay: 1.2s; }
+.tm-bg .tm-dot:nth-child(3) { top: 80%; left: 10%; width: 10px; height: 10px; background: rgb(var(--tm-green)); animation-delay: 2.4s; }
+.tm-bg .tm-dot:nth-child(4) { top: 22%; left: 88%; width: 8px;  height: 8px;  background: rgb(var(--tm-orange)); animation-delay: .6s; }
+
+@keyframes tm-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+
+/* 4) Sınav / test sayfaları için "odak modu".
+   class="tm-bg tm-bg--focus" yazarsanız renkli lekeler ve noktalar kaybolur,
+   öğrenci LGS sorusu çözerken dikkati dağılmaz. */
+.tm-bg--focus {
+  background: radial-gradient(circle at center, #ffffff 0%, #F3FAFF 100%);
+}
+.tm-bg--focus .tm-dot {
+  display: none;
+}
+
+/* 5) Küçük ekranlar (telefon): daha az öğe, daha iyi performans */
+@media (max-width: 480px) {
+  .tm-bg .tm-dot { display: none; }
+  .tm-bg {
+    background:
+      radial-gradient(circle closest-side at 6% 6%,  rgba(var(--tm-red), .22),  transparent 70%),
+      radial-gradient(circle closest-side site-background.cssat 94% 6%, rgba(var(--tm-blue), .18), transparent 70%),
+      radial-gradient(circle at center, #ffffff 0%, var(--tm-sky) 100%);
+  }
+}
+
+/* 6) Hareketten rahatsız olan kullanıcılar için (ekşitişim, göz yorgunluğu vb.) */
+@media (prefers-reduced-motion: reduce) {
+  .tm-dot { animation: none; }
+}
