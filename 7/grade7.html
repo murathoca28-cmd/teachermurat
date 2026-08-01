@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade 7 - Tests</title>
+    <title>Grade 7 - Learning Hub</title>
     <style>
         /* ----- GENEL AYARLAR ----- */
         html, body {
@@ -11,7 +12,7 @@
             padding: 0;
             width: 100%;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: radial-gradient(circle, #ffffff 0%, #f0f2f5 100%);
+            background: radial-gradient(circle at top, #f0f9ff 0%, #d4eefe 40%, #b8e4fc 100%);
             min-height: 100vh;
         }
 
@@ -33,9 +34,10 @@
             font-size: 38px;
             margin: 0;
             font-weight: 800;
-            background: linear-gradient(to right, #FF6B6B, #FF8E53);
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #FFC371 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
             letter-spacing: -1px;
         }
@@ -44,32 +46,17 @@
             color: #5d6d7e;
             margin-top: 5px;
             font-weight: 500;
-            background: none;
-            -webkit-text-fill-color: #5d6d7e;
         }
 
-        /* ANA MENÜ (2 Büyük Buton) */
+        /* ANA MENÜ (4 BUTON) */
         .menu-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            align-items: center;
-            gap: 25px;
+            align-items: stretch;
+            gap: 20px;
             width: 100%;
-            max-width: 600px;
-        }
-
-        /* ÜNİTE KONTEYNERİ (Başlangıçta Gizli) */
-        .unit-container {
-            display: none;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-            max-width: 700px;
-            margin-top: 10px;
-            animation: fadeIn 0.4s ease;
+            max-width: 900px;
         }
 
         /* Buton Kartları (Ortak) */
@@ -82,46 +69,68 @@
             align-items: center;
             transition: all 0.3s ease;
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            color: white;
+            color: #1E3C32;
             box-sizing: border-box;
             cursor: pointer;
             border: none;
             font-family: inherit;
             text-align: center;
             padding: 15px;
+            position: relative;
+            overflow: hidden;
         }
         .card:hover {
             transform: scale(1.05) translateY(-6px);
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
-
-        /* --- 2 ANA BUTON STİLLERİ --- */
-        .menu-card {
-            width: 220px;
-            height: 180px;
+        .card:active {
+            transform: scale(0.98) translateY(-3px);
         }
-        .menu-card .icon { font-size: 48px; margin-bottom: 8px; }
-        .menu-card .label { font-size: 20px; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); }
 
-        .mc-main { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-        .rev-main { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1e3c32; }
-        .rev-main .label { text-shadow: 1px 1px 2px rgba(255,255,255,0.4); }
+        /* --- 4 ANA MENÜ BUTON STİLLERİ --- */
+        .menu-card {
+            width: 200px;
+            height: 170px;
+        }
+        .menu-card .icon { font-size: 46px; margin-bottom: 8px; }
+        .menu-card .label { font-size: 19px; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); }
 
-        /* --- ÜNİTE BUTON STİLLERİ (Küçük kartlar - Scroll engellendi) --- */
+        .card-tests { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .card-activities { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1a3c2a; }
+        .card-activities .label { text-shadow: 1px 1px 2px rgba(255,255,255,0.4); }
+        .card-presentations { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .card-worksheets { background: linear-gradient(135deg, #ff9a56, #ff6a88); }
+
+        /* --- ÜNİTE KONTEYNERİ (Başlangıçta Gizli) --- */
+        .unit-container {
+            display: none;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 750px;
+            margin-top: 10px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* --- ÜNİTE BUTON STİLLERİ (İlk koddaki orijinal boyutlar) --- */
         .unit-card {
             width: 110px;
-            height: 95px; /* Küçültüldü */
+            height: 95px;
             background: white;
             color: #2c3e50;
-            border: 2px solid #4a6fa5;   /* koyu mavi çerçeve */
-             box-shadow: 0 6px 15px rgba(0,0,0,0.15); /* daha belirgin gölge */
+            border: 2px solid #d0dbe8;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.12);
             border-radius: 20px;
+            padding: 8px 4px;
         }
         .unit-card:hover {
             border-color: #4ca1af;
             background: #f8f9fa;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.18);
         }
-        .unit-card .icon { font-size: 24px; margin-bottom: 2px; }
+        .unit-card .icon { font-size: 26px; margin-bottom: 4px; }
         .unit-card .label { font-size: 14px; font-weight: 600; color: #2c3e50; text-shadow: none; }
 
         /* Geri Butonu */
@@ -159,167 +168,197 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px !important;
+            gap: 10px;
             width: 100%;
         }
 
+        /* Kategori başlığı */
+        .category-title {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 6px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
         /* --- MOBİL UYUMLULUK --- */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .page-title h1 { font-size: 28px; }
             .menu-card { width: 160px; height: 140px; }
             .menu-card .icon { font-size: 36px; }
             .menu-card .label { font-size: 16px; }
-            .unit-card { 
-                width: calc(50% - 15px); 
-                max-width: 110px; 
-                height: 85px; 
+            .unit-card {
+                width: calc(50% - 15px);
+                max-width: 110px;
+                height: 85px;
+            }
+            .unit-card .icon { font-size: 22px; }
+            .unit-card .label { font-size: 13px; }
+        }
+
+        @media (max-width: 400px) {
+            .menu-card {
+                width: 130px;
+                height: 120px;
+            }
+            .menu-card .icon { font-size: 30px; }
+            .menu-card .label { font-size: 14px; }
+            .unit-card {
+                width: calc(50% - 12px);
+                height: 80px;
             }
             .unit-card .icon { font-size: 20px; }
             .unit-card .label { font-size: 12px; }
         }
     </style>
+    
+     <link rel="stylesheet" href="../site-background.css">
+    
 </head>
 <body>
     <div id="navbar-placeholder"></div>
-    <script src="navbar.js"></script>
+    <script src="../navbar.js"></script>
 
-<!-- BAŞLIK -->
-<div class="page-title">
-    <h1>📘 GRADE 7</h1>
-    <p class="sub-desc">Choose your activity below</p>
-</div>
-
-<!-- 1. AŞAMA: ANA MENÜ (2 BUTON) -->
-<div id="menuContainer" class="menu-container">
-    <button onclick="showUnits('mc')" class="card menu-card mc-main">
-        <div class="icon">📝</div>
-        <div class="label">Multiple Choice Tests</div>
-    </button>
-    <button onclick="showUnits('rev')" class="card menu-card rev-main">
-        <div class="icon">🔄</div>
-        <div class="label">Revision Activities</div>
-    </button>
-</div>
-
-<!-- 2. AŞAMA: ÜNİTE LİSTESİ (Başlangıçta Gizli) -->
-<div id="unitContainer" class="unit-container">
-    <!-- Geri Butonu -->
-    <div class="back-btn">
-        <button onclick="goBack()">⬅ Geri Dön</button>
+    <!-- BAŞLIK -->
+    <div class="page-title">
+        <h1>📘 GRADE 7</h1>
+        <p class="sub-desc">Choose your activity below</p>
     </div>
 
-    <!-- Üniteler buraya gelecek -->
-    <div id="unitGrid"></div>
-</div>
+    <!-- 1. AŞAMA: ANA MENÜ (4 BUTON) -->
+    <div id="menuContainer" class="menu-container">
+        <button onclick="showUnits('tests')" class="card menu-card card-tests">
+            <div class="icon">📝</div>
+            <div class="label">Tests</div>
+        </button>
+        <button onclick="showUnits('activities')" class="card menu-card card-activities">
+            <div class="icon">🎯</div>
+            <div class="label">Activities</div>
+        </button>
+        <button onclick="showUnits('presentations')" class="card menu-card card-presentations">
+            <div class="icon">📊</div>
+            <div class="label">Presentations</div>
+        </button>
+        <button onclick="showUnits('worksheets')" class="card menu-card card-worksheets">
+            <div class="icon">🎲</div>
+            <div class="label">Worksheets<br>& Games</div>
+        </button>
+    </div>
 
-<script>
-    // ============================================================
-    // ✅ BURASI ÇOK ÖNEMLİ! İKİ AYRI LİSTE OLUŞTURDUM.
-    // Şimdi "Multiple Choice" ve "Revision" linklerini AYRI AYRI girebilirsin.
-    // ============================================================
+    <!-- 2. AŞAMA: ÜNİTE LİSTESİ (Başlangıçta Gizli) -->
+    <div id="unitContainer" class="unit-container">
+        <div class="back-btn">
+            <button onclick="goBack()">⬅ Geri Dön</button>
+        </div>
+        <div id="unitGrid"></div>
+    </div>
 
-    // 📌 1. MULTIPLE CHOICE TESTLER İÇİN LİSTELER (10 Ünite)
-    const mcUnits = [
-        { name: 'Revs ', icon: '📝', url: 'multop_buton.html' },
-        { name: 'Unit 1', icon: '📝', url: '****** MC - UNITE 2 LİNKİ ******' },
-        { name: 'Unit 2', icon: '📝', url: '****** MC - UNITE 3 LİNKİ ******' },
-        { name: 'Unit 3', icon: '📝', url: '****** MC - UNITE 4 LİNKİ ******' },
-        { name: 'Unit 4', icon: '📝', url: '****** MC - UNITE 5 LİNKİ ******' },
-        { name: 'Unit 5', icon: '📝', url: '****** MC - UNITE 6 LİNKİ ******' },
-        { name: 'Unit 6', icon: '📝', url: '****** MC - UNITE 7 LİNKİ ******' },
-        { name: 'Unit 7', icon: '📝', url: '****** MC - UNITE 8 LİNKİ ******' },
-        { name: 'Unit 8', icon: '📝', url: '****** MC - UNITE 9 LİNKİ ******' },
-    ];
+    <script>
+        // ============================================================
+        // VERİ LİSTELERİ (İsterseniz 10 ünite olarak güncelleyebilirsiniz)
+        // Grade 6 şu an örnek olarak Revs + Unit 1-8 içeriyor.
+        // Grade 7/8 için Unit 1'den Unit 10'a kadar 10 ünite ekleyebilirsiniz.
+        // ============================================================
+        const testsUnits = [
+            { name: 'Revs', icon: '📝', url: 'multop_buton_5.html' },
+            { name: 'Unit 1', icon: '📝', url: '****** TEST - UNITE 1 ******' },
+            { name: 'Unit 2', icon: '📝', url: '****** TEST - UNITE 2 ******' },
+            { name: 'Unit 3', icon: '📝', url: '****** TEST - UNITE 3 ******' },
+            { name: 'Unit 4', icon: '📝', url: '****** TEST - UNITE 4 ******' },
+            { name: 'Unit 5', icon: '📝', url: '****** TEST - UNITE 5 ******' },
+            { name: 'Unit 6', icon: '📝', url: '****** TEST - UNITE 6 ******' },
+            { name: 'Unit 7', icon: '📝', url: '****** TEST - UNITE 7 ******' },
+            { name: 'Unit 8', icon: '📝', url: '****** TEST - UNITE 8 ******' },
+            // 10 ünite için alt satırları ekleyin:
+            // { name: 'Unit 9', icon: '📝', url: '...' },
+            // { name: 'Unit 10', icon: '📝', url: '...' },
+        ];
+        const activitiesUnits = [
+            { name: 'Revs', icon: '🎮', url: 'rev_buton_5.html' },
+            { name: 'Unit 1', icon: '🎮', url: '****** ACTIVITY - UNITE 1 ******' },
+            { name: 'Unit 2', icon: '🎮', url: '****** ACTIVITY - UNITE 2 ******' },
+            { name: 'Unit 3', icon: '🎮', url: '****** ACTIVITY - UNITE 3 ******' },
+            { name: 'Unit 4', icon: '🎮', url: '****** ACTIVITY - UNITE 4 ******' },
+            { name: 'Unit 5', icon: '🎮', url: '****** ACTIVITY - UNITE 5 ******' },
+            { name: 'Unit 6', icon: '🎮', url: '****** ACTIVITY - UNITE 6 ******' },
+            { name: 'Unit 7', icon: '🎮', url: '****** ACTIVITY - UNITE 7 ******' },
+            { name: 'Unit 8', icon: '🎮', url: '****** ACTIVITY - UNITE 8 ******' },
+        ];
+        const presentationsUnits = [
+            { name: 'Revs', icon: '📊', url: '****** PRES - REVS ******' },
+            { name: 'Unit 1', icon: '📊', url: '****** PRES - UNITE 1 ******' },
+            { name: 'Unit 2', icon: '📊', url: '****** PRES - UNITE 2 ******' },
+            { name: 'Unit 3', icon: '📊', url: '****** PRES - UNITE 3 ******' },
+            { name: 'Unit 4', icon: '📊', url: '****** PRES - UNITE 4 ******' },
+            { name: 'Unit 5', icon: '📊', url: '****** PRES - UNITE 5 ******' },
+            { name: 'Unit 6', icon: '📊', url: '****** PRES - UNITE 6 ******' },
+            { name: 'Unit 7', icon: '📊', url: '****** PRES - UNITE 7 ******' },
+            { name: 'Unit 8', icon: '📊', url: '****** PRES - UNITE 8 ******' },
+        ];
+        const worksheetsUnits = [
+            { name: 'Revs', icon: '🎲', url: '****** PRES - REVS ******' },
+            { name: 'Unit 1', icon: '🎲', url: '****** W/G - UNITE 1 ******' },
+            { name: 'Unit 2', icon: '🎲', url: '****** W/G - UNITE 2 ******' },
+            { name: 'Unit 3', icon: '🎲', url: '****** W/G - UNITE 3 ******' },
+            { name: 'Unit 4', icon: '🎲', url: '****** W/G - UNITE 4 ******' },
+            { name: 'Unit 5', icon: '🎲', url: '****** W/G - UNITE 5 ******' },
+            { name: 'Unit 6', icon: '🎲', url: '****** W/G - UNITE 6 ******' },
+            { name: 'Unit 7', icon: '🎲', url: '****** W/G - UNITE 7 ******' },
+            { name: 'Unit 8', icon: '🎲', url: '****** W/G - UNITE 8 ******' },
+        ];
 
-    // 📌 2. REVISION ACTIVITIES İÇİN LİSTELER (10 Ünite) - Tamamen bağımsız!
-    const revUnits = [
-        { name: 'Revs', icon: '🔄', url: 'rev_buton.html' },
-        { name: 'Unit 1', icon: '🔄', url: '****** REV - UNITE 2 LİNKİ ******' },
-        { name: 'Unit 2', icon: '🔄', url: '****** REV - UNITE 3 LİNKİ ******' },
-        { name: 'Unit 3', icon: '🔄', url: '****** REV - UNITE 4 LİNKİ ******' },
-        { name: 'Unit 4', icon: '🔄', url: '****** REV - UNITE 5 LİNKİ ******' },
-        { name: 'Unit 5', icon: '🔄', url: '****** REV - UNITE 6 LİNKİ ******' },
-        { name: 'Unit 6', icon: '🔄', url: '****** REV - UNITE 7 LİNKİ ******' },
-        { name: 'Unit 7', icon: '🔄', url: '****** REV - UNITE 8 LİNKİ ******' },
-        { name: 'Unit 8', icon: '🔄', url: '****** REV - UNITE 9 LİNKİ ******' },
-    ];
+        const categoryConfig = {
+            tests: { title: '📝 Tests', color: '#4facfe' },
+            activities: { title: '🎯 Activities', color: '#38d9a9' },
+            presentations: { title: '📊 Presentations', color: '#f5576c' },
+            worksheets: { title: '🎲 Worksheets & Games', color: '#ff7a45' }
+        };
 
-    // ============================================================
-    // 🔴 DEĞİŞTİRMEN GEREKEN YERLER BURASI BİTTI. 
-    // Aşağıdaki kodlara dokunma, otomatik çalışıyor.
-    // ============================================================
+        function renderUnits(type) {
+            const grid = document.getElementById('unitGrid');
+            grid.innerHTML = '';
+            let data = [];
+            switch (type) {
+                case 'tests': data = testsUnits; break;
+                case 'activities': data = activitiesUnits; break;
+                case 'presentations': data = presentationsUnits; break;
+                case 'worksheets': data = worksheetsUnits; break;
+                default: data = testsUnits;
+            }
+            const config = categoryConfig[type];
 
-    // Üniteleri ekrana basan fonksiyon (Artık hangi liste geleceğini biliyor)
-    function renderUnits(type) {
-        const grid = document.getElementById('unitGrid');
-        grid.innerHTML = ''; // Önceki içeriği temizle
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'category-title';
+            titleDiv.style.color = config.color;
+            titleDiv.innerText = config.title;
+            grid.appendChild(titleDiv);
 
-        // Hangisini göstereceğimizi seçelim
-        let data = [];
-        let typeTitle = '';
-        let titleColor = '';
-
-        if (type === 'mc') {
-            data = mcUnits;
-            typeTitle = '📝 Multiple Choice Tests';
-            titleColor = '#4facfe';
-        } else {
-            data = revUnits;
-            typeTitle = '🔄 Revision Activities';
-            titleColor = '#43e97b';
+            data.forEach(unit => {
+                const link = document.createElement('a');
+                link.href = unit.url;
+                link.className = 'card unit-card';
+                link.innerHTML = `<div class="icon">${unit.icon}</div><div class="label">${unit.name}</div>`;
+                grid.appendChild(link);
+            });
         }
 
-        // Kategori başlığını ekle
-        const titleDiv = document.createElement('div');
-        titleDiv.style.width = '100%';
-        titleDiv.style.textAlign = 'center';
-        titleDiv.style.marginBottom = '8px';
-        titleDiv.style.fontSize = '20px';
-        titleDiv.style.fontWeight = 'bold';
-        titleDiv.style.color = titleColor;
-        titleDiv.innerText = typeTitle;
-        grid.appendChild(titleDiv);
+        function showUnits(type) {
+            document.getElementById('menuContainer').style.display = 'none';
+            const unitContainer = document.getElementById('unitContainer');
+            unitContainer.style.display = 'flex';
+            renderUnits(type);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-        // 10 üniteyi döngüyle oluştur (Artık doğru listeden geliyor)
-        data.forEach(unit => {
-            const link = document.createElement('a');
-            link.href = unit.url;
-            link.className = 'card unit-card';
-            //link.target = '_blank'; // Yeni sekmede açmak için (istersen kaldır)
-            
-            link.innerHTML = `
-                <div class="icon">${unit.icon}</div>
-                <div class="label">${unit.name}</div>
-            `;
-            grid.appendChild(link);
+        function goBack() {
+            document.getElementById('menuContainer').style.display = 'flex';
+            document.getElementById('unitContainer').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('unitContainer').style.display = 'none';
         });
-    }
-
-    // Menüden bir butona tıklandığında çalışır
-    function showUnits(type) {
-        // Ana menüyü gizle
-        document.getElementById('menuContainer').style.display = 'none';
-        // Ünite konteynerini görünür yap
-        const unitContainer = document.getElementById('unitContainer');
-        unitContainer.style.display = 'flex';
-        unitContainer.style.flexWrap = 'wrap';
-        unitContainer.style.justifyContent = 'center';
-        
-        // Üniteleri render et (Hangi tür olduğunu gönder)
-        renderUnits(type);
-    }
-
-    // Geri butonuna tıklandığında
-    function goBack() {
-        document.getElementById('menuContainer').style.display = 'flex';
-        document.getElementById('unitContainer').style.display = 'none';
-    }
-
-    // Sayfa yüklendiğinde başlangıçta hiçbir ünite görünmesin
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('unitContainer').style.display = 'none';
-    });
-</script>
-
+    </script>
 </body>
 </html>
