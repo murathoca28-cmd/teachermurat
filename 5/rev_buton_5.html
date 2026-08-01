@@ -111,10 +111,23 @@
             box-shadow: 0 4px 10px rgba(79, 172, 254, 0.3);
         }
 
-        /* Buton içindeki küçük ikon (isteğe bağlı) */
+        /* Buton içindeki küçük ikon */
         .test-btn .icon {
             margin-right: 6px;
             font-size: 1.1rem;
+        }
+
+        /* READING butonlarına özel ince dokunuş */
+        .test-btn.reading {
+            background: linear-gradient(145deg, #6db9f2, #1a6dd4);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.35),
+                        inset 0 1px 0 rgba(255,255,255,0.25);
+            border-bottom: 3px solid rgba(255, 215, 0, 0.6);
+        }
+
+        .test-btn.reading:hover {
+            background: linear-gradient(145deg, #5a9fd4, #0f4fa0);
+            border-bottom-color: rgba(255, 215, 0, 0.9);
         }
 
         /* MOBİL UYUM (Küçük ekranlarda 3 veya 2 sütun) */
@@ -140,19 +153,19 @@
     <div class="title">📝 Revision 1-2 Activities</div>
 
     <div class="grid">
-        <!-- 1. SATIR (5 TANE) -->
-        <a href="revtact_1_5.html" class="test-btn"><span class="icon">📄</span> Activity 1</a>
-        <a href="revtact_1_5v2.html" class="test-btn"><span class="icon">📄</span> Activity 2</a>
-        <a href="revtact_3.html" class="test-btn"><span class="icon">📄</span> Activity 3</a>
-        <a href="revtact_4.html" class="test-btn"><span class="icon">📄</span> Activity 4</a>
-        <a href="revtact_5.html" class="test-btn"><span class="icon">📄</span> Activity 5</a>
+        <!-- 1. SATIR (Alıştırmalar) -->
+        <a href="revtact_1_5.html" class="test-btn"><span class="icon">✏️</span> Activity 1</a>
+        <a href="revtact_1_5v2.html" class="test-btn"><span class="icon">✏️</span> Activity 2</a>
+        <a href="revtact_3.html" class="test-btn"><span class="icon">✏️</span> Activity 3</a>
+        <a href="revtact_4.html" class="test-btn"><span class="icon">✏️</span> Activity 4</a>
+        <a href="revtact_5.html" class="test-btn"><span class="icon">✏️</span> Activity 5</a>
 
-        <!-- 2. SATIR (5 TANE) -->
-        <a href="revtact_6.html" class="test-btn"><span class="icon">📄</span> Activity 6</a>
-        <a href="revtact_7.html" class="test-btn"><span class="icon">📄</span> Activity 7</a>
-        <a href="revtact_8.html" class="test-btn"><span class="icon">📄</span> Activity 8</a>
-        <a href="revtact_9.html" class="test-btn"><span class="icon">📄</span> Activity 9</a>
-        <a href="revtact_10.html" class="test-btn"><span class="icon">📄</span> Activity 10</a>
+        <!-- 2. SATIR (Reading Passages) -->
+        <a href="revtact_6.html" class="test-btn reading"><span class="icon">📖</span> Reading 1</a>
+        <a href="revtact_7.html" class="test-btn reading"><span class="icon">📖</span> Reading 2</a>
+        <a href="revtact_8.html" class="test-btn reading"><span class="icon">📖</span> Reading 3</a>
+        <a href="revtact_9.html" class="test-btn reading"><span class="icon">📖</span> Reading 4</a>
+        <a href="revtact_10.html" class="test-btn reading"><span class="icon">📖</span> Reading 5</a>
     </div>
 </div>
 
