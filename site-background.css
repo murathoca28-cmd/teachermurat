@@ -20,6 +20,12 @@
   position: relative;      /* aşağıdaki .tm-dot'ların "kendi içinde" kalmasını sağlar */
   min-height: 100vh;
   background:
+    /* --- hafif çizgi-ikonlar: her biri kendi köşesindeki lekeyle aynı renkte, düşük opasiteli --- */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(220,90,90,.55)' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20l1-4L16 5l3 3L8 19z'/%3E%3Cpath d='M14 7l3 3'/%3E%3C/svg%3E") 5% 11% / 30px no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(85,99,255,.5)' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='4' y1='20' x2='4' y2='12'/%3E%3Cline x1='10' y1='20' x2='10' y2='4'/%3E%3Cline x1='16' y1='20' x2='16' y2='14'/%3E%3Cline x1='2' y1='20' x2='20' y2='20'/%3E%3C/svg%3E") 93% 9% / 30px no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(86,171,118,.55)' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='9' width='14' height='8' rx='2' transform='rotate(-20 12 13)'/%3E%3Cline x1='9' y1='17' x2='19' y2='17'/%3E%3C/svg%3E") 5% 89% / 30px no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(247,127,0,.5)' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='8' width='20' height='10' rx='5'/%3E%3Cline x1='7' y1='11' x2='7' y2='15'/%3E%3Cline x1='5' y1='13' x2='9' y2='13'/%3E%3Ccircle cx='16' cy='11' r='1'/%3E%3Ccircle cx='18' cy='14' r='1'/%3E%3C/svg%3E") 92% 87% / 32px no-repeat,
+    /* --- renkli lekeler --- */
     radial-gradient(circle closest-side at 6% 8%,   rgba(var(--tm-red), .30),    transparent 70%),
     radial-gradient(circle closest-side at 94% 6%,   rgba(var(--tm-blue), .26),   transparent 70%),
     radial-gradient(circle closest-side at 4% 94%,   rgba(var(--tm-green), .28), transparent 70%),
@@ -68,7 +74,7 @@
   .tm-bg {
     background:
       radial-gradient(circle closest-side at 6% 6%,  rgba(var(--tm-red), .22),  transparent 70%),
-      radial-gradient(circle closest-side site-background.cssat 94% 6%, rgba(var(--tm-blue), .18), transparent 70%),
+      radial-gradient(circle closest-side at 94% 6%, rgba(var(--tm-blue), .18), transparent 70%),
       radial-gradient(circle at center, #ffffff 0%, var(--tm-sky) 100%);
   }
 }
