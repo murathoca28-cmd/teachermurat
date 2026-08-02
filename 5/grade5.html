@@ -98,7 +98,7 @@
         .card-tests { background: linear-gradient(135deg, #4facfe, #00f2fe); }
         .card-activities { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1a3c2a; }
         .card-activities .label { text-shadow: 1px 1px 2px rgba(255,255,255,0.4); }
-        .card-presentations { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .card-slides { background: linear-gradient(135deg, #f093fb, #f5576c); }
         .card-worksheets { background: linear-gradient(135deg, #ff9a56, #ff6a88); }
 
         /* --- ÜNİTE KONTEYNERİ (Başlangıçta Gizli) --- */
@@ -235,9 +235,9 @@
             <div class="icon">🎯</div>
             <div class="label">Activities</div>
         </button>
-        <button onclick="showUnits('presentations')" class="card menu-card card-presentations">
+        <button onclick="showUnits('slides')" class="card menu-card card-slides">
             <div class="icon">📊</div>
-            <div class="label">Presentations</div>
+            <div class="label">Slides</div>
         </button>
         <button onclick="showUnits('worksheets')" class="card menu-card card-worksheets">
             <div class="icon">🎲</div>
@@ -284,7 +284,7 @@
             { name: 'Unit 7', icon: '🎮', url: '****** ACTIVITY - UNITE 7 ******' },
             { name: 'Unit 8', icon: '🎮', url: '****** ACTIVITY - UNITE 8 ******' },
         ];
-        const presentationsUnits = [
+        const slidesUnits = [
             { name: 'Revs', icon: '📊', url: '****** PRES - REVS ******' },
             { name: 'Unit 1', icon: '📊', url: '****** PRES - UNITE 1 ******' },
             { name: 'Unit 2', icon: '📊', url: '****** PRES - UNITE 2 ******' },
@@ -310,7 +310,7 @@
         const categoryConfig = {
             tests: { title: '📝 Tests', color: '#4facfe' },
             activities: { title: '🎯 Activities', color: '#38d9a9' },
-            presentations: { title: '📊 Presentations', color: '#f5576c' },
+            slides: { title: '📊 Slides', color: '#f5576c' },
             worksheets: { title: '🎲 Worksheets & Games', color: '#ff7a45' }
         };
 
@@ -321,7 +321,7 @@
             switch (type) {
                 case 'tests': data = testsUnits; break;
                 case 'activities': data = activitiesUnits; break;
-                case 'presentations': data = presentationsUnits; break;
+                case 'slides': data = slidesUnits; break;
                 case 'worksheets': data = worksheetsUnits; break;
                 default: data = testsUnits;
             }
