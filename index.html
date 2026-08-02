@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,18 +23,18 @@
             box-sizing: border-box;
         }
 
-        /* Başlık Alanı - Güncellendi */
+        /* Başlık Alanı - Büyütüldü */
         .page-title {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             padding: 0 10px;
         }
 
         .page-title h1 {
-            font-size: 40px;
+            font-size: 56px; /* 40'tan 56'ya */
             color: #2c3e50;
             margin: 0;
-            font-weight: 500;
+            font-weight: 600;
             letter-spacing: -1px;
             background: linear-gradient(to right, #2c3e50, #4ca1af);
             -webkit-background-clip: text;
@@ -44,28 +43,19 @@
             line-height: 1.2;
         }
 
-        /* İkinci satır: SECONDARY SCHOOL (orta boy, kalın, renkli) */
-        .page-title .sub-main {
-            font-size: 22px;
-            font-weight: 700;
-            margin: 6px 0 2px 0;
-            background: linear-gradient(to right, #4ca1af, #2c3e50);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(1px 2px 4px rgba(0,0,0,0.08));
-            letter-spacing: 2px;
-        }
+        /* İkinci satır: SECONDARY SCHOOL (orta boy, kalın, renkli) - kaldırıldı ama siz eklemek isterseniz */
+        /* .page-title .sub-main { ... } */
 
-        /* Üçüncü satır: Your All-in-One English Resource Hub (daha küçük, sade) */
+        /* Üçüncü satır: Your All-in-One English Resource Hub (büyütüldü) */
         .page-title .sub-desc {
-            font-size: 20px;
+            font-size: 26px; /* 20'den 26'ya */
             font-weight: 400;
             color: #5d6d7e;
-            margin: 2px 0 0 0;
+            margin: 8px 0 0 0;
             letter-spacing: 1px;
             text-shadow: none;
             background: none;
-            -webkit-text-fill-color: #5d6d7e; /* Önceki gradienti ezer */
+            -webkit-text-fill-color: #5d6d7e;
         }
 
         /* Kart Konteynırı */
@@ -74,19 +64,19 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: 15px;
+            gap: 20px; /* Biraz daha açıklık */
             width: 100%;
-            max-width: 700px;
+            max-width: 820px; /* Daha geniş butonlar için max-width artırıldı */
             padding: 5px;
             box-sizing: border-box;
         }
 
-        /* Buton Kartları */
+        /* Buton Kartları - Büyütüldü */
         .card {
-            width: 140px;
-            height: 120px;
+            width: 180px;   /* 140 → 180 */
+            height: 160px;  /* 120 → 160 */
             text-decoration: none;
-            border-radius: 20px;
+            border-radius: 24px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -103,12 +93,12 @@
         }
 
         .icon {
-            font-size: 36px;
-            margin-bottom: 6px;
+            font-size: 48px; /* 36 → 48 */
+            margin-bottom: 8px;
         }
 
         .label {
-            font-size: 18px;
+            font-size: 22px; /* 18 → 22 */
             font-weight: 700;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
         }
@@ -119,26 +109,25 @@
         .grade-7 { background: linear-gradient(135deg, #A8E063, #56AB76); }
         .grade-8 { background: linear-gradient(135deg, #F77F00, #FCFF44); color: #333; }
 
-        /* Mobil Ekran Uyum Ayarları (600px ve altı) */
+        /* Mobil Ekran Uyum Ayarları (600px ve altı) - Orantılı büyütüldü */
         @media (max-width: 600px) {
             .page-title h1 { 
-                font-size: 24px; 
-            }
-            .page-title .sub-main { 
-                font-size: 17px; 
-                letter-spacing: 1px;
+                font-size: 32px; /* 24 → 32 */
             }
             .page-title .sub-desc {
-                font-size: 14px;
+                font-size: 18px; /* 14 → 18 */
             }
-            .container { gap: 12px; }
+            .container { 
+                gap: 14px; 
+                max-width: 100%;
+            }
             .card { 
-                width: calc(50% - 12px); 
-                max-width: 140px; 
-                height: 110px; 
+                width: calc(50% - 14px); 
+                max-width: 160px; 
+                height: 140px; /* 110 → 140 */
             }
-            .icon { font-size: 30px; }
-            .label { font-size: 15px; }
+            .icon { font-size: 38px; /* 30 → 38 */ }
+            .label { font-size: 18px; /* 15 → 18 */ }
         }
     </style>
 
@@ -174,6 +163,5 @@
         <div class="label">Grade 8</div>
     </a>
 </div>
-
 </body>
 </html>
