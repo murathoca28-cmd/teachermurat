@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etkinlik Sunumlarım</title>
+    <style>
+        /* RESET ve GENEL */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding-top: 50px;    /* ⬅️ BU SATIRI EKLEYİN (40px, 60px, 80px deneyin) */
+        }
+        h1 {
+            color: #2c3e50;
+            font-weight: 300;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+
+        /* KART GRID */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 25px;
+            border: 2px solid black; /* ⬅️ BU SATIRI EKLEYİN: Açık gri çerçeve */
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 50px 32px rgba(0,0,0,0.12);
+        }
+        .card-thumbnail {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            background: #ecf0f1;
+        }
+        .card-body {
+            padding: 18px 20px 20px;
+        }
+        .card-body h3 {
+            margin-bottom: 6px;
+            font-size: 1.2rem;
+            color: #2c3e50;
+        }
+        .card-body p {
+            margin-bottom: 16px;
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            border: 2px solid #1f618d;    /* ⬅️ Kenarlık rengi (koyu mavi) */
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s; /* Geçiş efekti için */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* ⬅️ Hafif gölge ekleyelim, çok şık durur */
+            text-align: center;
+            width: 100%;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background: #2980b9;
+            border-color: #154360;        /* ⬅️ Üzerine gelince kenarlık koyulaşsın */
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        /* MODAL (açılır pencere) */
+        .modal-overlay {
+            display: none; /* başlangıçta gizli */
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-box {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 1100px;
+            max-height: 90vh;
+            padding: 25px 30px 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            animation: slideDown 0.3s ease;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            flex-shrink: 0
+        }
+        .modal-header h2 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin: 0;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .modal-actions .btn {
+            width: auto;
+            padding: 8px 24px;
+            font-size: 0.9rem;
+        }
+        .btn-download {
+            background: #27ae60;
+        }
+        .btn-download:hover {
+            background: #1e8449;
+        }
+        .btn-close {
+            background: #e74c3c;
+        }
+        .btn-close:hover {
+            background: #c0392b;
+        }
+
+        .modal-iframe-wrapper {
+            flex: 1;
+            min-height: 0px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .modal-iframe-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 480px;
+            border: none;
+            border-radius: 12px;
+        }
+
+        /* Animasyonlar */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Mobil uyum */
+        @media (max-width: 700px) {
+            .modal-box { padding: 18px; width: 95%; }
+            .modal-header { flex-direction: column; align-items: stretch; gap: 12px; }
+            .modal-actions { justify-content: center; }
+            .modal-iframe-wrapper iframe { min-height: 300px; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>📚 SLIDES</h1>
+
+    <div class="card-grid">
+        <!-- KART 1 -->
+        <div class="card" 
+             data-embed="https://docs.google.com/presentation/d/e/2PACX-1vS8_xOXHG5yrRMsAZKmCsF_pGRCMdu2jmVM3EahXgA95Db2KICPO0de748EhCAtJQ/pubembed?start=false&loop=false&delayms=3000"
+             data-download="https://drive.google.com/uc?export=download&id=ABC123def456"
+             data-title="Slide 1">
+            <img class="card-thumbnail" src="https://raw.githubusercontent.com/murathoca28-cmd/teachermurat/main/5/Thumbnails/grade_5_rev_pre1.webp?v=2
+
+" alt="">
+            <div class="card-body">
+                <h3>Slide 1</h3>
+                <p>Revision summary</p>
+                <button class="btn open-modal">OPEN</button>
+            </div>
+        </div>
+        
+<!--/////////////////////////////////////////////////////////////
+       <!-- KART 2 (artık emoji değil, resim var) -->
+<div class="card" 
+     data-embed="https://docs.google.com/presentation/d/e/2PACX-1vTP7x7LHv3A6GOkwHnqe0nH22zcgK7Dabs5kFAM06sJKJ3rR284VNr9Cfrom0idmw/pubembed?start=false&loop=false&delayms=3000"
+     data-download="https://drive.google.com/uc?export=download&id=XYZ789ghi123"
+     data-title="Slide 2">
+
+    <!-- ⬇️ RESİM BURAYA EKLENDİ ⬇️ -->
+    <img class="card-thumbnail" src="https://raw.githubusercontent.com/murathoca28-cmd/teachermurat/main/5/Thumbnails/grade_5_rev_pre2.webp" alt="Slide 2">
+
+    <div class="card-body">
+        <h3>Slide 2</h3>
+        <p>Revision summary </p>
+        <button class="btn open-modal">️OPEN</button>
+    </div>
+</div>
+
+    <!-- MODAL -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2 id="modalTitle">Sunum Başlığı</h2>
+                <div class="modal-actions">
+                    <a id="downloadBtn" href="#" class="btn btn-download" target="_blank">⬇️ Download Slide</a>
+                    <button id="closeModalBtn" class="btn btn-close">✕ Close</button>
+                </div>
+            </div>
+            <div class="modal-iframe-wrapper">
+                <iframe id="modalIframe" src="" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        // Modal elemanları
+        const overlay = document.getElementById('modalOverlay');
+        const iframe = document.getElementById('modalIframe');
+        const titleEl = document.getElementById('modalTitle');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const closeBtn = document.getElementById('closeModalBtn');
+
+        // Tüm "Sunumu Aç" butonlarına tıkla
+        document.querySelectorAll('.open-modal').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const card = this.closest('.card');
+                const embedUrl = card.getAttribute('data-embed');
+                const downloadUrl = card.getAttribute('data-download');
+                const title = card.getAttribute('data-title') || 'Sunum';
+
+                if (!embedUrl) {
+                    alert('Bu sunumun embed linki eksik.');
+                    return;
+                }
+
+                // Modal'ı doldur
+                iframe.src = embedUrl;
+                titleEl.textContent = title;
+                downloadBtn.href = downloadUrl || '#';
+                if (!downloadUrl) {
+                    downloadBtn.style.opacity = '0.5';
+                    downloadBtn.style.pointerEvents = 'none';
+                } else {
+                    downloadBtn.style.opacity = '1';
+                    downloadBtn.style.pointerEvents = 'auto';
+                }
+
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden'; // arka planı kaydırmayı engelle
+            });
+        });
+
+        // Kapatma işlevi
+        function closeModal() {
+            iframe.src = ''; // içeriği boşalt (video/audio durur)
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+
+        // Overlay'e tıklanınca da kapat (dışarı tıklama)
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeModal();
+            }
+        });
+
+        // ESC tuşu ile kapat
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+    })();
+</script>
+</body>
+</html>
