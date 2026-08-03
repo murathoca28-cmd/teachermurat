@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -114,7 +113,7 @@
             animation: fadeIn 0.4s ease;
         }
 
-        /* --- ÜNİTE BUTON STİLLERİ (İlk koddaki orijinal boyutlar) --- */
+        /* --- ÜNİTE BUTON STİLLERİ --- */
         .unit-card {
             width: 110px;
             height: 95px;
@@ -133,7 +132,7 @@
         .unit-card .icon { font-size: 26px; margin-bottom: 4px; }
         .unit-card .label { font-size: 14px; font-weight: 600; color: #2c3e50; text-shadow: none; }
 
-        /* Geri Butonu */
+        /* Back Button */
         .back-btn {
             width: 100%;
             text-align: center;
@@ -211,7 +210,6 @@
             .unit-card .label { font-size: 12px; }
         }
     </style>
-        
 </head>
 <body>
     <div id="navbar-placeholder"></div>
@@ -246,16 +244,14 @@
     <!-- 2. AŞAMA: ÜNİTE LİSTESİ (Başlangıçta Gizli) -->
     <div id="unitContainer" class="unit-container">
         <div class="back-btn">
-            <button onclick="goBack()">⬅ Geri Dön</button>
+            <button onclick="goBack()">⬅ Back</button>
         </div>
         <div id="unitGrid"></div>
     </div>
 
     <script>
         // ============================================================
-        // VERİ LİSTELERİ (İsterseniz 10 ünite olarak güncelleyebilirsiniz)
-        // Grade 5 şu an örnek olarak Revs + Unit 1-8 içeriyor.
-        // Grade 7/8 için Unit 1'den Unit 10'a kadar 10 ünite ekleyebilirsiniz.
+        // VERİ LİSTELERİ
         // ============================================================
         const testsUnits = [
             { name: 'Revs', icon: '📝', url: 'multop_buton_5.html' },
@@ -267,11 +263,9 @@
             { name: 'Unit 6', icon: '📝', url: '****** TEST - UNITE 6 ******' },
             { name: 'Unit 7', icon: '📝', url: '****** TEST - UNITE 7 ******' },
             { name: 'Unit 8', icon: '📝', url: '****** TEST - UNITE 8 ******' },
-            // 10 ünite için alt satırları ekleyin:
-            // { name: 'Unit 9', icon: '📝', url: '...' },
-            // { name: 'Unit 10', icon: '📝', url: '...' },
         ];
-        const activitiesUnits = [
+
+        const worksheetsActivitiesUnits = [
             { name: 'Revs', icon: '🎮', url: 'rev_buton_5.html' },
             { name: 'Unit 1', icon: '🎮', url: '****** ACTIVITY - UNITE 1 ******' },
             { name: 'Unit 2', icon: '🎮', url: '****** ACTIVITY - UNITE 2 ******' },
@@ -282,6 +276,7 @@
             { name: 'Unit 7', icon: '🎮', url: '****** ACTIVITY - UNITE 7 ******' },
             { name: 'Unit 8', icon: '🎮', url: '****** ACTIVITY - UNITE 8 ******' },
         ];
+
         const slidesUnits = [
             { name: 'Revs', icon: '📊', url: 'un_rev/grade_5_slide.html' },
             { name: 'Unit 1', icon: '📊', url: '****** PRES - UNITE 1 ******' },
@@ -293,23 +288,24 @@
             { name: 'Unit 7', icon: '📊', url: '****** PRES - UNITE 7 ******' },
             { name: 'Unit 8', icon: '📊', url: '****** PRES - UNITE 8 ******' },
         ];
-        const worksheetsUnits = [
-            { name: 'Revs', icon: '🎲', url: '****** PRES - REVS ******' },
-            { name: 'Unit 1', icon: '🎲', url: '****** W/G - UNITE 1 ******' },
-            { name: 'Unit 2', icon: '🎲', url: '****** W/G - UNITE 2 ******' },
-            { name: 'Unit 3', icon: '🎲', url: '****** W/G - UNITE 3 ******' },
-            { name: 'Unit 4', icon: '🎲', url: '****** W/G - UNITE 4 ******' },
-            { name: 'Unit 5', icon: '🎲', url: '****** W/G - UNITE 5 ******' },
-            { name: 'Unit 6', icon: '🎲', url: '****** W/G - UNITE 6 ******' },
-            { name: 'Unit 7', icon: '🎲', url: '****** W/G - UNITE 7 ******' },
-            { name: 'Unit 8', icon: '🎲', url: '****** W/G - UNITE 8 ******' },
+
+        const gamesUnits = [
+            { name: 'Revs', icon: '🎲', url: '****** GAME - REVS ******' },
+            { name: 'Unit 1', icon: '🎲', url: '****** GAME - UNITE 1 ******' },
+            { name: 'Unit 2', icon: '🎲', url: '****** GAME - UNITE 2 ******' },
+            { name: 'Unit 3', icon: '🎲', url: '****** GAME - UNITE 3 ******' },
+            { name: 'Unit 4', icon: '🎲', url: '****** GAME - UNITE 4 ******' },
+            { name: 'Unit 5', icon: '🎲', url: '****** GAME - UNITE 5 ******' },
+            { name: 'Unit 6', icon: '🎲', url: '****** GAME - UNITE 6 ******' },
+            { name: 'Unit 7', icon: '🎲', url: '****** GAME - UNITE 7 ******' },
+            { name: 'Unit 8', icon: '🎲', url: '****** GAME - UNITE 8 ******' },
         ];
 
         const categoryConfig = {
             tests: { title: '📝 Tests', color: '#4facfe' },
-            activities: { title: '🎯 Activities', color: '#38d9a9' },
+            activities: { title: '🎯 Worksheets & Activities', color: '#38d9a9' },
             slides: { title: '📊 Slides', color: '#f5576c' },
-            worksheets: { title: '🎲 Worksheets & Games', color: '#ff7a45' }
+            games: { title: '🎲 Games', color: '#ff7a45' }
         };
 
         function renderUnits(type) {
@@ -318,9 +314,9 @@
             let data = [];
             switch (type) {
                 case 'tests': data = testsUnits; break;
-                case 'activities': data = activitiesUnits; break;
+                case 'activities': data = worksheetsActivitiesUnits; break;
                 case 'slides': data = slidesUnits; break;
-                case 'worksheets': data = worksheetsUnits; break;
+                case 'games': data = gamesUnits; break;
                 default: data = testsUnits;
             }
             const config = categoryConfig[type];
