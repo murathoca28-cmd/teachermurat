@@ -226,7 +226,8 @@
 </head>
 <body>
  <div id="navbar-placeholder"></div>
- <script src="../../../../navbar.js"></script>
+ <!-- navbar.js yolu iki üst klasöre çıkacak şekilde düzeltildi -->
+ <script src="../../navbar.js"></script>
 
 <div class="quiz-card">
   <div id="quiz-view">
@@ -270,17 +271,18 @@
 </div>
 
 <script>
+  // Görsel yolları CDN yerine bağıl yollar (relative paths) ile değiştirildi
   const questions = [
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_01.webp", answer: "C" },
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_02.webp", answer: "B" },
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_03.webp", answer: "A" },
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_04.webp", answer: "A" },
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_05.webp", answer: "B" },
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_06.webp", answer: "C" },
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_07.webp", answer: "A" },
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_08.webp", answer: "B" },
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_09.webp", answer: "D" },
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_10.webp", answer: "A" }
+    { image: "../test_images/unit_rev/t_1/grade_5_revs_multest_01.webp", answer: "C" },
+    { image: "../test_images/unit_rev/t_1/grade_5_revs_multest_02.webp", answer: "B" },
+    { image: "../test_images/unit_rev/t_1/grade_5_revs_multest_03.webp", answer: "A" },
+    { image: "../test_images/unit_rev/t_1/grade_5_revs_multest_04.webp", answer: "A" },
+    { image: "../test_images/unit_rev/t_1/grade_5_revs_multest_05.webp", answer: "B" },
+    { image: "../test_images/unit_rev/t_1/grade_5_revs_multest_06.webp", answer: "C" },
+    { image: "../test_images/unit_rev/t_1/grade_5_revs_multest_07.webp", answer: "A" },
+    { image: "../test_images/unit_rev/t_1/grade_5_revs_multest_08.webp", answer: "B" },
+    { image: "../test_images/unit_rev/t_1/grade_5_revs_multest_09.webp", answer: "D" },
+    { image: "../test_images/unit_rev/t_1/grade_5_revs_multest_10.webp", answer: "A" }
   ];
 
   let currentIndex = 0;
@@ -396,6 +398,5 @@
 
   renderQuestion();
 </script>
-
 </body>
 </html>
