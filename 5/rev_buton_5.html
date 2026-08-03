@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiple Choice Tests</title>
+    <title>Öğrenci Çalışma Sayfası</title>
     <style>
-        /* Sıfırlama ve Genel Düzen */
         * {
             margin: 0;
             padding: 0;
@@ -14,29 +13,27 @@
 
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: transparent;
+            background: radial-gradient(circle, #ffffff 0%, #CDEFFF 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 15px 0px;
             min-height: 100vh;
             margin: 0;
-            background: radial-gradient(circle, #ffffff 0%, #CDEFFF 100%);
         }
 
         .container {
-            max-width: 800px;
+            max-width: 850px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
             padding: 30px 25px;
             border-radius: 35px;
             box-shadow: 0 15px 50px rgba(0, 100, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
 
-        /* BAŞLIK */
-        .title {
+        .main-title {
             font-size: 2rem;
             font-weight: 800;
             text-align: center;
@@ -48,41 +45,56 @@
             background-clip: text;
             filter: drop-shadow(0 4px 6px rgba(30, 60, 114, 0.2));
         }
-        .title span {
-            -webkit-text-fill-color: initial;
-            color: #4facfe;
+
+        .category-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 25px 0 15px 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 0.5px;
+        }
+        .category-title:first-of-type {
+            margin-top: 0;
         }
 
-        /* GRID - 5'ERLİ 2 SIRA */
+        .cat-icon {
+            font-size: 1.8rem;
+        }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 16px;
+            margin-bottom: 10px;
         }
 
-        /* BUTONLAR - MODERN MAVİ GRADIENT */
+        /* ORTAK BUTON STİLİ */
         .test-btn {
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 18px 10px;
-            background: linear-gradient(145deg, #4facfe, #0072ff);
             color: white;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.95rem;  /* biraz küçülttük ki sığsın */
             border-radius: 18px;
             text-decoration: none;
             text-align: center;
-            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.35);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: none;
             cursor: pointer;
             letter-spacing: 0.5px;
             position: relative;
             overflow: hidden;
+            white-space: nowrap;        /* ← TEK SATIR ZORUNLU */
+            overflow: hidden;           /* taşmayı gizle */
+            text-overflow: ellipsis;    /* taşarsa üç nokta */
         }
 
-        /* Butona hafif parlaklık efekti */
+        /* ... geri kalan hover, kategoriler vs. aynı, sadece .test-btn'a nowrap eklendi */
         .test-btn::after {
             content: '';
             position: absolute;
@@ -90,7 +102,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+            background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 60%);
             opacity: 0;
             transition: opacity 0.4s ease;
             pointer-events: none;
@@ -98,50 +110,69 @@
 
         .test-btn:hover {
             transform: translateY(-8px) scale(1.04);
-            box-shadow: 0 16px 35px rgba(79, 172, 254, 0.55);
-            background: linear-gradient(145deg, #3b8dd9, #0055cc);
         }
-
         .test-btn:hover::after {
             opacity: 1;
         }
-
         .test-btn:active {
             transform: scale(0.95) translateY(0);
-            box-shadow: 0 4px 10px rgba(79, 172, 254, 0.3);
         }
-
-        /* Buton içindeki küçük ikon */
         .test-btn .icon {
             margin-right: 6px;
             font-size: 1.1rem;
         }
 
-        /* READING butonlarına özel ince dokunuş */
+        /* ----- KATEGORİ RENKLERİ (değişiklik yok) ----- */
+        .cat-activities .category-title { color: #0b6e4f; }
+        .test-btn.activity {
+            background: linear-gradient(145deg, #2ecc71, #11998e);
+            box-shadow: 0 8px 18px rgba(46, 204, 113, 0.35);
+            border-bottom: 3px solid rgba(255, 255, 255, 0.4);
+        }
+        .test-btn.activity:hover {
+            background: linear-gradient(145deg, #27ae60, #0d7d6e);
+            box-shadow: 0 16px 30px rgba(46, 204, 113, 0.5);
+        }
+
+        .cat-worksheets .category-title { color: #d35400; }
+        .test-btn.worksheet {
+            background: linear-gradient(145deg, #f39c12, #e67e22);
+            box-shadow: 0 8px 18px rgba(243, 156, 18, 0.35);
+            border-bottom: 3px solid rgba(255, 255, 255, 0.4);
+        }
+        .test-btn.worksheet:hover {
+            background: linear-gradient(145deg, #d68910, #ca6f1e);
+            box-shadow: 0 16px 30px rgba(243, 156, 18, 0.5);
+        }
+
+        .cat-reading .category-title { color: #5b2c6f; }
         .test-btn.reading {
-            background: linear-gradient(145deg, #6db9f2, #1a6dd4);
-            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.35),
-                        inset 0 1px 0 rgba(255,255,255,0.25);
+            background: linear-gradient(145deg, #8e44ad, #5b2c6f);
+            box-shadow: 0 8px 18px rgba(142, 68, 173, 0.35);
             border-bottom: 3px solid rgba(255, 215, 0, 0.6);
         }
-
         .test-btn.reading:hover {
-            background: linear-gradient(145deg, #5a9fd4, #0f4fa0);
-            border-bottom-color: rgba(255, 215, 0, 0.9);
+            background: linear-gradient(145deg, #7d3c98, #4a235a);
+            box-shadow: 0 16px 30px rgba(142, 68, 173, 0.5);
         }
 
-        /* MOBİL UYUM (Küçük ekranlarda 3 veya 2 sütun) */
+        /* MOBİL */
         @media (max-width: 650px) {
             .container { padding: 20px 15px; }
-            .title { font-size: 1.6rem; }
+            .main-title { font-size: 1.6rem; }
             .grid { gap: 12px; }
-            .test-btn { font-size: 0.9rem; padding: 14px 6px; border-radius: 14px; }
+            .test-btn {
+                font-size: 0.8rem;
+                padding: 14px 6px;
+                border-radius: 14px;
+                white-space: normal;   /* mobilde alt satıra geçebilir (daha rahat okunur) */
+            }
+            .category-title { font-size: 1.1rem; }
         }
-
         @media (max-width: 450px) {
             .grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-            .test-btn { font-size: 0.8rem; padding: 12px 4px; border-radius: 12px; }
-            .title { font-size: 1.3rem; }
+            .test-btn { font-size: 0.75rem; padding: 12px 4px; border-radius: 12px; }
+            .main-title { font-size: 1.3rem; }
         }
     </style>
 </head>
@@ -150,24 +181,43 @@
     <script src="../navbar.js"></script>
 
 <div class="container">
-    <div class="title">📝 Revision 1-2 Activities</div>
+    <div class="main-title">📚 Activities&Worksheets</div>
 
-    <div class="grid">
-        <!-- 1. SATIR (Alıştırmalar) -->
-        <a href="revtact_1_5.html" class="test-btn"><span class="icon">✏️</span> Activity 1</a>
-        <a href="revtact_1_5v2.html" class="test-btn"><span class="icon">✏️</span> Activity 2</a>
-        <a href="revtact_3.html" class="test-btn"><span class="icon">✏️</span> Activity 3</a>
-        <a href="revtact_4.html" class="test-btn"><span class="icon">✏️</span> Activity 4</a>
-        <a href="revtact_5.html" class="test-btn"><span class="icon">✏️</span> Activity 5</a>
+    <!-- ACTIVITIES -->
+    <div class="cat-activities">
+        <div class="category-title"><span class="cat-icon">🧩</span> Activities</div>
+        <div class="grid">
+            <a href="#" class="test-btn activity"><span class="icon">🎯</span> Activity 1</a>
+            <a href="#" class="test-btn activity"><span class="icon">🎯</span> Activity 2</a>
+            <a href="#" class="test-btn activity"><span class="icon">🎯</span> Activity 3</a>
+            <a href="#" class="test-btn activity"><span class="icon">🎯</span> Activity 4</a>
+            <a href="#" class="test-btn activity"><span class="icon">🎯</span> Activity 5</a>
+        </div>
+    </div>
 
-        <!-- 2. SATIR (Reading Passages) -->
-        <a href="revtact_6.html" class="test-btn reading"><span class="icon">📖</span> Reading 1</a>
-        <a href="revtact_7.html" class="test-btn reading"><span class="icon">📖</span> Reading 2</a>
-        <a href="revtact_8.html" class="test-btn reading"><span class="icon">📖</span> Reading 3</a>
-        <a href="revtact_9.html" class="test-btn reading"><span class="icon">📖</span> Reading 4</a>
-        <a href="revtact_10.html" class="test-btn reading"><span class="icon">📖</span> Reading 5</a>
+    <!-- WORKSHEETS -->
+    <div class="cat-worksheets">
+        <div class="category-title"><span class="cat-icon">📄</span> Worksheets</div>
+        <div class="grid">
+            <a href="#" class="test-btn worksheet"><span class="icon">📝</span> Worksheet 1</a>
+            <a href="#" class="test-btn worksheet"><span class="icon">📝</span> Worksheet 2</a>
+            <a href="#" class="test-btn worksheet"><span class="icon">📝</span> Worksheet 3</a>
+            <a href="#" class="test-btn worksheet"><span class="icon">📝</span> Worksheet 4</a>
+            <a href="#" class="test-btn worksheet"><span class="icon">📝</span> Worksheet 5</a>
+        </div>
+    </div>
+
+    <!-- READING -->
+    <div class="cat-reading">
+        <div class="category-title"><span class="cat-icon">📖</span> Reading</div>
+        <div class="grid">
+            <a href="#" class="test-btn reading"><span class="icon">🔖</span> Reading 1</a>
+            <a href="#" class="test-btn reading"><span class="icon">🔖</span> Reading 2</a>
+            <a href="#" class="test-btn reading"><span class="icon">🔖</span> Reading 3</a>
+            <a href="#" class="test-btn reading"><span class="icon">🔖</span> Reading 4</a>
+            <a href="#" class="test-btn reading"><span class="icon">🔖</span> Reading 5</a>
+        </div>
     </div>
 </div>
-
 </body>
 </html>
