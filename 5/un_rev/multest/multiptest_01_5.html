@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>İngilizce Testi</title>
 <style>
   * { box-sizing: border-box; }
   
@@ -226,6 +227,7 @@
 </head>
 <body>
  <div id="navbar-placeholder"></div>
+ <!-- YENİ YOL: 3 klasör yukarı çıkıyoruz -->
  <script src="../../../navbar.js"></script>
 
 <div class="quiz-card">
@@ -263,27 +265,25 @@
   </div>
 </div>
 
-<!-- Tam Ekran Büyütme Modalı -->
 <div id="image-modal" class="modal" onclick="closeModal()">
   <span class="close-modal">&times;</span>
   <img id="modal-img" class="modal-content" src="">
 </div>
 
 <script>
-   const questions = [
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_01.webp", answer: "C" },
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_02.webp", answer: "B" },
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_03.webp", answer: "A" },
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_04.webp", answer: "A" },
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_05.webp", answer: "B" },    
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_06.webp", answer: "C" },       
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_07.webp", answer: "A" },       
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_08.webp", answer: "B" },       
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_09.webp", answer: "D" },       
-    { image: "https://cdn.jsdelivr.net/gh/murathoca28-cmd/teachermurat@main/5/test_images/unit_rev/t_1/grade_5_revs_multest_10.webp", answer: "A" },     
+  // YENİ YOLLAR: 2 klasör yukarı çıkıp test_images klasörüne giriyoruz
+  const questions = [
+    { image: "../../test_images/unit_rev/t_1/grade_5_revs_multest_01.webp", answer: "C" },
+    { image: "../../test_images/unit_rev/t_1/grade_5_revs_multest_02.webp", answer: "B" },
+    { image: "../../test_images/unit_rev/t_1/grade_5_revs_multest_03.webp", answer: "A" },
+    { image: "../../test_images/unit_rev/t_1/grade_5_revs_multest_04.webp", answer: "A" },
+    { image: "../../test_images/unit_rev/t_1/grade_5_revs_multest_05.webp", answer: "B" },
+    { image: "../../test_images/unit_rev/t_1/grade_5_revs_multest_06.webp", answer: "C" },
+    { image: "../../test_images/unit_rev/t_1/grade_5_revs_multest_07.webp", answer: "A" },
+    { image: "../../test_images/unit_rev/t_1/grade_5_revs_multest_08.webp", answer: "B" },
+    { image: "../../test_images/unit_rev/t_1/grade_5_revs_multest_09.webp", answer: "D" },
+    { image: "../../test_images/unit_rev/t_1/grade_5_revs_multest_10.webp", answer: "A" }
   ];
-
- 5/
 
   let currentIndex = 0;
   let userAnswers = new Array(questions.length).fill(null);
@@ -302,12 +302,10 @@
     });
 
     document.getElementById('prev-btn').disabled = (currentIndex === 0);
-    
-    // ★★★ DEĞİŞİKLİK: Buton her zaman aktif ★★★
     document.getElementById('next-btn').disabled = false;
 
     if (currentIndex === questions.length - 1) {
-      document.getElementById('next-btn').innerHTML = 'See Result ✨';
+      document.getElementById('next-btn').innerHTML = 'Sonuçları Gör ✨';
     } else {
       document.getElementById('next-btn').innerHTML = 'Sonraki ➔';
     }
@@ -319,7 +317,6 @@
     buttons.forEach(btn => {
       btn.classList.toggle('selected', btn.innerText === option);
     });
-    // Bu satırı kaldırmaya gerek yok, false yapar ama zaten her zaman aktif
     document.getElementById('next-btn').disabled = false;
   }
 
@@ -376,21 +373,6 @@
     document.getElementById('result-details').innerHTML = detailsHtml;
   }
 
-  function reviewWrongQuestions() {
-    const wrongIndices = [];
-    questions.forEach((q, idx) => {
-      if (userAnswers[idx] !== q.answer) {
-        wrongIndices.push(idx + 1);
-      }
-    });
-
-    if (wrongIndices.length === 0) {
-      alert('🎉 Hiç yanlışın yok, tebrikler!');
-    } else {
-      alert(`Yanlış yaptığınız soru numaraları: ${wrongIndices.join(', ')}`);
-    }
-  }
-
   function resetQuiz() {
     currentIndex = 0;
     userAnswers = new Array(questions.length).fill(null);
@@ -401,6 +383,5 @@
 
   renderQuestion();
 </script>
-
 </body>
 </html>
