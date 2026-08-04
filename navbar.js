@@ -2,11 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("navbar");
   if (!container) return;
 
-  // 1. Script'in çalıştığı dizini otomatik bulma (GitHub Pages uyumu için)
   const scriptTag = document.currentScript || document.querySelector('script[src*="navbar.js"]');
   const baseUrl = scriptTag ? new URL('./', scriptTag.src).href : window.location.origin;
 
-  // 2. Sayfalarınıza ait menü bağlantıları
   const navLinks = [
     { name: "Ana Sayfa", path: "index.html" },
     { name: "Grade 5", path: "grade5.html" },
@@ -17,53 +15,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const currentUrl = window.location.href.split('?')[0].split('#')[0];
 
-  // 3. Navbar'ı diğer CSS dosyalarındaki çakışmalardan koruyan sıfırlanmış CSS stili
-  const style = document.createElement('style');
-  style.textContent = `
-    #navbar, #navbar * {
-      box-sizing: border-box !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      font-family: inherit;
-    }
-    .tm-navbar {
-      width: 100%;
-      background: transparent;
-      padding: 20px 40px !important;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .tm-brand {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #2b5b84;
-      text-decoration: none;
-    }
-    .tm-menu {
-      display: flex;
-      gap: 25px;
-      list-style: none;
-      align-items: center;
-    }
-    .tm-link {
-      text-decoration: none;
-      color: #3b698e;
-      font-size: 0.95rem;
-      font-weight: 600;
-      transition: opacity 0.2s;
-    }
-    .tm-link:hover {
-      opacity: 0.75;
-    }
-    .tm-link.active {
-      color: #1a3a5c;
-      font-weight: 700;
-    }
-  `;
-  document.head.appendChild(style);
+  if (!document.getElementById("tm-navbar-styles")) {
+    const style = document.createElement('style');
+    style.id = "tm-navbar-styles";
+    style.textContent = `
+      #navbar {
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .tm-navbar {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 40px;
+        box-sizing: border-box;
+      }
+      .tm-brand {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #2b5b84;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .tm-menu {
+        display: flex;
+        gap: 25px;
+        list-style: none;
+        margin: 0 !important;
+        padding: 0 !important;
+        align-items: center;
+      }
+      .tm-link {
+        text-decoration: none;
+        color: #3b698e;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: opacity 0.2s;
+        white-space: nowrap;
+      }
+      .tm-link:hover {
+        opacity: 0.75;
+      }
+      .tm-link.active {
+        color: #1a3a5c;
+        font-weight: 700;
+      }
+    `;
+    document.head.appendChild(style);
+  }
 
-  // 4. HTML içeriğini oluşturma
   const linksHtml = navLinks.map(link => {
     const fullUrl = new URL(link.path, baseUrl).href;
     const isActive = currentUrl === fullUrl || 
