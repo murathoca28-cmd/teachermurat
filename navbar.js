@@ -1,8 +1,8 @@
 document.getElementById('navbar-placeholder').innerHTML = `
   <style>
-      html {
-        overflow-y: scroll;
-        scrollbar-gutter: stable;
+    html {
+      overflow-y: scroll;
+      scrollbar-gutter: stable;
     }
     .tm-navbar {
       position: fixed; top: 0; left: 0; width: 100%;
