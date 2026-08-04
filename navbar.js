@@ -1,10 +1,6 @@
 document.getElementById('navbar-placeholder').innerHTML = `
 <style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  
   html {
     overflow-y: scroll;
     scrollbar-gutter: stable;
