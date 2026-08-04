@@ -1,102 +1,152 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const container = document.getElementById("navbar");
-  if (!container) return;
-
-  // 1. Script'in bulunduğu asıl klasörü hatasız bulur (GitHub Pages uyumlu)
-  const scriptTag = document.currentScript || document.querySelector('script[src*="navbar.js"]');
-  const baseUrl = scriptTag ? new URL('./', scriptTag.src).href : window.location.origin + '/';
-
-  const navLinks = [
-    { name: "Ana Sayfa", path: "index.html" },
-    { name: "Grade 5", path: "5/grade5.html" },
-    { name: "Grade 6", path: "6/grade6.html" },
-    { name: "Grade 7", path: "7/grade7.html" },
-    { name: "Grade 8", path: "8/grade8.html" }
-  ];
-
-  const currentUrl = window.location.href.split('?')[0].split('#')[0];
-
-  if (!document.getElementById("tm-navbar-styles")) {
-    const style = document.createElement('style');
-    style.id = "tm-navbar-styles";
-    style.textContent = `
-      /* Şerit Tasarımı (Görselinizdeki arka plan ve alt çizgi) */
-      #navbar {
-        width: 100%;
-        background-color: #eaf3fa; /* Açık mavi şerit rengi */
-        border-bottom: 1px solid #c5def5; /* Şerit altındaki ince sınır çizgisi */
-        margin: 0;
-        padding: 0;
-        display: block;
-      }
-      
-      .tm-navbar-container {
-        max-width: 1100px; /* Alttaki kartlarla hizalar */
-        margin: 0 auto;
-        padding: 15px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      
-      .tm-brand {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #2b5b84;
-        text-decoration: none;
-      }
-      
-      .tm-menu {
-        display: flex;
-        gap: 10px; /* Düğmelerin birbirine uzaklığı */
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        align-items: center;
-      }
-      
-      /* Normal Düğme Tasarımı */
-      .tm-link {
-        text-decoration: none;
-        color: #3b698e;
-        font-size: 0.95rem;
-        font-weight: 600;
-        padding: 8px 18px; /* Düğme iç boşluğu */
-        border-radius: 25px; /* Düğmeyi hap (pill) şekline sokar */
-        transition: all 0.2s ease;
-      }
-      
-      /* Vurgulu (Üzerine gelince veya Aktifken) Düğme Tasarımı */
-      .tm-link:hover, .tm-link.active {
-        background-color: #9bbce3; /* Buton içi dolgu rengi */
-        color: #1a3a5c; /* Buton içi yazı rengi */
-      }
-    `;
-    document.head.appendChild(style);
+document.getElementById('navbar-placeholder').innerHTML = `
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
+  html {
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+  }
+  .tm-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    z-index: 1000;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+  .tm-navbar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+  }
+  .tm-logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e3a5f;
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+  }
+  .tm-links {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .tm-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 18px;
+    min-width: 95px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2c5282;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    background: transparent;
+  }
+  .tm-links a:hover {
+    background: #ebf4ff;
+    color: #1a365d;
+    border-color: #bee3f8;
+  }
+  .tm-links a.active {
+    background: #2b6cb0;
+    color: #ffffff;
+    border-color: #2b6cb0;
+  }
+  /* Mobil hamburger menü */
+  .tm-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+  }
+  .tm-hamburger span {
+    display: block;
+    width: 24px;
+    height: 2.5px;
+    background: #2c5282;
+    margin: 3px 0;
+    border-radius: 2px;
+    transition: 0.3s ease;
+  }
+  @media (max-width: 768px) {
+    .tm-links {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      flex-direction: column;
+      gap: 2px;
+      padding: 12px 0;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+      transform: translateY(-120%);
+      transition: transform 0.3s ease;
+      z-index: 999;
+    }
+    .tm-links.open {
+      transform: translateY(0);
+    }
+    .tm-hamburger {
+      display: flex;
+    }
+    .tm-links a {
+      width: 100%;
+      justify-content: center;
+      border-radius: 0;
+      min-width: unset;
+      height: 48px;
+      font-size: 1rem;
+    }
+  }
+</style>
 
-  const linksHtml = navLinks.map(link => {
-    const fullUrl = new URL(link.path, baseUrl).href;
-    
-    // Aktif sayfayı hatasız tespit etme mantığı
-    const isActive = currentUrl === fullUrl || 
-      (link.path === 'index.html' && (currentUrl === baseUrl || currentUrl === baseUrl + 'index.html'));
+<div class="tm-navbar">
+  <div class="tm-navbar-inner">
+    <div class="tm-logo">Teacher Murat</div>
+    <button class="tm-hamburger" id="hamburger-btn" aria-label="Menü">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="tm-links" id="nav-links">
+      <a href="/teachermurat/index.html">Ana Sayfa</a>
+      <a href="/teachermurat/5/grade5.html">Grade 5</a>
+      <a href="/teachermurat/6/grade6.html">Grade 6</a>
+      <a href="/teachermurat/7/grade7.html">Grade 7</a>
+      <a href="/teachermurat/8/grade8.html">Grade 8</a>
+    </div>
+  </div>
+</div>
+<div style="height:64px;"></div>
+`;
 
-    return `
-      <li>
-        <a href="${fullUrl}" class="tm-link ${isActive ? 'active' : ''}">
-          ${link.name}
-        </a>
-      </li>
-    `;
-  }).join('');
-
-  container.innerHTML = `
-    <header class="tm-navbar-container">
-      <a href="${new URL('index.html', baseUrl).href}" class="tm-brand">Teacher Murat</a>
-      <ul class="tm-menu">
-        ${linksHtml}
-      </ul>
-    </header>
-  `;
+// Hamburger menü işlevselliği
+document.addEventListener('click', function(e) {
+  const btn = document.getElementById('hamburger-btn');
+  const nav = document.getElementById('nav-links');
+  if (!btn || !nav) return;
+  if (e.target.closest('#hamburger-btn')) {
+    nav.classList.toggle('open');
+  } else if (!e.target.closest('#nav-links') && nav.classList.contains('open')) {
+    nav.classList.remove('open');
+  }
 });
