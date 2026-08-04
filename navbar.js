@@ -2,38 +2,41 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("navbar");
   if (!container) return;
 
+  // 1. Script'in bulunduğu kök dizini (teachermurat/) otomatik tespit eder
   const scriptTag = document.currentScript || document.querySelector('script[src*="navbar.js"]');
   const baseUrl = scriptTag ? new URL('./', scriptTag.src).href : window.location.origin;
 
+  // 2. Sayfa konumları (Kök dizine göre göreli yollar)
   const navLinks = [
     { name: "Ana Sayfa", path: "index.html" },
-    { name: "Grade 5", path: "grade5.html" },
-    { name: "Grade 6", path: "grade6.html" },
-    { name: "Grade 7", path: "grade7.html" },
-    { name: "Grade 8", path: "grade8.html" }
+    { name: "Grade 5", path: "5/grade5.html" }, // Alt klasör yapınıza uygun yol
+    { name: "Grade 6", path: "6/grade6.html" },
+    { name: "Grade 7", path: "7/grade7.html" },
+    { name: "Grade 8", path: "8/grade8.html" }
   ];
 
   const currentUrl = window.location.href.split('?')[0].split('#')[0];
 
+  // 3. Eski görsel düzeninizle birebir eşleşen CSS stili
   if (!document.getElementById("tm-navbar-styles")) {
     const style = document.createElement('style');
     style.id = "tm-navbar-styles";
     style.textContent = `
       #navbar {
         width: 100%;
-        margin: 0 !important;
-        padding: 0 !important;
+        background: transparent;
       }
-      .tm-navbar {
-        width: 100%;
+      .tm-navbar-container {
+        max-width: 1100px; /* Ortadaki Grade kart grubunun genişliğiyle tam hizalı */
+        margin: 0 auto;    /* Sayfada ortalar */
+        padding: 30px 20px 10px 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 40px;
         box-sizing: border-box;
       }
       .tm-brand {
-        font-size: 1.1rem;
+        font-size: 1.25rem;
         font-weight: 700;
         color: #2b5b84;
         text-decoration: none;
@@ -41,16 +44,16 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       .tm-menu {
         display: flex;
-        gap: 25px;
+        gap: 28px;
         list-style: none;
-        margin: 0 !important;
-        padding: 0 !important;
+        margin: 0;
+        padding: 0;
         align-items: center;
       }
       .tm-link {
         text-decoration: none;
         color: #3b698e;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         font-weight: 600;
         transition: opacity 0.2s;
         white-space: nowrap;
@@ -66,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.head.appendChild(style);
   }
 
+  // 4. Bağlantıları dinamik oluşturma
   const linksHtml = navLinks.map(link => {
     const fullUrl = new URL(link.path, baseUrl).href;
     const isActive = currentUrl === fullUrl || 
@@ -81,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }).join('');
 
   container.innerHTML = `
-    <header class="tm-navbar">
+    <header class="tm-navbar-container">
       <a href="${new URL('index.html', baseUrl).href}" class="tm-brand">Teacher Murat</a>
       <ul class="tm-menu">
         ${linksHtml}
