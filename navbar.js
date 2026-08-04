@@ -33,10 +33,6 @@ document.getElementById('navbar-placeholder').innerHTML = `
       padding: 8px 16px;
       border-radius: 20px;
       transition: background 0.2s ease, color 0.2s ease;
-      /* ↓↓↓ YENİ EKLENEN SATIRLAR ↓↓↓ */
-      min-width: 110px;
-      text-align: center;
-      /* İsteğe bağlı: display: inline-block; */
     }
     .tm-links a:hover {
       background: #91BCED;
