@@ -1,55 +1,89 @@
-document.getElementById('navbar-placeholder').innerHTML = `
-  <style>
-    html {
-      overflow-y: scroll;
-      scrollbar-gutter: stable;
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("navbar");
+  if (!container) return;
+
+  // 1. Script'in çalıştığı dizini otomatik bulma (GitHub Pages uyumu için)
+  const scriptTag = document.currentScript || document.querySelector('script[src*="navbar.js"]');
+  const baseUrl = scriptTag ? new URL('./', scriptTag.src).href : window.location.origin;
+
+  // 2. Sayfalarınıza ait menü bağlantıları
+  const navLinks = [
+    { name: "Ana Sayfa", path: "index.html" },
+    { name: "Grade 5", path: "grade5.html" },
+    { name: "Grade 6", path: "grade6.html" },
+    { name: "Grade 7", path: "grade7.html" },
+    { name: "Grade 8", path: "grade8.html" }
+  ];
+
+  const currentUrl = window.location.href.split('?')[0].split('#')[0];
+
+  // 3. Navbar'ı diğer CSS dosyalarındaki çakışmalardan koruyan sıfırlanmış CSS stili
+  const style = document.createElement('style');
+  style.textContent = `
+    #navbar, #navbar * {
+      box-sizing: border-box !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      font-family: inherit;
     }
     .tm-navbar {
-      position: fixed; top: 0; left: 0; width: 100%;
-      background: #eaf4fb;
-      border-bottom: 1px solid #91BCED;
-      box-sizing: border-box;
-      z-index: 1000;
-    }
-    .tm-navbar-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 14px 24px;
+      width: 100%;
+      background: transparent;
+      padding: 20px 40px !important;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .tm-logo {
-      color: #2c5f8a;
+    .tm-brand {
+      font-size: 1.25rem;
       font-weight: 700;
-      font-size: 19px;
-    }
-    .tm-links { display: flex; gap: 8px; }
-    .tm-links a {
-      color: #3a6ea5;
+      color: #2b5b84;
       text-decoration: none;
-      font-size: 15px;
+    }
+    .tm-menu {
+      display: flex;
+      gap: 25px;
+      list-style: none;
+      align-items: center;
+    }
+    .tm-link {
+      text-decoration: none;
+      color: #3b698e;
+      font-size: 0.95rem;
       font-weight: 600;
-      padding: 8px 16px;
-      border-radius: 20px;
-      transition: background 0.2s ease, color 0.2s ease;
+      transition: opacity 0.2s;
     }
-    .tm-links a:hover {
-      background: #91BCED;
-      color: #1c3f5c;
+    .tm-link:hover {
+      opacity: 0.75;
     }
-  </style>
-  <div class="tm-navbar">
-    <div class="tm-navbar-inner">
-      <div class="tm-logo">Teacher Murat</div>
-      <div class="tm-links">
-        <a href="/teachermurat/index.html">Ana Sayfa</a>
-        <a href="/teachermurat/5/grade5.html">Grade 5</a>
-        <a href="/teachermurat/6/grade6.html">Grade 6</a>
-        <a href="/teachermurat/7/grade7.html">Grade 7</a>
-        <a href="/teachermurat/8/grade8.html">Grade 8</a>
-      </div>
-    </div>
-  </div>
-  <div style="height:65px;"></div>
-`;
+    .tm-link.active {
+      color: #1a3a5c;
+      font-weight: 700;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // 4. HTML içeriğini oluşturma
+  const linksHtml = navLinks.map(link => {
+    const fullUrl = new URL(link.path, baseUrl).href;
+    const isActive = currentUrl === fullUrl || 
+      (link.path === 'index.html' && currentUrl.replace(/\/$/, '') === baseUrl.replace(/\/$/, ''));
+
+    return `
+      <li>
+        <a href="${fullUrl}" class="tm-link ${isActive ? 'active' : ''}">
+          ${link.name}
+        </a>
+      </li>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <header class="tm-navbar">
+      <a href="${new URL('index.html', baseUrl).href}" class="tm-brand">Teacher Murat</a>
+      <ul class="tm-menu">
+        ${linksHtml}
+      </ul>
+    </header>
+  `;
+});
