@@ -136,7 +136,6 @@ document.getElementById('navbar-placeholder').innerHTML = `
     </div>
   </div>
 </div>
-<div style="height:64px;"></div>
 `;
 
 // Hamburger menü işlevselliği
