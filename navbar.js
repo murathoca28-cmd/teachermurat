@@ -2,14 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("navbar");
   if (!container) return;
 
-  // 1. Script'in bulunduğu kök dizini (teachermurat/) otomatik tespit eder
   const scriptTag = document.currentScript || document.querySelector('script[src*="navbar.js"]');
   const baseUrl = scriptTag ? new URL('./', scriptTag.src).href : window.location.origin;
 
-  // 2. Sayfa konumları (Kök dizine göre göreli yollar)
   const navLinks = [
     { name: "Ana Sayfa", path: "index.html" },
-    { name: "Grade 5", path: "5/grade5.html" }, // Alt klasör yapınıza uygun yol
+    { name: "Grade 5", path: "5/grade5.html" },
     { name: "Grade 6", path: "6/grade6.html" },
     { name: "Grade 7", path: "7/grade7.html" },
     { name: "Grade 8", path: "8/grade8.html" }
@@ -17,19 +15,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const currentUrl = window.location.href.split('?')[0].split('#')[0];
 
-  // 3. Eski görsel düzeninizle birebir eşleşen CSS stili
   if (!document.getElementById("tm-navbar-styles")) {
     const style = document.createElement('style');
     style.id = "tm-navbar-styles";
     style.textContent = `
       #navbar {
-        width: 100%;
-        background: transparent;
+        position: absolute !important; /* Menüyü sayfa akışından koparır */
+        top: 0 !important;             /* Tarayıcının en tepesine çiviler */
+        left: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        z-index: 9999;                 /* Her şeyin üstünde görünmesini sağlar */
       }
       .tm-navbar-container {
-        max-width: 1100px; /* Ortadaki Grade kart grubunun genişliğiyle tam hizalı */
-        margin: 0 auto;    /* Sayfada ortalar */
-        padding: 30px 20px 10px 20px;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 25px 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -46,8 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
         display: flex;
         gap: 28px;
         list-style: none;
-        margin: 0;
-        padding: 0;
+        margin: 0 !important;
+        padding: 0 !important;
         align-items: center;
       }
       .tm-link {
@@ -69,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.head.appendChild(style);
   }
 
-  // 4. Bağlantıları dinamik oluşturma
   const linksHtml = navLinks.map(link => {
     const fullUrl = new URL(link.path, baseUrl).href;
     const isActive = currentUrl === fullUrl || 
