@@ -1,0 +1,11 @@
+/* Ortak site teması - tüm sayfalarda paylaşılır */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: radial-gradient(circle, #ffffff 0%, #CDEFFF 100%);
+    min-height: 100vh;
+}
