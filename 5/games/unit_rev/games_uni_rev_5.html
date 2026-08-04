@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -5,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grade 5 - Games (Revs)</title>
     <style>
+    
+            :root {
+            --theme-coral: #ff6a88;
+            --theme-soft: #ffe8e0;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -79,20 +85,20 @@
         transition: all 0.3s ease;
         display: flex;
         flex-direction: column;
-        border: 1px solid green;  /* Daha koyu bir gri-mavi, kartları belirginleştirir */
+        border: 1px solid var(--theme-soft);
      }
 
         .game-card:hover {
             transform: translateY(-6px);
             box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-            border-color: #f5576c;
+             border-color: var(--theme-coral);
         }
 
         /* Thumbnail konteyneri */
         .card-thumb {
             width: 100%;
             aspect-ratio: 4/3; /* Wordwall küçük resim oranına yakın */
-            background: #f0f0f0;
+            background: linear-gradient(135deg, #fdf6ec, #ffe8e0);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -112,11 +118,13 @@
             font-size: 48px;
             position: absolute;
             opacity: 0.3;
+            color: var(--theme-coral);
         }
 
         .card-info {
             padding: 12px 10px;
             text-align: center;
+            background: var(--theme-soft);
         }
 
         .game-name {
@@ -272,12 +280,12 @@
         const games = [
             {
                 name: 'Find Objects',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/052e1f399e1a4f539800ae458ca072d5_2',
+                thumbnailUrl: 'https://screens.cdn.wordwall.net/400/052e1f399e1a4f539800ae458ca072d5_2',
                 embedUrl: 'https://wordwall.net/tr/embed/052e1f399e1a4f539800ae458ca072d5?themeId=2&templateId=10&fontStackId=0'
             },
             {
                 name: 'Matching',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/3606ddd7b2394c9b8f5ad305c063f0c1_1',  // kendi linkiniz
+                thumbnailUrl: 'https://screens.cdn.wordwall.net/400/3606ddd7b2394c9b8f5ad305c063f0c1_1',  // kendi linkiniz
                 embedUrl: 'https://wordwall.net/tr/embed/3606ddd7b2394c9b8f5ad305c063f0c1?themeId=1&templateId=3&fontStackId=0'
             },
             {
