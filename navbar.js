@@ -2,8 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("navbar");
   if (!container) return;
 
+  // 1. Script'in bulunduğu asıl klasörü hatasız bulur (GitHub Pages uyumlu)
   const scriptTag = document.currentScript || document.querySelector('script[src*="navbar.js"]');
-  const baseUrl = scriptTag ? new URL('./', scriptTag.src).href : window.location.origin;
+  const baseUrl = scriptTag ? new URL('./', scriptTag.src).href : window.location.origin + '/';
 
   const navLinks = [
     { name: "Ana Sayfa", path: "index.html" },
@@ -19,53 +20,56 @@ document.addEventListener("DOMContentLoaded", () => {
     const style = document.createElement('style');
     style.id = "tm-navbar-styles";
     style.textContent = `
+      /* Şerit Tasarımı (Görselinizdeki arka plan ve alt çizgi) */
       #navbar {
-        position: absolute !important; /* Menüyü sayfa akışından koparır */
-        top: 0 !important;             /* Tarayıcının en tepesine çiviler */
-        left: 0 !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        z-index: 9999;                 /* Her şeyin üstünde görünmesini sağlar */
+        width: 100%;
+        background-color: #eaf3fa; /* Açık mavi şerit rengi */
+        border-bottom: 1px solid #c5def5; /* Şerit altındaki ince sınır çizgisi */
+        margin: 0;
+        padding: 0;
+        display: block;
       }
+      
       .tm-navbar-container {
-        max-width: 1100px;
+        max-width: 1100px; /* Alttaki kartlarla hizalar */
         margin: 0 auto;
-        padding: 25px 20px;
+        padding: 15px 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        box-sizing: border-box;
       }
+      
       .tm-brand {
         font-size: 1.25rem;
         font-weight: 700;
         color: #2b5b84;
         text-decoration: none;
-        white-space: nowrap;
       }
+      
       .tm-menu {
         display: flex;
-        gap: 28px;
+        gap: 10px; /* Düğmelerin birbirine uzaklığı */
         list-style: none;
-        margin: 0 !important;
-        padding: 0 !important;
+        margin: 0;
+        padding: 0;
         align-items: center;
       }
+      
+      /* Normal Düğme Tasarımı */
       .tm-link {
         text-decoration: none;
         color: #3b698e;
         font-size: 0.95rem;
         font-weight: 600;
-        transition: opacity 0.2s;
-        white-space: nowrap;
+        padding: 8px 18px; /* Düğme iç boşluğu */
+        border-radius: 25px; /* Düğmeyi hap (pill) şekline sokar */
+        transition: all 0.2s ease;
       }
-      .tm-link:hover {
-        opacity: 0.75;
-      }
-      .tm-link.active {
-        color: #1a3a5c;
-        font-weight: 700;
+      
+      /* Vurgulu (Üzerine gelince veya Aktifken) Düğme Tasarımı */
+      .tm-link:hover, .tm-link.active {
+        background-color: #9bbce3; /* Buton içi dolgu rengi */
+        color: #1a3a5c; /* Buton içi yazı rengi */
       }
     `;
     document.head.appendChild(style);
@@ -73,8 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const linksHtml = navLinks.map(link => {
     const fullUrl = new URL(link.path, baseUrl).href;
+    
+    // Aktif sayfayı hatasız tespit etme mantığı
     const isActive = currentUrl === fullUrl || 
-      (link.path === 'index.html' && currentUrl.replace(/\/$/, '') === baseUrl.replace(/\/$/, ''));
+      (link.path === 'index.html' && (currentUrl === baseUrl || currentUrl === baseUrl + 'index.html'));
 
     return `
       <li>
