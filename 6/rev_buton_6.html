@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worksheets & Activities</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle, #ffffff 0%, #CDEFFF 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        #navbar-placeholder {
+            width: 100%;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 30px 25px;
+            margin: 20px;
+            border-radius: 35px;
+            box-shadow: 0 15px 50px rgba(0, 100, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .main-title {
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #1e3c72, #2a5298, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .category-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 25px 0 15px 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .cat-icon {
+            font-size: 1.8rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        /* ORTAK BUTON STİLİ */
+        .test-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 18px 10px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border-radius: 18px;
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .test-btn:hover {
+            transform: translateY(-8px) scale(1.04);
+        }
+        .test-btn:active {
+            transform: scale(0.95) translateY(0);
+        }
+
+        /* Kategori renkleri */
+        .cat-activities .category-title { color: #0b6e4f; }
+        .test-btn.activity {
+            background: linear-gradient(145deg, #2ecc71, #11998e);
+            box-shadow: 0 8px 18px rgba(46, 204, 113, 0.35);
+        }
+        .test-btn.activity:hover {
+            background: linear-gradient(145deg, #27ae60, #0d7d6e);
+            box-shadow: 0 16px 30px rgba(46, 204, 113, 0.5);
+        }
+
+        .cat-worksheets .category-title { color: #d35400; }
+        .test-btn.worksheet {
+            background: linear-gradient(145deg, #f39c12, #e67e22);
+            box-shadow: 0 8px 18px rgba(243, 156, 18, 0.35);
+        }
+        .test-btn.worksheet:hover {
+            background: linear-gradient(145deg, #d68910, #ca6f1e);
+            box-shadow: 0 16px 30px rgba(243, 156, 18, 0.5);
+        }
+
+        .cat-reading .category-title { color: #5b2c6f; }
+        .test-btn.reading {
+            background: linear-gradient(145deg, #8e44ad, #5b2c6f);
+            box-shadow: 0 8px 18px rgba(142, 68, 173, 0.35);
+        }
+        .test-btn.reading:hover {
+            background: linear-gradient(145deg, #7d3c98, #4a235a);
+            box-shadow: 0 16px 30px rgba(142, 68, 173, 0.5);
+        }
+
+        /* MODAL STİLLERİ */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #d35400, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #666;
+            transition: 0.2s;
+            line-height: 1;
+        }
+
+        .close-btn:hover { color: #e67e22; transform: scale(1.2); }
+
+        .modal-body {
+            flex: 1;
+            padding: 10px 20px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pdf-frame {
+            width: 100%;
+            height: 65vh;
+            max-height: 600px;
+            border: 2px solid #f39c12;
+            border-radius: 12px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .download-btn, .close-modal-btn {
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1rem;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .download-btn {
+            background: #f39c12;
+            color: white;
+        }
+
+        .close-modal-btn {
+            background: #eee;
+            color: #333;
+        }
+
+        .download-btn:hover { background: #d68910; }
+        .close-modal-btn:hover { background: #ddd; }
+
+        /* MOBİL */
+        @media (max-width: 650px) {
+            .container { padding: 20px 15px; }
+            .main-title { font-size: 1.6rem; }
+            .grid { gap: 12px; }
+            .test-btn { font-size: 0.85rem; padding: 14px 6px; white-space: normal; border-radius: 14px; }
+            .category-title { font-size: 1.1rem; }
+            .pdf-frame { height: 50vh; }
+        }
+
+        @media (max-width: 450px) {
+            .grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            .test-btn { font-size: 0.8rem; padding: 12px 4px; border-radius: 12px; }
+            .main-title { font-size: 1.3rem; }
+        }
+    </style>
+    <link rel="stylesheet" href="../theme.css">
+</head>
+<body>
+    <div id="navbar-placeholder" style="min-height: 64px;"></div>
+    <script src="../navbar.js"></script>
+
+    <div class="container">
+        <div class="main-title">📝 Worksheets & Activities</div>
+
+        <!-- ========== ACTIVITIES (HTML sayfaları) ========== -->
+        <div class="cat-activities">
+            <div class="category-title"><span class="cat-icon">🧩</span> Activities</div>
+            <div class="grid">
+                <a href="activities/unit_rev/revtact_1_6.html" class="test-btn activity">🎯 Activity 1</a>
+                <a href="activities/activity2.html" class="test-btn activity">🎯 Activity 2</a>
+                <a href="activities/activity3.html" class="test-btn activity">🎯 Activity 3</a>
+                <a href="activities/activity4.html" class="test-btn activity">🎯 Activity 4</a>
+                <a href="activities/activity5.html" class="test-btn activity">🎯 Activity 5</a>
+            </div>
+        </div>
+
+        <!-- ========== WORKSHEETS (PDF – Modal ile) ========== -->
+        <div class="cat-worksheets">
+            <div class="category-title"><span class="cat-icon">📄</span> Worksheets</div>
+            <div class="grid">
+                <!-- PDF kimliklerini kendi Drive ID'lerinizle değiştirin -->
+                <button class="test-btn worksheet" data-pdf-id="1SszRmzaamqJSLKxOmK0Kp7wqVoopl42f" data-title="Worksheet 1">📝 Worksheet 1</button>
+                <button class="test-btn worksheet" data-pdf-id="WORKSHEET2_ID" data-title="Worksheet 2">📝 Worksheet 2</button>
+                <button class="test-btn worksheet" data-pdf-id="WORKSHEET3_ID" data-title="Worksheet 3">📝 Worksheet 3</button>
+                <button class="test-btn worksheet" data-pdf-id="WORKSHEET4_ID" data-title="Worksheet 4">📝 Worksheet 4</button>
+                <button class="test-btn worksheet" data-pdf-id="WORKSHEET5_ID" data-title="Worksheet 5">📝 Worksheet 5</button>
+            </div>
+        </div>
+
+        <!-- ========== READING (HTML sayfaları) ========== -->
+        <div class="cat-reading">
+            <div class="category-title"><span class="cat-icon">📖</span> Reading</div>
+            <div class="grid">
+                <a href="reading/unit_rev/grade_6_revread_1.html" class="test-btn reading">🔖 Reading 1</a>
+                <a href="reading/reading2.html" class="test-btn reading">🔖 Reading 2</a>
+                <a href="reading/reading3.html" class="test-btn reading">🔖 Reading 3</a>
+                <a href="reading/reading4.html" class="test-btn reading">🔖 Reading 4</a>
+                <a href="reading/reading5.html" class="test-btn reading">🔖 Reading 5</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL (sadece Worksheet için) ========== -->
+    <div class="modal-overlay" id="pdfModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="modalTitle">Worksheet</span>
+                <button class="close-btn" id="closeModalTop">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe class="pdf-frame" id="pdfFrame" src="" allow="autoplay" title="PDF Önizleme"></iframe>
+            </div>
+            <div class="modal-footer">
+                <a class="download-btn" id="downloadLink" href="#" download>⬇️ PDF'i İndir</a>
+                <button class="close-modal-btn" id="closeModalBottom">Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('pdfModal');
+        const pdfFrame = document.getElementById('pdfFrame');
+        const modalTitle = document.getElementById('modalTitle');
+        const downloadLink = document.getElementById('downloadLink');
+
+        // Sadece data-pdf-id olan butonlar (Worksheet'ler) modal'ı tetikler
+        const worksheetButtons = document.querySelectorAll('.test-btn[data-pdf-id]');
+        const closeButtons = document.querySelectorAll('#closeModalTop, #closeModalBottom');
+
+        worksheetButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const pdfId = btn.dataset.pdfId;
+                const title = btn.dataset.title;
+                pdfFrame.src = `https://drive.google.com/file/d/${pdfId}/preview`;
+                downloadLink.href = `https://drive.google.com/uc?export=download&id=${pdfId}`;
+                modalTitle.textContent = `📄 ${title}`;
+                modal.classList.add('active');
+            });
+        });
+
+        function closeModal() {
+            modal.classList.remove('active');
+            pdfFrame.src = ''; // iframe'i temizle
+        }
+
+        closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
+
+        // Overlay dışına tıklayınca kapat
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+    </script>
+</body>
+</html>
