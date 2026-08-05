@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive English Lesson: Jobs</title>
+    <title>Interactive English Lesson: Appearance and Personality</title>
     <style>
         :root {
             --primary: #4a90e2;
@@ -22,17 +22,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 70px 20px 20px 20px;   /* üst:80px, sağ:20px, alt:20px, sol:20px */
+            padding: 70px 20px 20px 20px;
             margin: 0px;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 680px;
             background: white;
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-top: -35px;      /* Bunu dene */
+            margin-top: -35px;
         }
 
         h1 {
@@ -42,7 +42,7 @@
             padding-bottom: 10px;
         }
 
-        /* Vocabulary Tooltip Styling – YATAY (GENİŞ) HALE GETİRİLDİ */
+        /* Vocabulary Tooltip Styling */
         .vocab {
             text-decoration: underline wavy var(--secondary);
             cursor: help;
@@ -60,11 +60,11 @@
             transform: translateX(-50%);
             background-color: #333;
             color: #fff;
-            padding: 8px 22px;             /* Yatay genişlik için sağ-sol padding */
+            padding: 8px 22px;
             border-radius: 8px;
             font-size: 1rem;
-            white-space: nowrap;            /* TEK SATIRDA KALMASINI SAĞLAR */
-            z-index: 10;
+            white-space: nowrap;
+            z-index: 1010;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
@@ -78,18 +78,32 @@
             border-width: 6px;
             border-style: solid;
             border-color: #333 transparent transparent transparent;
+            z-index: 1010;
         }
 
         .reading-section {
             margin-bottom: 40px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             text-align: justify;
+            text-justify: inter-word;
+        }
+
+        .reading-section p {
+            margin: 0 0 1.2em 0;
         }
 
         /* Quiz Styling */
         .quiz-section {
             border-top: 2px solid #eee;
             padding-top: 30px;
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 1.15rem;
+            margin: 25px 0 15px 0;
+            border-bottom: 2px dashed #ddd;
+            padding-bottom: 5px;
         }
 
         .question-card {
@@ -122,7 +136,23 @@
             margin-right: 10px;
         }
 
-        button {
+        .short-answer-input {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 1rem;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-top: 5px;
+            transition: border-color 0.2s;
+        }
+
+        .short-answer-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        button.action-btn {
             display: block;
             width: 100%;
             padding: 15px;
@@ -137,9 +167,87 @@
             transition: transform 0.2s, background 0.2s;
         }
 
-        button:hover {
+        button.action-btn:hover {
             background-color: #357abd;
             transform: translateY(-2px);
+        }
+
+        /* Floating Read Passage Button */
+        #floatingReadBtn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 14px 22px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            z-index: 999;
+            transition: transform 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #floatingReadBtn:hover {
+            background-color: #e09216;
+            transform: scale(1.05);
+        }
+
+        /* Modal Overlay & Card */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 650px;
+            max-height: 85vh;
+            border-radius: 20px;
+            padding: 30px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #888;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-close-btn:hover {
+            color: var(--error);
         }
 
         #result {
@@ -160,91 +268,132 @@
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
     <script src="../../../navbar.js"></script>
 
-<div class="container">
-        <h1>🌟 My Friends' Amazing Jobs 🌟</h1>
+<!-- Floating Button -->
+<button id="floatingReadBtn" onclick="openTextModal()">📖 Read Passage</button>
 
-    <p style="text-align: center; font-size: 0.95rem; color: #666; background: #f4f8fb; padding: 6px 12px; border-radius: 30px; margin: 0 0 20px 0; border: 1px solid #e0e7ef;">
+<!-- Modal Text Box -->
+<div id="textModal" class="modal-overlay" onclick="closeModalOnOutsideClick(event)">
+    <div class="modal-content">
+        <button class="modal-close-btn" onclick="closeTextModal()">&times;</button>
+        <h2 style="color: var(--primary); margin-top: 0; border-bottom: 2px solid var(--secondary); padding-bottom: 8px;">🌟 Reading Passage</h2>
+        <div id="modal-text-container" class="reading-section"></div>
+    </div>
+</div>
+
+<div class="container">
+    <h1>🌟 Unit 1: Appearance and Personality 🌟</h1>
+
+    <p style="text-align: center; font-size: 0.85rem; color: black; background: #e9f0fc; font-weight: bold; padding: 4px 10px; border-radius: 30px; margin: 0 0 20px 0; border: 2px solid #e0e7ef;">
         🖱️ Altı çizili kelimenin Türkçe anlamını görmek için farenizi kelimenin üzerine getiriniz.
     </p>
 
+    <!-- Reading Passage based on Unit 1 PDF -->
     <div class="reading-section" id="reading-text">
         <p>
-            Hello! My name is Alex. Today, I want to tell you about my family and their interesting <span class="vocab" data-translation="meslekler">jobs</span>. My family is very <span class="vocab" data-translation="çalışkan">hard-working</span>!
+            Hello! My name is Barry. I am 12 years old. I have short <span class="vocab" data-translation="düz">straight</span> <span class="vocab" data-translation="sarışın">blond</span> hair and <span class="vocab" data-translation="yeşil">green</span> eyes. I want to talk about my lovely family.
         </p>
         <p>
-            My father is a <span class="vocab" data-translation="polis">police officer</span>. He <span class="vocab" data-translation="çalışır">works</span> at a big police station. He <span class="vocab" data-translation="insanlara yardım eder">helps people</span> and <span class="vocab" data-translation="şehrimizi güvende tutar">keeps our city safe</span>. He <span class="vocab" data-translation="üniforma giyer">wears a uniform</span> every day. My mother is a <span class="vocab" data-translation="doktor">doctor</span>. She <span class="vocab" data-translation="çalışır">works</span> at a hospital. She is very kind and she <span class="vocab" data-translation="hasta insanlara yardım eder">helps sick people</span>. She sometimes <span class="vocab" data-translation="gece çalışır">works at night</span>, but she loves her job!
+            My father, Tim, is a <span class="vocab" data-translation="yakışıklı">handsome</span> man with a <span class="vocab" data-translation="sakal">beard</span> and <span class="vocab" data-translation="bıyık">moustache</span>. He is <span class="vocab" data-translation="yapılı">well-built</span> and <span class="vocab" data-translation="uzun boylu">tall</span>. He has short brown hair and brown eyes. My mother, Jenny, is a <span class="vocab" data-translation="güzel">beautiful</span> <span class="vocab" data-translation="orta yaşlı">middle-aged</span> woman. She is <span class="vocab" data-translation="zayıf">thin</span> and she has long <span class="vocab" data-translation="dalgalı">wavy</span> black hair.
         </p>
         <p>
-            My brother, Leo, is a <span class="vocab" data-translation="çiftçi">farmer</span>. He lives in a small village. He <span class="vocab" data-translation="taze meyve ve sebze yetiştirir">grows fresh fruits and vegetables</span>. He also <span class="vocab" data-translation="ilgilenir">takes care of</span> many animals. He <span class="vocab" data-translation="çok erken kalkar">gets up very early</span> in the morning! My sister, Emma, is a <span class="vocab" data-translation="şarkıcı">singer</span>. She is very talented. She <span class="vocab" data-translation="şarkı söyler">sings songs</span> in a studio with her band. She is very happy when she is on stage.
-        </p>
-        <p>
-            Finally, my uncle is a <span class="vocab" data-translation="öğretmen">teacher</span>. He <span class="vocab" data-translation="çalışır">works</span> at a primary school. He <span class="vocab" data-translation="İngilizce öğretir">teaches English</span> to many students. He thinks his job is very important because he <span class="vocab" data-translation="çocukların yeni şeyler öğrenmesine yardım eder">helps children learn new things</span>. We are a very happy family!
+            My sister, Lily, is only 4 years old. She is a <span class="vocab" data-translation="sevimli">cute</span> girl with long <span class="vocab" data-translation="dalgalı">wavy</span> brown hair. My grandfather, Richard, is an <span class="vocab" data-translation="yaşlı">old</span> man. He is <span class="vocab" data-translation="kel">bald</span>. He has blue eyes and he <span class="vocab" data-translation="gözlük takar">wears glasses</span>. My grandmother, Lucy, is a nice old woman. She is <span class="vocab" data-translation="kısa boylu">short</span> and <span class="vocab" data-translation="balık etli">plump</span>. I love my family!
         </p>
     </div>
 
     <div class="quiz-section">
         <form id="quizForm">
-            <!-- Question 1 -->
-            <div class="question-card" data-answer="a">
-                <span class="question-text">1. What is Alex's father's job?</span>
+            <!-- Part 1: Multiple Choice Questions -->
+            <h2 class="section-title">Part 1: Multiple Choice Questions</h2>
+
+            <div class="question-card" data-type="mc" data-answer="a">
+                <span class="question-text">1. What does Barry have?</span>
                 <div class="options">
-                    <label><input type="radio" name="q1" value="a"> a) He is a police officer.</label>
-                    <label><input type="radio" name="q1" value="b"> b) He is a farmer.</label>
-                    <label><input type="radio" name="q1" value="c"> c) He is a doctor.</label>
-                    <label><input type="radio" name="q1" value="d"> d) He is a singer.</label>
+                    <label><input type="radio" name="q1" value="a"> a) Straight blond hair and green eyes.</label>
+                    <label><input type="radio" name="q1" value="b"> b) Curly black hair and blue eyes.</label>
+                    <label><input type="radio" name="q1" value="c"> c) Short brown hair and brown eyes.</label>
+                    <label><input type="radio" name="q1" value="d"> d) Wavy brown hair and hazel eyes.</label>
                 </div>
                 <div class="feedback-detail"></div>
             </div>
 
-            <!-- Question 2 -->
-            <div class="question-card" data-answer="b">
-                <span class="question-text">2. Where does the mother work?</span>
+            <div class="question-card" data-type="mc" data-answer="b">
+                <span class="question-text">2. How is Tim described?</span>
                 <div class="options">
-                    <label><input type="radio" name="q2" value="a"> a) At a school</label>
-                    <label><input type="radio" name="q2" value="b"> b) At a hospital</label>
-                    <label><input type="radio" name="q2" value="c"> c) At a studio</label>
-                    <label><input type="radio" name="q2" value="d"> d) In a garden</label>
+                    <label><input type="radio" name="q2" value="a"> a) He is short and thin.</label>
+                    <label><input type="radio" name="q2" value="b"> b) He is well-built and tall.</label>
+                    <label><input type="radio" name="q2" value="c"> c) He is old and bald.</label>
+                    <label><input type="radio" name="q2" value="d"> d) He is plump and short.</label>
                 </div>
                 <div class="feedback-detail"></div>
             </div>
 
-            <!-- Question 3 -->
-            <div class="question-card" data-answer="c">
-                <span class="question-text">3. What does Leo do?</span>
+            <div class="question-card" data-type="mc" data-answer="c">
+                <span class="question-text">3. What is Jenny like?</span>
                 <div class="options">
-                    <label><input type="radio" name="q3" value="a"> a) He teaches English</label>
-                    <label><input type="radio" name="q3" value="b"> b) He sings songs</label>
-                    <label><input type="radio" name="q3" value="c"> c) He grows vegetables</label>
-                    <label><input type="radio" name="q3" value="d"> d) He helps sick people</label>
+                    <label><input type="radio" name="q3" value="a"> a) She is a young girl.</label>
+                    <label><input type="radio" name="q3" value="b"> b) She is thin and bald.</label>
+                    <label><input type="radio" name="q3" value="c"> c) She is a beautiful middle-aged woman.</label>
+                    <label><input type="radio" name="q3" value="d"> d) She is grumpy and selfish.</label>
                 </div>
                 <div class="feedback-detail"></div>
             </div>
 
-            <!-- Question 4 -->
-            <div class="question-card" data-answer="d">
-                <span class="question-text">4. Who works in a studio?</span>
+            <div class="question-card" data-type="mc" data-answer="d">
+                <span class="question-text">4. What does Richard look like?</span>
                 <div class="options">
-                    <label><input type="radio" name="q4" value="a"> a) The father</label>
-                    <label><input type="radio" name="q4" value="b"> b) The mother</label>
-                    <label><input type="radio" name="q4" value="c"> c) The uncle</label>
-                    <label><input type="radio" name="q4" value="d"> d) Emma</label>
+                    <label><input type="radio" name="q4" value="a"> a) He has a beard.</label>
+                    <label><input type="radio" name="q4" value="b"> b) He is well-built.</label>
+                    <label><input type="radio" name="q4" value="c"> c) He is middle-aged.</label>
+                    <label><input type="radio" name="q4" value="d"> d) He is old and bald.</label>
                 </div>
                 <div class="feedback-detail"></div>
             </div>
 
-            <!-- Question 5 -->
-            <div class="question-card" data-answer="a">
-                <span class="question-text">5. What does the uncle teach?</span>
+            <div class="question-card" data-type="mc" data-answer="a">
+                <span class="question-text">5. How is Lucy described?</span>
                 <div class="options">
-                    <label><input type="radio" name="q5" value="a"> a) English</label>
-                    <label><input type="radio" name="q5" value="b"> b) Math</label>
-                    <label><input type="radio" name="q5" value="c"> c) Science</label>
-                    <label><input type="radio" name="q5" value="d"> d) Music</label>
+                    <label><input type="radio" name="q5" value="a"> a) She is short and plump.</label>
+                    <label><input type="radio" name="q5" value="b"> b) She is tall and thin.</label>
+                    <label><input type="radio" name="q5" value="c"> c) She is beautiful and young.</label>
+                    <label><input type="radio" name="q5" value="d"> d) She is well-built and tall.</label>
                 </div>
                 <div class="feedback-detail"></div>
             </div>
 
-            <button type="button" onclick="checkQuiz()">Finish Quiz & Check Results</button>
+            <!-- Part 2: Short Answer Questions -->
+            <h2 class="section-title">Part 2: Short Answer Questions</h2>
+
+            <div class="question-card" data-type="sa" data-answers='["beard and moustache", "beard", "moustache"]'>
+                <span class="question-text">6. What does Tim have on his face?</span>
+                <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..." autocomplete="off">
+                <div class="feedback-detail"></div>
+            </div>
+
+            <div class="question-card" data-type="sa" data-answers='["long wavy brown hair", "wavy brown hair"]'>
+                <span class="question-text">7. Describe Lily's hair.</span>
+                <input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..." autocomplete="off">
+                <div class="feedback-detail"></div>
+            </div>
+
+            <div class="question-card" data-type="sa" data-answers='["glasses"]'>
+                <span class="question-text">8. What does Richard wear on his face?</span>
+                <input type="text" class="short-answer-input" name="q8" placeholder="Type your answer here..." autocomplete="off">
+                <div class="feedback-detail"></div>
+            </div>
+
+            <div class="question-card" data-type="sa" data-answers='["old", "an old man"]'>
+                <span class="question-text">9. How is Richard's age described?</span>
+                <input type="text" class="short-answer-input" name="q9" placeholder="Type your answer here..." autocomplete="off">
+                <div class="feedback-detail"></div>
+            </div>
+
+            <div class="question-card" data-type="sa" data-answers='["beautiful", "middle-aged", "thin"]'>
+                <span class="question-text">10. Mention one adjective used to describe Jenny.</span>
+                <input type="text" class="short-answer-input" name="q10" placeholder="Type your answer here..." autocomplete="off">
+                <div class="feedback-detail"></div>
+            </div>
+
+            <button type="button" class="action-btn" onclick="checkQuiz()">Check Answers & Finish Quiz</button>
         </form>
     </div>
 
@@ -252,6 +401,28 @@
 </div>
 
 <script>
+    // Modal Yönetimi
+    function openTextModal() {
+        const textContent = document.getElementById('reading-text').innerHTML;
+        document.getElementById('modal-text-container').innerHTML = textContent;
+        document.getElementById('textModal').style.display = 'flex';
+    }
+
+    function closeTextModal() {
+        document.getElementById('textModal').style.display = 'none';
+    }
+
+    function closeModalOnOutsideClick(event) {
+        if (event.target.id === 'textModal') {
+            closeTextModal();
+        }
+    }
+
+    // Cevap Kontrol Mantığı
+    function normalizeText(text) {
+        return text.toLowerCase().trim().replace(/\s+/g, ' ');
+    }
+
     function checkQuiz() {
         const form = document.getElementById('quizForm');
         const questions = document.querySelectorAll('.question-card');
@@ -259,30 +430,51 @@
         let total = questions.length;
 
         questions.forEach((q, index) => {
-            const correctAnswer = q.getAttribute('data-answer');
-            const userAnswer = form.querySelector(`input[name="q${index + 1}"]:checked`);
+            const type = q.getAttribute('data-type');
             const feedback = q.querySelector('.feedback-detail');
-            
-            if (userAnswer) {
-                if (userAnswer.value === correctAnswer) {
-                    score++;
-                    feedback.innerHTML = "<span class='correct-msg'>✓ Correct! Well done!</span>";
+
+            if (type === 'mc') {
+                const correctAnswer = q.getAttribute('data-answer');
+                const userAnswer = form.querySelector(`input[name="q${index + 1}"]:checked`);
+
+                if (userAnswer) {
+                    if (userAnswer.value === correctAnswer) {
+                        score++;
+                        feedback.innerHTML = "<span class='correct-msg'>✓ Correct! Well done!</span>";
+                    } else {
+                        feedback.innerHTML = `<span class='wrong-msg'>✗ Wrong. The correct answer was "${getOptionText(q, correctAnswer)}".</span>`;
+                    }
                 } else {
-                    feedback.innerHTML = `<span class='wrong-msg'>✗ Wrong. The correct answer was "${getOptionText(q, correctAnswer)}".</span>`;
+                    feedback.innerHTML = `<span class='wrong-msg'>✗ You didn't answer this one! The correct answer was "${getOptionText(q, correctAnswer)}".</span>`;
                 }
-            } else {
-                feedback.innerHTML = `<span class='wrong-msg'>✗ You didn't answer this one! The correct answer was "${getOptionText(q, correctAnswer)}".</span>`;
+            } else if (type === 'sa') {
+                const validAnswers = JSON.parse(q.getAttribute('data-answers'));
+                const inputElement = q.querySelector('input[type="text"]');
+                const userInputValue = normalizeText(inputElement.value);
+
+                if (userInputValue !== "") {
+                    const isCorrect = validAnswers.some(ans => normalizeText(ans) === userInputValue);
+
+                    if (isCorrect) {
+                        score++;
+                        feedback.innerHTML = "<span class='correct-msg'>✓ Correct! Well done!</span>";
+                    } else {
+                        feedback.innerHTML = `<span class='wrong-msg'>✗ Wrong. Acceptable answer: "${validAnswers[0]}".</span>`;
+                    }
+                } else {
+                    feedback.innerHTML = `<span class='wrong-msg'>✗ You didn't answer this one! Acceptable answer: "${validAnswers[0]}".</span>`;
+                }
             }
         });
 
         const resultDiv = document.getElementById('result');
         resultDiv.style.display = 'block';
         resultDiv.innerHTML = `<h2>Your Score: ${score} / ${total}</h2>`;
-        
-        if(score === total) {
+
+        if (score === total) {
             resultDiv.innerHTML += "<p>🌟 Perfect! You are a superstar! 🌟</p>";
             resultDiv.style.backgroundColor = "#e6fffa";
-        } else if (score >= total/2) {
+        } else if (score >= total / 2) {
             resultDiv.innerHTML += "<p>👍 Good job! Keep practicing!</p>";
             resultDiv.style.backgroundColor = "#fffaf0";
         } else {
@@ -306,6 +498,5 @@
         return "";
     }
 </script>
-
 </body>
 </html>
