@@ -28,7 +28,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 680px;
             background: white;
             padding: 40px;
             border-radius: 20px;
@@ -81,17 +81,20 @@
             border-color: #333 transparent transparent transparent;
         }
 
-        .reading-section {
+      .reading-section {
             margin-bottom: 40px;
-            font-size: 1.1rem;
-            text-align: left;
-         /* text-justify: inter-word; /* Sadece justify için, boşlukları dengeler */
+            font-size: 1rem;               /* 1.1rem yerine 1rem deneyelim */
+            text-align: left;              /* Sola yaslı */
+            hyphens: none;                 /* Kesinlikle heceleme yok */
+            word-break: normal;            /* Kelime bölme yok */
         }
         
         .reading-section p {
-             margin: 0 0 1.2em 0; /* Her paragrafın altına 1.2 satır yüksekliği kadar boşluk */
+         margin: 0 0 1.2em 0;  /* Paragraf arası boşluk */
         }
-
+        
+        
+        }
 
         /* Quiz Styling */
         .quiz-section {
