@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Choice Tests</title>
+    <style>
+        /* Sıfırlama ve Genel Düzen */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle, #ffffff 0%, #CDEFFF 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 10px;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 750px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 30px 25px;
+            border-radius: 35px;
+            box-shadow: 0 15px 50px rgba(0, 100, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* BAŞLIK */
+        .title {
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #1e3c72, #2a5298, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 4px 6px rgba(30, 60, 114, 0.2));
+        }
+        .title span {
+            -webkit-text-fill-color: initial;
+            color: #4facfe;
+        }
+
+        /* GRID - 5'ERLİ 2 SIRA */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+        }
+
+        /* BUTONLAR - MODERN MAVİ GRADIENT */
+        .test-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 18px 10px;
+            background: linear-gradient(145deg, #4facfe, #0072ff);
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 18px;
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.35);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Butona hafif parlaklık efekti */
+        .test-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .test-btn:hover {
+            transform: translateY(-8px) scale(1.04);
+            box-shadow: 0 16px 35px rgba(79, 172, 254, 0.55);
+            background: linear-gradient(145deg, #3b8dd9, #0055cc);
+        }
+
+        .test-btn:hover::after {
+            opacity: 1;
+        }
+
+        .test-btn:active {
+            transform: scale(0.95) translateY(0);
+            box-shadow: 0 4px 10px rgba(79, 172, 254, 0.3);
+        }
+
+        /* Buton içindeki küçük ikon (isteğe bağlı) */
+        .test-btn .icon {
+            margin-right: 6px;
+            font-size: 1.1rem;
+        }
+
+        /* MOBİL UYUM (Küçük ekranlarda 3 veya 2 sütun) */
+        @media (max-width: 650px) {
+            .container { padding: 20px 15px; }
+            .title { font-size: 1.6rem; }
+            .grid { gap: 12px; }
+            .test-btn { font-size: 0.9rem; padding: 14px 6px; border-radius: 14px; }
+        }
+
+        @media (max-width: 450px) {
+            .grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            .test-btn { font-size: 0.8rem; padding: 12px 4px; border-radius: 12px; }
+            .title { font-size: 1.3rem; }
+        }
+    </style>
+     <link rel="stylesheet" href="../theme.css">
+</head>
+<body>
+    
+    <div id="navbar-placeholder" style="min-height: 64px;"></div>
+    <script src="../navbar.js"></script>
+
+<div class="container">
+    <div class="title">📝 Multiple Choice Tests</div>
+
+    <div class="grid">
+        <!-- 1. SATIR (5 TANE) -->
+        <a href="un_rev/multest/multiptest_01_6.html" class="test-btn"><span class="icon">📝</span> Test 1</a>
+        <a href="LINK_TEST_2" class="test-btn" target="_blank"><span class="icon">📄</span> Test 2</a>
+        <a href="LINK_TEST_3" class="test-btn" target="_blank"><span class="icon">📄</span> Test 3</a>
+        <a href="LINK_TEST_4" class="test-btn" target="_blank"><span class="icon">📄</span> Test 4</a>
+        <a href="LINK_TEST_5" class="test-btn" target="_blank"><span class="icon">📄</span> Test 5</a>
+
+        <!-- 2. SATIR (5 TANE) -->
+        <a href="LINK_TEST_6" class="test-btn" target="_blank"><span class="icon">📄</span> Test 6</a>
+        <a href="LINK_TEST_7" class="test-btn" target="_blank"><span class="icon">📄</span> Test 7</a>
+        <a href="LINK_TEST_8" class="test-btn" target="_blank"><span class="icon">📄</span> Test 8</a>
+        <a href="LINK_TEST_9" class="test-btn" target="_blank"><span class="icon">📄</span> Test 9</a>
+        <a href="LINK_TEST_10" class="test-btn" target="_blank"><span class="icon">📄</span> Test 10</a>
+    </div>
+</div>
+
+</body>
+</html>
