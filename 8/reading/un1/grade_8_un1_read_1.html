@@ -408,7 +408,10 @@
                 </div>
 
                 <button type="button" id="finish" class="action-btn" onclick="checkQuiz()">Check Answers &amp; Finish Quiz</button>
-                <button type="button" id="downloadReading" class="action-btn download-btn" onclick="downloadReadingActivity()">Download Reading Activity</button>
+                <a href="https://drive.google.com/uc?export=download&id=14PYa13kG2mA2W3ptDK5ZuFiJxf6vzOXN" 
+                    target="_blank" class="action-btn download-btn" 
+                    style="display:block;text-align:center;text-decoration:none;">
+                    ⬇️ Download Reading Activity</a>
             </form>
         </div>
 
@@ -511,32 +514,6 @@
                 }
             }
             return "";
-        }
-
-        // Download handler for the Reading Activity PDF stored on Google Drive.
-        // Replace 'REPLACE_WITH_FILE_ID' with your Drive file ID and ensure the file is shared accordingly.
-        function downloadReadingActivity() {
-            const fileId = 'REPLACE_WITH_FILE_ID';
-            if (!fileId || fileId === '14PYa13kG2mA2W3ptDK5ZuFiJxf6vzOXN') {
-                alert('Lütfen Download Reading Activity için Google Drive dosya ID\'sini ayarlayın.');
-                return;
-            }
-
-            // Direct download URL pattern for Google Drive public files
-            const url = 'https://drive.google.com/uc?export=download&id=14PYa13kG2mA2W3ptDK5ZuFiJxf6vzOXN' + encodeURIComponent(fileId);
-
-            // Try to download by creating an anchor element (preferred)
-            const a = document.createElement('a');
-            a.href = url;
-            a.setAttribute('download', '');
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-
-            // Fallback: open in a new tab if browser blocks automatic download or Drive shows preview
-            setTimeout(function() {
-                window.open(url, '_blank');
-            }, 400);
         }
     </script>
 </body>
