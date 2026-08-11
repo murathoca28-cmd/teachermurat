@@ -173,6 +173,20 @@
             transform: translateY(-2px);
         }
 
+        /* Slightly lift the finish button so it appears a bit higher */
+        #finish { margin-top: 8px; }
+
+        /* Download button styling (placed beneath finish button) */
+        button.action-btn.download-btn {
+            background-color: var(--secondary);
+            margin-top: 10px;
+        }
+
+        button.action-btn.download-btn:hover {
+            background-color: #e09216;
+            transform: translateY(-2px) scale(1.01);
+        }
+
         /* Floating Read Passage Button */
         #floatingReadBtn {
             position: fixed;
@@ -393,7 +407,8 @@
                     <div class="feedback-detail"></div>
                 </div>
 
-                <button type="button" class="action-btn" onclick="checkQuiz()">Check Answers & Finish Quiz</button>
+                <button type="button" id="finish" class="action-btn" onclick="checkQuiz()">Check Answers &amp; Finish Quiz</button>
+                <button type="button" id="downloadReading" class="action-btn download-btn" onclick="downloadReadingActivity()">Download Reading Activity</button>
             </form>
         </div>
 
@@ -496,6 +511,32 @@
                 }
             }
             return "";
+        }
+
+        // Download handler for the Reading Activity PDF stored on Google Drive.
+        // Replace 'REPLACE_WITH_FILE_ID' with your Drive file ID and ensure the file is shared accordingly.
+        function downloadReadingActivity() {
+            const fileId = 'REPLACE_WITH_FILE_ID';
+            if (!fileId || fileId === 'REPLACE_WITH_FILE_ID') {
+                alert('Lütfen Download Reading Activity için Google Drive dosya ID\'sini ayarlayın.');
+                return;
+            }
+
+            // Direct download URL pattern for Google Drive public files
+            const url = 'https://drive.google.com/uc?export=download&id=14PYa13kG2mA2W3ptDK5ZuFiJxf6vzOXN' + encodeURIComponent(fileId);
+
+            // Try to download by creating an anchor element (preferred)
+            const a = document.createElement('a');
+            a.href = url;
+            a.setAttribute('download', '');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            // Fallback: open in a new tab if browser blocks automatic download or Drive shows preview
+            setTimeout(function() {
+                window.open(url, '_blank');
+            }, 400);
         }
     </script>
 </body>
