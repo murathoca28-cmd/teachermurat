@@ -16,6 +16,11 @@
   --toolbarButton-presentationMode-icon: url(images/toolbarButton-presentationMode.svg);
 }
 
+#presentationMode::before {
+  -webkit-mask-image: var(--toolbarButton-presentationMode-icon);
+  mask-image: var(--toolbarButton-presentationMode-icon);
+}
+
 .messageBar{
   --closing-button-icon:url(images/messageBar_closingButton.svg);
   --message-bar-close-button-color:var(--text-primary-color);
