@@ -114,8 +114,8 @@
             background: white;
             border-radius: 20px;
             width: 100%;
-            max-width: 1100px;
-            max-height: 90vh;
+            max-width: 1300px;
+            max-height: 95vh;
             padding: 25px 30px 30px;
             display: flex;
             flex-direction: column;
@@ -155,7 +155,7 @@
         .modal-iframe-wrapper iframe {
             width: 100%;
             height: 100%;
-            min-height: 480px;
+            min-height: 750px;
             border: none;
         }
 
@@ -218,19 +218,6 @@
             </div>
             
             <!-BURAYA YENİ- KART EK-LENEBİLİR>
-
-            <!-- YENİ KART (PDF) -->
-            <div class="card" 
-                 data-embed="https://mozilla.github.io/pdf.js/web/viewer.html?file=https://murathoca28-cmd.github.io/teachermurat/Personality_Power_Up.pdf"
-                 data-download="https://murathoca28-cmd.github.io/teachermurat/Personality_Power_Up.pdf"
-                 data-title="Personality Power Up">
-                <img class="card-thumbnail" src="../thumbnails/personality_power_up.webp" alt="Personality Power Up" loading="lazy" decoding="async">
-                <div class="card-body">
-                    <h3>Personality Power Up</h3>
-                    <p>UNIT ...</p>
-                    <button class="btn open-modal">OPEN</button>
-                </div>
-            </div>
             
         </div> <!-- ✅ GRID KAPATILDI -->
         
@@ -240,6 +227,7 @@
                 <div class="modal-header">
                     <h2 id="modalTitle">Sunum Başlığı</h2>
                     <div class="modal-actions">
+                        <button id="fullscreenBtn" class="btn" style="background:#8e44ad; border-color:#6c3483;">⛶ Tam Ekran</button>
                         <a id="downloadBtn" href="#" class="btn btn-download" target="_blank">⬇️ Download Slide</a>
                         <button id="closeModalBtn" class="btn btn-close">✕ Close</button>
                     </div>
@@ -293,6 +281,17 @@
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
             }
+
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            fullscreenBtn.addEventListener('click', function() {
+                if (iframe.requestFullscreen) {
+                    iframe.requestFullscreen();
+                } else if (iframe.webkitRequestFullscreen) {
+                    iframe.webkitRequestFullscreen();
+                } else if (iframe.msRequestFullscreen) {
+                    iframe.msRequestFullscreen();
+                }
+            });
 
             closeBtn.addEventListener('click', closeModal);
             overlay.addEventListener('click', function(e) {
