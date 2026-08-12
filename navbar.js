@@ -128,11 +128,11 @@ document.getElementById('navbar-placeholder').innerHTML = `
       <span></span><span></span><span></span>
     </button>
     <div class="tm-links" id="nav-links">
-      <a href="/teachermurat/index.html">Ana Sayfa</a>
-      <a href="/teachermurat/5/grade5.html">Grade 5</a>
-      <a href="/teachermurat/6/grade6.html">Grade 6</a>
-      <a href="/teachermurat/7/grade7.html">Grade 7</a>
-      <a href="/teachermurat/8/grade8.html">Grade 8</a>
+      <a href="/index.html">Ana Sayfa</a>
+      <a href="/5/grade5.html">Grade 5</a>
+      <a href="/6/grade6.html">Grade 6</a>
+      <a href="/7/grade7.html">Grade 7</a>
+      <a href="/8/grade8.html">Grade 8</a>
     </div>
   </div>
 </div>
