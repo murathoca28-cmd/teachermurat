@@ -114,8 +114,8 @@
             background: white;
             border-radius: 20px;
             width: 100%;
-            max-width: 1300px;
-            max-height: 95vh;
+            max-width: 1200px;
+            max-height: 92vh;
             padding: 25px 30px 30px;
             display: flex;
             flex-direction: column;
@@ -141,8 +141,6 @@
             padding: 8px 24px;
             font-size: 0.9rem;
         }
-        .btn-download { background: #27ae60; }
-        .btn-download:hover { background: #1e8449; }
         .btn-close { background: #e74c3c; }
         .btn-close:hover { background: #c0392b; }
 
@@ -155,7 +153,7 @@
         .modal-iframe-wrapper iframe {
             width: 100%;
             height: 100%;
-            min-height: 750px;
+            min-height: 650px;
             border: none;
         }
 
@@ -240,8 +238,6 @@
                 <div class="modal-header">
                     <h2 id="modalTitle">Sunum Başlığı</h2>
                     <div class="modal-actions">
-                        <button id="fullscreenBtn" class="btn" style="background:#8e44ad; border-color:#6c3483;">⛶ Tam Ekran</button>
-                        <a id="downloadBtn" href="#" class="btn btn-download" target="_blank">⬇️ Download Slide</a>
                         <button id="closeModalBtn" class="btn btn-close">✕ Close</button>
                     </div>
                 </div>
@@ -257,7 +253,6 @@
             const overlay = document.getElementById('modalOverlay');
             const iframe = document.getElementById('modalIframe');
             const titleEl = document.getElementById('modalTitle');
-            const downloadBtn = document.getElementById('downloadBtn');
             const closeBtn = document.getElementById('closeModalBtn');
 
             document.querySelectorAll('.open-modal').forEach(btn => {
@@ -265,7 +260,6 @@
                     e.stopPropagation();
                     const card = this.closest('.card');
                     const embedUrl = card.getAttribute('data-embed');
-                    const downloadUrl = card.getAttribute('data-download');
                     const title = card.getAttribute('data-title') || 'Sunum';
 
                     if (!embedUrl) {
@@ -275,14 +269,6 @@
 
                     iframe.src = embedUrl;
                     titleEl.textContent = title;
-                    downloadBtn.href = downloadUrl || '#';
-                    if (!downloadUrl) {
-                        downloadBtn.style.opacity = '0.5';
-                        downloadBtn.style.pointerEvents = 'none';
-                    } else {
-                        downloadBtn.style.opacity = '1';
-                        downloadBtn.style.pointerEvents = 'auto';
-                    }
 
                     overlay.classList.add('active');
                     document.body.style.overflow = 'hidden';
@@ -294,17 +280,6 @@
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
             }
-
-            const fullscreenBtn = document.getElementById('fullscreenBtn');
-            fullscreenBtn.addEventListener('click', function() {
-                if (iframe.requestFullscreen) {
-                    iframe.requestFullscreen();
-                } else if (iframe.webkitRequestFullscreen) {
-                    iframe.webkitRequestFullscreen();
-                } else if (iframe.msRequestFullscreen) {
-                    iframe.msRequestFullscreen();
-                }
-            });
 
             closeBtn.addEventListener('click', closeModal);
             overlay.addEventListener('click', function(e) {
