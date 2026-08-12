@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="theme.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="theme.css">
     <style>
         /* Sayfa genel düzeni - Kaydırma sorunlarını ve taşmaları önler */
         html, body {
@@ -32,7 +32,7 @@
         }
 
         .page-title h1 {
-            font-size: 56px; /* 40'tan 56'ya */
+            font-size: 56px;
             color: #2c3e50;
             margin: 0;
             font-weight: 600;
@@ -44,12 +44,8 @@
             line-height: 1.2;
         }
 
-        /* İkinci satır: SECONDARY SCHOOL (orta boy, kalın, renkli) - kaldırıldı ama siz eklemek isterseniz */
-        /* .page-title .sub-main { ... } */
-
-        /* Üçüncü satır: Your All-in-One English Resource Hub (büyütüldü) */
         .page-title .sub-desc {
-            font-size: 26px; /* 20'den 26'ya */
+            font-size: 26px;
             font-weight: 400;
             color: #5d6d7e;
             margin: 8px 0 0 0;
@@ -65,17 +61,17 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: 20px; /* Biraz daha açıklık */
+            gap: 20px;
             width: 100%;
-            max-width: 820px; /* Daha geniş butonlar için max-width artırıldı */
+            max-width: 820px;
             padding: 5px;
             box-sizing: border-box;
         }
 
         /* Buton Kartları - Büyütüldü */
         .card {
-            width: 185px;   /* 140 → 180 */
-            height: 165px;  /* 120 → 160 */
+            width: 185px;
+            height: 165px;
             text-decoration: none;
             border-radius: 24px;
             display: flex;
@@ -94,12 +90,12 @@
         }
 
         .icon {
-            font-size: 48px; /* 36 → 48 */
+            font-size: 48px;
             margin-bottom: 8px;
         }
 
         .label {
-            font-size: 22px; /* 18 → 22 */
+            font-size: 22px;
             font-weight: 700;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
         }
@@ -110,13 +106,13 @@
         .grade-7 { background: linear-gradient(135deg, #A8E063, #56AB76); }
         .grade-8 { background: linear-gradient(135deg, #F77F00, #FCFF44); color: #333; }
 
-        /* Mobil Ekran Uyum Ayarları (600px ve altı) - Orantılı büyütüldü */
+        /* Mobil Ekran Uyum Ayarları (600px ve altı) */
         @media (max-width: 600px) {
             .page-title h1 { 
-                font-size: 32px; /* 24 → 32 */
+                font-size: 32px;
             }
             .page-title .sub-desc {
-                font-size: 18px; /* 14 → 18 */
+                font-size: 18px;
             }
             .container { 
                 gap: 14px; 
@@ -125,15 +121,12 @@
             .card { 
                 width: calc(50% - 14px); 
                 max-width: 160px; 
-                height: 140px; /* 110 → 140 */
+                height: 140px;
             }
-            .icon { font-size: 38px; /* 30 → 38 */ }
-            .label { font-size: 18px; /* 15 → 18 */ }
+            .icon { font-size: 38px; }
+            .label { font-size: 18px; }
         }
     </style>
-
-    <link rel="stylesheet" href="theme.css">
-    
 </head>
 <body>
     
@@ -141,28 +134,31 @@
     <script src="navbar.js"></script>
         
     <div class="page-title">
-    
-    <h1>TEACHER MURAT</h1>
-    <p class="sub-desc">Your All-in-One English Resource Hub</p>
-</div>
+        <h1>TEACHER MURAT</h1>
+        <p class="sub-desc">Your All-in-One English Resource Hub</p>
+    </div>
 
-<div class="container">
-    <a href="5/grade5.html" class="card grade-5">
-        <div class="icon">📝</div>
-        <div class="label">Grade 5</div>
-    </a>
-    <a href="javascript:void(0)" class="card grade-6" onclick="alert('Grade 6 yakında eklenecek!')">
-        <div class="icon">📝</div>
-        <div class="label">Grade 6</div>
-    </a>
-    <a href="7/grade7.html" class="card grade-7">
-        <div class="icon">📝</div>
-        <div class="label">Grade 7</div>
-    </a>
-    <a href="8/grade8.html" class="card grade-8">
-        <div class="icon">📝</div>
-        <div class="label">Grade 8</div>
-    </a>
-</div>
+    <div class="container">
+        <a href="5/grade5.html" class="card grade-5">
+            <div class="icon">📝</div>
+            <div class="label">Grade 5</div>
+        </a>
+        <!-- Grade 6 kartı artık şık modal'ı tetikliyor -->
+        <a href="javascript:void(0)" class="card grade-6" 
+           onclick="document.getElementById('soonModal').classList.add('open')">
+            <div class="icon">📝</div>
+            <div class="label">Grade 6</div>
+        </a>
+        <a href="7/grade7.html" class="card grade-7">
+            <div class="icon">📝</div>
+            <div class="label">Grade 7</div>
+        </a>
+        <a href="8/grade8.html" class="card grade-8">
+            <div class="icon">📝</div>
+            <div class="label">Grade 8</div>
+        </a>
+    </div>
+
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
