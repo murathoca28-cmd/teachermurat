@@ -20263,7 +20263,7 @@ PDFPrintServiceFactory.initGlobals(PDFViewerApplication);
       return;
     }
     const fileOrigin = URL.parse(file, window.location)?.origin;
-    if (fileOrigin === viewerOrigin) {
+    if (fileOrigin === viewerOrigin || fileOrigin === "https://cdn.teachermurat.com") {
       return;
     }
     const ex = new Error("file origin does not match viewer's");
