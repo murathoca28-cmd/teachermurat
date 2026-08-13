@@ -97,7 +97,7 @@
             border-color: #154360;
         }
 
-        /* MODAL */
+        /* MODAL (İlk Sayfadaki Tasarım) */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -114,9 +114,9 @@
             background: white;
             border-radius: 20px;
             width: 100%;
-            max-width: 1100px;
-            max-height: 90vh;
-            padding: 25px 30px 30px;
+            max-width: 1000px;
+            max-height: 85vh;
+            padding: 20px 24px 24px;
             display: flex;
             flex-direction: column;
         }
@@ -136,15 +136,27 @@
             gap: 12px;
             flex-wrap: wrap;
         }
-        .modal-actions .btn {
-            width: auto;
-            padding: 8px 24px;
-            font-size: 0.9rem;
+
+        /* Narin, ikon şeklinde kapatma butonu */
+        .modal-actions .btn-close {
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            background: #f1f1f1;
+            color: #666;
+            font-size: 1rem;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: none;
         }
-        .btn-download { background: #27ae60; }
-        .btn-download:hover { background: #1e8449; }
-        .btn-close { background: #e74c3c; }
-        .btn-close:hover { background: #c0392b; }
+        .modal-actions .btn-close:hover {
+            background: #e74c3c;
+            color: white;
+        }
 
         .modal-iframe-wrapper {
             flex: 1;
@@ -155,12 +167,12 @@
         .modal-iframe-wrapper iframe {
             width: 100%;
             height: 100%;
-            min-height: 480px;
+            min-height: 550px;
             border: none;
         }
 
         @media (max-width: 700px) {
-            .modal-box { padding: 18px; width: 95%; }
+            .modal-box { padding: 16px; width: 95%; }
             .modal-header { flex-direction: column; align-items: stretch; gap: 12px; }
             .modal-iframe-wrapper iframe { min-height: 300px; }
             .card-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
@@ -170,18 +182,17 @@
     <link rel="stylesheet" href="../../theme.css">
 </head>
 <body>
-    
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
     <script src="../../navbar.js"></script>
+    
     <div class="container">
-        
         <h1>📚 UNIT 1 SLIDES</h1>
 
         <div class="card-grid">
             <!-- KART 1 -->
             <div class="card" 
-                 data-embed="https://docs.google.com/presentation/d/e/2PACX-1vS8_xOXHG5yrRMsAZKmCsF_pGRCMdu2jmVM3EahXgA95Db2KICPO0de748EhCAtJQ/pubembed?start=false&loop=false&delayms=3000"
-                 data-download="https://drive.google.com/uc?export=download&id=ABC123def456"
+                 data-embed="https://docs.google.com/presentation/d/e/2PACX-1vS8_xOXHG5yrRMsAZKmCsF_pGRCMdu2jmVM3EahXgA95Db2KICPO0de748EhCAtJQ/pubembed?start=false&loop=false&delayms=3000" 
+                 data-download="https://drive.google.com/uc?export=download&id=ABC123def456" 
                  data-title="Slide 1">
                 <img class="card-thumbnail" src="../thumbnails/grade_5_rev_pre1.webp" alt="Slide 1" loading="lazy" decoding="async">
                 <div class="card-body">
@@ -193,8 +204,8 @@
 
             <!-- KART 2 -->
             <div class="card" 
-                 data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_slides/01-Grade5_Pre.pdf"
-                 data-download="https://cdn.teachermurat.com/5/rev_slides/01-Grade5_Pre.pdf"
+                 data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_slides/01-Grade5_Pre.pdf" 
+                 data-download="https://cdn.teachermurat.com/5/rev_slides/01-Grade5_Pre.pdf" 
                  data-title="Slide 2">
                 <img class="card-thumbnail" src="../thumbnails/grade_5_rev_pre2.webp" alt="Slide 2" loading="lazy" decoding="async">
                 <div class="card-body">
@@ -204,10 +215,10 @@
                 </div>
             </div>
 
-            <!-- KART 3 (yeni) -->
+            <!-- KART 3 -->
             <div class="card" 
-                 data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_slides/03-Grade5_Pre.pdf"
-                 data-download="https://cdn.teachermurat.com/5/rev_slides/03-Grade5_Pre.pdf"
+                 data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_slides/03-Grade5_Pre.pdf" 
+                 data-download="https://cdn.teachermurat.com/5/rev_slides/03-Grade5_Pre.pdf" 
                  data-title="Slide 3">
               <img class="card-thumbnail" src="../thumbnails/grade_5_rev_pre3.webp" alt="Slide 3" loading="lazy" decoding="async">
                 <div class="card-body">
@@ -217,18 +228,16 @@
                 </div>
             </div>
             
-            <!-BURAYA YENİ- KART EK-LENEBİLİR>
-            
+            <!-- BURAYA YENİ KART EKLENEBİLİR -->
         </div> <!-- ✅ GRID KAPATILDI -->
         
-        <!-- MODAL -->
+        <!-- MODAL (İlk Sayfadaki Yapı) -->
         <div id="modalOverlay" class="modal-overlay">
             <div class="modal-box">
                 <div class="modal-header">
                     <h2 id="modalTitle">Sunum Başlığı</h2>
                     <div class="modal-actions">
-                        <a id="downloadBtn" href="#" class="btn btn-download" target="_blank">⬇️ Download Slide</a>
-                        <button id="closeModalBtn" class="btn btn-close">✕ Close</button>
+                        <button id="closeModalBtn" class="btn btn-close" aria-label="Kapat">✕</button>
                     </div>
                 </div>
                 <div class="modal-iframe-wrapper">
@@ -238,12 +247,12 @@
         </div>
     </div>
 
+    <!-- İlk Sayfadaki JavaScript Yapısı -->
     <script>
         (function() {
             const overlay = document.getElementById('modalOverlay');
             const iframe = document.getElementById('modalIframe');
             const titleEl = document.getElementById('modalTitle');
-            const downloadBtn = document.getElementById('downloadBtn');
             const closeBtn = document.getElementById('closeModalBtn');
 
             document.querySelectorAll('.open-modal').forEach(btn => {
@@ -251,7 +260,6 @@
                     e.stopPropagation();
                     const card = this.closest('.card');
                     const embedUrl = card.getAttribute('data-embed');
-                    const downloadUrl = card.getAttribute('data-download');
                     const title = card.getAttribute('data-title') || 'Sunum';
 
                     if (!embedUrl) {
@@ -261,14 +269,6 @@
 
                     iframe.src = embedUrl;
                     titleEl.textContent = title;
-                    downloadBtn.href = downloadUrl || '#';
-                    if (!downloadUrl) {
-                        downloadBtn.style.opacity = '0.5';
-                        downloadBtn.style.pointerEvents = 'none';
-                    } else {
-                        downloadBtn.style.opacity = '1';
-                        downloadBtn.style.pointerEvents = 'auto';
-                    }
 
                     overlay.classList.add('active');
                     document.body.style.overflow = 'hidden';
@@ -282,13 +282,16 @@
             }
 
             closeBtn.addEventListener('click', closeModal);
+            
             overlay.addEventListener('click', function(e) {
                 if (e.target === overlay) closeModal();
             });
+            
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && overlay.classList.contains('active')) closeModal();
             });
         })();
     </script>
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
