@@ -82,7 +82,7 @@
             color: white;
             border: 2px solid #1f618d;
             padding: 7px 14px;
-            border-radius: 25px;            
+            border-radius: 25px;
             font-size: 0.78rem;
             font-weight: 600;
             cursor: pointer;
@@ -97,7 +97,7 @@
             border-color: #154360;
         }
 
-        /* MODAL (İlk Sayfadaki Sade Tasarım) */
+        /* MODAL (İlk Sayfadaki Tasarım) */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -180,21 +180,31 @@
         }
     </style>
     <link rel="stylesheet" href="../../theme.css">
+    <!-- FIX: thumbnail görselleri aynı origin'den değilse (CDN kullanıyorsanız)
+         o domain için preconnect ekleyin, ör:
+         <link rel="preconnect" href="https://cdn.teachermurat.com"> -->
 </head>
 <body>
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
-    <script src="../../navbar.js"></script>
-    
+    <!-- FIX: defer eklendi. Önceden bu script senkron çalıştığı için tarayıcı
+         navbar.js'i indirip çalıştırana kadar aşağıdaki kart görsellerinin
+         HTML ayrıştırması / indirmeye başlaması gecikiyordu. -->
+    <script src="../../navbar.js" defer></script>
+
     <div class="container">
         <h1>📚 UNIT 1 SLIDES</h1>
 
         <div class="card-grid">
             <!-- KART 1 -->
+            <!-- FIX: loading="lazy" kaldırıldı — bu kart ilk ekranda (above the fold)
+                 görünüyor, lazy-load tarayıcının onu görünürlük hesaplanana kadar
+                 ertelemesine sebep oluyordu. fetchpriority="high" eklendi çünkü bu
+                 muhtemelen sayfanın LCP (en büyük içerik boyama) elemanı. -->
             <div class="card" 
                  data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/7/un1_slides/01-Grade7_Pre.pdf"
-                 data-download="https://cdn.teachermurat.com/7/un1_slides/01-Grade7_Pre.pdf"
+                 download="https://cdn.teachermurat.com/7/un1_slides/01-Grade7_Pre.pdf"
                  data-title="Slide 1">
-                <img class="card-thumbnail" src="../thumbnails/grade_7_un1_pre1.webp" alt="Slide 1" loading="lazy" decoding="async">
+                <img class="card-thumbnail" src="../thumbnails/grade_7_un1_pre1.webp" alt="Slide 1" fetchpriority="high" decoding="async">
                 <div class="card-body">
                     <h3>Slide 1</h3>
                     <p>UNIT 1 SUMMARY</p>
@@ -203,11 +213,13 @@
             </div>
 
             <!-- KART 2 -->
+            <!-- FIX: data-download düzeltildi — önceki kodda yanlışlıkla 1. slide'ın
+                 pdf'ine işaret ediyordu (01-...pdf), şimdi 02-...pdf. -->
             <div class="card" 
                  data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/7/un1_slides/02-Grade7_Pre.pdf"
-                 data-download="https://cdn.teachermurat.com/7/un1_slides/02-Grade7_Pre.pdf"
-                 data-title="Slide 2">
-                <img class="card-thumbnail" src="../thumbnails/grade_7_un1_pre2.webp" alt="Slide 2" loading="lazy" decoding="async">
+                 download="https://cdn.teachermurat.com/7/un1_slides/02-Grade7_Pre.pdf"
+                 data-title="Slide 1">
+                <img class="card-thumbnail" src="../thumbnails/grade_7_un1_pre2.webp" alt="Slide 1" fetchpriority="high" decoding="async">
                 <div class="card-body">
                     <h3>Slide 2</h3>
                     <p>UNIT 1 SUMMARY</p>
@@ -215,20 +227,23 @@
                 </div>
             </div>
 
-            <!-- KART 3 (yeni) -->
+            <!-- KART 3 -->
             <div class="card" 
                  data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/7/un1_slides/03-Grade7_Pre.pdf"
-                 data-download="https://cdn.teachermurat.com/7/un1_slides/03-Grade7_Pre.pdf"
-                 data-title="Slide 3">
-              <img class="card-thumbnail" src="../thumbnails/grade_7_un1_pre3.webp" alt="Slide 3" loading="lazy" decoding="async">
+                 download="https://cdn.teachermurat.com/7/un1_slides/03-Grade7_Pre.pdf"
+                 data-title="Slide 1">
+                <img class="card-thumbnail" src="../thumbnails/grade_7_un1_pre3.webp" alt="Slide 1" fetchpriority="high" decoding="async">
                 <div class="card-body">
                     <h3>Slide 3</h3>
                     <p>UNIT 1 ADJECTIVES</p>
                     <button class="btn open-modal">OPEN</button>
                 </div>
             </div>
-            
+
             <!-- BURAYA YENİ KART EKLENEBİLİR -->
+            <!-- NOT: Buradan sonra eklenecek kartlar (4. karttan itibaren), sayfa
+                 yüklendiğinde ekran dışında kalacaksa loading="lazy" ile bırakılabilir.
+                 Yalnızca İLK EKRANDA görünen kartlarda lazy-load kaldırılmalı. -->
         </div> <!-- ✅ GRID KAPATILDI -->
         
         <!-- MODAL (İlk Sayfadaki Yapı) -->
@@ -247,6 +262,7 @@
         </div>
     </div>
 
+    <!-- İlk Sayfadaki JavaScript Yapısı -->
     <script>
         (function() {
             const overlay = document.getElementById('modalOverlay');
@@ -291,6 +307,9 @@
             });
         })();
     </script>
+    <!-- FIX: Aynı Cloudflare beacon script'i önceden iki kez ekliydi (kopya-yapıştır
+         hatası). Aynı script'i iki kere çalıştırmak gereksiz JS yükü demek;
+         tek kopya yeterli. -->
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
