@@ -286,13 +286,23 @@
     { image: "../../test_images/un_1/t_1/grade_8_un1_multest_10.webp", answer: "D" }
   ];
 
-  let currentIndex = 0;
+let currentIndex = 0;
   let userAnswers = new Array(questions.length).fill(null);
+
+  function preloadImage(src) {
+    const img = new Image();
+    img.src = src;
+  }
 
   function renderQuestion() {
     const q = questions[currentIndex];
     document.getElementById('question-img').src = q.image;
     document.getElementById('step-counter').innerText = `Soru ${currentIndex + 1} / ${questions.length}`;
+
+    // Bir sonraki soruyu arka planda sessizce önceden yükle
+    if (questions[currentIndex + 1]) {
+      preloadImage(questions[currentIndex + 1].image);
+    }
 
     const buttons = document.querySelectorAll('.btn-option');
     buttons.forEach(btn => {
@@ -380,9 +390,3 @@
     document.getElementById('quiz-view').style.display = 'block';
     document.getElementById('result-view').style.display = 'none';
     renderQuestion();
-  }
-
-  renderQuestion();
-</script>
-</body>
-</html>
