@@ -124,14 +124,20 @@
   }
   #playerWrap.visible { display: block; }
   #playerWrap.show { opacity: 1; transform: translateY(0); }
-  #playerWrap.visible.show {
-    position: sticky;
+
+  /* JS tabanlı "pin" (sticky yerine) — theme.css/navbar.js'teki
+     overflow/transform gibi ayarlardan etkilenmez */
+  #playerWrap.pinned {
+    position: fixed;
     top: 12px;
     z-index: 20;
     background: var(--card-bg);
     padding: 6px 0 2px;
     box-shadow: 0 8px 16px -12px rgba(31, 35, 33, 0.25);
     border-radius: 12px;
+  }
+  #playerWrapSpacer {
+    display: none;
   }
 
   .plyr {
@@ -288,6 +294,7 @@
       <source src="https://cdn.teachermurat.com/5/rev_listens/01-Grade5_listening.mp3" type="audio/mp3" />
     </audio>
   </div>
+  <div id="playerWrapSpacer"></div>
 
   <!-- SORULAR -->
   <div class="quiz">
@@ -363,6 +370,8 @@
 
   const listenBtn = document.getElementById('listenBtn');
   const playerWrap = document.getElementById('playerWrap');
+  const playerSpacer = document.getElementById('playerWrapSpacer');
+  const card = document.querySelector('.card');
   let started = false;
 
   listenBtn.addEventListener('click', () => {
@@ -375,6 +384,41 @@
     }
     player.play();
   });
+
+  // --- Pinlenmiş (sabitlenmiş) oynatıcı: position:sticky yerine
+  // JS tabanlı çözüm, temanızdaki overflow/transform ayarlarından etkilenmez ---
+  const STICKY_TOP = 12;
+
+  function updatePin() {
+    if (!playerWrap.classList.contains('visible')) return;
+
+    if (!playerWrap.classList.contains('pinned')) {
+      const rect = playerWrap.getBoundingClientRect();
+      if (rect.top <= STICKY_TOP) {
+        const cardRect = card.getBoundingClientRect();
+        playerSpacer.style.height = playerWrap.offsetHeight + 'px';
+        playerSpacer.style.display = 'block';
+        playerWrap.style.left = cardRect.left + 'px';
+        playerWrap.style.width = cardRect.width + 'px';
+        playerWrap.classList.add('pinned');
+      }
+    } else {
+      const spacerRect = playerSpacer.getBoundingClientRect();
+      if (spacerRect.top > STICKY_TOP) {
+        playerWrap.classList.remove('pinned');
+        playerWrap.style.left = '';
+        playerWrap.style.width = '';
+        playerSpacer.style.display = 'none';
+      } else {
+        const cardRect = card.getBoundingClientRect();
+        playerWrap.style.left = cardRect.left + 'px';
+        playerWrap.style.width = cardRect.width + 'px';
+      }
+    }
+  }
+
+  window.addEventListener('scroll', updatePin, { passive: true });
+  window.addEventListener('resize', updatePin);
 
   function allAnswered() {
     const questions = document.querySelectorAll('.question');
@@ -445,5 +489,6 @@
   });
 </script>
 
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
