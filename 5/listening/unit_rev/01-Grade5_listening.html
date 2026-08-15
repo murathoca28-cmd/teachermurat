@@ -385,41 +385,55 @@
     player.play();
   });
 
-  // --- Pinlenmiş (sabitlenmiş) oynatıcı: position:sticky yerine
-  // JS tabanlı çözüm, temanızdaki overflow/transform ayarlarından etkilenmez ---
-  const GAP_BELOW_NAVBAR = 12; // navbar ile oynatıcı arasındaki boşluk
+  // --- Pinlenmiş (sabitlenmiş) oynatıcı ---
+  // Oynatıcı pinlenirken doğrudan <body>'nin çocuğu yapılır. Böylece
+  // theme.css / navbar.js içindeki herhangi bir ata elementte olabilecek
+  // transform / overflow / filter gibi ayarlardan TAMAMEN bağımsız çalışır
+  // (ses de kesintisiz çalmaya devam eder, çünkü DOM node'u sadece taşınıyor).
+  const GAP_BELOW_NAVBAR = 12;
+  const playerAnchor = document.createComment('player-anchor');
+  playerWrap.parentNode.insertBefore(playerAnchor, playerWrap);
 
   function getStickyTop() {
-    // Sitenizdeki sabit (fixed) navbar'ın gerçek yüksekliğini ölçer,
-    // böylece oynatıcı her zaman navbar'ın hemen altına oturur.
     const navPlaceholder = document.getElementById('navbar-placeholder');
     const navHeight = navPlaceholder ? navPlaceholder.getBoundingClientRect().height : 0;
     return navHeight + GAP_BELOW_NAVBAR;
   }
 
+  function pinPlayer(stickyTop) {
+    const cardRect = card.getBoundingClientRect();
+    playerSpacer.style.height = playerWrap.offsetHeight + 'px';
+    playerSpacer.style.display = 'block';
+    document.body.appendChild(playerWrap); // <-- kilit satır: body'e taşı
+    playerWrap.style.position = 'fixed';
+    playerWrap.style.top = stickyTop + 'px';
+    playerWrap.style.left = cardRect.left + 'px';
+    playerWrap.style.width = cardRect.width + 'px';
+    playerWrap.classList.add('pinned');
+  }
+
+  function unpinPlayer() {
+    playerAnchor.parentNode.insertBefore(playerWrap, playerAnchor.nextSibling); // eski yerine geri koy
+    playerWrap.style.position = '';
+    playerWrap.style.top = '';
+    playerWrap.style.left = '';
+    playerWrap.style.width = '';
+    playerWrap.classList.remove('pinned');
+    playerSpacer.style.display = 'none';
+  }
+
   function updatePin() {
     if (!playerWrap.classList.contains('visible')) return;
     const stickyTop = getStickyTop();
+    const isPinned = playerWrap.classList.contains('pinned');
 
-    if (!playerWrap.classList.contains('pinned')) {
-      const rect = playerWrap.getBoundingClientRect();
-      if (rect.top <= stickyTop) {
-        const cardRect = card.getBoundingClientRect();
-        playerSpacer.style.height = playerWrap.offsetHeight + 'px';
-        playerSpacer.style.display = 'block';
-        playerWrap.style.top = stickyTop + 'px';
-        playerWrap.style.left = cardRect.left + 'px';
-        playerWrap.style.width = cardRect.width + 'px';
-        playerWrap.classList.add('pinned');
-      }
+    if (!isPinned) {
+      const rect = (playerAnchor.nextSibling === playerWrap ? playerWrap : playerSpacer).getBoundingClientRect();
+      if (rect.top <= stickyTop) pinPlayer(stickyTop);
     } else {
       const spacerRect = playerSpacer.getBoundingClientRect();
       if (spacerRect.top > stickyTop) {
-        playerWrap.classList.remove('pinned');
-        playerWrap.style.top = '';
-        playerWrap.style.left = '';
-        playerWrap.style.width = '';
-        playerSpacer.style.display = 'none';
+        unpinPlayer();
       } else {
         const cardRect = card.getBoundingClientRect();
         playerWrap.style.top = stickyTop + 'px';
