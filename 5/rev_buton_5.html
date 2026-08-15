@@ -177,17 +177,27 @@
             background-clip: text;
         }
 
+        /* FIX: slides sayfasındaki narin, dairesel X butonuyla aynı stil */
         .close-btn {
-            background: none;
+            width: 34px;
+            height: 34px;
+            padding: 0;
             border: none;
-            font-size: 1.8rem;
-            cursor: pointer;
+            border-radius: 50%;
+            background: #f1f1f1;
             color: #666;
+            font-size: 1.1rem;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: none;
             transition: 0.2s;
             line-height: 1;
         }
 
-        .close-btn:hover { color: #e67e22; transform: scale(1.2); }
+        .close-btn:hover { background: #e67e22; color: white; }
 
         .modal-body {
             flex: 1;
@@ -203,40 +213,6 @@
             border: 2px solid #f39c12;
             border-radius: 12px;
         }
-
-        .modal-footer {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            padding: 15px 20px;
-            border-top: 1px solid #eee;
-        }
-
-        .download-btn, .close-modal-btn {
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: 0.2s;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 1rem;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        .download-btn {
-            background: #f39c12;
-            color: white;
-        }
-
-        .close-modal-btn {
-            background: #eee;
-            color: #333;
-        }
-
-        .download-btn:hover { background: #d68910; }
-        .close-modal-btn:hover { background: #ddd; }
 
         /* MOBİL */
         @media (max-width: 650px) {
@@ -258,7 +234,7 @@
 </head>
 <body>
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
-    <script src="../navbar.js"></script>
+    <script src="../navbar.js" defer></script>
 
     <div class="container">
         <div class="main-title">📝 Worksheets & Activities</div>
@@ -275,16 +251,43 @@
             </div>
         </div>
 
-        <!-- ========== WORKSHEETS (PDF – Modal ile) ========== -->
+        <!-- ========== WORKSHEETS (PDF – artık PDF.js viewer ile, Drive preview KALDIRILDI) ========== -->
         <div class="cat-worksheets">
             <div class="category-title"><span class="cat-icon">📄</span> Worksheets</div>
             <div class="grid">
-                <!-- PDF kimliklerini kendi Drive ID'lerinizle değiştirin -->
-                <button class="test-btn worksheet" data-pdf-id="1SszRmzaamqJSLKxOmK0Kp7wqVoopl42f" data-title="Worksheet 1">📝 Worksheet 1</button>
-                <button class="test-btn worksheet" data-pdf-id="WORKSHEET2_ID" data-title="Worksheet 2">📝 Worksheet 2</button>
-                <button class="test-btn worksheet" data-pdf-id="WORKSHEET3_ID" data-title="Worksheet 3">📝 Worksheet 3</button>
-                <button class="test-btn worksheet" data-pdf-id="WORKSHEET4_ID" data-title="Worksheet 4">📝 Worksheet 4</button>
-                <button class="test-btn worksheet" data-pdf-id="WORKSHEET5_ID" data-title="Worksheet 5">📝 Worksheet 5</button>
+                <!--
+                    FIX: data-pdf-id (Google Drive preview) yapısı kaldırıldı.
+                    Artık slides sayfasındaki (grade_5_unit1_slides.html) ile AYNI yöntem:
+                    data-embed  -> PDF.js viewer URL'i (viewer.html?file=<GERÇEK_PDF_LİNKİ>)
+                    data-download -> doğrudan PDF linki (şu an bir butona bağlı değil,
+                    PDF.js kendi indirme ikonunu sağlıyor; ileride lazım olursa diye
+                    attribute olarak bırakıldı, istenirse tamamen silinebilir)
+
+                    Tüm worksheet PDF'leri Cloudflare R2 CDN'den (cdn.teachermurat.com)
+                    servis ediliyor, CORS ayarı slides sayfasıyla aynı şekilde yapıldı.
+                -->
+                <button class="test-btn worksheet"
+                        data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_worksheets/Grade_5_revs_work_1.pdf"
+                        data-download="https://cdn.teachermurat.com/5/rev_worksheets/Grade_5_revs_work_1.pdf"
+                        data-title="Worksheet 1">📝 Worksheet 1</button>
+
+                <!-- TODO: dosya adları farklıysa aşağıdaki linkleri güncelleyin -->
+                <button class="test-btn worksheet"
+                        data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/worksheets/worksheet2.pdf"
+                        data-download="https://cdn.teachermurat.com/5/worksheets/worksheet2.pdf"
+                        data-title="Worksheet 2">📝 Worksheet 2</button>
+                <button class="test-btn worksheet"
+                        data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/worksheets/worksheet3.pdf"
+                        data-download="https://cdn.teachermurat.com/5/worksheets/worksheet3.pdf"
+                        data-title="Worksheet 3">📝 Worksheet 3</button>
+                <button class="test-btn worksheet"
+                        data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/worksheets/worksheet4.pdf"
+                        data-download="https://cdn.teachermurat.com/5/worksheets/worksheet4.pdf"
+                        data-title="Worksheet 4">📝 Worksheet 4</button>
+                <button class="test-btn worksheet"
+                        data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/worksheets/worksheet5.pdf"
+                        data-download="https://cdn.teachermurat.com/5/worksheets/worksheet5.pdf"
+                        data-title="Worksheet 5">📝 Worksheet 5</button>
             </div>
         </div>
 
@@ -309,47 +312,60 @@
                 <button class="close-btn" id="closeModalTop">&times;</button>
             </div>
             <div class="modal-body">
-                <iframe class="pdf-frame" id="pdfFrame" src="" allow="autoplay" title="PDF Önizleme"></iframe>
-            </div>
-            <div class="modal-footer">
-                <a class="download-btn" id="downloadLink" href="#" download>⬇️ PDF'i İndir</a>
-                <button class="close-modal-btn" id="closeModalBottom">Kapat</button>
+                <iframe class="pdf-frame" id="pdfFrame" src="" allowfullscreen title="PDF Önizleme"></iframe>
             </div>
         </div>
     </div>
 
     <script>
-        const modal = document.getElementById('pdfModal');
-        const pdfFrame = document.getElementById('pdfFrame');
-        const modalTitle = document.getElementById('modalTitle');
-        const downloadLink = document.getElementById('downloadLink');
+        (function() {
+            const overlay = document.getElementById('pdfModal');
+            const iframe = document.getElementById('pdfFrame');
+            const titleEl = document.getElementById('modalTitle');
+            // FIX: indirme butonu kaldırıldı (PDF.js viewer'ın kendi indirme ikonu var),
+            // alt "Kapat" butonu da kaldırıldı, tek kapatma butonu sağ üstteki ✕.
+            const closeButtons = document.querySelectorAll('#closeModalTop');
 
-        // Sadece data-pdf-id olan butonlar (Worksheet'ler) modal'ı tetikler
-        const worksheetButtons = document.querySelectorAll('.test-btn[data-pdf-id]');
-        const closeButtons = document.querySelectorAll('#closeModalTop, #closeModalBottom');
+            // FIX: data-pdf-id yerine data-embed okunuyor (PDF.js viewer URL'i).
+            // Google Drive preview iframe tamamen kaldırıldı.
+            const worksheetButtons = document.querySelectorAll('.test-btn.worksheet[data-embed]');
 
-        worksheetButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const pdfId = btn.dataset.pdfId;
-                const title = btn.dataset.title;
-                pdfFrame.src = `https://drive.google.com/file/d/${pdfId}/preview`;
-                downloadLink.href = `https://drive.google.com/uc?export=download&id=${pdfId}`;
-                modalTitle.textContent = `📄 ${title}`;
-                modal.classList.add('active');
+            worksheetButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const embedUrl = btn.dataset.embed;
+                    const title = btn.dataset.title || 'Worksheet';
+
+                    if (!embedUrl) {
+                        alert('Bu worksheet için embed linki eksik.');
+                        return;
+                    }
+
+                    iframe.src = embedUrl;
+                    titleEl.textContent = `📄 ${title}`;
+
+                    overlay.classList.add('active');
+                });
             });
-        });
 
-        function closeModal() {
-            modal.classList.remove('active');
-            pdfFrame.src = ''; // iframe'i temizle
-        }
+            function closeModal() {
+                iframe.src = ''; // iframe'i temizle
+                overlay.classList.remove('active');
+            }
 
-        closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
+            closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
 
-        // Overlay dışına tıklayınca kapat
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
+            // Overlay dışına tıklayınca kapat
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeModal();
+            });
+
+            // FIX: slides sayfasıyla tutarlılık için Esc tuşu desteği eklendi
+            // (önceki worksheet kodunda yoktu).
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && overlay.classList.contains('active')) closeModal();
+            });
+        })();
     </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
