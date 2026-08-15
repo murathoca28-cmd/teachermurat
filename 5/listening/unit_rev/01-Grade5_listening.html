@@ -129,7 +129,7 @@
      overflow/transform gibi ayarlardan etkilenmez */
   #playerWrap.pinned {
     position: fixed;
-    top: 12px;
+    /* top değeri JS tarafından navbar yüksekliğine göre ayarlanır */
     z-index: 20;
     background: var(--card-bg);
     padding: 6px 0 2px;
@@ -387,30 +387,42 @@
 
   // --- Pinlenmiş (sabitlenmiş) oynatıcı: position:sticky yerine
   // JS tabanlı çözüm, temanızdaki overflow/transform ayarlarından etkilenmez ---
-  const STICKY_TOP = 12;
+  const GAP_BELOW_NAVBAR = 12; // navbar ile oynatıcı arasındaki boşluk
+
+  function getStickyTop() {
+    // Sitenizdeki sabit (fixed) navbar'ın gerçek yüksekliğini ölçer,
+    // böylece oynatıcı her zaman navbar'ın hemen altına oturur.
+    const navPlaceholder = document.getElementById('navbar-placeholder');
+    const navHeight = navPlaceholder ? navPlaceholder.getBoundingClientRect().height : 0;
+    return navHeight + GAP_BELOW_NAVBAR;
+  }
 
   function updatePin() {
     if (!playerWrap.classList.contains('visible')) return;
+    const stickyTop = getStickyTop();
 
     if (!playerWrap.classList.contains('pinned')) {
       const rect = playerWrap.getBoundingClientRect();
-      if (rect.top <= STICKY_TOP) {
+      if (rect.top <= stickyTop) {
         const cardRect = card.getBoundingClientRect();
         playerSpacer.style.height = playerWrap.offsetHeight + 'px';
         playerSpacer.style.display = 'block';
+        playerWrap.style.top = stickyTop + 'px';
         playerWrap.style.left = cardRect.left + 'px';
         playerWrap.style.width = cardRect.width + 'px';
         playerWrap.classList.add('pinned');
       }
     } else {
       const spacerRect = playerSpacer.getBoundingClientRect();
-      if (spacerRect.top > STICKY_TOP) {
+      if (spacerRect.top > stickyTop) {
         playerWrap.classList.remove('pinned');
+        playerWrap.style.top = '';
         playerWrap.style.left = '';
         playerWrap.style.width = '';
         playerSpacer.style.display = 'none';
       } else {
         const cardRect = card.getBoundingClientRect();
+        playerWrap.style.top = stickyTop + 'px';
         playerWrap.style.left = cardRect.left + 'px';
         playerWrap.style.width = cardRect.width + 'px';
       }
