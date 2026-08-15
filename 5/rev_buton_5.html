@@ -69,16 +69,16 @@
             margin-bottom: 10px;
         }
 
-        /* ORTAK BUTON STİLİ */
+        /* ORTAK BUTON STİLİ (Daha dengeli sığması için orantılı boyutlandırıldı) */
         .test-btn {
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 18px 10px;
+            padding: 15px 8px;
             color: white;
             font-weight: 700;
-            font-size: 0.95rem;
-            border-radius: 18px;
+            font-size: 0.9rem;
+            border-radius: 16px;
             text-decoration: none;
             text-align: center;
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
@@ -130,6 +130,17 @@
             box-shadow: 0 16px 30px rgba(142, 68, 173, 0.5);
         }
 
+        /* LISTEN KATEGORİSİ */
+        .cat-listen .category-title { color: #1f618d; }
+        .test-btn.listen {
+            background: linear-gradient(145deg, #2980b9, #1f618d);
+            box-shadow: 0 8px 18px rgba(41, 128, 185, 0.35);
+        }
+        .test-btn.listen:hover {
+            background: linear-gradient(145deg, #2471a3, #1a5276);
+            box-shadow: 0 16px 30px rgba(41, 128, 185, 0.5);
+        }
+
         /* MODAL STİLLERİ */
         .modal-overlay {
             position: fixed;
@@ -177,7 +188,6 @@
             background-clip: text;
         }
 
-        /* FIX: slides sayfasındaki narin, dairesel X butonuyla aynı stil */
         .close-btn {
             width: 34px;
             height: 34px;
@@ -251,27 +261,15 @@
             </div>
         </div>
 
-        <!-- ========== WORKSHEETS (PDF – artık PDF.js viewer ile, Drive preview KALDIRILDI) ========== -->
+        <!-- ========== WORKSHEETS (PDF.js viewer) ========== -->
         <div class="cat-worksheets">
             <div class="category-title"><span class="cat-icon">📄</span> Worksheets</div>
             <div class="grid">
-                <!--
-                    FIX: data-pdf-id (Google Drive preview) yapısı kaldırıldı.
-                    Artık slides sayfasındaki (grade_5_unit1_slides.html) ile AYNI yöntem:
-                    data-embed  -> PDF.js viewer URL'i (viewer.html?file=<GERÇEK_PDF_LİNKİ>)
-                    data-download -> doğrudan PDF linki (şu an bir butona bağlı değil,
-                    PDF.js kendi indirme ikonunu sağlıyor; ileride lazım olursa diye
-                    attribute olarak bırakıldı, istenirse tamamen silinebilir)
-
-                    Tüm worksheet PDF'leri Cloudflare R2 CDN'den (cdn.teachermurat.com)
-                    servis ediliyor, CORS ayarı slides sayfasıyla aynı şekilde yapıldı.
-                -->
                 <button class="test-btn worksheet"
                         data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_worksheets/Grade_5_revs_work_1.pdf?=v1"
                         data-download="https://cdn.teachermurat.com/5/rev_worksheets/Grade_5_revs_work_1.pdf"
                         data-title="Worksheet 1">📝 Worksheet 1</button>
 
-                <!-- TODO: dosya adları farklıysa aşağıdaki linkleri güncelleyin -->
                 <button class="test-btn worksheet"
                         data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/worksheets/worksheet2.pdf"
                         data-download="https://cdn.teachermurat.com/5/worksheets/worksheet2.pdf"
@@ -302,6 +300,18 @@
                 <a href="reading/reading5.html" class="test-btn reading">🔖 Reading 5</a>
             </div>
         </div>
+
+        <!-- ========== LISTEN (HTML / Ses sayfaları) ========== -->
+        <div class="cat-listen">
+            <div class="category-title"><span class="cat-icon">🎧</span> Listening</div>
+            <div class="grid">
+                <a href="listening/unit_rev/01-Grade5_listening.html" class="test-btn listen">🎧 Listening 1</a>
+                <a href="listen/listen2.html" class="test-btn listen">🎧 Listening 2</a>
+                <a href="listen/listen3.html" class="test-btn listen">🎧 Listening 3</a>
+                <a href="listen/listen4.html" class="test-btn listen">🎧 Listening 4</a>
+                <a href="listen/listen5.html" class="test-btn listen">🎧 Listening 5</a>
+            </div>
+        </div>
     </div>
 
     <!-- ========== MODAL (sadece Worksheet için) ========== -->
@@ -322,12 +332,7 @@
             const overlay = document.getElementById('pdfModal');
             const iframe = document.getElementById('pdfFrame');
             const titleEl = document.getElementById('modalTitle');
-            // FIX: indirme butonu kaldırıldı (PDF.js viewer'ın kendi indirme ikonu var),
-            // alt "Kapat" butonu da kaldırıldı, tek kapatma butonu sağ üstteki ✕.
             const closeButtons = document.querySelectorAll('#closeModalTop');
-
-            // FIX: data-pdf-id yerine data-embed okunuyor (PDF.js viewer URL'i).
-            // Google Drive preview iframe tamamen kaldırıldı.
             const worksheetButtons = document.querySelectorAll('.test-btn.worksheet[data-embed]');
 
             worksheetButtons.forEach(btn => {
@@ -348,19 +353,16 @@
             });
 
             function closeModal() {
-                iframe.src = ''; // iframe'i temizle
+                iframe.src = '';
                 overlay.classList.remove('active');
             }
 
             closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
 
-            // Overlay dışına tıklayınca kapat
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay) closeModal();
             });
 
-            // FIX: slides sayfasıyla tutarlılık için Esc tuşu desteği eklendi
-            // (önceki worksheet kodunda yoktu).
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && overlay.classList.contains('active')) closeModal();
             });
