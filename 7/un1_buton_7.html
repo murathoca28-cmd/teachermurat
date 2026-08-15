@@ -30,8 +30,8 @@
             width: 100%;
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
-            padding: 30px 25px;
-            margin: 20px;
+            padding: 15px 20px;
+            margin: -10px auto 20px auto;
             border-radius: 35px;
             box-shadow: 0 15px 50px rgba(0, 100, 255, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.6);
@@ -41,7 +41,7 @@
             font-size: 2rem;
             font-weight: 800;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             background: linear-gradient(to right, #1e3c72, #2a5298, #4facfe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -51,7 +51,7 @@
         .category-title {
             font-size: 1.3rem;
             font-weight: 700;
-            margin: 25px 0 15px 5px;
+            margin: 10px 0 15px 5px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -128,6 +128,17 @@
         .test-btn.reading:hover {
             background: linear-gradient(145deg, #7d3c98, #4a235a);
             box-shadow: 0 16px 30px rgba(142, 68, 173, 0.5);
+        }
+
+        /* LISTEN KATEGORİSİ */
+        .cat-listen .category-title { color: #1f618d; }
+        .test-btn.listen {
+            background: linear-gradient(145deg, #2980b9, #1f618d);
+            box-shadow: 0 8px 18px rgba(41, 128, 185, 0.35);
+        }
+        .test-btn.listen:hover {
+            background: linear-gradient(145deg, #2471a3, #1a5276);
+            box-shadow: 0 16px 30px rgba(41, 128, 185, 0.5);
         }
 
         /* MODAL STİLLERİ */
@@ -270,8 +281,8 @@
                         data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/7/un1_worksheets/Grade_7_un1_work_1.pdf"
                         data-download="https://cdn.teachermurat.com/7/un1_worksheets/Grade_7_un1_work_1.pdf"
                         data-title="Worksheet 1">📝 Worksheet 1</button>
-						
-						
+
+
 
                 <!-- TODO: dosya adları farklıysa aşağıdaki linkleri güncelleyin -->
                 <button class="test-btn worksheet"
@@ -302,6 +313,19 @@
                 <a href="reading/reading3.html" class="test-btn reading">🔖 Reading 3</a>
                 <a href="reading/reading4.html" class="test-btn reading">🔖 Reading 4</a>
                 <a href="reading/reading5.html" class="test-btn reading">🔖 Reading 5</a>
+            </div>
+        </div>
+
+        <!-- ========== LISTEN (HTML / Ses sayfaları) ========== -->
+        <div class="cat-listen">
+            <div class="category-title"><span class="cat-icon">🎧</span> Listening</div>
+            <div class="grid">
+                <!-- TODO: gerçek link eklenecek -->
+                <a href="listening/un1/grade_7_un1_listen_1.html" class="test-btn listen">🎧 Listening 1</a>
+                <a href="listen/listen2.html" class="test-btn listen">🎧 Listening 2</a>
+                <a href="listen/listen3.html" class="test-btn listen">🎧 Listening 3</a>
+                <a href="listen/listen4.html" class="test-btn listen">🎧 Listening 4</a>
+                <a href="listen/listen5.html" class="test-btn listen">🎧 Listening 5</a>
             </div>
         </div>
     </div>
@@ -368,6 +392,7 @@
             });
         })();
     </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
