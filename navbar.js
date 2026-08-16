@@ -172,7 +172,7 @@ document.getElementById('navbar-placeholder').innerHTML = `
 
 <div class="tm-navbar">
   <div class="tm-navbar-inner">
-    <div class="tm-logo">Teacher Murat</div>
+    <div class="tm-logo">TEACHER MURAT</div>
     <button class="tm-hamburger" id="hamburger-btn" aria-label="Menü">
       <span></span><span></span><span></span>
     </button>
