@@ -18,10 +18,20 @@
         body {
             display: flex;
             flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        /* DİKEY MERKEZLEME SAĞLAYAN KAPSAYICI */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px 15px;
+            width: 100%;
             box-sizing: border-box;
+            transform: translateY(-80px);
         }
 
         /* BAŞLIK */
@@ -214,42 +224,46 @@
 </head>
 <body>
 
+    <!-- NAVBAR ALANI (Sabit Kalır) -->
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
     <script src="../navbar.js"></script>
-    
-    <!-- BAŞLIK -->
-    <div class="page-title">
-        <h1>📘 GRADE 5</h1>
-        <p class="sub-desc">Choose your activity below</p>
-    </div>
 
-    <!-- 1. AŞAMA: ANA MENÜ (4 BUTON) -->
-    <div id="menuContainer" class="menu-container">
-        <button onclick="showUnits('tests')" class="card menu-card card-tests">
-            <div class="icon">📝</div>
-            <div class="label">Tests</div>
-        </button>
-        <button onclick="showUnits('activities')" class="card menu-card card-activities">
-            <div class="icon">🎯</div>
-            <div class="label">Worksheets<br>& Activities</div>
-        </button>
-        <button onclick="showUnits('slides')" class="card menu-card card-slides">
-            <div class="icon">📊</div>
-            <div class="label">Slides</div>
-        </button>
-        <button onclick="showUnits('games')" class="card menu-card card-worksheets">
-            <div class="icon">🎲</div>
-            <div class="label">Games</div>
-        </button>
-    </div>
-
-    <!-- 2. AŞAMA: ÜNİTE LİSTESİ (Başlangıçta Gizli) -->
-    <div id="unitContainer" class="unit-container">
-        <div class="back-btn">
-            <button onclick="goBack()">⬅ Back</button>
+    <!-- DİKEY MERKEZLEME SAĞLAYAN ANA İÇERİK KAPSAYICISI -->
+    <main class="main-content">
+        <!-- BAŞLIK -->
+        <div class="page-title">
+            <h1>📘 GRADE 5</h1>
+            <p class="sub-desc">Choose your activity below</p>
         </div>
-        <div id="unitGrid"></div>
-    </div>
+
+        <!-- 1. AŞAMA: ANA MENÜ (4 BUTON) -->
+        <div id="menuContainer" class="menu-container">
+            <button onclick="showUnits('tests')" class="card menu-card card-tests">
+                <div class="icon">📝</div>
+                <div class="label">Tests</div>
+            </button>
+            <button onclick="showUnits('activities')" class="card menu-card card-activities">
+                <div class="icon">🎯</div>
+                <div class="label">Worksheets<br>& Activities</div>
+            </button>
+            <button onclick="showUnits('slides')" class="card menu-card card-slides">
+                <div class="icon">📊</div>
+                <div class="label">Slides</div>
+            </button>
+            <button onclick="showUnits('games')" class="card menu-card card-worksheets">
+                <div class="icon">🎲</div>
+                <div class="label">Games</div>
+            </button>
+        </div>
+
+        <!-- 2. AŞAMA: ÜNİTE LİSTESİ (Başlangıçta Gizli) -->
+        <div id="unitContainer" class="unit-container">
+            <div class="back-btn">
+                <button onclick="goBack()">⬅ Back</button>
+            </div>
+            <div id="unitGrid"></div>
+        </div>
+    </main>
 
     <script>
         // ============================================================
@@ -356,5 +370,6 @@
             document.getElementById('unitContainer').style.display = 'none';
         });
     </script>
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
