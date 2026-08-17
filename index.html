@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="theme.css">
+    <title>Teacher Murat - English Resource Hub</title>
     <style>
         /* Sayfa genel düzeni - Kaydırma sorunlarını ve taşmaları önler */
         html, body {
@@ -12,19 +13,29 @@
             width: 100%;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: radial-gradient(circle, #ffffff 0%, #CDEFFF 100%);
+            min-height: 100vh;
         }
 
         body {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px 10px;
             box-sizing: border-box;
         }
 
-        /* Başlık Alanı - Büyütüldü */
+        /* DİKEY VE OPTİK MERKEZLEME SAĞLAYAN KAPSAYICI */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 15px;
+            width: 100%;
+            box-sizing: border-box;
+            transform: translateY(-40px); /* Optik denge için yukarı taşıma */
+        }
+
+        /* Başlık Alanı */
         .page-title {
             text-align: center;
             margin-bottom: 40px;
@@ -40,6 +51,7 @@
             background: linear-gradient(to right, #2c3e50, #4ca1af);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
             line-height: 1.2;
         }
@@ -68,7 +80,7 @@
             box-sizing: border-box;
         }
 
-        /* Buton Kartları - Büyütüldü */
+        /* Buton Kartları */
         .card {
             width: 185px;
             height: 165px;
@@ -108,6 +120,9 @@
 
         /* Mobil Ekran Uyum Ayarları (600px ve altı) */
         @media (max-width: 600px) {
+            .main-content {
+                transform: translateY(-20px); /* Mobilde ideal optik hizalama */
+            }
             .page-title h1 { 
                 font-size: 32px;
             }
@@ -129,35 +144,40 @@
     </style>
 </head>
 <body>
-    
+
+    <!-- NAVBAR ALANI (Sabit Kalır) -->
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
     <script src="navbar.js"></script>
-        
-    <div class="page-title">
-        <h1>TEACHER MURAT</h1>
-        <p class="sub-desc">Your All-in-One English Resource Hub</p>
-    </div>
 
-    <div class="container">
-        <a href="5/grade5.html" class="card grade-5">
-            <div class="icon">📝</div>
-            <div class="label">Grade 5</div>
-        </a>
-        <!-- Grade 6 kartı artık şık modal'ı tetikliyor -->
-        <a href="javascript:void(0)" class="card grade-6" 
-           onclick="document.getElementById('soonModal').classList.add('open')">
-            <div class="icon">📝</div>
-            <div class="label">Grade 6</div>
-        </a>
-        <a href="7/grade7.html" class="card grade-7">
-            <div class="icon">📝</div>
-            <div class="label">Grade 7</div>
-        </a>
-        <a href="8/grade8.html" class="card grade-8">
-            <div class="icon">📝</div>
-            <div class="label">Grade 8</div>
-        </a>
-    </div>
+    <!-- DİKEY VE OPTİK MERKEZLEME SAĞLAYAN ANA İÇERİK KAPSAYICISI -->
+    <main class="main-content">
+        <!-- Başlık Alanı -->
+        <div class="page-title">
+            <h1>TEACHER MURAT</h1>
+            <p class="sub-desc">Your All-in-One English Resource Hub</p>
+        </div>
+
+        <!-- Kart Konteynırı -->
+        <div class="container">
+            <a href="5/grade5.html" class="card grade-5">
+                <div class="icon">📝</div>
+                <div class="label">Grade 5</div>
+            </a>
+            <!-- Grade 6 kartı modal tetikliyor -->
+            <a href="javascript:void(0)" class="card grade-6" onclick="document.getElementById('soonModal').classList.add('open')">
+                <div class="icon">📝</div>
+                <div class="label">Grade 6</div>
+            </a>
+            <a href="7/grade7.html" class="card grade-7">
+                <div class="icon">📝</div>
+                <div class="label">Grade 7</div>
+            </a>
+            <a href="8/grade8.html" class="card grade-8">
+                <div class="icon">📝</div>
+                <div class="label">Grade 8</div>
+            </a>
+        </div>
+    </main>
 
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
