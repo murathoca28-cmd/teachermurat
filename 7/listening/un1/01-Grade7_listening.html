@@ -140,10 +140,11 @@
       transition: opacity 0.25s ease, transform 0.25s ease;
       position: sticky;
       top: 76px;
-      z-index: 20;
+      z-index: 1001;   /* 20 yerine */
       background: var(--card-bg);
       padding: 10px 0;
     }
+    .plyr__menu__container { top: 100% !important; bottom: auto !important; margin-top: 10px; margin-bottom: 0; }
 
     #playerWrap.visible {
       display: block;
