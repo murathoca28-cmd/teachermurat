@@ -1,0 +1,544 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5th Grade English - Idioms, Objects & Rules</title>
+    <link rel="stylesheet" href="../../../theme.css">
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-soft: #EEECFD;
+            --pink: #FD79A8;
+            --pink-soft: #FDEDF3;
+            --green: #00B894;
+            --green-soft: #E6F9F5;
+            --yellow: #FDCB6E;
+            --yellow-soft: #FEF9E7;
+            --red: #FF7675;
+            --red-soft: #FFEAE9;
+            --blue: #0984E3;
+            --blue-soft: #E3F2FD;
+            --bg: #F4F7FE;
+            --card-bg: #e2eff8;
+            --text-dark: #2D3436;
+            --text-muted: #636E72;
+            --border-color: #E2E8F0;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        /* Sayfa Genişliği Sınırlandırması ve Alan Dengesi */
+        .app-container {
+            width: 100%;
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Hero Kartı */
+        .hero-banner {
+            background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #FD79A8 100%);
+            color: #FFFFFF;
+            padding: 26px 24px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner h1 {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .hero-banner p {
+            font-size: 15px;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        /* İnteraktif Görev Kartları */
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            border: 2px solid #a4aeb9;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed var(--bg);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .card-title h2 {
+            font-size: 19px;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .card-title p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Izgara Yapıları */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .space-y {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Soru / Seçenek Kutuları */
+        .quiz-item {
+            background: #F8FAFC;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .opt-btn {
+            width: 100%;
+            padding: 11px 14px;
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        select.custom-select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border-color);
+            font-weight: 600;
+            font-size: 14px;
+            outline: none;
+            background: #FFFFFF;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-dark);
+        }
+
+        select.custom-select:hover:not(:disabled) {
+            border-color: var(--primary);
+        }
+
+        /* Yanıt Durum Stilleri */
+        .correct {
+            background: var(--green-soft) !important;
+            border-color: var(--green) !important;
+            color: #007955 !important;
+            font-weight: bold;
+        }
+
+        .wrong {
+            background: var(--red-soft) !important;
+            border-color: var(--red) !important;
+            color: #C0392B !important;
+            font-weight: bold;
+        }
+
+        .check-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            font-weight: bold;
+            font-size: 16px;
+            margin-left: 6px;
+        }
+        .check-icon.correct { color: #007955; }
+        .check-icon.wrong { color: #C0392B; }
+
+        .opt-btn.correct::after { content: "  ✓"; color: #007955; }
+        .opt-btn.wrong::after { content: "  ✕"; color: #C0392B; }
+
+        /* Cümle Düzenleme (Unscramble) Stilleri */
+        .unscramble-zone {
+            min-height: 58px;
+            padding: 10px 14px;
+            background: #FFFFFF;
+            border: 2px dashed #CBD5E0;
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .unscramble-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .item-chip {
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            padding: 9px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            user-select: none;
+        }
+
+        .item-chip:hover {
+            border-color: var(--yellow);
+            transform: translateY(-2px);
+        }
+
+        .item-chip.active-select {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* Animasyonlar */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .shake { animation: shake 0.3s ease; }
+
+        @keyframes pop {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        .pop { animation: pop 0.25s ease; }
+
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border-color);
+            background: #FFFFFF;
+            margin-top: auto;
+        }
+    </style>
+    <link rel="stylesheet" href="../../../theme.css">
+</head>
+<body>
+    <div id="navbar-placeholder" style="min-height: 0px;"></div>
+    <script src="../../../navbar.js"></script>
+
+    <div class="app-container">
+        <!-- Site Navbar Altında Şık İçerik Başlığı -->
+        <header class="hero-banner">
+            <h1>🎓 5th Grade English - Revision Activities</h1>
+            <p>Expressions & Idioms + Classroom Objects + Classroom Rules</p>
+        </header>
+
+        <main class="space-y">
+            <!-- PART A: EXPRESSIONS & IDIOMS MATCHING -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--yellow-soft); color: #D63031;">✨</div>
+                    <div class="card-title">
+                        <h2>Part A: Expressions & Idioms Matching</h2>
+                        <p>Match the situation with the correct English expression!</p>
+                    </div>
+                </div>
+                <div id="idiomsContainer" class="grid-2"></div>
+            </section>
+
+            <!-- PART B: CLASSROOM & TECH OBJECTS MATCHER -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--blue-soft); color: var(--blue);">📎</div>
+                    <div class="card-title">
+                        <h2>Part B: Classroom & Tech Objects Matcher</h2>
+                        <p>Click an item on the left, then click its matching function on the right!</p>
+                    </div>
+                </div>
+                <div class="grid-2" id="matchingApp">
+                    <div class="space-y" id="matchItemsCol"></div>
+                    <div class="space-y" id="matchTargetCol"></div>
+                </div>
+            </section>
+
+            <!-- PART C: UNSCRAMBLE CLASSROOM RULES -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--pink-soft); color: var(--pink);">📝</div>
+                    <div class="card-title">
+                        <h2>Part C: Unscramble the Classroom Rules</h2>
+                        <p>Click the words in the correct order. <b>Click a word in the box to undo it!</b></p>
+                    </div>
+                </div>
+                <div id="unscrambleContainer" class="space-y"></div>
+            </section>
+        </main>
+    </div>
+
+    <footer>Designed for 5th Grade English Students • Unit Revision Interactive Hub</footer>
+
+    <script>
+        // --- PART A: IDIOMS DATA & LOGIC ---
+        const idiomsData = [
+            { q: "1. It's raining very heavily outside!", ans: "It's raining cats and dogs.", id: "i1" },
+            { q: "2. My friend lost his pet cat and feels sad.", ans: "I'm sorry to hear that.", id: "i2" },
+            { q: "3. This jacket size is 100% perfect for me!", ans: "It fits like a glove.", id: "i3" },
+            { q: "4. Let's start talking to our new classmate.", ans: "Let's break the ice.", id: "i4" }
+        ];
+        const idiomOptions = ["It's raining cats and dogs.", "I'm sorry to hear that.", "It fits like a glove.", "Let's break the ice."];
+
+        function renderIdioms() {
+            document.getElementById('idiomsContainer').innerHTML = idiomsData.map(item => `
+                <div class="quiz-item">
+                    <p style="font-weight:700; font-size:15px; color:var(--text-dark);">${item.q}</p>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <select onchange="checkIdiom('${item.id}', this)" class="custom-select" style="flex:1;">
+                            <option value="">-- Choose Expression --</option>
+                            ${idiomOptions.map((opt, i) => `<option value="${i}">${opt}</option>`).join('')}
+                        </select>
+                        <span id="check-${item.id}" class="check-icon"></span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function checkIdiom(id, selectEl) {
+            if (selectEl.value === "") return;
+            const selectedText = selectEl.options[selectEl.selectedIndex].text;
+            const correctAns = idiomsData.find(i => i.id === id).ans;
+            const checkIcon = document.getElementById(`check-${id}`);
+
+            selectEl.classList.remove('correct', 'wrong');
+            checkIcon.classList.remove('correct', 'wrong');
+            checkIcon.innerHTML = '';
+
+            if (selectedText === correctAns) {
+                selectEl.classList.add('correct', 'pop');
+                selectEl.disabled = true;
+                checkIcon.classList.add('correct');
+                checkIcon.innerHTML = '✔';
+            } else {
+                selectEl.classList.add('wrong');
+                checkIcon.classList.add('wrong');
+                checkIcon.innerHTML = '✕';
+                setTimeout(() => selectEl.classList.remove('shake'), 300);
+                selectEl.classList.add('shake');
+            }
+        }
+
+        // --- PART B: CLASSROOM & TECH OBJECTS MATCHER ---
+        const matchData = [
+            { item: "Headphones", desc: "Used to listen to audio privately.", id: "m1" },
+            { item: "Stapler", desc: "Used to attach paper sheets together.", id: "m2" },
+            { item: "Printer", desc: "Used to print documents on paper.", id: "m3" },
+            { item: "Calculator", desc: "Used to solve math problems quickly.", id: "m4" },
+            { item: "Highlighter", desc: "Used to mark important textbook words.", id: "m5" }
+        ];
+        let selectedMatchItem = null;
+
+        function renderMatching() {
+            const shuffledTargets = [...matchData].sort(() => Math.random() - 0.5);
+            document.getElementById('matchItemsCol').innerHTML = matchData.map(m => `
+                <button id="src-${m.id}" onclick="selectMatchSource('${m.id}')" class="opt-btn">📦 ${m.item}</button>
+            `).join('');
+            document.getElementById('matchTargetCol').innerHTML = shuffledTargets.map(t => `
+                <button id="tgt-${t.id}" onclick="selectMatchTarget('${t.id}')" class="opt-btn">🎯 ${t.desc}</button>
+            `).join('');
+        }
+
+        function selectMatchSource(id) {
+            if (document.getElementById(`src-${id}`).classList.contains('correct')) return;
+            selectedMatchItem = id;
+            matchData.forEach(m => {
+                const el = document.getElementById(`src-${m.id}`);
+                if (el && !el.classList.contains('correct')) {
+                    el.style.borderColor = "var(--border-color)";
+                }
+            });
+            document.getElementById(`src-${id}`).style.borderColor = "var(--blue)";
+        }
+
+        function selectMatchTarget(targetId) {
+            if (!selectedMatchItem) return;
+
+            const sourceBtn = document.getElementById(`src-${selectedMatchItem}`);
+            const targetBtn = document.getElementById(`tgt-${targetId}`);
+
+            if (targetBtn.classList.contains('correct')) return;
+
+            if (selectedMatchItem === targetId) {
+                sourceBtn.classList.add('correct', 'pop');
+                targetBtn.classList.add('correct', 'pop');
+                sourceBtn.style.borderColor = "";
+                sourceBtn.disabled = true;
+                targetBtn.disabled = true;
+                selectedMatchItem = null;
+            } else {
+                targetBtn.classList.add('wrong', 'shake');
+                setTimeout(() => targetBtn.classList.remove('shake'), 300);
+            }
+        }
+
+        // --- PART C: UNSCRAMBLE CLASSROOM RULES ---
+        const unscrambleData = [
+            { words: ["Look", "at", "the", "screen", "please!"], id: "u1" },
+            { words: ["Listen", "carefully", "to", "your", "teacher!"], id: "u2" },
+            { words: ["Talk", "with", "your", "peers", "please!"], id: "u3" },
+            { words: ["Write", "down", "this", "note!"], id: "u4" }
+        ];
+        const userUnscrambleState = {};
+
+        function renderUnscramble() {
+            document.getElementById('unscrambleContainer').innerHTML = unscrambleData.map((item, idx) => {
+                userUnscrambleState[item.id] = [];
+                const shuffled = [...item.words].sort(() => Math.random() - 0.5);
+                return `
+                    <div class="quiz-item">
+                        <p style="font-size:14px; font-weight:700; color:var(--text-muted);">Instruction ${idx+1}</p>
+                        <div id="zone-${item.id}" class="unscramble-zone"></div>
+                        <div class="unscramble-pool" id="pool-${item.id}">
+                            ${shuffled.map((w, wIdx) => `<button id="btn-${item.id}-${wIdx}" onclick="clickUnscrambleWord('${item.id}', '${w}', ${wIdx})" class="item-chip">${w}</button>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clickUnscrambleWord(id, word, wIdx) {
+            const zone = document.getElementById(`zone-${id}`);
+            if (zone.dataset.locked === "true") return;
+
+            document.getElementById(`btn-${id}-${wIdx}`).style.display = 'none';
+            userUnscrambleState[id].push({ word, wIdx });
+
+            const tag = document.createElement('span');
+            tag.id = `tag-${id}-${wIdx}`;
+            tag.className = "item-chip active-select";
+            tag.style.cssText = "font-size:14px; padding:6px 14px; margin:0;";
+            tag.innerText = word;
+            tag.title = "Click to return";
+            tag.onclick = () => undoUnscrambleWord(id, wIdx);
+            zone.appendChild(tag);
+
+            checkUnscramble(id);
+        }
+
+        function undoUnscrambleWord(id, wIdx) {
+            const zone = document.getElementById(`zone-${id}`);
+            if (zone.dataset.locked === "true") return;
+
+            userUnscrambleState[id] = userUnscrambleState[id].filter(x => x.wIdx !== wIdx);
+
+            document.getElementById(`tag-${id}-${wIdx}`).remove();
+            document.getElementById(`btn-${id}-${wIdx}`).style.display = 'inline-block';
+            zone.style.background = "#FFFFFF";
+            zone.style.borderColor = "#CBD5E0";
+        }
+
+        function checkUnscramble(id) {
+            const item = unscrambleData.find(u => u.id === id);
+            const zone = document.getElementById(`zone-${id}`);
+
+            if (userUnscrambleState[id].length === item.words.length) {
+                const result = userUnscrambleState[id].map(x => x.word).join(" ");
+                const target = item.words.join(" ");
+
+                if (result === target) {
+                    zone.style.background = "var(--green-soft)";
+                    zone.style.borderColor = "var(--green)";
+                    zone.dataset.locked = "true";
+                    Array.from(zone.children).forEach(c => {
+                        c.style.cursor = "default";
+                        c.classList.remove('active-select');
+                        c.classList.add('correct');
+                    });
+                } else {
+                    zone.style.background = "var(--red-soft)";
+                    zone.style.borderColor = "var(--red)";
+                    setTimeout(() => zone.classList.remove('shake'), 300);
+                    zone.classList.add('shake');
+                }
+            } else {
+                zone.style.background = "#FFFFFF";
+                zone.style.borderColor = "#CBD5E0";
+            }
+        }
+
+        // --- INITIALIZE ---
+        window.onload = () => {
+            renderIdioms();
+            renderMatching();
+            renderUnscramble();
+        };
+    </script>
+</body>
+</html>
