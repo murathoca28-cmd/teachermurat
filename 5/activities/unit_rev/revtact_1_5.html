@@ -1,239 +1,328 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎯 REVISION 1 - Fun Practice</title>
+    <title>5th Grade English - Jobs, Places & Healthy Life</title>
     <style>
-        /* ----- EĞLENCELİ TASARIM (Sadece boşluk düzeltildi) ----- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --purple: #6C5CE7; --purple-light: #EEECFD;
+            --pink: #FD79A8; --pink-light: #FDEDF3;
+            --green: #00B894; --green-light: #D4EDDA;
+            --blue: #0984E3; --blue-light: #E3F2FD;
+            --orange: #E17055; --orange-light: #FDF1EE;
+            --rose: #DC3545; --rose-light: #F8D7DA;
+            --bg: #F4F6FA; --card-bg: #FFFFFF;
+            --text: #2D3436; --text-muted: #636E72; --border: #E2E8F0;
         }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body {
-            font-family: 'Segoe UI', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
-            background: radial-gradient(circle at 10% 20%, #fff5f5, #ffe4e1);
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+            background-attachment: fixed;
+            color: var(--text);
+            user-select: none;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Ortalamak yerine üstten başlasın */
-            padding: 100px 10px 20px 10px; /* Boşluk azaltıldı */
-            margin: 0;
+            flex-direction: column;
+            position: relative;
         }
 
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 25px 25px 30px; /* Üst padding azaltıldı */
-            border-radius: 35px;
-            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.25);
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            margin-top: 15px; /* Ekstra üst boşluk kaldırıldı */
+        /* Eğlenceli arka plan deseni */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(circle at 20% 30%, rgba(108, 92, 231, 0.1) 0%, transparent 25%),
+                              radial-gradient(circle at 80% 70%, rgba(253, 121, 168, 0.1) 0%, transparent 30%),
+                              radial-gradient(circle at 50% 90%, rgba(0, 184, 148, 0.08) 0%, transparent 35%);
+            pointer-events: none;
+            z-index: 0;
         }
 
-        /* BAŞLIK - RENKLİ VE PARLAK */
-        h1 {
+        /* HEADER */
+        header {
+            background: linear-gradient(90deg, #6C5CE7, #FD79A8, #FDCB6E);
+            color: #fff;
+            padding: 20px 16px;
             text-align: center;
-            font-size: 2.8rem;
-            font-weight: 900;
-            margin: 0 0 5px 0; /* Üst margin sıfırlandı */
-            letter-spacing: 2px;
-            background: linear-gradient(to right, #f7971e, #ffd200);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: none;
-            filter: drop-shadow(0 4px 6px rgba(247, 151, 30, 0.3));
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            border-bottom: 5px solid #fff;
+            position: relative;
+            z-index: 10;
         }
-
-        .sub-header {
-            text-align: center;
-            font-size: 1.1rem;
+        header h1 {
+            font-size: 26px;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+            letter-spacing: 0.5px;
+        }
+        header p {
+            font-size: 14px;
+            color: #fff;
+            margin-top: 6px;
             font-weight: 600;
-            color: #e07c3c;
-            background: rgba(255, 215, 0, 0.15);
-            display: inline-block;
-            padding: 5px 25px;
-            border-radius: 50px;
-            margin: 0 auto 15px;
-            letter-spacing: 1px;
-            border: 1px dashed #ffb347;
+            opacity: 0.95;
         }
 
-        .sub-header span {
-            font-size: 1.3rem;
+        /* MAIN */
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px 16px;
+            flex-grow: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            position: relative;
+            z-index: 1;
         }
 
-        /* BÖLÜM KARTLARI - RENKLİ VE YUVARLAK */
-        .section {
-            margin-bottom: 25px;
-            padding: 18px 20px;
-            background: white;
-            border-radius: 25px;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-            border-left: 8px solid #ffb347;
-            transition: transform 0.2s ease;
+        /* KARTLAR */
+        .card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 24px;
+            border: 3px solid #fff;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1), 0 4px 0 rgba(108, 92, 231, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .section:hover {
-            transform: scale(1.01);
-            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.15);
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.15), 0 4px 0 rgba(108, 92, 231, 0.25);
         }
-
-        .section-title {
-            font-weight: 800;
-            font-size: 1.2rem;
-            color: #d35400;
-            margin-bottom: 15px;
+        .card-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-bottom: 2px dotted #ffe0b2;
-            padding-bottom: 8px;
+            gap: 14px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 10px 14px;
+            border-radius: 16px;
         }
-        .section-title .emoji-big {
-            font-size: 1.8rem;
-        }
-
-        .question {
-            margin-bottom: 18px;
-            padding: 5px 5px 10px 5px;
-            border-bottom: 1px solid #f5f0eb;
-        }
-        .question:last-child {
-            border-bottom: none;
-        }
-
-        .question p {
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 8px;
-            font-size: 1.05rem;
-        }
-        .question p .q-letter {
-            background: #f7971e;
-            color: white;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            display: inline-flex;
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
-            margin-right: 8px;
+            font-size: 24px;
             font-weight: bold;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .card-title h2 {
+            font-size: 19px;
+            color: var(--text);
+            font-weight: 700;
+        }
+        .card-title p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
         }
 
-        select, input[type="text"] {
-            padding: 12px 16px;
-            border-radius: 50px;
-            border: 2px solid #ffe0b2;
-            background: #fffaf5;
+        /* GRID */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .space-y {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* INPUTS & BUTTONS */
+        .opt-btn {
             width: 100%;
-            max-width: 320px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: #333;
-            transition: 0.3s ease;
+            text-align: left;
+            padding: 12px 14px;
+            background: #fff;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+        }
+        .opt-btn:hover:not(:disabled) {
+            border-color: var(--purple);
+            background: var(--purple-light);
+            transform: scale(1.02);
+            box-shadow: 0 6px 12px rgba(108, 92, 231, 0.2);
+        }
+        .opt-btn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .custom-input {
+            padding: 10px 14px;
+            border-radius: 16px;
+            border: 2px solid var(--border);
+            font-weight: 600;
             outline: none;
-            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.03);
         }
-        select:focus, input[type="text"]:focus {
-            border-color: #f7971e;
-            box-shadow: 0 0 0 5px rgba(247, 151, 30, 0.15);
-            background: white;
-        }
-        select:hover {
-            background: #fff0e0;
+        .custom-input:focus {
+            border-color: var(--pink);
+            box-shadow: 0 0 0 4px rgba(253, 121, 168, 0.2);
         }
 
-        .explanation {
-            font-size: 0.9rem;
-            color: #e67e22;
-            margin-top: 8px;
-            background: #fef9e7;
-            padding: 8px 15px;
-            border-radius: 50px;
-            display: none;
-            border: 1px solid #f7dc6f;
-            font-weight: 500;
-        }
-
-        /* BÜYÜK EĞLENCELİ BUTON */
-        button {
-            display: block;
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(to right, #f7971e, #ffd200);
-            color: #2d1b00;
+        .action-btn {
+            background: linear-gradient(135deg, #FD79A8, #e84393);
+            color: #fff;
             border: none;
-            border-radius: 60px;
-            font-size: 1.5rem;
-            font-weight: 800;
+            padding: 10px 18px;
+            border-radius: 16px;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 12px 25px rgba(247, 151, 30, 0.4);
-            letter-spacing: 2px;
-            margin-top: 10px;
+            transition: all 0.25s ease;
+            box-shadow: 0 6px 12px rgba(253, 121, 168, 0.3);
         }
-        button:hover {
-            transform: scale(1.02) translateY(-5px);
-            box-shadow: 0 18px 35px rgba(247, 151, 30, 0.5);
-            background: linear-gradient(to right, #ff8c00, #ffd700);
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(253, 121, 168, 0.4);
         }
-        button:active {
+        .action-btn:active {
             transform: scale(0.95);
         }
 
-        /* SONUÇ EKRANI - EĞLENCELİ */
-        #result {
-            margin-top: 25px;
-            padding: 25px;
+        /* Doğru / Yanlış */
+        .correct {
+            background: var(--green-light) !important;
+            border-color: var(--green) !important;
+            color: #155724 !important;
+            font-weight: bold;
+        }
+        .wrong {
+            background: var(--rose-light) !important;
+            border-color: var(--rose) !important;
+            color: #721C24 !important;
+            font-weight: bold;
+        }
+
+        .opt-btn.correct::after {
+            content: " ✔";
+            color: #155724;
+            font-weight: bold;
+        }
+        .opt-btn.wrong::after {
+            content: " !";
+            color: #721C24;
+            font-weight: bold;
+        }
+
+        /* BUCKET SORTING */
+        .pool-box {
+            background: #f8f9fa;
+            border: 2px dashed #CBD5E0;
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+            min-height: 70px;
+            align-items: center;
+            transition: 0.3s;
+        }
+        .pool-box:hover {
+            border-color: var(--purple);
+            background: #f1f0ff;
+        }
+
+        .item-chip {
+            background: #fff;
+            border: 2px solid #CBD5E0;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            user-select: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+        }
+        .item-chip:hover {
+            border-color: #FDCB6E;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        .item-chip.active-select {
+            border-color: var(--purple);
+            background: var(--purple-light);
+            box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.25);
+            transform: scale(1.05);
+        }
+
+        .bucket-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+        .bucket {
+            min-height: 160px;
+            border-radius: 20px;
+            padding: 16px;
+            border: 3px solid;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+        }
+        .bucket:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .bucket h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            pointer-events: none;
+        }
+        .bucket-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            pointer-events: none;
+        }
+        .bucket-items .item-chip {
+            pointer-events: auto;
+        }
+
+        /* ANIMASYONLAR */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            50% { transform: translateX(6px); }
+            75% { transform: translateX(-6px); }
+        }
+        .shake {
+            animation: shake 0.4s ease;
+        }
+        @keyframes pop {
+            0% { transform: scale(0.9); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .pop {
+            animation: pop 0.3s ease;
+        }
+
+        footer {
             text-align: center;
-            font-weight: 800;
-            font-size: 1.8rem;
-            display: none;
-            border-radius: 30px;
-            background: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            border: 3px dashed #f7971e;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .correct-result { 
-            border: 4px solid #2ecc71; 
-            background: #f0fff4;
-            color: #27ae60;
-        }
-        .incorrect-result { 
-            border: 4px solid #e74c3c; 
-            background: #fff5f5;
-            color: #c0392b;
-        }
-        .partial-result {
-            border: 4px solid #f39c12;
-            background: #fffaf0;
-            color: #d35400;
-        }
-
-        /* MOBİL UYUM */
-        @media (max-width: 600px) {
-            body { padding: 10px 5px; }
-            .container { padding: 18px 15px; border-radius: 25px; }
-            h1 { font-size: 2.2rem; }
-            .sub-header { font-size: 0.9rem; padding: 3px 15px; }
-            .section { padding: 15px; }
-            .question p { font-size: 0.95rem; }
-            select, input { max-width: 100%; font-size: 0.95rem; }
-            button { font-size: 1.2rem; padding: 15px; }
-            #result { font-size: 1.4rem; padding: 20px; }
+            padding: 16px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+            background: #fff;
+            position: relative;
+            z-index: 1;
         }
     </style>
     <link rel="stylesheet" href="../../../theme.css">
@@ -241,220 +330,194 @@
 <body>
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
     <script src="../../../navbar.js"></script>
-    
-<div class="container">
-    <h1>🎯 REVISION 1</h1>
-    <div style="text-align: center;">
-        <div class="sub-header"><span>📚</span> Unit 1 · Test your English knowledge! <span>🎉</span></div>
-    </div>
 
-    <form id="quizForm">
-        
-        <!-- SECTION 1 -->
-        <div class="section">
-            <div class="section-title"><span class="emoji-big">⏰</span> 1. Daily Routines &amp; Telling Time</div>
-            
-            <div class="question">
-                <p><span class="q-letter">A</span> What time is it? (14:30)</p>
-                <select name="q1" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="wrong">It's quarter to two</option>
-                    <option value="correct">It's half past two</option>
-                    <option value="wrong">It's quarter past two</option>
-                </select>
+    <header>
+        <h1>🎓 5th Grade English - Jobs, Places & Healthy Life</h1>
+        <p>Who Am I? + Where Am I? + Healthy vs Unhealthy Food Sort</p>
+    </header>
+
+    <main>
+        <!-- WHO AM I? (JOBS & DUTIES) -->
+        <section class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--purple-light); color: var(--purple);">💼</div>
+                <div class="card-title">
+                    <h2>Who Am I? (Jobs & Duties)</h2>
+                    <p>Read the duty and select the correct job title!</p>
+                </div>
             </div>
+            <div id="jobsContainer" class="grid-2"></div>
+        </section>
 
-            <div class="question">
-                <p><span class="q-letter">B</span> Every morning, I _______ at 7:00 AM.</p>
-                <input type="text" name="q2" placeholder="e.g., wake up ✏️" class="answer">
-                <div class="explanation">💡 Correct: <strong>wake up</strong></div>
+        <!-- WHERE AM I? (PLACES IN TOWN) -->
+        <section class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--pink-light); color: var(--pink);">🏪</div>
+                <div class="card-title">
+                    <h2>Where Am I? (Places in Town)</h2>
+                    <p>Type the correct place name according to the clue! (e.g. bakery, chemist's)</p>
+                </div>
             </div>
-        </div>
+            <div id="placesContainer" class="space-y"></div>
+        </section>
 
-        <!-- SECTION 2 -->
-        <div class="section">
-            <div class="section-title"><span class="emoji-big">📖</span> 2. School Subjects &amp; Preferences</div>
-            
-            <div class="question">
-                <p><span class="q-letter">C</span> I prefer Math _______ Science because I love numbers.</p>
-                <select name="q3" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="wrong">then</option>
-                    <option value="correct">to</option>
-                    <option value="wrong">than</option>
-                </select>
+        <!-- HEALTHY VS UNHEALTHY FOOD SORT -->
+        <section class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--green-light); color: var(--green);">🥗</div>
+                <div class="card-title">
+                    <h2>Healthy vs Unhealthy Food Sort</h2>
+                    <p><b>1.</b> Click a food to select it. <b>2.</b> Click the correct bucket to place it. <i>(Click an item inside the bucket to take it back!)</i></p>
+                </div>
             </div>
-
-            <div class="question">
-                <p><span class="q-letter">D</span> My favorite subject _______ History.</p>
-                <select name="q4" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="wrong">are</option>
-                    <option value="correct">is</option>
-                    <option value="wrong">am</option>
-                </select>
+            <div id="foodPool" class="pool-box"></div>
+            <div class="bucket-container">
+                <div id="healthyBucket" class="bucket" style="background: #E8F8F5; border-color: #A3E4D7;" onclick="placeFood('healthy')">
+                    <h3 style="color: #0E6251;">❤️ Healthy Food</h3>
+                    <div class="bucket-items" id="healthyItems"></div>
+                </div>
+                <div id="unhealthyBucket" class="bucket" style="background: #FDEDEC; border-color: #F5B7B1;" onclick="placeFood('unhealthy')">
+                    <h3 style="color: #78281F;">🍔 Unhealthy Food</h3>
+                    <div class="bucket-items" id="unhealthyItems"></div>
+                </div>
             </div>
-        </div>
+        </section>
+    </main>
 
-        <!-- SECTION 3 -->
-        <div class="section">
-            <div class="section-title"><span class="emoji-big">👀</span> 3. Physical Appearance &amp; Personality</div>
-            
-            <div class="question">
-                <p><span class="q-letter">E</span> She has long, _______ hair and green eyes.</p>
-                <select name="q5" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="correct">curly</option>
-                    <option value="wrong">friendly</option>
-                    <option value="wrong">tall</option>
-                </select>
-            </div>
+    <footer>Designed for 5th Grade English Students • Unit Revision Interactive Hub</footer>
 
-            <div class="question">
-                <p><span class="q-letter">F</span> Mark is very _______; he always shares his things.</p>
-                <select name="q6" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="wrong">short</option>
-                    <option value="correct">kind</option>
-                    <option value="wrong">slim</option>
-                </select>
-            </div>
-        </div>
+    <script>
+        // --- WHO AM I? (JOBS & DUTIES) DATA ---
+        const jobsData = [
+            { duty: "I help sick people in a hospital.", job: "Doctor", opts: ["Farmer", "Doctor", "Singer"], id: "j1" },
+            { duty: "I grow fruit and work on a farm.", job: "Farmer", opts: ["Farmer", "Teacher", "Police"], id: "j2" },
+            { duty: "I teach English to students.", job: "Teacher", opts: ["Singer", "Doctor", "Teacher"], id: "j3" },
+            { duty: "I keep the city safe.", job: "Police Officer", opts: ["Police Officer", "Farmer", "Singer"], id: "j4" }
+        ];
 
-        <!-- SECTION 4 -->
-        <div class="section">
-            <div class="section-title"><span class="emoji-big">🧠</span> 4. Past States &amp; Abilities</div>
-            
-            <div class="question">
-                <p><span class="q-letter">G</span> When I was five, I _______ ride a bicycle.</p>
-                <select name="q7" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="wrong">can</option>
-                    <option value="correct">could</option>
-                    <option value="wrong">was</option>
-                </select>
-            </div>
-
-            <div class="question">
-                <p><span class="q-letter">H</span> Last year, they _______ very shy.</p>
-                <select name="q8" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="wrong">are</option>
-                    <option value="correct">were</option>
-                    <option value="wrong">did</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- SECTION 5 -->
-        <div class="section">
-            <div class="section-title"><span class="emoji-big">👕</span> 5. Clothing &amp; Idioms</div>
-            
-            <div class="question">
-                <p><span class="q-letter">I</span> This new jacket ___________ me perfectly!</p>
-                <select name="q9" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="wrong">rains cats and dogs</option>
-                    <option value="correct">fits like a glove</option>
-                    <option value="wrong">breaks the ice</option>
-                </select>
-            </div>
-
-            <div class="question">
-                <p><span class="q-letter">J</span> "Raining cats and dogs" means it is ___________.</p>
-                <select name="q10" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="wrong">raining lightly</option>
-                    <option value="correct">raining heavily</option>
-                    <option value="wrong">not raining at all</option>
-                </select>
-            </div>
-
-            <div class="question">
-                <p><span class="q-letter">K</span> "Break the ice" means to ___________.</p>
-                <select name="q11" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="wrong">start a fight</option>
-                    <option value="correct">make people feel relaxed</option>
-                    <option value="wrong">freeze the water</option>
-                </select>
-            </div>
-        </div>
-
-        <button type="button" onclick="checkQuiz()">✨ Check My Answers ✨</button>
-    </form>
-
-    <div id="result"></div>
-</div>
-
-<script>
-    function checkQuiz() {
-        const form = document.getElementById('quizForm');
-        const inputs = form.querySelectorAll('.answer');
-        
-        const correctValues = {
-            q1: 'correct',
-            q2: 'wake up',
-            q3: 'correct',
-            q4: 'correct',
-            q5: 'correct',
-            q6: 'correct',
-            q7: 'correct',
-            q8: 'correct',
-            q9: 'correct',
-            q10: 'correct',
-            q11: 'correct'
-        };
-
-        let score = 0;
-        let total = inputs.length;
-
-        inputs.forEach(input => {
-            const userAnswer = input.value.trim().toLowerCase();
-            const correct = correctValues[input.name];
-            const parentQ = input.closest('.question');
-            const exp = parentQ ? parentQ.querySelector('.explanation') : null;
-
-            // Sıfırla
-            input.style.borderColor = '';
-            if (exp) exp.style.display = 'none';
-
-            if (userAnswer === correct) {
-                score++;
-                input.style.borderColor = '#2ecc71';
-                input.style.background = '#f0fff4';
-            } else {
-                input.style.borderColor = '#e74c3c';
-                input.style.background = '#fff5f5';
-                if (exp) exp.style.display = 'block';
-            }
-        });
-
-        // Sonucu göster
-        const resultDiv = document.getElementById('result');
-        resultDiv.style.display = 'block';
-        resultDiv.className = ''; // Reset
-
-        let message = `🎯 You scored ${score} out of ${total}!`;
-
-        if (score === total) {
-            resultDiv.className = 'correct-result';
-            message += ' 🏆 Perfect! You are a GENIUS! 🌟';
-        } else if (score >= total * 0.7) {
-            resultDiv.className = 'partial-result';
-            message += ' 💪 Great job! Almost there! 🌟';
-        } else if (score >= total * 0.4) {
-            resultDiv.className = 'partial-result';
-            message += ' 📚 Keep practicing, you are improving! ✏️';
-        } else {
-            resultDiv.className = 'incorrect-result';
-            message += ' 😊 Don\'t give up! Review the unit and try again! 💪';
+        function renderJobs() {
+            document.getElementById('jobsContainer').innerHTML = jobsData.map(j => {
+                const shuffledOpts = [...j.opts].sort(() => Math.random() - 0.5);
+                return `
+                <div style="background:#F8F9FA; padding:16px; border-radius:20px; border:2px solid #E9ECEF; box-shadow: 0 4px 8px rgba(0,0,0,0.03);">
+                    <p style="font-weight:bold; font-size:13px; margin-bottom:12px;">"${j.duty}"</p>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;" id="jobOpts-${j.id}">
+                        ${shuffledOpts.map(o => `<button onclick="checkJob('${j.id}', this, '${j.job}')" class="opt-btn" style="text-align:center; padding:10px;">${o}</button>`).join('')}
+                    </div>
+                </div>`;
+            }).join('');
         }
 
-        resultDiv.innerHTML = message;
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }
-</script>
+        function checkJob(id, btn, correct) {
+            const chosen = btn.innerText;
+            if (chosen === correct) {
+                const parent = document.getElementById(`jobOpts-${id}`);
+                parent.querySelectorAll('button').forEach(b => b.disabled = true);
+                btn.classList.add('correct', 'pop');
+            } else {
+                btn.classList.add('wrong');
+                btn.classList.add('shake');
+                setTimeout(() => btn.classList.remove('shake'), 400);
+            }
+        }
 
+        // --- WHERE AM I? (PLACES IN TOWN) DATA ---
+        const placesData = [
+            { clue: "1. Buy fresh bread here in the morning.", ans: "bakery", id: "p1" },
+            { clue: "2. Look at ancient history objects here.", ans: "museum", id: "p2" },
+            { clue: "3. Buy medicine when you are sick.", ans: "chemist's", id: "p3" },
+            { clue: "4. Watch new films with friends.", ans: "cinema", id: "p4" }
+        ];
+
+        function renderPlaces() {
+            document.getElementById('placesContainer').innerHTML = placesData.map(p => `
+                <div style="background:#F8F9FA; padding:16px; border-radius:20px; border:2px solid #E9ECEF; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; box-shadow: 0 4px 8px rgba(0,0,0,0.03);">
+                    <span style="font-weight:bold; font-size:14px;">${p.clue}</span>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" id="in-${p.id}" placeholder="Type place..." class="custom-input" style="width:140px;">
+                        <button onclick="checkPlace('${p.id}')" class="action-btn">Check</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function checkPlace(id) {
+            const input = document.getElementById(`in-${id}`);
+            const val = input.value.trim().toLowerCase().replace(/['`’]/g, "");
+            const target = placesData.find(p => p.id === id).ans.toLowerCase().replace(/['`’]/g, "");
+
+            if (val === target) {
+                input.classList.remove('wrong');
+                input.classList.add('correct');
+                input.disabled = true;
+            } else {
+                input.classList.add('wrong');
+                input.classList.add('shake');
+                setTimeout(() => input.classList.remove('shake'), 400);
+            }
+        }
+
+        // --- HEALTHY VS UNHEALTHY FOOD SORT DATA ---
+        const foodData = [
+            { name: "Green Salad", type: "healthy" },
+            { name: "Hamburger", type: "unhealthy" },
+            { name: "Broccoli", type: "healthy" },
+            { name: "Chips", type: "unhealthy" },
+            { name: "Fish", type: "healthy" },
+            { name: "Chocolate", type: "unhealthy" }
+        ];
+        let activeFoodIdx = null;
+
+        function renderFood() {
+            const shuffled = foodData.map((f, i) => ({ ...f, originalIndex: i })).sort(() => Math.random() - 0.5);
+            document.getElementById('foodPool').innerHTML = shuffled.map(f => `
+                <div id="food-${f.originalIndex}" onclick="selectFood(${f.originalIndex})" class="item-chip">${f.name}</div>
+            `).join('');
+        }
+
+        function selectFood(index) {
+            document.querySelectorAll('#foodPool .item-chip').forEach(el => el.classList.remove('active-select'));
+            activeFoodIdx = index;
+            const el = document.getElementById(`food-${index}`);
+            if (el) el.classList.add('active-select');
+        }
+
+        function placeFood(type) {
+            if (activeFoodIdx === null) return;
+            const index = activeFoodIdx;
+            const item = foodData[index];
+            const el = document.getElementById(`food-${index}`);
+            const bucketContainer = document.getElementById(`${type}Items`);
+
+            el.classList.remove('active-select');
+            bucketContainer.appendChild(el);
+
+            if (item.type === type) {
+                el.classList.add('correct', 'pop');
+                el.classList.remove('wrong');
+                el.onclick = null;
+            } else {
+                el.classList.add('wrong');
+                el.classList.add('shake');
+                setTimeout(() => el.classList.remove('shake'), 400);
+                el.onclick = () => returnFoodToPool(index);
+            }
+            activeFoodIdx = null;
+        }
+
+        function returnFoodToPool(index) {
+            const el = document.getElementById(`food-${index}`);
+            document.getElementById('foodPool').appendChild(el);
+            el.classList.remove('wrong', 'correct');
+            el.onclick = () => selectFood(index);
+        }
+
+        // --- INITIALIZE ---
+        window.onload = () => {
+            renderJobs();
+            renderPlaces();
+            renderFood();
+        };
+    </script>
 </body>
 </html>
