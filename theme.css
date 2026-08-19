@@ -1,7 +1,11 @@
+html {
+    font-size: 95%;  /* varsayılan 16px'i ~18px yapar, tüm rem tabanlı yazılar orantılı büyür */
+}
+
 body {
     margin: 0;
     padding-top: 64px;   /* Navbar'ın tam yüksekliği kadar */
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Poppins', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background: radial-gradient(circle, #ffffff 0%, #CDEFFF 100%);
     min-height: 100vh;
 }
