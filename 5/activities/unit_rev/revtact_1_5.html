@@ -3,391 +3,398 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5th Grade English - Jobs, Places & Healthy Life</title>
+    <title>5th Grade English - Fun Practice Hub</title>
+    <link rel="stylesheet" href="../../../theme.css">
     <style>
         :root {
-            --purple: #6C5CE7; --purple-light: #EEECFD;
-            --pink: #FD79A8; --pink-light: #FDEDF3;
-            --green: #00B894; --green-light: #D4EDDA;
-            --blue: #0984E3; --blue-light: #E3F2FD;
-            --orange: #E17055; --orange-light: #FDF1EE;
-            --rose: #DC3545; --rose-light: #F8D7DA;
-            --bg: #F4F6FA; --card-bg: #FFFFFF;
-            --text: #2D3436; --text-muted: #636E72; --border: #E2E8F0;
+            --primary: #6C5CE7;
+            --primary-soft: #EEECFD;
+            --pink: #FD79A8;
+            --pink-soft: #FDEDF3;
+            --green: #00B894;
+            --green-soft: #E6F9F5;
+            --yellow: #FDCB6E;
+            --yellow-soft: #FEF9E7;
+            --red: #FF7675;
+            --red-soft: #FFEAE9;
+            --bg: #F4F7FE;
+            --card-bg: #e2eff8;
+            --text-dark: #2D3436;
+            --text-muted: #636E72;
+            --border-color: #E2E8F0;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
         body {
-            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
-            background-attachment: fixed;
-            color: var(--text);
-            user-select: none;
+            background-color: var(--bg);
+            color: var(--text-dark);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            position: relative;
+            user-select: none;
         }
 
-        /* Eğlenceli arka plan deseni */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: radial-gradient(circle at 20% 30%, rgba(108, 92, 231, 0.1) 0%, transparent 25%),
-                              radial-gradient(circle at 80% 70%, rgba(253, 121, 168, 0.1) 0%, transparent 30%),
-                              radial-gradient(circle at 50% 90%, rgba(0, 184, 148, 0.08) 0%, transparent 35%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* HEADER */
-        header {
-            background: linear-gradient(90deg, #6C5CE7, #FD79A8, #FDCB6E);
-            color: #fff;
-            padding: 20px 16px;
-            text-align: center;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-            border-bottom: 5px solid #fff;
-            position: relative;
-            z-index: 10;
-        }
-        header h1 {
-            font-size: 26px;
-            font-weight: bold;
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
-            letter-spacing: 0.5px;
-        }
-        header p {
-            font-size: 14px;
-            color: #fff;
-            margin-top: 6px;
-            font-weight: 600;
-            opacity: 0.95;
-        }
-
-        /* MAIN */
-        main {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 24px 16px;
-            flex-grow: 1;
+        /* Sayfa Genişliği Sınırlandırması ve Alan Dengesi */
+        .app-container {
             width: 100%;
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            gap: 24px;
-            position: relative;
-            z-index: 1;
+            gap: 20px;
         }
 
-        /* KARTLAR */
-        .card {
+        /* Hero Kartı */
+        .hero-banner {
+            background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #FD79A8 100%);
+            color: #FFFFFF;
+            padding: 26px 24px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner h1 {
+            font-size: 25px; /* +3px büyütüldü */
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .hero-banner p {
+            font-size: 15px; /* +2px büyütüldü */
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        /* İnteraktif Görev Kartları */
+        .activity-card {
             background: var(--card-bg);
-            border-radius: 24px;
-            padding: 24px;
-            border: 3px solid #fff;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.1), 0 4px 0 rgba(108, 92, 231, 0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            border: 2px solid #a4aeb9;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease;
         }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 40px rgba(0,0,0,0.15), 0 4px 0 rgba(108, 92, 231, 0.25);
-        }
+
         .card-header {
             display: flex;
             align-items: center;
-            gap: 14px;
-            margin-bottom: 20px;
-            background: #f8f9fa;
-            padding: 10px 14px;
-            border-radius: 16px;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed var(--bg);
         }
+
         .card-icon {
             width: 48px;
             height: 48px;
-            border-radius: 16px;
+            border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            background: #fff;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            font-size: 24px; /* +2px büyütüldü */
+            flex-shrink: 0;
         }
+
         .card-title h2 {
-            font-size: 19px;
-            color: var(--text);
+            font-size: 19px; /* +2px büyütüldü */
+            color: var(--text-dark);
             font-weight: 700;
         }
+
         .card-title p {
-            font-size: 13px;
+            font-size: 14px; /* +2px büyütüldü */
             color: var(--text-muted);
             margin-top: 2px;
         }
 
-        /* GRID */
+        /* Izgara Yapıları */
         .grid-2 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
-        }
-        .space-y {
-            display: flex;
-            flex-direction: column;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 14px;
         }
 
-        /* INPUTS & BUTTONS */
+        .space-y {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Soru / Seçenek Kutuları */
+        .quiz-item {
+            background: #F8FAFC;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-item-row {
+            background: #F8FAFC;
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
         .opt-btn {
             width: 100%;
-            text-align: left;
-            padding: 12px 14px;
-            background: #fff;
-            border: 2px solid var(--border);
-            border-radius: 16px;
+            padding: 11px 14px;
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
             font-weight: 700;
-            font-size: 13px;
-            color: var(--text);
+            font-size: 15px; /* +2px büyütüldü */
+            color: var(--text-dark);
             cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
         }
+
         .opt-btn:hover:not(:disabled) {
-            border-color: var(--purple);
-            background: var(--purple-light);
-            transform: scale(1.02);
-            box-shadow: 0 6px 12px rgba(108, 92, 231, 0.2);
-        }
-        .opt-btn:active:not(:disabled) {
-            transform: scale(0.98);
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+            transform: translateY(-2px);
         }
 
         .custom-input {
-            padding: 10px 14px;
-            border-radius: 16px;
-            border: 2px solid var(--border);
+            padding: 9px 12px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border-color);
             font-weight: 600;
+            font-size: 15px; /* +2px büyütüldü */
             outline: none;
-            transition: 0.2s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+            transition: all 0.2s;
+            width: 140px;
         }
+
         .custom-input:focus {
             border-color: var(--pink);
-            box-shadow: 0 0 0 4px rgba(253, 121, 168, 0.2);
+            box-shadow: 0 0 0 3px rgba(253, 121, 168, 0.2);
         }
 
         .action-btn {
-            background: linear-gradient(135deg, #FD79A8, #e84393);
-            color: #fff;
+            background: var(--pink);
+            color: #FFFFFF;
             border: none;
-            padding: 10px 18px;
-            border-radius: 16px;
-            font-weight: bold;
+            padding: 9px 18px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 15px; /* +2px büyütüldü */
             cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 0 6px 12px rgba(253, 121, 168, 0.3);
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(253, 121, 168, 0.3);
         }
+
         .action-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(253, 121, 168, 0.4);
-        }
-        .action-btn:active {
-            transform: scale(0.95);
+            opacity: 0.9;
         }
 
-        /* Doğru / Yanlış */
+        /* Yanıt Durum Stilleri */
         .correct {
-            background: var(--green-light) !important;
+            background: var(--green-soft) !important;
             border-color: var(--green) !important;
-            color: #155724 !important;
+            color: #007955 !important;
             font-weight: bold;
         }
+
         .wrong {
-            background: var(--rose-light) !important;
-            border-color: var(--rose) !important;
-            color: #721C24 !important;
+            background: var(--red-soft) !important;
+            border-color: var(--red) !important;
+            color: #C0392B !important;
             font-weight: bold;
         }
 
-        .opt-btn.correct::after {
-            content: " ✔";
-            color: #155724;
-            font-weight: bold;
-        }
-        .opt-btn.wrong::after {
-            content: " !";
-            color: #721C24;
-            font-weight: bold;
-        }
+        .opt-btn.correct::after { content: "  ✓"; }
+        .opt-btn.wrong::after { content: "  ✕"; }
 
-        /* BUCKET SORTING */
+        /* Sürükle-Bırak / Kova Alanı */
         .pool-box {
-            background: #f8f9fa;
+            background: #F8FAFC;
             border: 2px dashed #CBD5E0;
-            border-radius: 20px;
-            padding: 16px;
+            border-radius: var(--radius-md);
+            padding: 14px;
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 16px;
-            min-height: 70px;
+            margin-bottom: 14px;
+            min-height: 64px;
             align-items: center;
-            transition: 0.3s;
-        }
-        .pool-box:hover {
-            border-color: var(--purple);
-            background: #f1f0ff;
         }
 
         .item-chip {
-            background: #fff;
-            border: 2px solid #CBD5E0;
-            padding: 10px 16px;
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            padding: 9px 16px;
             border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 700;
+            font-size: 15px; /* +2px büyütüldü */
             cursor: pointer;
-            transition: all 0.25s ease;
-            user-select: none;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
         }
+
         .item-chip:hover {
-            border-color: #FDCB6E;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            border-color: var(--yellow);
+            transform: translateY(-2px);
         }
+
         .item-chip.active-select {
-            border-color: var(--purple);
-            background: var(--purple-light);
-            box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.25);
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
             transform: scale(1.05);
         }
 
         .bucket-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
         }
+
         .bucket {
-            min-height: 160px;
-            border-radius: 20px;
-            padding: 16px;
-            border: 3px solid;
+            min-height: 140px;
+            border-radius: var(--radius-md);
+            padding: 14px;
+            border: 2px solid;
             cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
         }
-        .bucket:hover {
-            transform: scale(1.02);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
+
         .bucket h3 {
-            font-size: 16px;
+            font-size: 16px; /* +2px büyütüldü */
             margin-bottom: 12px;
             pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
+
         .bucket-items {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
             pointer-events: none;
         }
+
         .bucket-items .item-chip {
             pointer-events: auto;
         }
 
-        /* ANIMASYONLAR */
+        /* Animasyonlar */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-6px); }
-            50% { transform: translateX(6px); }
-            75% { transform: translateX(-6px); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
         }
-        .shake {
-            animation: shake 0.4s ease;
-        }
+        .shake { animation: shake 0.3s ease; }
+
         @keyframes pop {
-            0% { transform: scale(0.9); }
-            50% { transform: scale(1.05); }
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.03); }
             100% { transform: scale(1); }
         }
-        .pop {
-            animation: pop 0.3s ease;
-        }
+        .pop { animation: pop 0.25s ease; }
 
         footer {
             text-align: center;
             padding: 16px;
             color: var(--text-muted);
-            font-size: 13px;
-            border-top: 1px solid var(--border);
-            background: #fff;
-            position: relative;
-            z-index: 1;
+            font-size: 13px; /* +1px büyütüldü */
+            border-top: 1px solid var(--border-color);
+            background: #FFFFFF;
+            margin-top: auto;
         }
     </style>
     <link rel="stylesheet" href="../../../theme.css">
 </head>
 <body>
-    <div id="navbar-placeholder" style="min-height: 64px;"></div>
+    <div id="navbar-placeholder" style="min-height: 0px;"></div>
     <script src="../../../navbar.js"></script>
 
-    <header>
-        <h1>🎓 5th Grade English - Jobs, Places & Healthy Life</h1>
-        <p>Who Am I? + Where Am I? + Healthy vs Unhealthy Food Sort</p>
-    </header>
+    <div class="app-container">
+        <!-- Site Navbar Altında Şık İçerik Başlığı -->
+        <header class="hero-banner">
+            <h1>🎓 5th Grade English Practice</h1>
+            <p>Jobs, Places in Town & Healthy vs Unhealthy Food</p>
+        </header>
 
-    <main>
-        <!-- WHO AM I? (JOBS & DUTIES) -->
-        <section class="card">
-            <div class="card-header">
-                <div class="card-icon" style="background: var(--purple-light); color: var(--purple);">💼</div>
-                <div class="card-title">
-                    <h2>Who Am I? (Jobs & Duties)</h2>
-                    <p>Read the duty and select the correct job title!</p>
+        <main class="space-y">
+            <!-- WHO AM I? (JOBS) -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">💼</div>
+                    <div class="card-title">
+                        <h2>Part A: Who Am I? (Jobs & Duties)</h2>
+                        <p>Read the clue and choose the correct job!</p>
+                    </div>
                 </div>
-            </div>
-            <div id="jobsContainer" class="grid-2"></div>
-        </section>
+                <div id="jobsContainer" class="grid-2"></div>
+            </section>
 
-        <!-- WHERE AM I? (PLACES IN TOWN) -->
-        <section class="card">
-            <div class="card-header">
-                <div class="card-icon" style="background: var(--pink-light); color: var(--pink);">🏪</div>
-                <div class="card-title">
-                    <h2>Where Am I? (Places in Town)</h2>
-                    <p>Type the correct place name according to the clue! (e.g. bakery, chemist's)</p>
+            <!-- WHERE AM I? (PLACES) -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--pink-soft); color: var(--pink);">🏪</div>
+                    <div class="card-title">
+                        <h2>Part B: Where Am I? (Places in Town)</h2>
+                        <p>Type the correct place name! (e.g. bakery, chemist's)</p>
+                    </div>
                 </div>
-            </div>
-            <div id="placesContainer" class="space-y"></div>
-        </section>
+                <div id="placesContainer" class="space-y"></div>
+            </section>
 
-        <!-- HEALTHY VS UNHEALTHY FOOD SORT -->
-        <section class="card">
-            <div class="card-header">
-                <div class="card-icon" style="background: var(--green-light); color: var(--green);">🥗</div>
-                <div class="card-title">
-                    <h2>Healthy vs Unhealthy Food Sort</h2>
-                    <p><b>1.</b> Click a food to select it. <b>2.</b> Click the correct bucket to place it. <i>(Click an item inside the bucket to take it back!)</i></p>
+            <!-- HEALTHY VS UNHEALTHY FOOD SORT -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--green-soft); color: var(--green);">🥗</div>
+                    <div class="card-title">
+                        <h2>Part C: Healthy vs Unhealthy Food Sort</h2>
+                        <p>1. Click a food to select it. 2. Click the correct bucket to place it!</p>
+                    </div>
                 </div>
-            </div>
-            <div id="foodPool" class="pool-box"></div>
-            <div class="bucket-container">
-                <div id="healthyBucket" class="bucket" style="background: #E8F8F5; border-color: #A3E4D7;" onclick="placeFood('healthy')">
-                    <h3 style="color: #0E6251;">❤️ Healthy Food</h3>
-                    <div class="bucket-items" id="healthyItems"></div>
+                <div id="foodPool" class="pool-box"></div>
+                <div class="bucket-container">
+                    <div id="healthyBucket" class="bucket" style="background: var(--green-soft); border-color: #A3E4D7;" onclick="placeFood('healthy')">
+                        <h3 style="color: #0E6251;">❤️ Healthy Food</h3>
+                        <div class="bucket-items" id="healthyItems"></div>
+                    </div>
+                    <div id="unhealthyBucket" class="bucket" style="background: var(--red-soft); border-color: #F5B7B1;" onclick="placeFood('unhealthy')">
+                        <h3 style="color: #78281F;">🍔 Unhealthy Food</h3>
+                        <div class="bucket-items" id="unhealthyItems"></div>
+                    </div>
                 </div>
-                <div id="unhealthyBucket" class="bucket" style="background: #FDEDEC; border-color: #F5B7B1;" onclick="placeFood('unhealthy')">
-                    <h3 style="color: #78281F;">🍔 Unhealthy Food</h3>
-                    <div class="bucket-items" id="unhealthyItems"></div>
-                </div>
-            </div>
-        </section>
-    </main>
+            </section>
+        </main>
+    </div>
 
-    <footer>Designed for 5th Grade English Students • Unit Revision Interactive Hub</footer>
+    <footer>Designed for 5th Grade English Students • Interactive Revision Unit</footer>
 
     <script>
-        // --- WHO AM I? (JOBS & DUTIES) DATA ---
+        // --- DATA & LOGIC ---
         const jobsData = [
             { duty: "I help sick people in a hospital.", job: "Doctor", opts: ["Farmer", "Doctor", "Singer"], id: "j1" },
             { duty: "I grow fruit and work on a farm.", job: "Farmer", opts: ["Farmer", "Teacher", "Police"], id: "j2" },
@@ -399,29 +406,26 @@
             document.getElementById('jobsContainer').innerHTML = jobsData.map(j => {
                 const shuffledOpts = [...j.opts].sort(() => Math.random() - 0.5);
                 return `
-                <div style="background:#F8F9FA; padding:16px; border-radius:20px; border:2px solid #E9ECEF; box-shadow: 0 4px 8px rgba(0,0,0,0.03);">
-                    <p style="font-weight:bold; font-size:13px; margin-bottom:12px;">"${j.duty}"</p>
-                    <div style="display:flex; gap:8px; flex-wrap:wrap;" id="jobOpts-${j.id}">
-                        ${shuffledOpts.map(o => `<button onclick="checkJob('${j.id}', this, '${j.job}')" class="opt-btn" style="text-align:center; padding:10px;">${o}</button>`).join('')}
+                <div class="quiz-item">
+                    <p style="font-weight:700; font-size:15px; color:var(--text-dark);">"${j.duty}"</p>
+                    <div style="display:flex; flex-direction:column; gap:6px;" id="jobOpts-${j.id}">
+                        ${shuffledOpts.map(o => `<button onclick="checkJob('${j.id}', this, '${j.job}')" class="opt-btn">${o}</button>`).join('')}
                     </div>
                 </div>`;
             }).join('');
         }
 
         function checkJob(id, btn, correct) {
-            const chosen = btn.innerText;
-            if (chosen === correct) {
+            if (btn.innerText === correct) {
                 const parent = document.getElementById(`jobOpts-${id}`);
                 parent.querySelectorAll('button').forEach(b => b.disabled = true);
                 btn.classList.add('correct', 'pop');
             } else {
-                btn.classList.add('wrong');
-                btn.classList.add('shake');
-                setTimeout(() => btn.classList.remove('shake'), 400);
+                btn.classList.add('wrong', 'shake');
+                setTimeout(() => btn.classList.remove('shake'), 300);
             }
         }
 
-        // --- WHERE AM I? (PLACES IN TOWN) DATA ---
         const placesData = [
             { clue: "1. Buy fresh bread here in the morning.", ans: "bakery", id: "p1" },
             { clue: "2. Look at ancient history objects here.", ans: "museum", id: "p2" },
@@ -431,10 +435,10 @@
 
         function renderPlaces() {
             document.getElementById('placesContainer').innerHTML = placesData.map(p => `
-                <div style="background:#F8F9FA; padding:16px; border-radius:20px; border:2px solid #E9ECEF; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; box-shadow: 0 4px 8px rgba(0,0,0,0.03);">
-                    <span style="font-weight:bold; font-size:14px;">${p.clue}</span>
+                <div class="quiz-item-row">
+                    <span style="font-weight:700; font-size:15px;">${p.clue}</span>
                     <div style="display:flex; gap:8px;">
-                        <input type="text" id="in-${p.id}" placeholder="Type place..." class="custom-input" style="width:140px;">
+                        <input type="text" id="in-${p.id}" placeholder="Type place..." class="custom-input">
                         <button onclick="checkPlace('${p.id}')" class="action-btn">Check</button>
                     </div>
                 </div>
@@ -451,13 +455,11 @@
                 input.classList.add('correct');
                 input.disabled = true;
             } else {
-                input.classList.add('wrong');
-                input.classList.add('shake');
-                setTimeout(() => input.classList.remove('shake'), 400);
+                input.classList.add('wrong', 'shake');
+                setTimeout(() => input.classList.remove('shake'), 300);
             }
         }
 
-        // --- HEALTHY VS UNHEALTHY FOOD SORT DATA ---
         const foodData = [
             { name: "Green Salad", type: "healthy" },
             { name: "Hamburger", type: "unhealthy" },
@@ -497,9 +499,8 @@
                 el.classList.remove('wrong');
                 el.onclick = null;
             } else {
-                el.classList.add('wrong');
-                el.classList.add('shake');
-                setTimeout(() => el.classList.remove('shake'), 400);
+                el.classList.add('wrong', 'shake');
+                setTimeout(() => el.classList.remove('shake'), 300);
                 el.onclick = () => returnFoodToPool(index);
             }
             activeFoodIdx = null;
@@ -512,7 +513,6 @@
             el.onclick = () => selectFood(index);
         }
 
-        // --- INITIALIZE ---
         window.onload = () => {
             renderJobs();
             renderPlaces();
