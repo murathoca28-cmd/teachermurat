@@ -15,9 +15,13 @@ document.getElementById('navbar-placeholder').innerHTML = `
     left: 0;
     width: 100%;
     background: #ffffff;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    box-shadow: none;
     z-index: 1000;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: 'Nunito', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;  /* yeni */
+    transition: box-shadow 0.2s ease;
+  }
+  .tm-navbar.scrolled {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
   .tm-navbar-inner {
     max-width: 1200px;
@@ -41,6 +45,7 @@ document.getElementById('navbar-placeholder').innerHTML = `
     align-items: center;
   }
   .tm-links a {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -51,22 +56,35 @@ document.getElementById('navbar-placeholder').innerHTML = `
     font-size: 0.9rem;
     font-weight: 600;
     color: #2c5282;
-    border-radius: 8px;
-    transition: all 0.25s ease;
+    transition: color 0.25s ease;
     white-space: nowrap;
-    border: 1px solid transparent;
     background: transparent;
     cursor: pointer;
   }
+  .tm-links a::after {
+    content: '';
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 6px;
+    height: 2px;
+    background: #2b6cb0;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.25s ease;
+  }
   .tm-links a:hover {
-    background: #ebf4ff;
     color: #1a365d;
-    border-color: #bee3f8;
+  }
+  .tm-links a:hover::after {
+    transform: scaleX(1);
   }
   .tm-links a.active {
-    background: #2b6cb0;
-    color: #ffffff;
-    border-color: #2b6cb0;
+    color: #2b6cb0;
+    font-weight: 700;
+  }
+  .tm-links a.active::after {
+    transform: scaleX(1);
   }
   /* Mobil hamburger menü */
   .tm-hamburger {
@@ -118,6 +136,9 @@ document.getElementById('navbar-placeholder').innerHTML = `
       min-width: unset;
       height: 48px;
       font-size: 1rem;
+    }
+    .tm-links a::after {
+      display: none;
     }
   }
 
@@ -223,4 +244,27 @@ closeSoonBtn.addEventListener('click', function() {
 // Modal dışına tıklayınca kapat (opsiyonel)
 soonModal.addEventListener('click', function(e) {
   if (e.target === soonModal) soonModal.classList.remove('open');
+});
+
+// Kaydırınca gölge efekti
+window.addEventListener('scroll', function() {
+  const navbar = document.querySelector('.tm-navbar');
+  if (!navbar) return;
+  if (window.scrollY > 10) {
+    navbar.classList.add('scrolled');
+  } else {
+    navbar.classList.remove('scrolled');
+  }
+});
+
+// Aktif sayfayı otomatik vurgulama
+const currentPath = window.location.pathname;
+document.querySelectorAll('.tm-links a[href]').forEach(function(link) {
+  const href = link.getAttribute('href');
+  if (href.startsWith('javascript:')) return; // Grade 6 gibi modal açan linkleri atla
+  const linkPath = new URL(href, window.location.origin).pathname;
+  const isHome = (currentPath === '/' || currentPath.endsWith('/index.html')) && linkPath.endsWith('/index.html');
+  if (linkPath === currentPath || isHome) {
+    link.classList.add('active');
+  }
 });
