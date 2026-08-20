@@ -30,12 +30,15 @@
             --radius-sm: 12px;
         }
 
-        * {
+        /* DÜZELTİLMİŞ KISIM */
+        *, *::before, *::after {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
+
+        /* Sadece etkinlik alanının fontunu ve sıfırlamasını belirler, Navbar'a dokunmaz */
+            .app-container, .app-container * {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
 
         body {
             background-color: var(--bg);
@@ -289,7 +292,6 @@
             margin-top: auto;
         }
     </style>
-    <link rel="stylesheet" href="../../../theme.css">
 </head>
 <body>
     <div id="navbar-placeholder" style="min-height: 0px;"></div>

@@ -2,6 +2,8 @@
 
 html {
     font-size: 100%;
+    scrollbar-gutter: stable; /* Scrollbar çıksa da çıkmasa da alanı sabit tutar, navbar kaymasını önler */
+    overflow-y: scroll;       /* Eski tarayıcılar için yedek destek */
 }
 
 body {
@@ -12,7 +14,7 @@ body {
     min-height: 100vh;
 }
 
- h1, h2, h3, h4, h5, h6 {
-       font-family: 'Poppins', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-       font-weight: 300; /* veya 400, mevcut 600/700'den daha ince */
-   }
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 300; /* veya 400, mevcut 600/700'den daha ince */
+}
