@@ -172,13 +172,15 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Grid aralığı */
+        /* Grid aralığı - tam 5 buton genişliğinde, eksik son satır otomatik ortalanır */
         #unitGrid {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
             width: 100%;
+            max-width: 590px; /* 5 x 110px + 4 x 10px boşluk */
+            margin: 0 auto;
         }
 
         /* Kategori başlığı */
@@ -196,6 +198,7 @@
             .menu-card { width: 160px; height: 140px; }
             .menu-card .icon { font-size: 2.25rem; } /* 36px */
             .menu-card .label { font-size: 1rem; } /* 16px */
+
             .unit-card {
                 width: calc(50% - 15px);
                 max-width: 110px;
@@ -212,6 +215,7 @@
             }
             .menu-card .icon { font-size: 1.875rem; } /* 30px */
             .menu-card .label { font-size: 0.875rem; } /* 14px */
+
             .unit-card {
                 width: calc(50% - 12px);
                 height: 80px;
