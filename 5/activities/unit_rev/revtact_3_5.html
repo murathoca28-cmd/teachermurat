@@ -29,10 +29,13 @@
             --radius-sm: 12px;
         }
 
-        * {
+                /* Her zaman güvenli olan kısım */
+        *, *::before, *::after {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        }
+
+        /* Font ve özel sıfırlamaları sadece etkinlik kapsayıcısına uygulayın */
+        .app-container, .app-container * {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
