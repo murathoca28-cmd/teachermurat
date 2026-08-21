@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,141 +12,179 @@
             box-sizing: border-box;
         }
 
+        /* BODY DİKEYDE VE YATAYDA TAM MERKEZLENDİ */
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: radial-gradient(circle, #ffffff 0%, #CDEFFF 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            /* Dikeyde tam ortalama eklendi */
             min-height: 100vh;
             margin: 0;
         }
 
-        #navbar-placeholder {
-            width: 100%;
-        }
-
         .container {
-            max-width: 850px;
-            width: 100%;
+            max-width: 800px;
+            /* 800px -> 880px (Daha geniş kart) */
+            width: 92%;
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
-            padding: 15px 20px;
-            margin: -10px auto 20px auto;
+            padding: 50px 45px;
+            /* 30px -> 50px 45px (Dikey ve yatayda dolgun iç hacim) */
+            margin-top: -100px;
             border-radius: 35px;
-            box-shadow: 0 15px 50px rgba(0, 100, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 60px rgba(0, 100, 255, 0.18);
+            /* Hacmi destekleyen daha yumuşak derin gölge */
+            border: 5px solid rgba(79, 172, 254, 0.4);
         }
 
         .main-title {
             font-size: 2rem;
             font-weight: 800;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 25px;
             background: linear-gradient(to right, #1e3c72, #2a5298, #4facfe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .category-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin: 10px 0 15px 5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            letter-spacing: 0.5px;
-        }
-
-        .cat-icon {
-            font-size: 1.8rem;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 16px;
-            margin-bottom: 10px;
-        }
-
-        /* ORTAK BUTON STİLİ (Daha dengeli sığması için orantılı boyutlandırıldı) */
-        .test-btn {
+        /* SEKME (TAB) MENÜSÜ */
+        .tab-menu {
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 15px 8px;
-            color: white;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 22px;
+            border: 2px solid #7dd3fc;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #334155;
             font-weight: 700;
-            font-size: 0.9rem;
-            border-radius: 16px;
-            text-decoration: none;
-            text-align: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            font-size: 0.95rem;
+            cursor: pointer;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            background: #ffffff;
+            border-color: #94a3b8;
+        }
+
+        /* Aktif Sekme Renkleri */
+        .tab-btn.active[data-tab="activities"] {
+            background: #2ecc71;
+            color: white;
+            border-color: #27ae60;
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+        }
+
+        .tab-btn.active[data-tab="worksheets"] {
+            background: #e67e22;
+            color: white;
+            border-color: #d35400;
+            box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4);
+        }
+
+        .tab-btn.active[data-tab="reading"] {
+            background: #8e44ad;
+            color: white;
+            border-color: #712b8d;
+            box-shadow: 0 6px 20px rgba(142, 68, 173, 0.4);
+        }
+
+        .tab-btn.active[data-tab="listening"] {
+            background: #2980b9;
+            color: white;
+            border-color: #1f618d;
+            box-shadow: 0 6px 20px rgba(41, 128, 185, 0.4);
+        }
+
+        /* TAB İÇERİKLERİ VE GRID */
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(90px, 135px));
+            gap: 16px;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* SADELEŞTİRİLMİŞ & ORTALANMIŞ BUTONLAR */
+        .card-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            padding: 16px 10px;
+            border-radius: 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
             border: none;
             cursor: pointer;
-            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }border: 1.5px solid #cbd5e1;
+
+        .card-btn:hover {
+            transform: translateY(-6px) scale(1.04);
         }
 
-        .test-btn:hover {
-            transform: translateY(-8px) scale(1.04);
-        }
-        .test-btn:active {
-            transform: scale(0.95) translateY(0);
-        }
-
-        /* Kategori renkleri */
-        .cat-activities .category-title { color: #0b6e4f; }
-        .test-btn.activity {
+        /* Renk Sınıfları */
+        .btn-act {
             background: linear-gradient(145deg, #2ecc71, #11998e);
-            box-shadow: 0 8px 18px rgba(46, 204, 113, 0.35);
-        }
-        .test-btn.activity:hover {
-            background: linear-gradient(145deg, #27ae60, #0d7d6e);
-            box-shadow: 0 16px 30px rgba(46, 204, 113, 0.5);
         }
 
-        .cat-worksheets .category-title { color: #d35400; }
-        .test-btn.worksheet {
+        .btn-work {
             background: linear-gradient(145deg, #f39c12, #e67e22);
-            box-shadow: 0 8px 18px rgba(243, 156, 18, 0.35);
-        }
-        .test-btn.worksheet:hover {
-            background: linear-gradient(145deg, #d68910, #ca6f1e);
-            box-shadow: 0 16px 30px rgba(243, 156, 18, 0.5);
         }
 
-        .cat-reading .category-title { color: #5b2c6f; }
-        .test-btn.reading {
+        .btn-read {
             background: linear-gradient(145deg, #8e44ad, #5b2c6f);
-            box-shadow: 0 8px 18px rgba(142, 68, 173, 0.35);
-        }
-        .test-btn.reading:hover {
-            background: linear-gradient(145deg, #7d3c98, #4a235a);
-            box-shadow: 0 16px 30px rgba(142, 68, 173, 0.5);
         }
 
-        /* LISTEN KATEGORİSİ */
-        .cat-listen .category-title { color: #1f618d; }
-        .test-btn.listen {
+        .btn-list {
             background: linear-gradient(145deg, #2980b9, #1f618d);
-            box-shadow: 0 8px 18px rgba(41, 128, 185, 0.35);
-        }
-        .test-btn.listen:hover {
-            background: linear-gradient(145deg, #2471a3, #1a5276);
-            box-shadow: 0 16px 30px rgba(41, 128, 185, 0.5);
         }
 
-        /* MODAL STİLLERİ */
+        /* MODAL */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -169,7 +207,6 @@
             max-height: 90vh;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
         .modal-header {
@@ -181,195 +218,159 @@
         }
 
         .modal-title {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 700;
-            background: linear-gradient(to right, #d35400, #e67e22);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #e67e22;
         }
 
         .close-btn {
-            width: 34px;
-            height: 34px;
-            padding: 0;
+            width: 32px;
+            height: 32px;
             border: none;
             border-radius: 50%;
             background: #f1f1f1;
-            color: #666;
-            font-size: 1.1rem;
-            font-weight: 400;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             cursor: pointer;
-            box-shadow: none;
-            transition: 0.2s;
-            line-height: 1;
-        }
-
-        .close-btn:hover { background: #e67e22; color: white; }
-
-        .modal-body {
-            flex: 1;
-            padding: 10px 20px 20px;
-            display: flex;
-            flex-direction: column;
+            font-size: 1.1rem;
         }
 
         .pdf-frame {
             width: 100%;
             height: 65vh;
-            max-height: 600px;
-            border: 2px solid #f39c12;
-            border-radius: 12px;
+            border: none;
+            padding: 15px;
         }
 
-        /* MOBİL */
-        @media (max-width: 650px) {
-            .container { padding: 20px 15px; }
-            .main-title { font-size: 1.6rem; }
-            .grid { gap: 12px; }
-            .test-btn { font-size: 0.85rem; padding: 14px 6px; white-space: normal; border-radius: 14px; }
-            .category-title { font-size: 1.1rem; }
-            .pdf-frame { height: 50vh; }
-        }
+        @media (max-width: 550px) {
+            .container {
+                padding: 20px 12px;
+                margin: 20px auto;
+            }
 
-        @media (max-width: 450px) {
-            .grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-            .test-btn { font-size: 0.8rem; padding: 12px 4px; border-radius: 12px; }
-            .main-title { font-size: 1.3rem; }
+            .tab-btn {
+                padding: 9px 13px;
+                font-size: 0.82rem;
+            }
+
+            .tab-panel.active {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .card-btn {
+                padding: 14px 4px;
+                font-size: 0.88rem;
+                border-radius: 14px;
+            }
         }
     </style>
     <link rel="stylesheet" href="../theme.css">
 </head>
+
 <body>
+
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
     <script src="../navbar.js" defer></script>
 
     <div class="container">
         <div class="main-title">📝 Worksheets & Activities</div>
 
-        <!-- ========== ACTIVITIES (HTML sayfaları) ========== -->
-        <div class="cat-activities">
-            <div class="category-title"><span class="cat-icon">🧩</span> Activities</div>
-            <div class="grid">
-                <a href="activities/unit_rev/revtact_1_5.html" class="test-btn activity">🎯 Activity 1</a>
-                <a href="activities/unit_rev/revtact_2_5.html" class="test-btn activity">🎯 Activity 2</a>
-                <a href="activities/unit_rev/revtact_3_5.html" class="test-btn activity">🎯 Activity 3</a>
-                <a href="activities/activity4.html" class="test-btn activity">🎯 Activity 4</a>
-                <a href="activities/activity5.html" class="test-btn activity">🎯 Activity 5</a>
-            </div>
+        <!-- ÜST SEKME MENÜSÜ -->
+        <div class="tab-menu">
+            <button class="tab-btn active" data-tab="activities">🧩 Activities</button>
+            <button class="tab-btn" data-tab="worksheets">📄 Worksheets</button>
+            <button class="tab-btn" data-tab="reading">📚 Reading</button>
+            <button class="tab-btn" data-tab="listening">🎧 Listening</button>
         </div>
 
-        <!-- ========== WORKSHEETS (PDF.js viewer) ========== -->
-        <div class="cat-worksheets">
-            <div class="category-title"><span class="cat-icon">📄</span> Worksheets</div>
-            <div class="grid">
-                <button class="test-btn worksheet"
-                        data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_worksheets/Grade_5_revs_work_1.pdf?=v1"
-                        data-download="https://cdn.teachermurat.com/5/rev_worksheets/Grade_5_revs_work_1.pdf"
-                        data-title="Worksheet 1">📝 Worksheet 1</button>
-
-                <button class="test-btn worksheet"
-                        data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/worksheets/worksheet2.pdf"
-                        data-download="https://cdn.teachermurat.com/5/worksheets/worksheet2.pdf"
-                        data-title="Worksheet 2">📝 Worksheet 2</button>
-                <button class="test-btn worksheet"
-                        data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/worksheets/worksheet3.pdf"
-                        data-download="https://cdn.teachermurat.com/5/worksheets/worksheet3.pdf"
-                        data-title="Worksheet 3">📝 Worksheet 3</button>
-                <button class="test-btn worksheet"
-                        data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/worksheets/worksheet4.pdf"
-                        data-download="https://cdn.teachermurat.com/5/worksheets/worksheet4.pdf"
-                        data-title="Worksheet 4">📝 Worksheet 4</button>
-                <button class="test-btn worksheet"
-                        data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/worksheets/worksheet5.pdf"
-                        data-download="https://cdn.teachermurat.com/5/worksheets/worksheet5.pdf"
-                        data-title="Worksheet 5">📝 Worksheet 5</button>
-            </div>
+        <!-- 1. ACTIVITIES PANELİ -->
+        <div class="tab-panel active" id="activities">
+            <a href="activities/unit_rev/revtact_1_5.html" class="card-btn btn-act">🎯 Part 1</a>
+            <a href="activities/unit_rev/revtact_2_5.html" class="card-btn btn-act">🎯 Part 2</a>
+            <a href="activities/unit_rev/revtact_3_5.html" class="card-btn btn-act">🎯 Part 3</a>
         </div>
 
-        <!-- ========== READING (HTML sayfaları) ========== -->
-        <div class="cat-reading">
-            <div class="category-title"><span class="cat-icon">📖</span> Reading</div>
-            <div class="grid">
-                <a href="reading/unit_rev/grade_5_revread_1.html" class="test-btn reading">🔖 Reading 1</a>
-                <a href="reading/reading2.html" class="test-btn reading">🔖 Reading 2</a>
-                <a href="reading/reading3.html" class="test-btn reading">🔖 Reading 3</a>
-                <a href="reading/reading4.html" class="test-btn reading">🔖 Reading 4</a>
-                <a href="reading/reading5.html" class="test-btn reading">🔖 Reading 5</a>
-            </div>
+        <!-- 2. WORKSHEETS PANELİ -->
+        <div class="tab-panel" id="worksheets">
+            <button class="card-btn btn-work worksheet-btn"
+                data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_worksheets/Grade_5_revs_work_1.pdf?=v1"
+                data-title="Worksheet 1">📝 Sheet 1</button>
+            <button class="card-btn btn-work worksheet-btn"
+                data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/worksheets/worksheet2.pdf"
+                data-title="Worksheet 2">📝 Sheet 2</button>
+            <button class="card-btn btn-work worksheet-btn"
+                data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/worksheets/worksheet3.pdf"
+                data-title="Worksheet 3">📝 Sheet 3</button>
         </div>
 
-        <!-- ========== LISTEN (HTML / Ses sayfaları) ========== -->
-        <div class="cat-listen">
-            <div class="category-title"><span class="cat-icon">🎧</span> Listening</div>
-            <div class="grid">
-                <a href="listening/unit_rev/01-Grade5_listening.html" class="test-btn listen">🎧 Listening 1</a>
-                <a href="listening/unit_rev/02-Grade5_listening.html" class="test-btn listen">🎧 Listening 2</a>
-                <a href="listen/listen3.html" class="test-btn listen">🎧 Listening 3</a>
-                <a href="listen/listen4.html" class="test-btn listen">🎧 Listening 4</a>
-                <a href="listen/listen5.html" class="test-btn listen">🎧 Listening 5</a>
-            </div>
+        <!-- 3. READING PANELİ -->
+        <div class="tab-panel" id="reading">
+            <a href="reading/unit_rev/grade_5_revread_1.html" class="card-btn btn-read">📚 Passage 1</a>
+            <a href="reading/reading2.html" class="card-btn btn-read">📚 Passage 2</a>
+            <a href="reading/reading3.html" class="card-btn btn-read">📚 Passage 3</a>
+        </div>
+
+        <!-- 4. LISTENING PANELİ -->
+        <div class="tab-panel" id="listening">
+            <a href="listening/unit_rev/01-Grade5_listening.html" class="card-btn btn-list">🎧 Audio 1</a>
+            <a href="listening/unit_rev/02-Grade5_listening.html" class="card-btn btn-list">🎧 Audio 2</a>
+            <a href="listen/listen3.html" class="card-btn btn-list">🎧 Audio 3</a>
         </div>
     </div>
 
-    <!-- ========== MODAL (sadece Worksheet için) ========== -->
+    <!-- MODAL -->
     <div class="modal-overlay" id="pdfModal">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title" id="modalTitle">Worksheet</span>
-                <button class="close-btn" id="closeModalTop">&times;</button>
+                <button class="close-btn" id="closeModal">&times;</button>
             </div>
-            <div class="modal-body">
-                <iframe class="pdf-frame" id="pdfFrame" src="" allowfullscreen title="PDF Önizleme"></iframe>
-            </div>
+            <iframe class="pdf-frame" id="pdfFrame" src="" title="PDF Önizleme"></iframe>
         </div>
     </div>
 
     <script>
-        (function() {
-            const overlay = document.getElementById('pdfModal');
-            const iframe = document.getElementById('pdfFrame');
-            const titleEl = document.getElementById('modalTitle');
-            const closeButtons = document.querySelectorAll('#closeModalTop');
-            const worksheetButtons = document.querySelectorAll('.test-btn.worksheet[data-embed]');
+        // TAB GEÇİŞ MANTIĞI
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabPanels = document.querySelectorAll('.tab-panel');
 
-            worksheetButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const embedUrl = btn.dataset.embed;
-                    const title = btn.dataset.title || 'Worksheet';
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabPanels.forEach(p => p.classList.remove('active'));
 
-                    if (!embedUrl) {
-                        alert('Bu worksheet için embed linki eksik.');
-                        return;
-                    }
-
-                    iframe.src = embedUrl;
-                    titleEl.textContent = `📄 ${title}`;
-
-                    overlay.classList.add('active');
-                });
+                btn.classList.add('active');
+                const targetPanel = document.getElementById(btn.dataset.tab);
+                if (targetPanel) targetPanel.classList.add('active');
             });
+        });
 
-            function closeModal() {
+        // PDF MODAL MANTIĞI
+        const overlay = document.getElementById('pdfModal');
+        const iframe = document.getElementById('pdfFrame');
+        const titleEl = document.getElementById('modalTitle');
+        const closeBtn = document.getElementById('closeModal');
+        const worksheetBtns = document.querySelectorAll('.worksheet-btn');
+
+        worksheetBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                iframe.src = btn.dataset.embed;
+                titleEl.textContent = `📄 ${btn.dataset.title || 'Worksheet'}`;
+                overlay.classList.add('active');
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            iframe.src = '';
+            overlay.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
                 iframe.src = '';
                 overlay.classList.remove('active');
             }
-
-            closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
-
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) closeModal();
-            });
-
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && overlay.classList.contains('active')) closeModal();
-            });
-        })();
+        });
     </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
+
 </html>
