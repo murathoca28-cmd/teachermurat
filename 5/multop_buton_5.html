@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +32,7 @@
             padding: 35px 30px;
             border-radius: 35px;
             box-shadow: 0 15px 50px rgba(0, 100, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 2px solid rgba(79, 172, 254, 0.4);
         }
 
         /* GERİ (BACK) BUTONU */
@@ -83,16 +84,18 @@
             background-clip: text;
             filter: drop-shadow(0 4px 6px rgba(30, 60, 114, 0.2));
         }
+
         .title span {
             -webkit-text-fill-color: initial;
             color: #4facfe;
         }
 
-        /* GRID - 5 TANE BÜYÜK BUTON */
+        /* GRID - 3 BUTON (ORİJİNAL BOYUT VE ORTALANMIŞ) */
         .grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(3, minmax(100px, 145px));
             gap: 18px;
+            justify-content: center;
         }
 
         /* BUTONLAR - BÜYÜTÜLMÜŞ MODERN MAVİ GRADIENT */
@@ -101,7 +104,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 28px 12px;
+            padding: 20px 0px;
             background: linear-gradient(145deg, #4facfe, #0072ff);
             color: white;
             font-weight: 700;
@@ -127,7 +130,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
             opacity: 0;
             transition: opacity 0.4s ease;
             pointer-events: none;
@@ -154,47 +157,105 @@
             margin-right: 0;
         }
 
+        .test-btn .sub-text {
+            display: block;
+            font-size: 0.75em;
+            margin-top: -4px;
+            line-height: 1;
+            opacity: 0.9;
+        }
+
         /* MOBİL UYUM */
         @media (max-width: 650px) {
-            .container { padding: 25px 18px; }
-            .title { font-size: 1.7rem; margin-bottom: 25px; }
-            .grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
-            .test-btn { font-size: 1rem; padding: 20px 10px; border-radius: 16px; }
-            .test-btn .icon { font-size: 1.4rem; }
+            .container {
+                padding: 25px 18px;
+            }
+
+            .title {
+                font-size: 1.7rem;
+                margin-bottom: 25px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+
+            .test-btn {
+                font-size: 1rem;
+                padding: 20px 10px;
+                border-radius: 16px;
+            }
+
+            .test-btn .icon {
+                font-size: 1.4rem;
+            }
         }
 
         @media (max-width: 450px) {
-            .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .test-btn { font-size: 0.95rem; padding: 18px 8px; border-radius: 14px; }
-            .title { font-size: 1.4rem; }
-            .back-btn { padding: 8px 20px; font-size: 0.9rem; }
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .test-btn {
+                font-size: 0.95rem;
+                padding: 18px 8px;
+                border-radius: 14px;
+            }
+
+            .title {
+                font-size: 1.4rem;
+            }
+
+            .back-btn {
+                padding: 8px 20px;
+                font-size: 0.9rem;
+            }
         }
     </style>
-     <link rel="stylesheet" href="../theme.css">
+    <link rel="stylesheet" href="../theme.css">
 </head>
+
 <body>
-    
+
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
     <script src="../navbar.js"></script>
 
-<div class="container">
-    <!-- BACK / GERİ BUTONU -->
-    <div class="back-container">
-        <a href="javascript:history.back()" class="back-btn">← Back</a>
+    <div class="container">
+        <!-- BACK / GERİ BUTONU -->
+        <div class="back-container">
+            <a href="javascript:history.back()" class="back-btn">← Back</a>
+        </div>
+
+        <div class="title">📝 Multiple Choice Tests</div>
+
+        <div class="grid">
+            <a href="un_rev/multest/multiptest_01_5.html" class="test-btn">
+                <span class="icon">📝</span>
+                Test 1
+                <span class="sub-text">(New Generation)</span>
+            </a>
+
+            <a href="un_rev/multest/multiptest_02_5.html" class="test-btn">
+                <span class="icon">📝</span>
+                Test 3
+                <span class="sub-text">(New Generation)</span>
+            </a>
+
+            <a href="un_rev/multest/multiptest_03_5.html" class="test-btn">
+                <span class="icon">📝</span>
+                Test 3
+                <span class="sub-text">(New Generation)</span>
+            </a>
+        </div>
     </div>
 
-    <div class="title">📝 Multiple Choice Tests</div>
-
-    <div class="grid">
-        <!-- 1-5 ARASI BÜYÜTÜLMÜŞ BUTONLAR -->
-        <a href="un_rev/multest/multiptest_01_5.html" class="test-btn"><span class="icon">📝</span> Test 1</a>
-        <a href="un_rev/multest/multiptest_02_5.html" class="test-btn"><span class="icon">📝</span> Test 2</a>
-        <a href="un_rev/multest/multiptest_03_5.html" class="test-btn"><span class="icon">📝</span> Test 3</a>
-        <a href="LINK_TEST_4" class="test-btn" target="_blank"><span class="icon">📄</span> Test 4</a>
-        <a href="LINK_TEST_5" class="test-btn" target="_blank"><span class="icon">📄</span> Test 5</a>
-    </div>
-</div>
-
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
+    <script type="module"
+        src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496"
+        integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ=="
+        data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}'
+        crossorigin="anonymous"></script>
 </body>
+
 </html>
