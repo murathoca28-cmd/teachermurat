@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -351,12 +350,21 @@
     <script>
         // --- PART A: IDIOMS DATA & LOGIC ---
         const idiomsData = [
-            { q: "1. It's raining very heavily outside!", ans: "It's raining cats and dogs.", id: "i1" },
-            { q: "2. My friend lost his pet cat and feels sad.", ans: "I'm sorry to hear that.", id: "i2" },
-            { q: "3. This jacket size is 100% perfect for me!", ans: "It fits like a glove.", id: "i3" },
-            { q: "4. Let's start talking to our new classmate.", ans: "Let's break the ice.", id: "i4" }
+            { q: "1. ..................... . But I don't have an umbrella.", ans: "It's raining cats and dogs.", id: "i1" },
+            { q: "2. I really like this jacket.", ans: "Yes, it fits like a glove.", id: "i2" },
+            { q: "3. My cat ran away.", ans: "I'm sorry to hear that.", id: "i3" },
+            { q: "4. Oh, I don't have a highlighter.", ans: "Feel free to use this!", id: "i4" },
+            { q: "5. Look! She is our new classmate. We can go and meet her.", ans: "Sure, let's break the ice.", id: "i5" },
+            { q: "6. I passed my English test with a high score!", ans: "I'm glad to hear that.", id: "i6" }
         ];
-        const idiomOptions = ["It's raining cats and dogs.", "I'm sorry to hear that.", "It fits like a glove.", "Let's break the ice."];
+        const idiomOptions = [
+            "Feel free to use this!",
+            "It's raining cats and dogs.",
+            "Yes, it fits like a glove.",
+            "I'm glad to hear that.",
+            "Sure, let's break the ice.",
+            "I'm sorry to hear that."
+        ];
 
         function renderIdioms() {
             document.getElementById('idiomsContainer').innerHTML = idiomsData.map(item => `
@@ -542,5 +550,6 @@
             renderUnscramble();
         };
     </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
