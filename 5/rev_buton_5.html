@@ -154,7 +154,9 @@
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
             white-space: nowrap;
-        }border: 1.5px solid #cbd5e1;
+        }
+
+        border: 1.5px solid #cbd5e1;
 
         .card-btn:hover {
             transform: translateY(-6px) scale(1.04);
@@ -275,22 +277,18 @@
         <div class="main-title">📝 Worksheets & Activities</div>
 
         <!-- ÜST SEKME MENÜSÜ -->
+
         <div class="tab-menu">
-            <button class="tab-btn active" data-tab="activities">🧩 Activities</button>
-            <button class="tab-btn" data-tab="worksheets">📄 Worksheets</button>
+            <button class="tab-btn active" data-tab="worksheets">📄 Worksheets</button>
+            <button class="tab-btn" data-tab="activities">🧩 Activities</button>
             <button class="tab-btn" data-tab="reading">📚 Reading</button>
             <button class="tab-btn" data-tab="listening">🎧 Listening</button>
         </div>
 
-        <!-- 1. ACTIVITIES PANELİ -->
-        <div class="tab-panel active" id="activities">
-            <a href="activities/unit_rev/revtact_1_5.html" class="card-btn btn-act">🎯 Part 1</a>
-            <a href="activities/unit_rev/revtact_2_5.html" class="card-btn btn-act">🎯 Part 2</a>
-            <a href="activities/unit_rev/revtact_3_5.html" class="card-btn btn-act">🎯 Part 3</a>
-        </div>
+        
 
-        <!-- 2. WORKSHEETS PANELİ -->
-        <div class="tab-panel" id="worksheets">
+        <!-- 1. WORKSHEETS PANELİ (Artık Varsayılan Aktif) -->
+        <div class="tab-panel active" id="worksheets">
             <button class="card-btn btn-work worksheet-btn"
                 data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_worksheets/Grade_5_revs_work_1.pdf?=v1"
                 data-title="Worksheet 1">📝 Sheet 1</button>
@@ -300,6 +298,13 @@
             <button class="card-btn btn-work worksheet-btn"
                 data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/worksheets/worksheet3.pdf"
                 data-title="Worksheet 3">📝 Sheet 3</button>
+        </div>
+
+        <!-- 2. ACTIVITIES PANELİ -->
+        <div class="tab-panel" id="activities">
+            <a href="activities/unit_rev/revtact_1_5.html" class="card-btn btn-act">🎯 Part 1</a>
+            <a href="activities/unit_rev/revtact_2_5.html" class="card-btn btn-act">🎯 Part 2</a>
+            <a href="activities/unit_rev/revtact_3_5.html" class="card-btn btn-act">🎯 Part 3</a>
         </div>
 
         <!-- 3. READING PANELİ -->
