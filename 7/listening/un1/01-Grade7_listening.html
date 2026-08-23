@@ -505,13 +505,13 @@
         } else {
           q.classList.add('incorrect');
           mark.textContent = '✗';
-          hint.textContent = 'Doğru cevap: ' + q.dataset.key.split('|')[0];
+          hint.textContent = 'The correct answer: ' + q.dataset.key.split('|')[0];
         }
       });
 
       const banner = document.getElementById('scoreBanner');
       banner.style.display = 'block';
-      banner.textContent = correctCount + ' / ' + questions.length + ' doğru';
+      banner.textContent = correctCount + ' / ' + questions.length + ' correct';
 
       document.getElementById('transcriptBtn').style.display = 'block';
     });
