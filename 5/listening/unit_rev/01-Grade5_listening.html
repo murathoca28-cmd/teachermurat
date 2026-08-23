@@ -269,7 +269,6 @@
     
     <!-- TRANSKRİPT -->
     <div id="transcriptBox">
-      <h3>Transkript</h3>
       <p>Hello! My name is Lilly. I am a 5th-grade student, and I really love my school!<br><br>
       My favourite lesson is Science because I like doing experiments in the lab. On Tuesdays and Thursdays, we have English and Art. In English lessons, I love learning new words, reading short stories, and speaking with my friends.<br><br>
       I also enjoy school activities. I am in the Art Club, and I like drawing pictures. On Fridays, my friends and I participate in the school drama club and school plays.<br><br>
@@ -423,13 +422,13 @@
         } else {
           q.classList.add('incorrect');
           mark.textContent = '✗';
-          hint.textContent = 'Doğru cevap: ' + q.dataset.key.split('|')[0];
+          hint.textContent = 'Correct answer: ' + q.dataset.key.split('|')[0];
         }
       });
 
       const banner = document.getElementById('scoreBanner');
       banner.style.display = 'block';
-      banner.textContent = correctCount + ' / ' + questions.length + ' doğru';
+      banner.textContent = correctCount + ' / ' + questions.length + ' correct';
 
       document.getElementById('transcriptBtn').style.display = 'block';
     });
