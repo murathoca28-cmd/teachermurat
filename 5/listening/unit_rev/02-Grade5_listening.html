@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>5th Grade Listening Activity — Preparing for Presentation</title>
+  <title>5th Grade Listening Activity — Healthy and Unhealthy Food</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.css" />
   <style>
     :root {
@@ -20,9 +20,7 @@
       --good-soft: #e4ede9;
     }
 
-    * { 
-      box-sizing: border-box; 
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -78,11 +76,7 @@
       background: var(--accent-soft);
       border: 1px solid var(--border);
     }
-    
-    #transcriptBox.visible { 
-      display: block; 
-    }
-    
+    #transcriptBox.visible { display: block; }
     #transcriptBox h3 {
       margin: 0 0 8px;
       font-size: 12px;
@@ -90,7 +84,6 @@
       letter-spacing: 0.08em;
       color: var(--accent);
     }
-    
     #transcriptBox p {
       margin: 0;
       font-family: Georgia, "Times New Roman", serif;
@@ -117,19 +110,9 @@
       cursor: pointer;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
-    
-    #listenBtn:hover { 
-      transform: translateY(-1px); 
-      box-shadow: 0 10px 20px -12px rgba(47, 93, 80, 0.6); 
-    }
-    
-    #listenBtn:active { 
-      transform: translateY(0); 
-    }
-    
-    #listenBtn svg { 
-      flex-shrink: 0; 
-    }
+    #listenBtn:hover { transform: translateY(-1px); box-shadow: 0 10px 20px -12px rgba(47, 93, 80, 0.6); }
+    #listenBtn:active { transform: translateY(0); }
+    #listenBtn svg { flex-shrink: 0; }
 
     /* --- Oynatıcı alanı --- */
     #playerWrap {
@@ -140,20 +123,14 @@
       transition: opacity 0.25s ease, transform 0.25s ease;
       position: sticky;
       top: 76px;
-      z-index: 1001;   /* 20 yerine */
+      z-index: 1001;
       background: var(--card-bg);
       padding: 10px 0;
     }
     .plyr__menu__container { top: 100% !important; bottom: auto !important; margin-top: 10px; margin-bottom: 0; }
     
-    #playerWrap.visible { 
-      display: block; 
-    }
-    
-    #playerWrap.show { 
-      opacity: 1; 
-      transform: translateY(0); 
-    }
+    #playerWrap.visible { display: block; }
+    #playerWrap.show { opacity: 1; transform: translateY(0); }
 
     .plyr {
       --plyr-color-main: var(--accent);
@@ -165,9 +142,7 @@
     }
 
     /* --- Sorular --- */
-    .quiz { 
-      margin-top: 30px; 
-    }
+    .quiz { margin-top: 30px; }
 
     .quiz h2 {
       font-size: 13px;
@@ -186,16 +161,8 @@
       margin-bottom: 14px;
       transition: border-color 0.2s ease, background 0.2s ease;
     }
-    
-    .question.correct { 
-      border-color: var(--good); 
-      background: var(--good-soft); 
-    }
-    
-    .question.incorrect { 
-      border-color: var(--bad); 
-      background: var(--bad-soft); 
-    }
+    .question.correct { border-color: var(--good); background: var(--good-soft); }
+    .question.incorrect { border-color: var(--bad); background: var(--bad-soft); }
 
     .q-text {
       font-size: 14.5px;
@@ -206,25 +173,11 @@
       gap: 8px;
     }
 
-    .q-mark { 
-      font-size: 14px; 
-      font-weight: 700; 
-    }
-    
-    .question.correct .q-mark { 
-      color: var(--good); 
-    }
-    
-    .question.incorrect .q-mark { 
-      color: var(--bad); 
-    }
+    .q-mark { font-size: 14px; font-weight: 700; }
+    .question.correct .q-mark { color: var(--good); }
+    .question.incorrect .q-mark { color: var(--bad); }
 
-    .options { 
-      display: flex; 
-      flex-direction: column; 
-      gap: 8px; 
-    }
-    
+    .options { display: flex; flex-direction: column; gap: 8px; }
     .options label {
       display: flex;
       align-items: center;
@@ -233,12 +186,7 @@
       color: var(--ink);
       cursor: pointer;
     }
-    
-    .options input[type="radio"] { 
-      accent-color: var(--accent); 
-      width: 15px; 
-      height: 15px; 
-    }
+    .options input[type="radio"] { accent-color: var(--accent); width: 15px; height: 15px; }
 
     .short-answer input[type="text"] {
       width: 100%;
@@ -249,30 +197,16 @@
       font-family: inherit;
       background: #fff;
     }
-    
-    .short-answer input[type="text"]:focus { 
-      outline: 2px solid var(--accent); 
-      outline-offset: 1px; 
-    }
+    .short-answer input[type="text"]:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 
     .correct-hint {
       margin-top: 8px;
       font-size: 12.5px;
       display: none;
     }
-    
-    .question.correct .correct-hint, 
-    .question.incorrect .correct-hint { 
-      display: block; 
-    }
-    
-    .question.correct .correct-hint { 
-      color: var(--good); 
-    }
-    
-    .question.incorrect .correct-hint { 
-      color: var(--bad); 
-    }
+    .question.correct .correct-hint, .question.incorrect .correct-hint { display: block; }
+    .question.correct .correct-hint { color: var(--good); }
+    .question.incorrect .correct-hint { color: var(--bad); }
 
     #checkBtn {
       width: 100%;
@@ -286,10 +220,7 @@
       font-weight: 600;
       cursor: pointer;
     }
-    
-    #checkBtn:hover { 
-      opacity: 0.9; 
-    }
+    #checkBtn:hover { opacity: 0.9; }
 
     #warning {
       display: none;
@@ -324,10 +255,7 @@
       font-weight: 600;
       cursor: pointer;
     }
-    
-    #transcriptBtn:hover { 
-      background: var(--accent-soft); 
-    }
+    #transcriptBtn:hover { background: var(--accent-soft); }
   </style>
   <link rel="stylesheet" href="../../../theme.css">
 </head>
@@ -336,122 +264,88 @@
   <script src="../../../navbar.js" defer></script>
 
   <div class="card">
-    <p class="eyebrow">GRADE 5 LISTENING ACTIVITY 2</p>
-    <h1>Preparing for Presentation</h1>
-
+    <p class="eyebrow">GRADE 5 LISTENING ACTIVITY</p>
+    <h1>Healthy and Unhealthy Food</h1>
+    
     <!-- TRANSKRİPT -->
     <div id="transcriptBox">
-      <h3></h3>
-      <p>
-        <b>Leo:</b> Hi Maya, can you help me prepare for our presentation?<br>
-        <b>Maya:</b> Sure! We need the projector to show our slides on the wall, right?<br>
-        <b>Leo:</b> Yes. I printed these study sheets, but I need a stapler to join them.<br>
-        <b>Maya:</b> Here is one. Where are the extra notes?<br>
-        <b>Leo:</b> They are inside the orange folder.<br>
-        <b>Maya:</b> Perfect. Take this yellow highlighter to mark the important words.<br>
-        <b>Leo:</b> Thanks! Let me throw these useless papers into the rubbish bin, and we are ready.
-      </p>
+      <p>Hello! My name is Leo. I try to eat healthy food every day.<br><br>
+      For breakfast, I usually eat eggs and yoghurt. At dinner, my family and I often eat fish, spinach, and a big green salad. They are very good for our health!<br><br>
+      I also like some unhealthy food. On Saturdays, I sometimes eat a small hamburger, chips, or ice cream. I love chocolate and sweets too, but I don't eat them every day.<br><br>
+      Eating healthy makes me feel great!</p>
     </div>
 
     <button id="listenBtn">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor"/>
-        <path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-      </svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor"/><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
       Listen to Text
     </button>
 
     <!-- OYNATICI ALANI -->
     <div id="playerWrap">
       <audio id="player" controls preload="metadata">
-        <source src="https://cdn.teachermurat.com/5/rev_listens/02-Grade5_listening.mp3" type="audio/mp3" />
+        <source src="https://cdn.teachermurat.com/5/rev_listens/02-Grade5_listening.mp3?v=1" type="audio/mp3" />
       </audio>
     </div>
 
     <!-- SORULAR -->
     <div class="quiz">
       <h2>MULTIPLE CHOICE</h2>
-
       <div class="question" data-type="mc" data-key="b">
-        <p class="q-text">
-          <span>1. What do they need to show their slides on the wall?</span>
-          <span class="q-mark"></span>
-        </p>
+        <p class="q-text"><span>1. What does Leo eat for breakfast?</span><span class="q-mark"></span></p>
         <div class="options">
-          <label><input type="radio" name="mc1" value="a"> A) A printer</label>
-          <label><input type="radio" name="mc1" value="b"> B) A projector</label>
-          <label><input type="radio" name="mc1" value="c"> C) A speaker</label>
-          <label><input type="radio" name="mc1" value="d"> D) Headphones</label>
+          <label><input type="radio" name="mc1" value="a"> A) Chips and chocolate</label>
+          <label><input type="radio" name="mc1" value="b"> B) Eggs and yoghurt</label>
+          <label><input type="radio" name="mc1" value="c"> C) Hamburger and ice cream</label>
+          <label><input type="radio" name="mc1" value="d"> D) Sausages and sweets</label>
         </div>
         <p class="correct-hint"></p>
       </div>
 
       <div class="question" data-type="mc" data-key="c">
-        <p class="q-text">
-          <span>2. What color is the folder?</span>
-          <span class="q-mark"></span>
-        </p>
+        <p class="q-text"><span>2. Which healthy food does Leo eat at dinner?</span><span class="q-mark"></span></p>
         <div class="options">
-          <label><input type="radio" name="mc2" value="a"> A) Yellow</label>
-          <label><input type="radio" name="mc2" value="b"> B) Blue</label>
-          <label><input type="radio" name="mc2" value="c"> C) Orange</label>
-          <label><input type="radio" name="mc2" value="d"> D) Green</label>
+          <label><input type="radio" name="mc2" value="a"> A) Noodles and sausages</label>
+          <label><input type="radio" name="mc2" value="b"> B) Sweets and broccoli</label>
+          <label><input type="radio" name="mc2" value="c"> C) Fish, spinach, and green salad</label>
+          <label><input type="radio" name="mc2" value="d"> D) Chips and ice cream</label>
         </div>
         <p class="correct-hint"></p>
       </div>
 
       <div class="question" data-type="mc" data-key="a">
-        <p class="q-text">
-          <span>3. Where does Leo throw the useless papers?</span>
-          <span class="q-mark"></span>
-        </p>
+        <p class="q-text"><span>3. When does Leo eat unhealthy food?</span><span class="q-mark"></span></p>
         <div class="options">
-          <label><input type="radio" name="mc3" value="a"> A) Into the rubbish bin</label>
-          <label><input type="radio" name="mc3" value="b"> B) Inside the folder</label>          <label><input type="radio" name="mc3" value="c"> C) On the desk</label>
-          <label><input type="radio" name="mc3" value="d"> D) Under the table</label>
+          <label><input type="radio" name="mc3" value="a"> A) On Saturdays</label>
+          <label><input type="radio" name="mc3" value="b"> B) Every morning</label>
+          <label><input type="radio" name="mc3" value="c"> C) On Tuesdays</label>
+          <label><input type="radio" name="mc3" value="d"> D) Never</label>
         </div>
         <p class="correct-hint"></p>
       </div>
 
       <h2>SHORT ANSWER</h2>
-
-      <div class="question" data-type="sa" data-key="maya">
-        <p class="q-text">
-          <span>4. Who helps Leo prepare for the presentation?</span>
-          <span class="q-mark"></span>
-        </p>
-        <div class="short-answer">
-          <input type="text" name="sa1" placeholder="Type your answer here...">
-        </div>
+      <div class="question" data-type="sa" data-key="leo">
+        <p class="q-text"><span>4. What is the name of the speaker?</span><span class="q-mark"></span></p>
+        <div class="short-answer"><input type="text" name="sa1" placeholder="Type your answer here..."></div>
         <p class="correct-hint"></p>
       </div>
 
-      <div class="question" data-type="sa" data-key="stapler|a stapler">
-        <p class="q-text">
-          <span>5. What tool does Leo need to join the study sheets?</span>
-          <span class="q-mark"></span>
-        </p>
-        <div class="short-answer">
-          <input type="text" name="sa2" placeholder="Type your answer here...">
-        </div>
+      <div class="question" data-type="sa" data-key="yoghurt|yogurt">
+        <p class="q-text"><span>5. What healthy food does Leo eat for breakfast with eggs?</span><span class="q-mark"></span></p>
+        <div class="short-answer"><input type="text" name="sa2" placeholder="Type your answer here..."></div>
         <p class="correct-hint"></p>
       </div>
 
-      <div class="question" data-type="sa" data-key="to mark important words|mark important words|marking important words">
-        <p class="q-text">
-          <span>6. What is the yellow highlighter used for?</span>
-          <span class="q-mark"></span>
-        </p>
-        <div class="short-answer">
-          <input type="text" name="sa3" placeholder="Type your answer here...">
-        </div>
+      <div class="question" data-type="sa" data-key="great|good|happy">
+        <p class="q-text"><span>6. How does eating healthy make Leo feel?</span><span class="q-mark"></span></p>
+        <div class="short-answer"><input type="text" name="sa3" placeholder="Type your answer here..."></div>
         <p class="correct-hint"></p>
       </div>
 
-      <button id="checkBtn">Cevapları Kontrol Et</button>
-      <p id="warning">Lütfen devam etmeden önce tüm soruları cevaplayın.</p>
+      <button id="checkBtn">Check the Answers</button>
+      <p id="warning">Please answer all the questions before continuing.</p>
       <div id="scoreBanner"></div>
-      <button id="transcriptBtn">Metni Gör</button>
+      <button id="transcriptBtn">See the text</button>
     </div>
   </div>
 
@@ -527,13 +421,13 @@
         } else {
           q.classList.add('incorrect');
           mark.textContent = '✗';
-          hint.textContent = 'Doğru cevap: ' + q.dataset.key.split('|')[0];
+          hint.textContent = 'Correct answer: ' + q.dataset.key.split('|')[0];
         }
       });
 
       const banner = document.getElementById('scoreBanner');
       banner.style.display = 'block';
-      banner.textContent = correctCount + ' / ' + questions.length + ' doğru';
+      banner.textContent = correctCount + ' / ' + questions.length + ' correct';
 
       document.getElementById('transcriptBtn').style.display = 'block';
     });
@@ -545,5 +439,7 @@
       box.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   </script>
+  
+  <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
