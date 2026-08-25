@@ -1,428 +1,582 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎯 REVISION 1 - Personality Traits</title>
+    <title>7th Grade English - Appearance & Personality</title>
+    <link rel="stylesheet" href="../../../theme.css">
     <style>
-        /* ----- EĞLENCELİ TASARIM (Sadece boşluk düzeltildi) ----- */
-        * {
-            margin: 0;
-            padding: 0;
+        :root {
+            --primary: #6C5CE7;
+            --primary-soft: #EEECFD;
+            --pink: #FD79A8;
+            --pink-soft: #FDEDF3;
+            --green: #00B894;
+            --green-soft: #E6F9F5;
+            --yellow: #FDCB6E;
+            --yellow-soft: #FEF9E7;
+            --red: #FF7675;
+            --red-soft: #FFEAE9;
+            --blue: #0984E3;
+            --blue-soft: #E3F2FD;
+            --bg: #F4F7FE;
+            --card-bg: #e2eff8;
+            --text-dark: #2D3436;
+            --text-muted: #636E72;
+            --border-color: #E2E8F0;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        *, *::before, *::after {
             box-sizing: border-box;
         }
 
+        .app-container, .app-container * {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
         body {
-            font-family: 'Segoe UI', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
-            background: radial-gradient(circle at 10% 20%, #fff5f5, #ffe4e1);
+            background-color: var(--bg);
+            color: var(--text-dark);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Ortalamak yerine üstten başlasın */
-            padding: 100px 10px 20px 10px; /* Boşluk azaltıldı */
+            flex-direction: column;
+            user-select: none;
             margin: 0;
         }
 
-        .container {
-            max-width: 800px;
+        .app-container {
             width: 100%;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 25px 25px 30px; /* Üst padding azaltıldı */
-            border-radius: 35px;
-            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.25);
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            margin-top: 15px; /* Ekstra üst boşluk kaldırıldı */
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        /* BAŞLIK - RENKLİ VE PARLAK */
-        h1 {
+        /* Hero Kartı */
+        .hero-banner {
+            background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #FD79A8 100%);
+            color: #FFFFFF;
+            padding: 26px 24px;
+            border-radius: var(--radius-lg);
             text-align: center;
-            font-size: 2.8rem;
-            font-weight: 900;
-            margin: 0 0 5px 0; /* Üst margin sıfırlandı */
-            letter-spacing: 2px;
-            background: linear-gradient(to right, #f7971e, #ffd200);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: none;
-            filter: drop-shadow(0 4px 6px rgba(247, 151, 30, 0.3));
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.2);
+            position: relative;
+            overflow: hidden;
         }
 
-        .sub-header {
-            text-align: center;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #e07c3c;
-            background: rgba(255, 215, 0, 0.15);
-            display: inline-block;
-            padding: 5px 25px;
-            border-radius: 50px;
-            margin: 0 auto 15px;
-            letter-spacing: 1px;
-            border: 1px dashed #ffb347;
+        .hero-banner h1 {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        .sub-header span {
-            font-size: 1.3rem;
+        .hero-banner p {
+            font-size: 15px;
+            opacity: 0.95;
+            font-weight: 500;
         }
 
-        /* BÖLÜM KARTLARI - RENKLİ VE YUVARLAK */
-        .section {
-            margin-bottom: 25px;
-            padding: 18px 20px;
-            background: white;
-            border-radius: 25px;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-            border-left: 8px solid #ffb347;
+        /* İnteraktif Görev Kartları */
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            border: 2px solid #a4aeb9;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
             transition: transform 0.2s ease;
         }
-        .section:hover {
-            transform: scale(1.01);
-            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.15);
-        }
 
-        .section-title {
-            font-weight: 800;
-            font-size: 1.2rem;
-            color: #d35400;
-            margin-bottom: 15px;
+        .card-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-bottom: 2px dotted #ffe0b2;
-            padding-bottom: 8px;
-        }
-        .section-title .emoji-big {
-            font-size: 1.8rem;
-        }
-
-        .question {
+            gap: 12px;
             margin-bottom: 18px;
-            padding: 5px 5px 10px 5px;
-            border-bottom: 1px solid #f5f0eb;
-        }
-        .question:last-child {
-            border-bottom: none;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed #cbd5e0;
         }
 
-        .question p {
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 8px;
-            font-size: 1.05rem;
-        }
-        .question p .q-letter {
-            background: #f7971e;
-            color: white;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            display: inline-flex;
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
-            margin-right: 8px;
+            font-size: 24px;
+            flex-shrink: 0;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .card-title h2 {
+            font-size: 19px;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .card-title p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            margin-bottom: 0;
+        }
+
+        /* Izgara Yapıları */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .space-y {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Soru / Seçenek Kutuları */
+        .quiz-item {
+            background: #F8FAFC;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-item label {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        .opt-btn {
+            width: 100%;
+            padding: 11px 14px;
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        select.custom-select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border-color);
+            font-weight: 600;
+            font-size: 14px;
+            outline: none;
+            background: #FFFFFF;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-dark);
+        }
+
+        select.custom-select:hover:not(:disabled) {
+            border-color: var(--primary);
+        }
+
+        /* Yanıt Durum Stilleri */
+        .correct {
+            background: var(--green-soft) !important;
+            border-color: var(--green) !important;
+            color: #007955 !important;
             font-weight: bold;
         }
 
-        select, input[type="text"] {
-            padding: 12px 16px;
-            border-radius: 50px;
-            border: 2px solid #ffe0b2;
-            background: #fffaf5;
-            width: 100%;
-            max-width: 320px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: #333;
-            transition: 0.3s ease;
-            outline: none;
+        .wrong {
+            background: var(--red-soft) !important;
+            border-color: var(--red) !important;
+            color: #C0392B !important;
+            font-weight: bold;
+        }
+
+        .opt-btn.correct::after { content: "  ✓"; color: #007955; }
+        .opt-btn.wrong::after { content: "  ✕"; color: #C0392B; }
+
+        /* Cümle Düzenleme (Unscramble) Stilleri */
+        .unscramble-zone {
+            min-height: 58px;
+            padding: 10px 14px;
+            background: #FFFFFF;
+            border: 2px dashed #CBD5E0;
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .unscramble-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .item-chip {
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            padding: 9px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 15px;
             cursor: pointer;
-        }
-        select:focus, input[type="text"]:focus {
-            border-color: #f7971e;
-            box-shadow: 0 0 0 5px rgba(247, 151, 30, 0.15);
-            background: white;
-        }
-        select:hover {
-            background: #fff0e0;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            user-select: none;
         }
 
-        .explanation {
-            font-size: 0.9rem;
-            color: #e67e22;
-            margin-top: 8px;
-            background: #fef9e7;
-            padding: 8px 15px;
-            border-radius: 50px;
-            display: none;
-            border: 1px solid #f7dc6f;
-            font-weight: 500;
+        .item-chip:hover {
+            border-color: var(--yellow);
+            transform: translateY(-2px);
         }
 
-        /* BÜYÜK EĞLENCELİ BUTON */
-        button {
-            display: block;
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(to right, #f7971e, #ffd200);
-            color: #2d1b00;
+        .action-btn {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
             border: none;
-            border-radius: 60px;
-            font-size: 1.5rem;
-            font-weight: 800;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 12px 25px rgba(247, 151, 30, 0.4);
-            letter-spacing: 2px;
-            margin-top: 10px;
-        }
-        button:hover {
-            transform: scale(1.02) translateY(-5px);
-            box-shadow: 0 18px 35px rgba(247, 151, 30, 0.5);
-            background: linear-gradient(to right, #ff8c00, #ffd700);
-        }
-        button:active {
-            transform: scale(0.95);
+            align-self: flex-start;
+            transition: background 0.2s;
         }
 
-        /* SONUÇ EKRANI - EĞLENCELİ */
-        #result {
-            margin-top: 25px;
-            padding: 25px;
+        .action-btn:hover {
+            background: #5b4cc4;
+        }
+
+        /* Animasyonlar */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .shake { animation: shake 0.3s ease; }
+
+        footer {
             text-align: center;
-            font-weight: 800;
-            font-size: 1.8rem;
-            display: none;
-            border-radius: 30px;
-            background: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            border: 3px dashed #f7971e;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .correct-result { 
-            border: 4px solid #2ecc71; 
-            background: #f0fff4;
-            color: #27ae60;
-        }
-        .incorrect-result { 
-            border: 4px solid #e74c3c; 
-            background: #fff5f5;
-            color: #c0392b;
-        }
-        .partial-result {
-            border: 4px solid #f39c12;
-            background: #fffaf0;
-            color: #d35400;
-        }
-
-        /* MOBİL UYUM */
-        @media (max-width: 600px) {
-            body { padding: 10px 5px; }
-            .container { padding: 18px 15px; border-radius: 25px; }
-            h1 { font-size: 2.2rem; }
-            .sub-header { font-size: 0.9rem; padding: 3px 15px; }
-            .section { padding: 15px; }
-            .question p { font-size: 0.95rem; }
-            select, input { max-width: 100%; font-size: 0.95rem; }
-            button { font-size: 1.2rem; padding: 15px; }
-            #result { font-size: 1.4rem; padding: 20px; }
+            padding: 16px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border-color);
+            background: #FFFFFF;
+            margin-top: auto;
         }
     </style>
     <link rel="stylesheet" href="../../../theme.css">
 </head>
 <body>
-    <div id="navbar-placeholder" style="min-height: 64px;"></div>
+    <div id="navbar-placeholder" style="min-height: 0px;"></div>
     <script src="../../../navbar.js"></script>
-    
-<div class="container">
-    <h1>🎯 REVISION 1</h1>
-    <div style="text-align: center;">
-        <div class="sub-header"><span>✨</span> Unit 1 -> Who Am I? - Personality & Traits <span>🌟</span></div>
+
+    <div class="app-container">
+        
+        <!-- Hero Banner -->
+        <header class="hero-banner">
+            <h1>🎓 7th Grade English - Unit 1 Activities</h1>
+            <p>Appearance, Personality & Comparatives Revision</p>
+        </header>
+
+        <!-- Activity A: Matching Physical Appearance -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon">👤</div>
+                <div class="card-title">
+                    <h2>Part A: Physical Appearance Matching</h2>
+                    <p>Match the definitions with the correct appearance adjectives!</p>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="quiz-item">
+                    <label>1. She has light yellow hair.</label>
+                    <select class="custom-select" data-answer="blonde" onchange="checkSelect(this)">
+                        <option value="">-- Choose Option --</option>
+                        <option value="blonde">blonde</option>
+                        <option value="plump">plump</option>
+                        <option value="glasses">glasses</option>
+                        <option value="headscarf">headscarf</option>
+                    </select>
+                </div>
+
+                <div class="quiz-item">
+                    <label>2. He is a bit overweight, not thin.</label>
+                    <select class="custom-select" data-answer="plump" onchange="checkSelect(this)">
+                        <option value="">-- Choose Option --</option>
+                        <option value="curly">curly hair</option>
+                        <option value="plump">plump</option>
+                        <option value="middle-aged">middle-aged</option>
+                        <option value="blonde">blonde</option>
+                    </select>
+                </div>
+
+                <div class="quiz-item">
+                    <label>3. She covers her head with a fabric.</label>
+                    <select class="custom-select" data-answer="headscarf" onchange="checkSelect(this)">
+                        <option value="">-- Choose Option --</option>
+                        <option value="glasses">glasses</option>
+                        <option value="headscarf">headscarf</option>
+                        <option value="plump">plump</option>
+                        <option value="middle-aged">middle-aged</option>
+                    </select>
+                </div>
+
+                <div class="quiz-item">
+                    <label>4. He is around 45-50 years old.</label>
+                    <select class="custom-select" data-answer="middle-aged" onchange="checkSelect(this)">
+                        <option value="">-- Choose Option --</option>
+                        <option value="blonde">blonde</option>
+                        <option value="middle-aged">middle-aged</option>
+                        <option value="curly">curly hair</option>
+                        <option value="glasses">glasses</option>
+                    </select>
+                </div>
+
+                <div class="quiz-item">
+                    <label>5. She wears these to see better.</label>
+                    <select class="custom-select" data-answer="glasses" onchange="checkSelect(this)">
+                        <option value="">-- Choose Option --</option>
+                        <option value="glasses">glasses</option>
+                        <option value="headscarf">headscarf</option>
+                        <option value="plump">plump</option>
+                        <option value="middle-aged">middle-aged</option>
+                    </select>
+                </div>
+
+                <div class="quiz-item">
+                    <label>6. His hair has round curves/waves.</label>
+                    <select class="custom-select" data-answer="curly" onchange="checkSelect(this)">
+                        <option value="">-- Choose Option --</option>
+                        <option value="blonde">blonde</option>
+                        <option value="curly">curly hair</option>
+                        <option value="headscarf">headscarf</option>
+                        <option value="plump">plump</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Activity B: Personality Traits Multiple Choice -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon">🧠</div>
+                <div class="card-title">
+                    <h2>Part B: Personality Traits Quiz</h2>
+                    <p>Choose the correct option according to the description!</p>
+                </div>
+            </div>
+
+            <div class="space-y">
+                <!-- Question 1 -->
+                <div class="quiz-item">
+                    <label>1. Jack always buys gifts for his friends and likes sharing. What is he like?</label>
+                    <div class="grid-2">
+                        <button class="opt-btn" onclick="checkOption(this, false)">Stubborn</button>
+                        <button class="opt-btn" onclick="checkOption(this, true)">Generous</button>
+                        <button class="opt-btn" onclick="checkOption(this, false)">Lazy</button>
+                        <button class="opt-btn" onclick="checkOption(this, false)">Shy</button>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="quiz-item">
+                    <label>2. Mary never changes her mind and never listens to others. She is ________.</label>
+                    <div class="grid-2">
+                        <button class="opt-btn" onclick="checkOption(this, true)">Stubborn</button>
+                        <button class="opt-btn" onclick="checkOption(this, false)">Outgoing</button>
+                        <button class="opt-btn" onclick="checkOption(this, false)">Honest</button>
+                        <button class="opt-btn" onclick="checkOption(this, false)">Punctual</button>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="quiz-item">
+                    <label>3. Dave always comes to class on time. He is never late.</label>
+                    <div class="grid-2">
+                        <button class="opt-btn" onclick="checkOption(this, false)">Clumsy</button>
+                        <button class="opt-btn" onclick="checkOption(this, false)">Selfish</button>
+                        <button class="opt-btn" onclick="checkOption(this, true)">Punctual</button>
+                        <button class="opt-btn" onclick="checkOption(this, false)">Forgetful</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Activity C: Sentence Ordering (Unscramble - 4 Questions) -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon">🔤</div>
+                <div class="card-title">
+                    <h2>Part C: Sentence Unscramble (Comparatives)</h2>
+                    <p>Click on the words below to build the correct comparative sentences!</p>
+                </div>
+            </div>
+
+            <div class="space-y">
+                <!-- Sentence 1 -->
+                <div class="quiz-item">
+                    <label>1. Order the words: <i>(Sosyal/Dışa dönük karşılaştırması)</i></label>
+                    <div class="unscramble-zone" id="zone-1"></div>
+                    <div class="unscramble-pool" id="pool-1">
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">outgoing</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">Sue</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">than</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">is</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">more</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">Kate</span>
+                    </div>
+                    <button class="action-btn" onclick="checkUnscramble('zone-1', 'Sue is more outgoing than Kate')">Check Sentence</button>
+                </div>
+
+                <!-- Sentence 2 -->
+                <div class="quiz-item">
+                    <label>2. Order the words: <i>(Boy karşılaştırması)</i></label>
+                    <div class="unscramble-zone" id="zone-2"></div>
+                    <div class="unscramble-pool" id="pool-2">
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">taller</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">is</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">Jack</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">Mark</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">than</span>
+                    </div>
+                    <button class="action-btn" onclick="checkUnscramble('zone-2', 'Jack is taller than Mark')">Check Sentence</button>
+                </div>
+
+                <!-- Sentence 3 -->
+                <div class="quiz-item">
+                    <label>3. Order the words: <i>(Cömertlik karşılaştırması)</i></label>
+                    <div class="unscramble-zone" id="zone-3"></div>
+                    <div class="unscramble-pool" id="pool-3">
+                        <span class="item-chip" onclick="moveChip(this, 'zone-3', 'pool-3')">generous</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-3', 'pool-3')">than</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-3', 'pool-3')">is</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-3', 'pool-3')">Linda</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-3', 'pool-3')">more</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-3', 'pool-3')">Tom</span>
+                    </div>
+                    <button class="action-btn" onclick="checkUnscramble('zone-3', 'Linda is more generous than Tom')">Check Sentence</button>
+                </div>
+
+                <!-- Sentence 4 -->
+                <div class="quiz-item">
+                    <label>4. Order the words: <i>(Yaş karşılaştırması)</i></label>
+                    <div class="unscramble-zone" id="zone-4"></div>
+                    <div class="unscramble-pool" id="pool-4">
+                        <span class="item-chip" onclick="moveChip(this, 'zone-4', 'pool-4')">is</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-4', 'pool-4')">brother</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-4', 'pool-4')">younger</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-4', 'pool-4')">My</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-4', 'pool-4')">me</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-4', 'pool-4')">than</span>
+                    </div>
+                    <button class="action-btn" onclick="checkUnscramble('zone-4', 'My brother is younger than me')">Check Sentence</button>
+                </div>
+            </div>
+        </section>
+
     </div>
 
-    <form id="quizForm">
-        
-        <!-- SECTION 1 -->
-        <div class="section">
-            <div class="section-title"><span class="emoji-big">🤝</span> 1. Social Personalities</div>
-            
-            <div class="question">
-                <p><span class="q-letter">A</span> I enjoy meeting new people. I am an _______ person.</p>
-                <select name="q1" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="wrong">shy</option>
-                    <option value="correct">outgoing</option>
-                    <option value="wrong">stubborn</option>
-                </select>
-            </div>
+    <footer>
+        <p>7th Grade English Revision Activities • Built for GitHub Pages</p>
+    </footer>
 
-            <div class="question">
-                <p><span class="q-letter">B</span> I always help my friends with their homework. I am very _______.</p>
-                <input type="text" name="q2" placeholder=" Type your answer here..." class="answer">
-                <div class="explanation">💡 Correct: <strong>helpful</strong></div>
-            </div>
-        </div>
+    <!-- JS Logic -->
+    <script>
+        // 1. Select / Dropdown Check
+        function checkSelect(element) {
+            const expected = element.getAttribute('data-answer');
+            const selected = element.value;
 
-        <!-- SECTION 2 -->
-        <div class="section">
-            <div class="section-title"><span class="emoji-big">🏫</span> 2. School & Habits</div>
-            
-            <div class="question">
-                <p><span class="q-letter">C</span> My friends think I am _______ because I always arrive on time.</p>
-                <select name="q3" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="wrong">lazy</option>
-                    <option value="correct">punctual</option>
-                    <option value="wrong">easy-going</option>
-                </select>
-            </div>
+            element.classList.remove('correct', 'wrong');
 
-            <div class="question">
-                <p><span class="q-letter">D</span> Michael understands everything easily. He is a _______ student.</p>
-                <select name="q4" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="wrong">shy</option>
-                    <option value="correct">smart</option>
-                    <option value="wrong">stubborn</option>
-                </select>
-            </div>
-        </div>
+            if (selected === "") return;
 
-        <!-- SECTION 3 -->
-        <div class="section">
-            <div class="section-title"><span class="emoji-big">🎭</span> 3. Feelings & Moods</div>
-            
-            <div class="question">
-                <p><span class="q-letter">E</span> I am a bit _______; I feel nervous when I talk to new people.</p>
-                <select name="q5" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="correct">shy</option>
-                    <option value="wrong">cheerful</option>
-                    <option value="wrong">generous</option>
-                </select>
-            </div>
-
-            <div class="question">
-                <p><span class="q-letter">F</span> I like sharing my snacks with everyone. I am _______.</p>
-                <input type="text" name="q6" placeholder=" Type your answer here..." class="answer">
-                <div class="explanation">💡 Correct: <strong>generous</strong></div>
-            </div>
-        </div>
-
-        <!-- SECTION 4 -->
-        <div class="section">
-            <div class="section-title"><span class="emoji-big">💎</span> 4. Character & Values</div>
-            
-            <div class="question">
-                <p><span class="q-letter">G</span> I never tell lies. I am an _______ person.</p>
-                <select name="q7" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="wrong">easy-going</option>
-                    <option value="correct">honest</option>
-                    <option value="wrong">lazy</option>
-                </select>
-            </div>
-
-            <div class="question">
-                <p><span class="q-letter">H</span> Sarah never changes her mind. She is quite _______.</p>
-                <select name="q8" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="wrong">cheerful</option>
-                    <option value="correct">stubborn</option>
-                    <option value="wrong">smart</option>
-                </select>
-            </div>
-
-            <div class="question">
-                <p><span class="q-letter">I</span> Someone who thinks about other people's feelings is _______.</p>
-                <select name="q9" class="answer">
-                    <option value="">-- Select --</option>
-                    <option value="correct">thoughtful</option>
-                    <option value="wrong">punctual</option>
-                    <option value="wrong">outgoing</option>
-                </select>
-            </div>
-        </div>
-
-        <button type="button" onclick="checkQuiz()">✨ Check My Answers ✨</button>
-    </form>
-
-    <div id="result"></div>
-</div>
-<script>
-    function checkQuiz() {
-        const form = document.getElementById('quizForm');
-        const inputs = form.querySelectorAll('.answer');
-        
-        const correctValues = {
-            q1: 'correct',
-            q2: 'helpful',
-            q3: 'correct',
-            q4: 'correct',
-            q5: 'correct',
-            q6: 'generous',
-            q7: 'correct',
-            q8: 'correct',
-            q9: 'correct'
-        };
-
-        let score = 0;
-        let total = inputs.length;
-
-        inputs.forEach(input => {
-            const userAnswer = input.value.trim().toLowerCase();
-            const correct = correctValues[input.name];
-            const parentQ = input.closest('.question');
-            const exp = parentQ ? parentQ.querySelector('.explanation') : null;
-
-            // Reset
-            input.style.borderColor = '';
-            if (exp) exp.style.display = 'none';
-
-            if (userAnswer === correct) {
-                score++;
-                input.style.borderColor = '#2ecc71';
-                input.style.background = '#f0fff4';
+            if (selected === expected) {
+                element.classList.add('correct');
             } else {
-                input.style.borderColor = '#e74c3c';
-                input.style.background = '#fff5f5';
-                if (exp) exp.style.display = 'block';
+                element.classList.add('wrong');
+                element.parentElement.classList.add('shake');
+                setTimeout(() => element.parentElement.classList.remove('shake'), 300);
             }
-        });
-
-        // Show result
-        const resultDiv = document.getElementById('result');
-        resultDiv.style.display = 'block';
-        resultDiv.className = ''; // Reset
-
-        let message = `🎯 You scored ${score} out of ${total}!`;
-
-        if (score === total) {
-            resultDiv.className = 'correct-result';
-            message += ' 🏆 Perfect! You know all the traits! 🌟';
-        } else if (score >= total * 0.7) {
-            resultDiv.className = 'partial-result';
-            message += ' 💪 Great job! You are doing very well! 🌟';
-        } else if (score >= total * 0.4) {
-            resultDiv.className = 'partial-result';
-            message += ' 📚 Keep practicing, you are improving! ✏️';
-        } else {
-            resultDiv.className = 'incorrect-result';
-            message += ' 😊 Don\'t give up! Review the adjectives and try again! 💪';
         }
 
-        resultDiv.innerHTML = message;
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }
-</script>
+        // 2. Multiple Choice Option Check
+        function checkOption(btn, isCorrect) {
+            const parent = btn.closest('.grid-2');
+            const siblings = parent.querySelectorAll('.opt-btn');
 
+            siblings.forEach(s => {
+                s.classList.remove('correct', 'wrong');
+            });
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+            } else {
+                btn.classList.add('wrong');
+                btn.classList.add('shake');
+                setTimeout(() => btn.classList.remove('shake'), 300);
+            }
+        }
+
+        // 3. Unscramble Chip Move Logic
+        function moveChip(chip, zoneId, poolId) {
+            const zone = document.getElementById(zoneId);
+            const pool = document.getElementById(poolId);
+
+            if (chip.parentElement.id === poolId) {
+                zone.appendChild(chip);
+            } else {
+                pool.appendChild(chip);
+            }
+            zone.classList.remove('correct', 'wrong');
+        }
+
+        // 4. Unscramble Sentence Check Logic
+        function checkUnscramble(zoneId, targetSentence) {
+            const zone = document.getElementById(zoneId);
+            const chips = zone.querySelectorAll('.item-chip');
+            
+            let userSentence = [];
+            chips.forEach(chip => userSentence.push(chip.innerText.trim()));
+            
+            const formedSentence = userSentence.join(' ');
+
+            zone.classList.remove('correct', 'wrong');
+
+            if (formedSentence.toLowerCase() === targetSentence.toLowerCase()) {
+                zone.classList.add('correct');
+            } else {
+                zone.classList.add('wrong');
+                zone.classList.add('shake');
+                setTimeout(() => zone.classList.remove('shake'), 300);
+            }
+        }
+    </script>
 </body>
 </html>
