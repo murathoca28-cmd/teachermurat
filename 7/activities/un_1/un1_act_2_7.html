@@ -12,8 +12,6 @@
             --pink-soft: #FDEDF3;
             --green: #00B894;
             --green-soft: #E6F9F5;
-            --yellow: #FDCB6E;
-            --yellow-soft: #FEF9E7;
             --red: #FF7675;
             --red-soft: #FFEAE9;
             --blue: #0984E3;
@@ -28,8 +26,6 @@
             --radius-sm: 12px;
         }
         
-    
-
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
@@ -81,8 +77,6 @@
             opacity: 0.95;
             font-weight: 500;
         }
-
-        /* Toplam skor bölümü kaldırıldı */
 
         /* Nav Pills */
         .section-nav {
@@ -520,23 +514,6 @@
         }
         .pop { animation: pop 0.25s ease; }
 
-        /* Summary Banner - artık kullanılmıyor ama HTML'de duruyor */
-        .summary-card {
-            background: linear-gradient(135deg, #00B894 0%, #0984E3 100%);
-            color: #FFFFFF;
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            text-align: center;
-            display: none;
-            flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 10px 25px rgba(0, 184, 148, 0.25);
-        }
-
-        .summary-card.show {
-            display: flex;
-        }
-
         footer {
             text-align: center;
             padding: 16px;
@@ -555,13 +532,13 @@
 
     <div class="app-container">
 
-        <!-- HERO HEADER (skor bölümü kaldırıldı) -->
+        <!-- HERO HEADER -->
         <header class="hero-banner">
             <h1>7th Grade Unit 1: Appearance & Personality</h1>
             <p>Appearance, Personality & Comparatives Revision</p>
         </header>
 
-        <!-- SECTION 1: CATEGORIZATION (nav butonu kaldırıldı ama bölüm duruyor) -->
+        <!-- SECTION 1: CATEGORIZATION -->
         <section class="activity-card" id="sec1">
             <div class="card-header">
                 <div class="card-icon">👤</div>
@@ -597,7 +574,7 @@
             </div>
         </section>
 
-        <!-- SECTION 2: MULTIPLE CHOICE (nav butonu kaldırıldı ama bölüm duruyor) -->
+        <!-- SECTION 2: MULTIPLE CHOICE -->
         <section class="activity-card" id="sec2">
             <div class="card-header">
                 <div class="card-icon">❓</div>
@@ -612,9 +589,6 @@
 
             <div class="quiz-list" id="sec2List">
                 <!-- Rendered via JS -->
-            </div>
-
-            <div class="btn-group">
             </div>
         </section>
 
@@ -641,7 +615,6 @@
             </div>
         </section>
 
-
         <!-- SECTION 4: MATCHING -->
         <section class="activity-card" id="sec5">
             <div class="card-header">
@@ -664,15 +637,6 @@
                 <button class="btn-action btn-secondary" onclick="resetSection5()">↺ Sıfırla</button>
             </div>
         </section>
-
-        <!-- SUMMARY CARD (gösterilmeyecek ama HTML'de duruyor) -->
-        <div class="summary-card" id="summaryCard">
-            <h2 id="summaryTitle">🎉 Tebrikler! Etkinliği Tamamladınız!</h2>
-            <p id="summaryDesc">Toplam 25 sorunun hepsini çözdünüz.</p>
-            <div class="btn-group" style="justify-content: center; margin-top: 10px;">
-                <button class="btn-action btn-secondary" onclick="resetAll()">🔄 Bütün Etkinlikleri Sıfırla</button>
-            </div>
-        </div>
 
     </div>
 
@@ -761,8 +725,6 @@
             { textBefore: "6. An elephant weighs 4,000 kg and a horse weighs 500 kg. An elephant is ", textAfter: " (heavy) than a horse.", answer: "heavier" }
         ];
 
-        // Sec 4 Data ve ilgili değişkenler kaldırıldı.
-
         // Sec 5 Data
         const sec5Data = [
             { q: "1. What is Sarah like?", answer: "She is easy-going and thoughtful." },
@@ -772,19 +734,6 @@
             { q: "5. What does your brother like doing in his free time?", answer: "He likes playing chess and basketball." }
         ];
         let sec5Answers = {};
-
-        // SECTION NAVIGATION
-        function scrollToSection(id) {
-            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
-        // UPDATE OVERALL SCORE - artık bir işlem yapmıyor (skor bölümü kaldırıldı)
-        function updateOverallScore() {
-            // Toplam skor bölümü kaldırıldığı için fonksiyon boş bırakıldı.
-            return;
-        }
 
         // --- SECTION 1 LOGIC ---
         function renderSection1() {
@@ -852,13 +801,11 @@
         function checkSection1() {
             sec1State.checked = true;
             renderSection1();
-            updateOverallScore(); // çağrı kaldı
         }
 
         function resetSection1() {
             sec1State = { selectedChipId: null, userPlacements: {}, checked: false };
             renderSection1();
-            updateOverallScore(); // çağrı kaldı
         }
 
         // --- SECTION 2 LOGIC ---
@@ -894,7 +841,6 @@
                     btn.onclick = () => {
                         sec2Answers[qIdx] = optIdx;
                         renderSection2();
-                        updateOverallScore(); // çağrı kaldı
                     };
 
                     optGrid.appendChild(btn);
@@ -905,15 +851,9 @@
             });
         }
 
-        function checkSection2() {
-            // Already evaluates on select, trigger score check
-            updateOverallScore(); // çağrı kaldı
-        }
-
         function resetSection2() {
             sec2Answers = {};
             renderSection2();
-            updateOverallScore(); // çağrı kaldı
         }
 
         // --- SECTION 3 LOGIC ---
@@ -951,7 +891,6 @@
                     fb.innerText = `✕ (Doğru: ${item.answer})`;
                 }
             });
-            updateOverallScore(); // çağrı kaldı
         }
 
         function resetSection3() {
@@ -964,10 +903,7 @@
                 }
                 if (fb) fb.innerText = '';
             });
-            updateOverallScore(); // çağrı kaldı
         }
-
-        // --- SECTION 4 LOGIC tamamen kaldırıldı ---
 
         // --- SECTION 5 LOGIC ---
         function renderSection5() {
@@ -1020,23 +956,11 @@
                     sel.className = 'custom-select wrong';
                 }
             });
-            updateOverallScore(); // çağrı kaldı
         }
 
         function resetSection5() {
             sec5Answers = {};
             renderSection5();
-            updateOverallScore(); // çağrı kaldı
-        }
-
-        function resetAll() {
-            resetSection1();
-            resetSection2();
-            resetSection3();
-            // resetSection4 kaldırıldı
-            resetSection5();
-            document.getElementById('summaryCard').classList.remove('show');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // INIT
@@ -1044,9 +968,7 @@
             renderSection1();
             renderSection2();
             renderSection3();
-            // renderSection4 kaldırıldı
             renderSection5();
-            updateOverallScore(); // çağrı kaldı
         };
     </script>
 </body>
