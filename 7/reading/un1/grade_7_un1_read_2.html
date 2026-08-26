@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +32,7 @@
             background: white;
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             margin-top: -35px;
         }
 
@@ -67,7 +68,7 @@
             white-space: nowrap;
             z-index: 1010;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .vocab:hover::before {
@@ -186,7 +187,7 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
             z-index: 999;
             transition: transform 0.2s, background 0.2s;
             display: flex;
@@ -225,13 +226,20 @@
             padding: 30px;
             overflow-y: auto;
             position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             animation: fadeIn 0.25s ease-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-close-btn {
@@ -258,12 +266,25 @@
             display: none;
         }
 
-        .correct-msg { color: var(--success); font-weight: bold; }
-        .wrong-msg { color: var(--error); font-weight: bold; }
-        .feedback-detail { font-size: 0.9rem; margin-top: 5px; display: block; }
+        .correct-msg {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .wrong-msg {
+            color: var(--error);
+            font-weight: bold;
+        }
+
+        .feedback-detail {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: block;
+        }
     </style>
     <link rel="stylesheet" href="../../../theme.css">
 </head>
+
 <body>
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
     <script src="../../../navbar.js"></script>
@@ -275,31 +296,52 @@
     <div id="textModal" class="modal-overlay" onclick="closeModalOnOutsideClick(event)">
         <div class="modal-content">
             <button class="modal-close-btn" onclick="closeTextModal()">&times;</button>
-            <h2 style="color: var(--primary); margin-top: 0; border-bottom: 2px solid var(--secondary); padding-bottom: 8px;">🌟 Reading Passage</h2>
+            <h2
+                style="color: var(--primary); margin-top: 0; border-bottom: 2px solid var(--secondary); padding-bottom: 8px;">
+                🌟 Reading Passage</h2>
             <div id="modal-text-container" class="reading-section"></div>
         </div>
     </div>
 
     <div class="container">
-        <h1>🌟 Unit 1: Physical Appearance 🌟</h1>
+        <h1>🌟 My Family and Their Physical Appearances 🌟</h1>
 
-        <p style="text-align: center; font-size: 0.85rem; color: black; background: #e9f0fc; font-weight: bold; padding: 4px 10px; border-radius: 30px; margin: 0 0 20px 0; border: 2px solid #e0e7ef;">
+        <p
+            style="text-align: center; font-size: 0.85rem; color: black; background: #e9f0fc; font-weight: bold; padding: 4px 10px; border-radius: 30px; margin: 0 0 20px 0; border: 2px solid #e0e7ef;">
             🖱️ Altı çizili kelimenin Türkçe anlamını görmek için farenizi kelimenin üzerine getiriniz.
         </p>
 
         <!-- 7. Sınıf Seviyesine Uygun Okuma Metni -->
         <div class="reading-section" id="reading-text">
             <p>
-                Hello! My name is David. Today, I want to introduce my lovely family members and <span class="vocab" data-translation="tanımlamak">describe</span> their <span class="vocab" data-translation="fiziksel özellikler">physical apperances</span>.
+                Hello! My name is David. Today, I want to introduce my lovely family members and <span class="vocab"
+                    data-translation="tanımlamak">describe</span> their <span class="vocab"
+                    data-translation="fiziksel özellikler">physical appearances</span>.
             </p>
             <p>
-                My father, Arthur, is a <span class="vocab" data-translation="yakışıklı">handsome</span>, <span class="vocab" data-translation="orta yaşlı">middle-aged</span> man. He is <span class="vocab" data-translation="orta boylu">of medium height</span> and <span class="vocab" data-translation="kaslı / yapılı">well-built</span>. He has short <span class="vocab" data-translation="düz">straight</span> grey hair and <span class="vocab" data-translation="ela gözler">hazel eyes</span>. He also has a brown <span class="vocab" data-translation="sakal">beard</span> and a <span class="vocab" data-translation="bıyık">moustache</span>.
+                My father, Arthur, is a <span class="vocab" data-translation="yakışıklı">handsome</span>, <span
+                    class="vocab" data-translation="orta yaşlı">middle-aged</span> man. He is <span class="vocab"
+                    data-translation="orta boylu">of medium height</span> and <span class="vocab"
+                    data-translation="kaslı / yapılı">well-built</span>. He has short <span class="vocab"
+                    data-translation="düz">straight</span> grey hair and <span class="vocab"
+                    data-translation="ela gözler">hazel eyes</span>. He also has a brown <span class="vocab"
+                    data-translation="sakal">beard</span> and a <span class="vocab"
+                    data-translation="bıyık">moustache</span>.
             </p>
             <p>
-                My mother, Selin, is a <span class="vocab" data-translation="zayıf / narin">slim</span> and attractive woman. She has long <span class="vocab" data-translation="kıvırcık">curly</span> dark hair and charming green eyes. She usually wears a colourful <span class="vocab" data-translation="başörtüsü">headscarf</span> when she goes out.
+                My mother, Selin, is a <span class="vocab" data-translation="zayıf / narin">slim</span> and attractive
+                woman. She has long <span class="vocab" data-translation="kıvırcık">curly</span> dark hair and charming
+                green eyes. She usually wears a colourful <span class="vocab"
+                    data-translation="başörtüsü">headscarf</span> when she goes out.
             </p>
             <p>
-                My little brother, Leo, is short and a bit <span class="vocab" data-translation="balık etli / toplu">plump</span>. He has <span class="vocab" data-translation="dalgalı">wavy</span> blonde hair and blue eyes. He wears round <span class="vocab" data-translation="gözlük">glasses</span>. Finally, my grandfather, Henry, is an <span class="vocab" data-translation="yaşlı">old</span> man. He is <span class="vocab" data-translation="kel">bald</span>, so he always wears a stylish hat outdoors. I love my family very much!
+                My little brother, Leo, is short and a bit <span class="vocab"
+                    data-translation="balık etli / toplu">plump</span>. He has <span class="vocab"
+                    data-translation="dalgalı">wavy</span> blonde hair and blue eyes. He wears round <span class="vocab"
+                    data-translation="gözlük">glasses</span>. Finally, my grandfather, Henry, is an <span class="vocab"
+                    data-translation="yaşlı">old</span> man. He is <span class="vocab"
+                    data-translation="kel">bald</span>, so he always wears a stylish hat outdoors. I love my family very
+                much!
             </p>
         </div>
 
@@ -311,10 +353,14 @@
                 <div class="question-card" data-type="mc" data-answer="b">
                     <span class="question-text">1. What does Arthur look like?</span>
                     <div class="options">
-                        <label><input type="radio" name="q1" value="a"> a) He is tall, plump, and has curly blonde hair.</label>
-                        <label><input type="radio" name="q1" value="b"> b) He is handsome, of medium height, and well-built with grey hair.</label>
-                        <label><input type="radio" name="q1" value="c"> c) He is short, thin, and wears a headscarf.</label>
-                        <label><input type="radio" name="q1" value="d"> d) He is an old, bald man who wears glasses.</label>
+                        <label><input type="radio" name="q1" value="a"> a) He is tall, plump, and has curly blonde
+                            hair.</label>
+                        <label><input type="radio" name="q1" value="b"> b) He is handsome, of medium height, and
+                            well-built with grey hair.</label>
+                        <label><input type="radio" name="q1" value="c"> c) He is short, thin, and wears a
+                            headscarf.</label>
+                        <label><input type="radio" name="q1" value="d"> d) He is an old, bald man who wears
+                            glasses.</label>
                     </div>
                     <div class="feedback-detail"></div>
                 </div>
@@ -356,9 +402,12 @@
                     <span class="question-text">5. Which sentence is CORRECT according to the text?</span>
                     <div class="options">
                         <label><input type="radio" name="q5" value="a"> a) Selin has short straight blonde hair.</label>
-                        <label><input type="radio" name="q5" value="b"> b) Henry is an old bald man who wears a hat.</label>
-                        <label><input type="radio" name="q5" value="c"> c) Arthur has blue eyes and no facial hair.</label>
-                        <label><input type="radio" name="q5" value="d"> d) Leo is a tall boy with dark straight hair.</label>
+                        <label><input type="radio" name="q5" value="b"> b) Henry is an old bald man who wears a
+                            hat.</label>
+                        <label><input type="radio" name="q5" value="c"> c) Arthur has blue eyes and no facial
+                            hair.</label>
+                        <label><input type="radio" name="q5" value="d"> d) Leo is a tall boy with dark straight
+                            hair.</label>
                     </div>
                     <div class="feedback-detail"></div>
                 </div>
@@ -368,45 +417,51 @@
 
                 <div class="question-card" data-type="sa" data-answers='["curly", "long curly", "curly dark"]'>
                     <span class="question-text">6. Write the hair type adjective used to describe Selin's hair.</span>
-                    <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..." autocomplete="off">
+                    <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..."
+                        autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
                 <div class="question-card" data-type="sa" data-answers='["glasses", "round glasses"]'>
                     <span class="question-text">7. What accessory does Leo wear?</span>
-                    <input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..." autocomplete="off">
+                    <input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..."
+                        autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
                 <div class="question-card" data-type="sa" data-answers='["bald"]'>
-                    <span class="question-text">8. Which word in the text describes someone who has no hair on their head?</span>
-                    <input type="text" class="short-answer-input" name="q8" placeholder="Type your answer here..." autocomplete="off">
+                    <span class="question-text">8. Which word in the text describes someone who has no hair on their
+                        head?</span>
+                    <input type="text" class="short-answer-input" name="q8" placeholder="Type your answer here..."
+                        autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
                 <div class="question-card" data-type="sa" data-answers='["hazel", "hazel eyes"]'>
                     <span class="question-text">9. What color are Arthur's eyes?</span>
-                    <input type="text" class="short-answer-input" name="q9" placeholder="Type your answer here..." autocomplete="off">
+                    <input type="text" class="short-answer-input" name="q9" placeholder="Type your answer here..."
+                        autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
                 <div class="question-card" data-type="sa" data-answers='["handsome"]'>
-                    <span class="question-text">10. Write an adjective from the text used to describe Arthur as good-looking.</span>
-                    <input type="text" class="short-answer-input" name="q10" placeholder="Type your answer here..." autocomplete="off">
+                    <span class="question-text">10. Write an adjective from the text used to describe Arthur as
+                        good-looking.</span>
+                    <input type="text" class="short-answer-input" name="q10" placeholder="Type your answer here..."
+                        autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
                 <button type="button" class="action-btn" onclick="checkQuiz()">Check Answers & Finish Quiz</button>
 
                 <!-- İndirme Butonu -->
-                <a href="https://cdn.teachermurat.com/7/read_acts/02-Grade7_readact.pdf" 
-                   download="https://cdn.teachermurat.com/7/read_acts/02-Grade7_readact.pdf" 
-                   class="action-btn download-btn" 
-                   style="display:flex; flex-direction:column; align-items:center; justify-content:center; 
+                <a href="https://cdn.teachermurat.com/7/read_acts/02-Grade7_readact.pdf"
+                    download="https://cdn.teachermurat.com/7/read_acts/02-Grade7_readact.pdf"
+                    class="action-btn download-btn" style="display:flex; flex-direction:column; align-items:center; justify-content:center; 
                           width:fit-content; margin:15px auto 0 auto; padding:12px 30px; 
                           text-decoration:none; line-height:1.4;">
-                   <span style="font-size:1.3rem;">⬇️</span>
-                   <span>Download Reading Activity</span>
+                    <span style="font-size:1.3rem;">⬇️</span>
+                    <span>Download Reading Activity</span>
                 </a>
 
                 <div id="result"></div>
@@ -513,4 +568,5 @@
         }
     </script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +32,7 @@
             background: white;
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             margin-top: -35px;
         }
 
@@ -67,7 +68,7 @@
             white-space: nowrap;
             z-index: 1010;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .vocab:hover::before {
@@ -186,7 +187,7 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
             z-index: 999;
             transition: transform 0.2s, background 0.2s;
             display: flex;
@@ -225,13 +226,20 @@
             padding: 30px;
             overflow-y: auto;
             position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             animation: fadeIn 0.25s ease-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-close-btn {
@@ -258,12 +266,25 @@
             display: none;
         }
 
-        .correct-msg { color: var(--success); font-weight: bold; }
-        .wrong-msg { color: var(--error); font-weight: bold; }
-        .feedback-detail { font-size: 0.9rem; margin-top: 5px; display: block; }
+        .correct-msg {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .wrong-msg {
+            color: var(--error);
+            font-weight: bold;
+        }
+
+        .feedback-detail {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: block;
+        }
     </style>
     <link rel="stylesheet" href="../../../theme.css">
 </head>
+
 <body>
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
     <script src="../../../navbar.js"></script>
@@ -275,28 +296,44 @@
     <div id="textModal" class="modal-overlay" onclick="closeModalOnOutsideClick(event)">
         <div class="modal-content">
             <button class="modal-close-btn" onclick="closeTextModal()">&times;</button>
-            <h2 style="color: var(--primary); margin-top: 0; border-bottom: 2px solid var(--secondary); padding-bottom: 8px;">🌟 Reading Passage</h2>
+            <h2
+                style="color: var(--primary); margin-top: 0; border-bottom: 2px solid var(--secondary); padding-bottom: 8px;">
+                🌟 Reading Passage</h2>
             <div id="modal-text-container" class="reading-section"></div>
         </div>
     </div>
 
     <div class="container">
-        <h1>🌟 Unit 1: Appearance and Personality 🌟</h1>
+        <h1>🌟 Meet My Family 🌟</h1>
 
-        <p style="text-align: center; font-size: 0.85rem; color: black; background: #e9f0fc; font-weight: bold; padding: 4px 10px; border-radius: 30px; margin: 0 0 20px 0; border: 2px solid #e0e7ef;">
+        <p
+            style="text-align: center; font-size: 0.85rem; color: black; background: #e9f0fc; font-weight: bold; padding: 4px 10px; border-radius: 30px; margin: 0 0 20px 0; border: 2px solid #e0e7ef;">
             🖱️ Altı çizili kelimenin Türkçe anlamını görmek için farenizi kelimenin üzerine getiriniz.
         </p>
 
         <!-- 7. Sınıf Seviyesine Yükseltilmiş Okuma Metni -->
         <div class="reading-section" id="reading-text">
             <p>
-                Hello! My name is Barry. Today, I want to introduce my two best classmates, Clara and Mark. Although they are both in my class, they have totally different physical appearances and personality traits.
+                Hello! My name is Barry. Today, I want to introduce my two best classmates, Clara and Mark. Although
+                they are both in my class, they have totally different physical appearances and personality traits.
             </p>
             <p>
-                Clara is a tall, <span class="vocab" data-translation="zayıf / narin">slim</span> girl with long <span class="vocab" data-translation="dalgalı">wavy</span> blonde hair and cheerful blue eyes. She is very <span class="vocab" data-translation="dışa dönük / sosyal">outgoing</span> and enjoys making new friends. She is also <span class="vocab" data-translation="cömert">generous</span> because she always shares her books and stationery with us. However, she can sometimes be a little <span class="vocab" data-translation="unutkan">forgetful</span>; she occasionally leaves her homework at home!
+                Clara is a tall, <span class="vocab" data-translation="zayıf / narin">slim</span> girl with long <span
+                    class="vocab" data-translation="dalgalı">wavy</span> blonde hair and cheerful blue eyes. She is very
+                <span class="vocab" data-translation="dışa dönük / sosyal">outgoing</span> and enjoys making new
+                friends. She is also <span class="vocab" data-translation="cömert">generous</span> because she always
+                shares her books and stationery with us. However, she can sometimes be a little <span class="vocab"
+                    data-translation="unutkan">forgetful</span>; she occasionally leaves her homework at home!
             </p>
             <p>
-                On the other hand, Mark is <span class="vocab" data-translation="...-den daha kısa">shorter than</span> Clara and has short curly dark hair. He wears glasses and looks quite smart. Mark is an introverted, <span class="vocab" data-translation="sessiz / sakin">quiet</span> boy, but he is extremely <span class="vocab" data-translation="dakik">punctual</span>—he never arrives late for class. He is more <span class="vocab" data-translation="...-den daha çalışkan">hardworking than</span> most of us. Sometimes Mark can be <span class="vocab" data-translation="inatçı">stubborn</span> when working on group projects because he always wants to stick to his own plan. Even though Clara and Mark are so different, I love spending time with both of them!
+                On the other hand, Mark is <span class="vocab" data-translation="...-den daha kısa">shorter than</span>
+                Clara and has short curly dark hair. He wears glasses and looks quite smart. Mark is an introverted,
+                <span class="vocab" data-translation="sessiz / sakin">quiet</span> boy, but he is extremely <span
+                    class="vocab" data-translation="dakik">punctual</span>—he never arrives late for class. He is more
+                <span class="vocab" data-translation="...-den daha çalışkan">hardworking than</span> most of us.
+                Sometimes Mark can be <span class="vocab" data-translation="inatçı">stubborn</span> when working on
+                group projects because he always wants to stick to his own plan. Even though Clara and Mark are so
+                different, I love spending time with both of them!
             </p>
         </div>
 
@@ -309,9 +346,11 @@
                     <span class="question-text">1. What does Clara look like?</span>
                     <div class="options">
                         <label><input type="radio" name="q1" value="a"> a) She is short and has dark curly hair.</label>
-                        <label><input type="radio" name="q1" value="b"> b) She is tall, slim with long wavy blonde hair.</label>
+                        <label><input type="radio" name="q1" value="b"> b) She is tall, slim with long wavy blonde
+                            hair.</label>
                         <label><input type="radio" name="q1" value="c"> c) She is plump and wears big glasses.</label>
-                        <label><input type="radio" name="q1" value="d"> d) She is middle-aged with short straight hair.</label>
+                        <label><input type="radio" name="q1" value="d"> d) She is middle-aged with short straight
+                            hair.</label>
                     </div>
                     <div class="feedback-detail"></div>
                 </div>
@@ -319,10 +358,14 @@
                 <div class="question-card" data-type="mc" data-answer="b">
                     <span class="question-text">2. Why does Barry describe Clara as "generous"?</span>
                     <div class="options">
-                        <label><input type="radio" name="q2" value="a"> a) Because she always arrives at school on time.</label>
-                        <label><input type="radio" name="q2" value="b"> b) Because she shares her materials with her classmates.</label>
-                        <label><input type="radio" name="q2" value="c"> c) Because she never changes her mind during projects.</label>
-                        <label><input type="radio" name="q2" value="d"> d) Because she forgets her homework regularly.</label>
+                        <label><input type="radio" name="q2" value="a"> a) Because she always arrives at school on
+                            time.</label>
+                        <label><input type="radio" name="q2" value="b"> b) Because she shares her materials with her
+                            classmates.</label>
+                        <label><input type="radio" name="q2" value="c"> c) Because she never changes her mind during
+                            projects.</label>
+                        <label><input type="radio" name="q2" value="d"> d) Because she forgets her homework
+                            regularly.</label>
                     </div>
                     <div class="feedback-detail"></div>
                 </div>
@@ -339,12 +382,15 @@
                 </div>
 
                 <div class="question-card" data-type="mc" data-answer="b">
-                    <span class="question-text">4. What is Mark's main negative personality trait mentioned in the text?</span>
+                    <span class="question-text">4. What is Mark's main negative personality trait mentioned in the
+                        text?</span>
                     <div class="options">
                         <label><input type="radio" name="q4" value="a"> a) He is late for every lesson.</label>
                         <label><input type="radio" name="q4" value="b"> b) He can be stubborn during group work.</label>
-                        <label><input type="radio" name="q4" value="c"> c) He is selfish and never shares his things.</label>
-                        <label><input type="radio" name="q4" value="d"> d) He forgets to bring his textbooks to school.</label>
+                        <label><input type="radio" name="q4" value="c"> c) He is selfish and never shares his
+                            things.</label>
+                        <label><input type="radio" name="q4" value="d"> d) He forgets to bring his textbooks to
+                            school.</label>
                     </div>
                     <div class="feedback-detail"></div>
                 </div>
@@ -352,10 +398,12 @@
                 <div class="question-card" data-type="mc" data-answer="b">
                     <span class="question-text">5. Which trait shows that Mark is "punctual"?</span>
                     <div class="options">
-                        <label><input type="radio" name="q5" value="a"> a) He wears glasses and reads many books.</label>
+                        <label><input type="radio" name="q5" value="a"> a) He wears glasses and reads many
+                            books.</label>
                         <label><input type="radio" name="q5" value="b"> b) He never arrives late for class.</label>
                         <label><input type="radio" name="q5" value="c"> c) He enjoys making lots of new friends.</label>
-                        <label><input type="radio" name="q5" value="d"> d) He always leaves his homework at home.</label>
+                        <label><input type="radio" name="q5" value="d"> d) He always leaves his homework at
+                            home.</label>
                     </div>
                     <div class="feedback-detail"></div>
                 </div>
@@ -364,143 +412,152 @@
                 <h2 class="section-title">Part 2: Short Answer Questions</h2>
 
                 <div class="question-card" data-type="sa" data-answers='["tall", "slim", "wavy", "blonde"]'>
-                    <span class="question-text">6. Write ONE physical appearance adjective used for Clara in the text.</span>
-                    <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..." autocomplete="off">
+                    <span class="question-text">6. Write ONE physical appearance adjective used for Clara in the
+                        text.</span>
+                    <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..."
+                        autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
-                <div class="question-card" data-type="sa" data-answers='["glasses", "curly hair", "short curly dark hair", "short curly hair"]'>
+                <div class="question-card" data-type="sa"
+                    data-answers='["glasses", "curly hair", "short curly dark hair", "short curly hair"]'>
                     <span class="question-text">7. What does Mark look like? (Mention hair type or accessories)</span>
-                    <input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..." autocomplete="off">
+                    <input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..."
+                        autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
                 <div class="question-card" data-type="sa" data-answers='["forgetful"]'>
-                    <span class="question-text">8. Which personality word in Paragraph 2 means "likely to forget things easily"?</span>
-                    <input type="text" class="short-answer-input" name="q8" placeholder="Type your answer here..." autocomplete="off">
+                    <span class="question-text">8. Which personality word in Paragraph 2 means "likely to forget things
+                        easily"?</span>
+                    <input type="text" class="short-answer-input" name="q8" placeholder="Type your answer here..."
+                        autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
                 <div class="question-card" data-type="sa" data-answers='["mark"]'>
                     <span class="question-text">9. Who is more hardworking according to Barry?</span>
-                    <input type="text" class="short-answer-input" name="q9" placeholder="Type your answer here..." autocomplete="off">
+                    <input type="text" class="short-answer-input" name="q9" placeholder="Type your answer here..."
+                        autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
                 <div class="question-card" data-type="sa" data-answers='["stubborn"]'>
-                    <span class="question-text">10. Write an adjective from the text that describes someone who never changes their opinion easily.</span>
-                    <input type="text" class="short-answer-input" name="q10" placeholder="Type your answer here..." autocomplete="off">
+                    <span class="question-text">10. Write an adjective from the text that describes someone who never
+                        changes their opinion easily.</span>
+                    <input type="text" class="short-answer-input" name="q10" placeholder="Type your answer here..."
+                        autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
                 <button type="button" class="action-btn" onclick="checkQuiz()">Check Answers & Finish Quiz</button>
                 <!-- İndirme butonu -->
-                <a href="https://cdn.teachermurat.com/7/read_acts/01-Grade7_readact.pdf" 
-                   download="https://cdn.teachermurat.com/7/read_acts/01-Grade7_readact.pdf" 
-                   class="action-btn download-btn" 
-                   style="display:flex; flex-direction:column; align-items:center; justify-content:center; 
+                <a href="https://cdn.teachermurat.com/7/read_acts/01-Grade7_readact.pdf"
+                    download="https://cdn.teachermurat.com/7/read_acts/01-Grade7_readact.pdf"
+                    class="action-btn download-btn" style="display:flex; flex-direction:column; align-items:center; justify-content:center; 
                           width:fit-content; margin:5px auto 0 auto; padding:12px 30px; 
                           text-decoration:none; line-height:1.4;">
-                   <span style="font-size:1.3rem;">⬇️</span>
-                   <span>Download Reading Activity</span>
+                    <span style="font-size:1.3rem;">⬇️</span>
+                    <span>Download Reading Activity</span>
                 </a>
-    <script>
-        // Modal Yönetimi
-        function openTextModal() {
-            const textContent = document.getElementById('reading-text').innerHTML;
-            document.getElementById('modal-text-container').innerHTML = textContent;
-            document.getElementById('textModal').style.display = 'flex';
-        }
-
-        function closeTextModal() {
-            document.getElementById('textModal').style.display = 'none';
-        }
-
-        function closeModalOnOutsideClick(event) {
-            if (event.target.id === 'textModal') {
-                closeTextModal();
-            }
-        }
-
-        // Cevap Kontrol Mantığı
-        function normalizeText(text) {
-            return text.toLowerCase().trim().replace(/\s+/g, ' ');
-        }
-
-        function checkQuiz() {
-            const form = document.getElementById('quizForm');
-            const questions = document.querySelectorAll('.question-card');
-            let score = 0;
-            let total = questions.length;
-
-            questions.forEach((q, index) => {
-                const type = q.getAttribute('data-type');
-                const feedback = q.querySelector('.feedback-detail');
-
-                if (type === 'mc') {
-                    const correctAnswer = q.getAttribute('data-answer');
-                    const userAnswer = form.querySelector(`input[name="q${index + 1}"]:checked`);
-
-                    if (userAnswer) {
-                        if (userAnswer.value === correctAnswer) {
-                            score++;
-                            feedback.innerHTML = "<span class='correct-msg'>✓ Correct! Well done!</span>";
-                        } else {
-                            feedback.innerHTML = `<span class='wrong-msg'>✗ Wrong. The correct answer was "${getOptionText(q, correctAnswer)}".</span>`;
-                        }
-                    } else {
-                        feedback.innerHTML = `<span class='wrong-msg'>✗ You didn't answer this one! The correct answer was "${getOptionText(q, correctAnswer)}".</span>`;
+                <script>
+                    // Modal Yönetimi
+                    function openTextModal() {
+                        const textContent = document.getElementById('reading-text').innerHTML;
+                        document.getElementById('modal-text-container').innerHTML = textContent;
+                        document.getElementById('textModal').style.display = 'flex';
                     }
-                } else if (type === 'sa') {
-                    const validAnswers = JSON.parse(q.getAttribute('data-answers'));
-                    const inputElement = q.querySelector('input[type="text"]');
-                    const userInputValue = normalizeText(inputElement.value);
 
-                    if (userInputValue !== "") {
-                        const isCorrect = validAnswers.some(ans => normalizeText(ans) === userInputValue);
-
-                        if (isCorrect) {
-                            score++;
-                            feedback.innerHTML = "<span class='correct-msg'>✓ Correct! Well done!</span>";
-                        } else {
-                            feedback.innerHTML = `<span class='wrong-msg'>✗ Wrong. Acceptable answer: "${validAnswers[0]}".</span>`;
-                        }
-                    } else {
-                        feedback.innerHTML = `<span class='wrong-msg'>✗ You didn't answer this one! Acceptable answer: "${validAnswers[0]}".</span>`;
+                    function closeTextModal() {
+                        document.getElementById('textModal').style.display = 'none';
                     }
-                }
-            });
 
-            const resultDiv = document.getElementById('result');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = `<h2>Your Score: ${score} / ${total}</h2>`;
+                    function closeModalOnOutsideClick(event) {
+                        if (event.target.id === 'textModal') {
+                            closeTextModal();
+                        }
+                    }
 
-            if (score === total) {
-                resultDiv.innerHTML += "<p>🌟 Perfect! You are a superstar! 🌟</p>";
-                resultDiv.style.backgroundColor = "#e6fffa";
-            } else if (score >= total / 2) {
-                resultDiv.innerHTML += "<p>👍 Good job! Keep practicing!</p>";
-                resultDiv.style.backgroundColor = "#fffaf0";
-            } else {
-                resultDiv.innerHTML += "<p>📚 Don't give up! Read the text again and try again!</p>";
-                resultDiv.style.backgroundColor = "#fff5f5";
-            }
+                    // Cevap Kontrol Mantığı
+                    function normalizeText(text) {
+                        return text.toLowerCase().trim().replace(/\s+/g, ' ');
+                    }
 
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
+                    function checkQuiz() {
+                        const form = document.getElementById('quizForm');
+                        const questions = document.querySelectorAll('.question-card');
+                        let score = 0;
+                        let total = questions.length;
 
-        function getOptionText(questionElement, value) {
-            const options = questionElement.querySelectorAll('label');
-            for (let label of options) {
-                const input = label.querySelector('input');
-                if (input && input.value === value) {
-                    let text = label.textContent.trim();
-                    text = text.replace(/^[a-d]\)\s*/, '');
-                    return text;
-                }
-            }
-            return "";
-        }
-    </script>
+                        questions.forEach((q, index) => {
+                            const type = q.getAttribute('data-type');
+                            const feedback = q.querySelector('.feedback-detail');
+
+                            if (type === 'mc') {
+                                const correctAnswer = q.getAttribute('data-answer');
+                                const userAnswer = form.querySelector(`input[name="q${index + 1}"]:checked`);
+
+                                if (userAnswer) {
+                                    if (userAnswer.value === correctAnswer) {
+                                        score++;
+                                        feedback.innerHTML = "<span class='correct-msg'>✓ Correct! Well done!</span>";
+                                    } else {
+                                        feedback.innerHTML = `<span class='wrong-msg'>✗ Wrong. The correct answer was "${getOptionText(q, correctAnswer)}".</span>`;
+                                    }
+                                } else {
+                                    feedback.innerHTML = `<span class='wrong-msg'>✗ You didn't answer this one! The correct answer was "${getOptionText(q, correctAnswer)}".</span>`;
+                                }
+                            } else if (type === 'sa') {
+                                const validAnswers = JSON.parse(q.getAttribute('data-answers'));
+                                const inputElement = q.querySelector('input[type="text"]');
+                                const userInputValue = normalizeText(inputElement.value);
+
+                                if (userInputValue !== "") {
+                                    const isCorrect = validAnswers.some(ans => normalizeText(ans) === userInputValue);
+
+                                    if (isCorrect) {
+                                        score++;
+                                        feedback.innerHTML = "<span class='correct-msg'>✓ Correct! Well done!</span>";
+                                    } else {
+                                        feedback.innerHTML = `<span class='wrong-msg'>✗ Wrong. Acceptable answer: "${validAnswers[0]}".</span>`;
+                                    }
+                                } else {
+                                    feedback.innerHTML = `<span class='wrong-msg'>✗ You didn't answer this one! Acceptable answer: "${validAnswers[0]}".</span>`;
+                                }
+                            }
+                        });
+
+                        const resultDiv = document.getElementById('result');
+                        resultDiv.style.display = 'block';
+                        resultDiv.innerHTML = `<h2>Your Score: ${score} / ${total}</h2>`;
+
+                        if (score === total) {
+                            resultDiv.innerHTML += "<p>🌟 Perfect! You are a superstar! 🌟</p>";
+                            resultDiv.style.backgroundColor = "#e6fffa";
+                        } else if (score >= total / 2) {
+                            resultDiv.innerHTML += "<p>👍 Good job! Keep practicing!</p>";
+                            resultDiv.style.backgroundColor = "#fffaf0";
+                        } else {
+                            resultDiv.innerHTML += "<p>📚 Don't give up! Read the text again and try again!</p>";
+                            resultDiv.style.backgroundColor = "#fff5f5";
+                        }
+
+                        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                    }
+
+                    function getOptionText(questionElement, value) {
+                        const options = questionElement.querySelectorAll('label');
+                        for (let label of options) {
+                            const input = label.querySelector('input');
+                            if (input && input.value === value) {
+                                let text = label.textContent.trim();
+                                text = text.replace(/^[a-d]\)\s*/, '');
+                                return text;
+                            }
+                        }
+                        return "";
+                    }
+                </script>
 </body>
+
 </html>
