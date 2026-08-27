@@ -302,7 +302,8 @@
             margin-top: auto;
         }
     </style>
-     <link rel="stylesheet" href="../../../theme.css">
+    <link rel="stylesheet" href="../../../theme.css">
+
 </head>
 <body>
     <div id="navbar-placeholder" style="min-height: 0px;"></div>
@@ -382,36 +383,36 @@
             <div class="quiz-item">
                 <label>1. True friends always tell the truth because they are ________.</label>
                 <div class="grid-2">
-                    <button class="opt-btn" onclick="checkPart2(this, false)">a) boring</button>
-                    <button class="opt-btn" onclick="checkPart2(this, true)">b) honest</button>
-                    <button class="opt-btn" onclick="checkPart2(this, false)">c) crazy</button>
+                    <button class="opt-btn" onclick="checkPart2(this, false)">boring</button>
+                    <button class="opt-btn" onclick="checkPart2(this, true)">honest</button>
+                    <button class="opt-btn" onclick="checkPart2(this, false)">crazy</button>
                 </div>
             </div>
 
             <div class="quiz-item">
                 <label>2. "Would you like to come over this evening?" expression is used for ________.</label>
                 <div class="grid-2">
-                    <button class="opt-btn" onclick="checkPart2(this, true)">a) making an invitation</button>
-                    <button class="opt-btn" onclick="checkPart2(this, false)">b) refusing an offer</button>
-                    <button class="opt-btn" onclick="checkPart2(this, false)">c) giving an excuse</button>
+                    <button class="opt-btn" onclick="checkPart2(this, true)">making an invitation</button>
+                    <button class="opt-btn" onclick="checkPart2(this, false)">refusing an offer</button>
+                    <button class="opt-btn" onclick="checkPart2(this, false)">giving an excuse</button>
                 </div>
             </div>
 
             <div class="quiz-item">
                 <label>3. Beatrice likes spending time with Vicky because she does ________ things.</label>
                 <div class="grid-2">
-                    <button class="opt-btn" onclick="checkPart2(this, false)">a) dull</button>
-                    <button class="opt-btn" onclick="checkPart2(this, false)">b) bad</button>
-                    <button class="opt-btn" onclick="checkPart2(this, true)">c) thrilling</button>
+                    <button class="opt-btn" onclick="checkPart2(this, false)">dull</button>
+                    <button class="opt-btn" onclick="checkPart2(this, false)">bad</button>
+                    <button class="opt-btn" onclick="checkPart2(this, true)">thrilling</button>
                 </div>
             </div>
 
             <div class="quiz-item">
                 <label>4. Which quote emphasizes that we choose our friends?</label>
                 <div class="grid-2">
-                    <button class="opt-btn" onclick="checkPart2(this, true)">a) "Friends are the family you choose."</button>
-                    <button class="opt-btn" onclick="checkPart2(this, false)">b) "I prefer playing computer games."</button>
-                    <button class="opt-btn" onclick="checkPart2(this, false)">c) "I have a guitar performance."</button>
+                    <button class="opt-btn" onclick="checkPart2(this, true)">"Friends are the family you choose."</button>
+                    <button class="opt-btn" onclick="checkPart2(this, false)">"I prefer playing computer games."</button>
+                    <button class="opt-btn" onclick="checkPart2(this, false)">"I have a guitar performance."</button>
                 </div>
             </div>
         </div>
@@ -524,6 +525,39 @@
 </footer>
 
 <script>
+    // General Fisher-Yates Shuffle Function
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // Auto-shuffle options and chips on DOM Ready
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Shuffle Part 1 Dropdown Options
+        document.querySelectorAll('#part1-container select').forEach(select => {
+            const options = Array.from(select.querySelectorAll('option:not([value=""])'));
+            shuffleArray(options);
+            options.forEach(opt => select.appendChild(opt));
+        });
+
+        // 2. Shuffle Part 2 Multiple Choice Buttons
+        document.querySelectorAll('.activity-card .grid-2').forEach(grid => {
+            const buttons = Array.from(grid.children);
+            shuffleArray(buttons);
+            buttons.forEach(btn => grid.appendChild(btn));
+        });
+
+        // 3. Shuffle Part 4 Sentence Building Chips
+        document.querySelectorAll('.unscramble-pool').forEach(pool => {
+            const chips = Array.from(pool.children);
+            shuffleArray(chips);
+            chips.forEach(chip => pool.appendChild(chip));
+        });
+    });
+
     // Part 1: Select Matching Check
     function checkPart1() {
         const selects = document.querySelectorAll('#part1-container select');
