@@ -46,7 +46,7 @@
             margin: 0;
         }
 
-        /* Hizalama ve Genişlik Sınırı (Sayfayı daraltan ayar) */
+        /* Hizalama ve Genişlik Sınırı (780px Yapı) */
         .app-container {
             width: 100%;
             max-width: 780px;
@@ -316,7 +316,7 @@
         <p>8th Grade English Interactive Activity Module</p>
     </header>
 
-    <!-- PART 1: Matching Vocabulary -->
+    <!-- PART 1: Matching Vocabulary (Dinamik ve Çeldiricili) -->
     <section class="activity-card">
         <div class="card-header">
             <div class="card-icon">🧩</div>
@@ -328,43 +328,19 @@
         <div class="space-y" id="part1-container">
             <div class="quiz-item">
                 <label>1. Buddy / Best mate</label>
-                <select class="custom-select" data-answer="a">
-                    <option value="">-- Select Meaning --</option>
-                    <option value="a">A very close friend</option>
-                    <option value="b">To visit someone at their home</option>
-                    <option value="c">To give help and stand by someone</option>
-                    <option value="d">To believe someone is honest</option>
-                </select>
+                <select class="custom-select" data-answer="A very close friend"></select>
             </div>
             <div class="quiz-item">
                 <label>2. Come over</label>
-                <select class="custom-select" data-answer="b">
-                    <option value="">-- Select Meaning --</option>
-                    <option value="a">A very close friend</option>
-                    <option value="b">To visit someone at their home</option>
-                    <option value="c">To give help and stand by someone</option>
-                    <option value="d">To believe someone is honest</option>
-                </select>
+                <select class="custom-select" data-answer="To visit someone at their home"></select>
             </div>
             <div class="quiz-item">
                 <label>3. Support each other</label>
-                <select class="custom-select" data-answer="c">
-                    <option value="">-- Select Meaning --</option>
-                    <option value="a">A very close friend</option>
-                    <option value="b">To visit someone at their home</option>
-                    <option value="c">To give help and stand by someone</option>
-                    <option value="d">To believe someone is honest</option>
-                </select>
+                <select class="custom-select" data-answer="To give help and stand by someone"></select>
             </div>
             <div class="quiz-item">
                 <label>4. Trust someone</label>
-                <select class="custom-select" data-answer="d">
-                    <option value="">-- Select Meaning --</option>
-                    <option value="a">A very close friend</option>
-                    <option value="b">To visit someone at their home</option>
-                    <option value="c">To give help and stand by someone</option>
-                    <option value="d">To believe someone is honest</option>
-                </select>
+                <select class="custom-select" data-answer="To believe someone is honest"></select>
             </div>
             <button class="action-btn" onclick="checkPart1()">Check Part 1</button>
         </div>
@@ -525,7 +501,17 @@
 </footer>
 
 <script>
-    // General Fisher-Yates Shuffle Function
+    // Part 1 için Tanım Havuzu (4 Doğru Tanım + 2 Çeldirici Seçenek)
+    const part1OptionsPool = [
+        "A very close friend",
+        "To visit someone at their home",
+        "To give help and stand by someone",
+        "To believe someone is honest",
+        "To feel full after a heavy meal",
+        "To refuse an invitation politely"
+    ];
+
+    // Genel Fisher-Yates Karıştırma Algoritması
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -534,23 +520,29 @@
         return array;
     }
 
-    // Auto-shuffle options and chips on DOM Ready
+    // Sayfa Yüklendiğinde Otomatik Karıştırmalar
     document.addEventListener('DOMContentLoaded', () => {
-        // 1. Shuffle Part 1 Dropdown Options
-        document.querySelectorAll('#part1-container select').forEach(select => {
-            const options = Array.from(select.querySelectorAll('option:not([value=""])'));
-            shuffleArray(options);
-            options.forEach(opt => select.appendChild(opt));
+        // 1. Part 1 Dropdown Seçeneklerini Çeldiricilerle Dinamik ve Rastgele Doldurma
+        const part1Selects = document.querySelectorAll('#part1-container select');
+        part1Selects.forEach(select => {
+            const shuffled = shuffleArray([...part1OptionsPool]);
+            select.innerHTML = '<option value="">-- Select Meaning --</option>';
+            shuffled.forEach(optText => {
+                const opt = document.createElement('option');
+                opt.value = optText;
+                opt.textContent = optText;
+                select.appendChild(opt);
+            });
         });
 
-        // 2. Shuffle Part 2 Multiple Choice Buttons
+        // 2. Part 2 Çoktan Seçmeli Şıkları Karıştırma
         document.querySelectorAll('.activity-card .grid-2').forEach(grid => {
             const buttons = Array.from(grid.children);
             shuffleArray(buttons);
             buttons.forEach(btn => grid.appendChild(btn));
         });
 
-        // 3. Shuffle Part 4 Sentence Building Chips
+        // 3. Part 4 Kelime Çiplerini Karıştırma
         document.querySelectorAll('.unscramble-pool').forEach(pool => {
             const chips = Array.from(pool.children);
             shuffleArray(chips);
@@ -558,7 +550,7 @@
         });
     });
 
-    // Part 1: Select Matching Check
+    // Part 1: Eşleştirme Kontrolü
     function checkPart1() {
         const selects = document.querySelectorAll('#part1-container select');
         selects.forEach(select => {
@@ -571,7 +563,7 @@
         });
     }
 
-    // Part 2: Multiple Choice Check
+    // Part 2: Çoktan Seçmeli Kontrolü
     function checkPart2(btn, isCorrect) {
         const parentGrid = btn.parentElement;
         const siblings = parentGrid.querySelectorAll('.opt-btn');
@@ -589,7 +581,7 @@
         }
     }
 
-    // Part 3: Reading True/False Check
+    // Part 3: True / False Kontrolü
     function checkPart3() {
         const selects = document.querySelectorAll('#part3-container select');
         selects.forEach(select => {
@@ -602,7 +594,7 @@
         });
     }
 
-    // Part 4: Interactive Chip Movement
+    // Part 4: İnteraktif Çip Taşıma
     function moveChip(chip, zoneId, poolId) {
         const zone = document.getElementById(zoneId);
         const pool = document.getElementById(poolId);
@@ -614,7 +606,7 @@
         }
     }
 
-    // Part 4: Sentence Checker
+    // Part 4: Cümle Kontrolü
     function checkSentence(zoneId, correctSentence) {
         const zone = document.getElementById(zoneId);
         const chips = zone.querySelectorAll('.item-chip');
