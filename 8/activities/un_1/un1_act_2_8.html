@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 1: Friendship - Interactive Practice</title>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-soft: #EEECFD;
+            --pink: #FD79A8;
+            --pink-soft: #FDEDF3;
+            --green: #00B894;
+            --green-soft: #E6F9F5;
+            --yellow: #FDCB6E;
+            --yellow-soft: #FEF9E7;
+            --red: #FF7675;
+            --red-soft: #FFEAE9;
+            --blue: #0984E3;
+            --blue-soft: #E3F2FD;
+            --bg: #F4F7FE;
+            --card-bg: #e2eff8;
+            --text-dark: #2D3436;
+            --text-muted: #636E72;
+            --border-color: #E2E8F0;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        .app-container, .app-container * {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            margin: 0;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Hero Kartı */
+        .hero-banner {
+            background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #FD79A8 100%);
+            color: #FFFFFF;
+            padding: 26px 24px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner h1 {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .hero-banner p {
+            font-size: 15px;
+            opacity: 0.95;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        /* İnteraktif Görev Kartları */
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            border: 2px solid #a4aeb9;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed #cbd5e0;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .card-title h2 {
+            font-size: 19px;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .card-title p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            margin-bottom: 0;
+        }
+
+        /* Izgara Yapıları */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .space-y {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Soru / Seçenek Kutuları */
+        .quiz-item {
+            background: #F8FAFC;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-item label {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        .opt-btn {
+            width: 100%;
+            padding: 11px 14px;
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-weight: 400;
+            font-size: 15px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        select.custom-select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border-color);
+            font-weight: 600;
+            font-size: 14px;
+            outline: none;
+            background: #FFFFFF;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-dark);
+        }
+
+        select.custom-select:hover:not(:disabled) {
+            border-color: var(--primary);
+        }
+
+        /* Yanıt Durum Stilleri */
+        .correct {
+            background: var(--green-soft) !important;
+            border-color: var(--green) !important;
+            color: #007955 !important;
+            font-weight: bold;
+        }
+
+        .wrong {
+            background: var(--red-soft) !important;
+            border-color: var(--red) !important;
+            color: #C0392B !important;
+            font-weight: bold;
+        }
+
+        .opt-btn.correct::after { content: "  ✓"; color: #007955; }
+        .opt-btn.wrong::after { content: "  ✕"; color: #C0392B; }
+
+        /* Reading Box */
+        .reading-box {
+            background: #FFFFFF;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--primary);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        /* Cümle Düzenleme (Unscramble) Stilleri */
+        .unscramble-zone {
+            min-height: 58px;
+            padding: 10px 14px;
+            background: #FFFFFF;
+            border: 2px dashed #CBD5E0;
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .unscramble-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .item-chip {
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            padding: 9px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            user-select: none;
+        }
+
+        .item-chip:hover {
+            border-color: var(--yellow);
+            transform: translateY(-2px);
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            cursor: pointer;
+            align-self: flex-start;
+            transition: background 0.2s;
+            margin-top: 6px;
+        }
+
+        .action-btn:hover {
+            background: #5b4cc4;
+        }
+
+        /* Animasyonlar */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .shake { animation: shake 0.3s ease; }
+
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border-color);
+            background: #FFFFFF;
+            margin-top: auto;
+        }
+    </style>
+     <link rel="stylesheet" href="../../../theme.css">
+</head>
+<body>
+    <div id="navbar-placeholder" style="min-height: 0px;"></div>
+    <script src="../../../navbar.js"></script>
+
+<div class="app-container">
+    <!-- Hero Banner -->
+    <header class="hero-banner">
+        <h1>UNIT 1: FRIENDSHIP</h1>
+        <p>8th Grade English Interactive Activity Module</p>
+    </header>
+
+    <!-- PART 1: Matching Vocabulary -->
+    <section class="activity-card">
+        <div class="card-header">
+            <div class="card-icon">🧩</div>
+            <div class="card-title">
+                <h2>Part 1: Vocabulary Matching</h2>
+                <p>Match the expressions with their correct meanings.</p>
+            </div>
+        </div>
+        <div class="space-y" id="part1-container">
+            <div class="quiz-item">
+                <label>1. Buddy / Best mate</label>
+                <select class="custom-select" data-answer="a">
+                    <option value="">-- Select Meaning --</option>
+                    <option value="a">A very close friend</option>
+                    <option value="b">To visit someone at their home</option>
+                    <option value="c">To give help and stand by someone</option>
+                    <option value="d">To believe someone is honest</option>
+                </select>
+            </div>
+            <div class="quiz-item">
+                <label>2. Come over</label>
+                <select class="custom-select" data-answer="b">
+                    <option value="">-- Select Meaning --</option>
+                    <option value="a">A very close friend</option>
+                    <option value="b">To visit someone at their home</option>
+                    <option value="c">To give help and stand by someone</option>
+                    <option value="d">To believe someone is honest</option>
+                </select>
+            </div>
+            <div class="quiz-item">
+                <label>3. Support each other</label>
+                <select class="custom-select" data-answer="c">
+                    <option value="">-- Select Meaning --</option>
+                    <option value="a">A very close friend</option>
+                    <option value="b">To visit someone at their home</option>
+                    <option value="c">To give help and stand by someone</option>
+                    <option value="d">To believe someone is honest</option>
+                </select>
+            </div>
+            <div class="quiz-item">
+                <label>4. Trust someone</label>
+                <select class="custom-select" data-answer="d">
+                    <option value="">-- Select Meaning --</option>
+                    <option value="a">A very close friend</option>
+                    <option value="b">To visit someone at their home</option>
+                    <option value="c">To give help and stand by someone</option>
+                    <option value="d">To believe someone is honest</option>
+                </select>
+            </div>
+            <button class="action-btn" onclick="checkPart1()">Check Part 1</button>
+        </div>
+    </section>
+
+    <!-- PART 2: Multiple Choice Questions -->
+    <section class="activity-card">
+        <div class="card-header">
+            <div class="card-icon">🎯</div>
+            <div class="card-title">
+                <h2>Part 2: Multiple Choice</h2>
+                <p>Choose the correct option for each question.</p>
+            </div>
+        </div>
+        <div class="space-y">
+            <div class="quiz-item">
+                <label>1. True friends always tell the truth because they are ________.</label>
+                <div class="grid-2">
+                    <button class="opt-btn" onclick="checkPart2(this, false)">a) boring</button>
+                    <button class="opt-btn" onclick="checkPart2(this, true)">b) honest</button>
+                    <button class="opt-btn" onclick="checkPart2(this, false)">c) crazy</button>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <label>2. "Would you like to come over this evening?" expression is used for ________.</label>
+                <div class="grid-2">
+                    <button class="opt-btn" onclick="checkPart2(this, true)">a) making an invitation</button>
+                    <button class="opt-btn" onclick="checkPart2(this, false)">b) refusing an offer</button>
+                    <button class="opt-btn" onclick="checkPart2(this, false)">c) giving an excuse</button>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <label>3. Beatrice likes spending time with Vicky because she does ________ things.</label>
+                <div class="grid-2">
+                    <button class="opt-btn" onclick="checkPart2(this, false)">a) dull</button>
+                    <button class="opt-btn" onclick="checkPart2(this, false)">b) bad</button>
+                    <button class="opt-btn" onclick="checkPart2(this, true)">c) thrilling</button>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <label>4. Which quote emphasizes that we choose our friends?</label>
+                <div class="grid-2">
+                    <button class="opt-btn" onclick="checkPart2(this, true)">a) "Friends are the family you choose."</button>
+                    <button class="opt-btn" onclick="checkPart2(this, false)">b) "I prefer playing computer games."</button>
+                    <button class="opt-btn" onclick="checkPart2(this, false)">c) "I have a guitar performance."</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PART 3: Reading Comprehension (True / False) -->
+    <section class="activity-card">
+        <div class="card-header">
+            <div class="card-icon">📖</div>
+            <div class="card-title">
+                <h2>Part 3: Reading & True / False</h2>
+                <p>Read the e-mail exchange between Janet and Mert, then answer True or False.</p>
+            </div>
+        </div>
+
+        <div class="reading-box">
+            <strong>Janet:</strong> "Hello Mert, How are you doing? I am giving a movie night party tomorrow. Would you like to come over? Please, let me know if you can join us as soon as possible."<br><br>
+            <strong>Mert:</strong> "Hi Janet, I'd love to join you, but I can't because I have a guitar performance tomorrow. How about coming to my concert instead? It's at seven o'clock in the city hall."<br><br>
+            <strong>Janet:</strong> "You have a concert! It sounds great. Of course, I'd like to come. I'll mail our friends, too. We'll be there before seven."
+        </div>
+
+        <div class="space-y" id="part3-container">
+            <div class="quiz-item">
+                <label>1. Janet is planning a movie night party next week.</label>
+                <select class="custom-select" data-answer="False">
+                    <option value="">-- Select --</option>
+                    <option value="True">True</option>
+                    <option value="False">False</option>
+                </select>
+            </div>
+
+            <div class="quiz-item">
+                <label>2. Mert can't go to Janet's party because he has a guitar performance.</label>
+                <select class="custom-select" data-answer="True">
+                    <option value="">-- Select --</option>
+                    <option value="True">True</option>
+                    <option value="False">False</option>
+                </select>
+            </div>
+
+            <div class="quiz-item">
+                <label>3. Mert's concert is at eight o'clock in the city hall.</label>
+                <select class="custom-select" data-answer="False">
+                    <option value="">-- Select --</option>
+                    <option value="True">True</option>
+                    <option value="False">False</option>
+                </select>
+            </div>
+
+            <div class="quiz-item">
+                <label>4. Janet accepts Mert's invitation to the concert.</label>
+                <select class="custom-select" data-answer="True">
+                    <option value="">-- Select --</option>
+                    <option value="True">True</option>
+                    <option value="False">False</option>
+                </select>
+            </div>
+
+            <button class="action-btn" onclick="checkPart3()">Check Part 3</button>
+        </div>
+    </section>
+
+    <!-- PART 4: Sentence Building (Unscramble) -->
+    <section class="activity-card">
+        <div class="card-header">
+            <div class="card-icon">✏️</div>
+            <div class="card-title">
+                <h2>Part 4: Sentence Building</h2>
+                <p>Click the words to put them in the correct order to form correct sentences.</p>
+            </div>
+        </div>
+
+        <div class="space-y">
+            <!-- Sentence 1 -->
+            <div class="quiz-item" id="unscramble-1">
+                <label>1. (Invitation sentence)</label>
+                <div class="unscramble-zone" id="zone-1"></div>
+                <div class="unscramble-pool" id="pool-1">
+                    <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">like</span>
+                    <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">Would</span>
+                    <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">to</span>
+                    <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">you</span>
+                    <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">come</span>
+                    <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">over?</span>
+                </div>
+                <button class="action-btn" onclick="checkSentence('zone-1', 'Would you like to come over?')">Check Sentence</button>
+            </div>
+
+            <!-- Sentence 2 -->
+            <div class="quiz-item" id="unscramble-2">
+                <label>2. (Friendship quality statement)</label>
+                <div class="unscramble-zone" id="zone-2"></div>
+                <div class="unscramble-pool" id="pool-2">
+                    <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">friends</span>
+                    <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">True</span>
+                    <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">and</span>
+                    <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">support</span>
+                    <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">trust</span>
+                    <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">each other.</span>
+                </div>
+                <button class="action-btn" onclick="checkSentence('zone-2', 'True friends support and trust each other.')">Check Sentence</button>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    8th Grade English Material | Unit 1: Friendship
+</footer>
+
+<script>
+    // Part 1: Select Matching Check
+    function checkPart1() {
+        const selects = document.querySelectorAll('#part1-container select');
+        selects.forEach(select => {
+            const correctAnswer = select.getAttribute('data-answer');
+            if (select.value === correctAnswer) {
+                select.className = 'custom-select correct';
+            } else {
+                select.className = 'custom-select wrong';
+            }
+        });
+    }
+
+    // Part 2: Multiple Choice Check
+    function checkPart2(btn, isCorrect) {
+        const parentGrid = btn.parentElement;
+        const siblings = parentGrid.querySelectorAll('.opt-btn');
+        
+        siblings.forEach(b => {
+            b.classList.remove('correct', 'wrong');
+            b.disabled = true;
+        });
+
+        if (isCorrect) {
+            btn.classList.add('correct');
+        } else {
+            btn.classList.add('wrong');
+            btn.classList.add('shake');
+        }
+    }
+
+    // Part 3: Reading True/False Check
+    function checkPart3() {
+        const selects = document.querySelectorAll('#part3-container select');
+        selects.forEach(select => {
+            const correctAnswer = select.getAttribute('data-answer');
+            if (select.value === correctAnswer) {
+                select.className = 'custom-select correct';
+            } else {
+                select.className = 'custom-select wrong';
+            }
+        });
+    }
+
+    // Part 4: Interactive Chip Movement
+    function moveChip(chip, zoneId, poolId) {
+        const zone = document.getElementById(zoneId);
+        const pool = document.getElementById(poolId);
+        
+        if (chip.parentElement.id === poolId) {
+            zone.appendChild(chip);
+        } else {
+            pool.appendChild(chip);
+        }
+    }
+
+    // Part 4: Sentence Checker
+    function checkSentence(zoneId, correctSentence) {
+        const zone = document.getElementById(zoneId);
+        const chips = zone.querySelectorAll('.item-chip');
+        const userSentence = Array.from(chips).map(c => c.innerText.trim()).join(' ');
+
+        if (userSentence === correctSentence) {
+            zone.style.borderColor = 'var(--green)';
+            zone.style.background = 'var(--green-soft)';
+        } else {
+            zone.style.borderColor = 'var(--red)';
+            zone.style.background = 'var(--red-soft)';
+            zone.classList.add('shake');
+            setTimeout(() => zone.classList.remove('shake'), 300);
+        }
+    }
+</script>
+
+</body>
+</html>
