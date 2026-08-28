@@ -10,7 +10,7 @@ body {
     margin: 0;
     padding-top: 64px;   /* Navbar'ın tam yüksekliği kadar */
     font-family: 'Nunito', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: radial-gradient(circle, #ffffff 0%, #98d5f0 100%);
+    background: radial-gradient(circle, #ffffff 0%, #a0dbf5 100%);
     min-height: 100vh;
 }
 
