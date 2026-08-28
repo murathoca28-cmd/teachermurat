@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,11 +29,14 @@
             --radius-sm: 12px;
         }
 
-        *, *::before, *::after {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
         }
 
-        .app-container, .app-container * {
+        .app-container,
+        .app-container * {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
@@ -75,7 +79,7 @@
             font-weight: 800;
             letter-spacing: 0.5px;
             margin-bottom: 6px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
         }
 
         .hero-banner p {
@@ -114,7 +118,7 @@
             font-size: 24px;
             flex-shrink: 0;
             background: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         }
 
         .card-title h2 {
@@ -200,6 +204,39 @@
             border-color: var(--primary);
         }
 
+        /* Part 3 True / False Buton Stilleri */
+        .tf-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .tf-btn {
+            flex: 1;
+            padding: 10px 16px;
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .tf-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+
+        .tf-btn.selected {
+            background: var(--primary-soft);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
         /* Yanıt Durum Stilleri */
         .correct {
             background: var(--green-soft) !important;
@@ -215,8 +252,17 @@
             font-weight: bold;
         }
 
-        .opt-btn.correct::after { content: "  ✓"; color: #007955; }
-        .opt-btn.wrong::after { content: "  ✕"; color: #C0392B; }
+        .opt-btn.correct::after,
+        .tf-btn.correct::after {
+            content: "  ✓";
+            color: #007955;
+        }
+
+        .opt-btn.wrong::after,
+        .tf-btn.wrong::after {
+            content: "  ✕";
+            color: #C0392B;
+        }
 
         /* Reading Box */
         .reading-box {
@@ -227,7 +273,7 @@
             font-size: 14px;
             line-height: 1.6;
             margin-bottom: 14px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
         }
 
         /* Cümle Düzenleme (Unscramble) Stilleri */
@@ -259,7 +305,7 @@
             font-size: 15px;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
             user-select: none;
         }
 
@@ -287,11 +333,24 @@
 
         /* Animasyonlar */
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-4px); }
-            75% { transform: translateX(4px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-4px);
+            }
+
+            75% {
+                transform: translateX(4px);
+            }
         }
-        .shake { animation: shake 0.3s ease; }
+
+        .shake {
+            animation: shake 0.3s ease;
+        }
 
         footer {
             text-align: center;
@@ -305,324 +364,347 @@
     </style>
     <link rel="stylesheet" href="../../../theme.css">
 </head>
+
 <body>
     <div id="navbar-placeholder" style="min-height: 0px;"></div>
     <script src="../../../navbar.js"></script>
 
-<div class="app-container">
-    <!-- Hero Banner -->
-    <header class="hero-banner">
-        <h1>UNIT 1: FRIENDSHIP</h1>
-        <p>8th Grade English Interactive Activity Module</p>
-    </header>
+    <div class="app-container">
+        <!-- Hero Banner -->
+        <header class="hero-banner">
+            <h1>UNIT 1: FRIENDSHIP</h1>
+            <p>8th Grade English Interactive Activity Module</p>
+        </header>
 
-    <!-- PART 1: Matching Vocabulary (Dinamik ve Çeldiricili) -->
-    <section class="activity-card">
-        <div class="card-header">
-            <div class="card-icon">🧩</div>
-            <div class="card-title">
-                <h2>Part 1: Vocabulary Matching</h2>
-                <p>Match the expressions with their correct meanings.</p>
+        <!-- PART 1: Matching Vocabulary (Dinamik ve Çeldiricili) -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon">🧩</div>
+                <div class="card-title">
+                    <h2>Part 1: Vocabulary Matching</h2>
+                    <p>Match the expressions with their correct meanings.</p>
+                </div>
             </div>
-        </div>
-        <div class="space-y" id="part1-container">
-            <div class="quiz-item">
-                <label>1. Buddy / Best mate</label>
-                <select class="custom-select" data-answer="A very close friend"></select>
+            <div class="space-y" id="part1-container">
+                <div class="quiz-item">
+                    <label>1. Buddy / Best mate</label>
+                    <select class="custom-select" data-answer="A very close friend"></select>
+                </div>
+                <div class="quiz-item">
+                    <label>2. Come over</label>
+                    <select class="custom-select" data-answer="To visit someone at their home"></select>
+                </div>
+                <div class="quiz-item">
+                    <label>3. Support each other</label>
+                    <select class="custom-select" data-answer="To give help and stand by someone"></select>
+                </div>
+                <div class="quiz-item">
+                    <label>4. Trust someone</label>
+                    <select class="custom-select" data-answer="To believe someone is honest"></select>
+                </div>
+                <button class="action-btn" onclick="checkPart1()">Check Part 1</button>
             </div>
-            <div class="quiz-item">
-                <label>2. Come over</label>
-                <select class="custom-select" data-answer="To visit someone at their home"></select>
-            </div>
-            <div class="quiz-item">
-                <label>3. Support each other</label>
-                <select class="custom-select" data-answer="To give help and stand by someone"></select>
-            </div>
-            <div class="quiz-item">
-                <label>4. Trust someone</label>
-                <select class="custom-select" data-answer="To believe someone is honest"></select>
-            </div>
-            <button class="action-btn" onclick="checkPart1()">Check Part 1</button>
-        </div>
-    </section>
+        </section>
 
-    <!-- PART 2: Multiple Choice Questions -->
-    <section class="activity-card">
-        <div class="card-header">
-            <div class="card-icon">🎯</div>
-            <div class="card-title">
-                <h2>Part 2: Multiple Choice</h2>
-                <p>Choose the correct option for each question.</p>
+        <!-- PART 2: Multiple Choice Questions -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon">🎯</div>
+                <div class="card-title">
+                    <h2>Part 2: Multiple Choice</h2>
+                    <p>Choose the correct option for each question.</p>
+                </div>
             </div>
-        </div>
-        <div class="space-y">
-            <div class="quiz-item">
-                <label>1. True friends always tell the truth because they are ________.</label>
-                <div class="grid-2">
-                    <button class="opt-btn" onclick="checkPart2(this, false)">boring</button>
-                    <button class="opt-btn" onclick="checkPart2(this, true)">honest</button>
-                    <button class="opt-btn" onclick="checkPart2(this, false)">crazy</button>
+            <div class="space-y">
+                <div class="quiz-item">
+                    <label>1. True friends always tell the truth because they are ________.</label>
+                    <div class="grid-2">
+                        <button class="opt-btn" onclick="checkPart2(this, false)">boring</button>
+                        <button class="opt-btn" onclick="checkPart2(this, true)">honest</button>
+                        <button class="opt-btn" onclick="checkPart2(this, false)">crazy</button>
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <label>2. "Would you like to come over this evening?" expression is used for ________.</label>
+                    <div class="grid-2">
+                        <button class="opt-btn" onclick="checkPart2(this, true)">making an invitation</button>
+                        <button class="opt-btn" onclick="checkPart2(this, false)">refusing an offer</button>
+                        <button class="opt-btn" onclick="checkPart2(this, false)">giving an excuse</button>
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <label>3. Beatrice likes spending time with Vicky because she does ________ things.</label>
+                    <div class="grid-2">
+                        <button class="opt-btn" onclick="checkPart2(this, false)">dull</button>
+                        <button class="opt-btn" onclick="checkPart2(this, false)">bad</button>
+                        <button class="opt-btn" onclick="checkPart2(this, true)">thrilling</button>
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <label>4. Which quote emphasizes that we choose our friends?</label>
+                    <div class="grid-2">
+                        <button class="opt-btn" onclick="checkPart2(this, true)">"Friends are the family you choose."</button>
+                        <button class="opt-btn" onclick="checkPart2(this, false)">"I prefer playing computer games."</button>
+                        <button class="opt-btn" onclick="checkPart2(this, false)">"I have a guitar performance."</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART 3: Reading Comprehension (True / False) -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon">📖</div>
+                <div class="card-title">
+                    <h2>Part 3: Reading & True / False</h2>
+                    <p>Read the e-mail exchange between Janet and Mert, then answer True or False.</p>
                 </div>
             </div>
 
-            <div class="quiz-item">
-                <label>2. "Would you like to come over this evening?" expression is used for ________.</label>
-                <div class="grid-2">
-                    <button class="opt-btn" onclick="checkPart2(this, true)">making an invitation</button>
-                    <button class="opt-btn" onclick="checkPart2(this, false)">refusing an offer</button>
-                    <button class="opt-btn" onclick="checkPart2(this, false)">giving an excuse</button>
+            <div class="reading-box">
+                <strong>Janet:</strong> "Hello Mert, How are you doing? I am giving a movie night party tomorrow. Would you like to come over? Please, let me know if you can join us as soon as possible."<br><br>
+                <strong>Mert:</strong> "Hi Janet, I'd love to join you, but I can't because I have a guitar performance tomorrow. How about coming to my concert instead? It's at seven o'clock in the city hall."<br><br>
+                <strong>Janet:</strong> "You have a concert! It sounds great. Of course, I'd like to come. I'll mail our friends, too. We'll be there before seven."
+            </div>
+
+            <div class="space-y" id="part3-container">
+                <div class="quiz-item" data-answer="False">
+                    <label>1. Janet is planning a movie night party next week.</label>
+                    <div class="tf-group">
+                        <button type="button" class="tf-btn" data-value="True" onclick="selectTF(this)">True</button>
+                        <button type="button" class="tf-btn" data-value="False" onclick="selectTF(this)">False</button>
+                    </div>
+                </div>
+
+                <div class="quiz-item" data-answer="True">
+                    <label>2. Mert can't go to Janet's party because he has a guitar performance.</label>
+                    <div class="tf-group">
+                        <button type="button" class="tf-btn" data-value="True" onclick="selectTF(this)">True</button>
+                        <button type="button" class="tf-btn" data-value="False" onclick="selectTF(this)">False</button>
+                    </div>
+                </div>
+
+                <div class="quiz-item" data-answer="False">
+                    <label>3. Mert's concert is at eight o'clock in the city hall.</label>
+                    <div class="tf-group">
+                        <button type="button" class="tf-btn" data-value="True" onclick="selectTF(this)">True</button>
+                        <button type="button" class="tf-btn" data-value="False" onclick="selectTF(this)">False</button>
+                    </div>
+                </div>
+
+                <div class="quiz-item" data-answer="True">
+                    <label>4. Janet accepts Mert's invitation to the concert.</label>
+                    <div class="tf-group">
+                        <button type="button" class="tf-btn" data-value="True" onclick="selectTF(this)">True</button>
+                        <button type="button" class="tf-btn" data-value="False" onclick="selectTF(this)">False</button>
+                    </div>
+                </div>
+
+                <button class="action-btn" onclick="checkPart3()">Check Part 3</button>
+            </div>
+        </section>
+
+        <!-- PART 4: Sentence Building (Unscramble) -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon">✏️</div>
+                <div class="card-title">
+                    <h2>Part 4: Sentence Building</h2>
+                    <p>Click the words to put them in the correct order to form correct sentences.</p>
                 </div>
             </div>
 
-            <div class="quiz-item">
-                <label>3. Beatrice likes spending time with Vicky because she does ________ things.</label>
-                <div class="grid-2">
-                    <button class="opt-btn" onclick="checkPart2(this, false)">dull</button>
-                    <button class="opt-btn" onclick="checkPart2(this, false)">bad</button>
-                    <button class="opt-btn" onclick="checkPart2(this, true)">thrilling</button>
+            <div class="space-y">
+                <!-- Sentence 1 -->
+                <div class="quiz-item" id="unscramble-1">
+                    <label>1. (Invitation sentence)</label>
+                    <div class="unscramble-zone" id="zone-1"></div>
+                    <div class="unscramble-pool" id="pool-1">
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">like</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">Would</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">to</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">you</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">come</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">over?</span>
+                    </div>
+                    <button class="action-btn" onclick="checkSentence('zone-1', 'Would you like to come over?')">Check Sentence</button>
+                </div>
+
+                <!-- Sentence 2 -->
+                <div class="quiz-item" id="unscramble-2">
+                    <label>2. (Friendship quality statement)</label>
+                    <div class="unscramble-zone" id="zone-2"></div>
+                    <div class="unscramble-pool" id="pool-2">
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">friends</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">True</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">and</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">support</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">trust</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">each other.</span>
+                    </div>
+                    <button class="action-btn" onclick="checkSentence('zone-2', ['True friends support and trust each other.', 'True friends trust and support each other.'])">Check Sentence</button>
                 </div>
             </div>
+        </section>
 
-            <div class="quiz-item">
-                <label>4. Which quote emphasizes that we choose our friends?</label>
-                <div class="grid-2">
-                    <button class="opt-btn" onclick="checkPart2(this, true)">"Friends are the family you choose."</button>
-                    <button class="opt-btn" onclick="checkPart2(this, false)">"I prefer playing computer games."</button>
-                    <button class="opt-btn" onclick="checkPart2(this, false)">"I have a guitar performance."</button>
-                </div>
-            </div>
-        </div>
-    </section>
+    </div>
 
-    <!-- PART 3: Reading Comprehension (True / False) -->
-    <section class="activity-card">
-        <div class="card-header">
-            <div class="card-icon">📖</div>
-            <div class="card-title">
-                <h2>Part 3: Reading & True / False</h2>
-                <p>Read the e-mail exchange between Janet and Mert, then answer True or False.</p>
-            </div>
-        </div>
+    <footer>
+        8th Grade English Material | Unit 1: Friendship
+    </footer>
 
-        <div class="reading-box">
-            <strong>Janet:</strong> "Hello Mert, How are you doing? I am giving a movie night party tomorrow. Would you like to come over? Please, let me know if you can join us as soon as possible."<br><br>
-            <strong>Mert:</strong> "Hi Janet, I'd love to join you, but I can't because I have a guitar performance tomorrow. How about coming to my concert instead? It's at seven o'clock in the city hall."<br><br>
-            <strong>Janet:</strong> "You have a concert! It sounds great. Of course, I'd like to come. I'll mail our friends, too. We'll be there before seven."
-        </div>
+    <script>
+        // Part 1 için Tanım Havuzu (4 Doğru Tanım + 2 Çeldirici Seçenek)
+        const part1OptionsPool = [
+            "A very close friend",
+            "To visit someone at their home",
+            "To give help and stand by someone",
+            "To believe someone is honest",
+            "To feel full after a heavy meal",
+            "To refuse an invitation politely"
+        ];
 
-        <div class="space-y" id="part3-container">
-            <div class="quiz-item">
-                <label>1. Janet is planning a movie night party next week.</label>
-                <select class="custom-select" data-answer="False">
-                    <option value="">-- Select --</option>
-                    <option value="True">True</option>
-                    <option value="False">False</option>
-                </select>
-            </div>
-
-            <div class="quiz-item">
-                <label>2. Mert can't go to Janet's party because he has a guitar performance.</label>
-                <select class="custom-select" data-answer="True">
-                    <option value="">-- Select --</option>
-                    <option value="True">True</option>
-                    <option value="False">False</option>
-                </select>
-            </div>
-
-            <div class="quiz-item">
-                <label>3. Mert's concert is at eight o'clock in the city hall.</label>
-                <select class="custom-select" data-answer="False">
-                    <option value="">-- Select --</option>
-                    <option value="True">True</option>
-                    <option value="False">False</option>
-                </select>
-            </div>
-
-            <div class="quiz-item">
-                <label>4. Janet accepts Mert's invitation to the concert.</label>
-                <select class="custom-select" data-answer="True">
-                    <option value="">-- Select --</option>
-                    <option value="True">True</option>
-                    <option value="False">False</option>
-                </select>
-            </div>
-
-            <button class="action-btn" onclick="checkPart3()">Check Part 3</button>
-        </div>
-    </section>
-
-    <!-- PART 4: Sentence Building (Unscramble) -->
-    <section class="activity-card">
-        <div class="card-header">
-            <div class="card-icon">✏️</div>
-            <div class="card-title">
-                <h2>Part 4: Sentence Building</h2>
-                <p>Click the words to put them in the correct order to form correct sentences.</p>
-            </div>
-        </div>
-
-        <div class="space-y">
-            <!-- Sentence 1 -->
-            <div class="quiz-item" id="unscramble-1">
-                <label>1. (Invitation sentence)</label>
-                <div class="unscramble-zone" id="zone-1"></div>
-                <div class="unscramble-pool" id="pool-1">
-                    <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">like</span>
-                    <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">Would</span>
-                    <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">to</span>
-                    <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">you</span>
-                    <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">come</span>
-                    <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">over?</span>
-                </div>
-                <button class="action-btn" onclick="checkSentence('zone-1', 'Would you like to come over?')">Check Sentence</button>
-            </div>
-
-            <!-- Sentence 2 -->
-            <div class="quiz-item" id="unscramble-2">
-                <label>2. (Friendship quality statement)</label>
-                <div class="unscramble-zone" id="zone-2"></div>
-                <div class="unscramble-pool" id="pool-2">
-                    <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">friends</span>
-                    <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">True</span>
-                    <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">and</span>
-                    <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">support</span>
-                    <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">trust</span>
-                    <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">each other.</span>
-                </div>
-                <button class="action-btn" onclick="checkSentence('zone-2', 'True friends support and trust each other.')">Check Sentence</button>
-            </div>
-        </div>
-    </section>
-
-</div>
-
-<footer>
-    8th Grade English Material | Unit 1: Friendship
-</footer>
-
-<script>
-    // Part 1 için Tanım Havuzu (4 Doğru Tanım + 2 Çeldirici Seçenek)
-    const part1OptionsPool = [
-        "A very close friend",
-        "To visit someone at their home",
-        "To give help and stand by someone",
-        "To believe someone is honest",
-        "To feel full after a heavy meal",
-        "To refuse an invitation politely"
-    ];
-
-    // Genel Fisher-Yates Karıştırma Algoritması
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+        // Genel Fisher-Yates Karıştırma Algoritması
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
         }
-        return array;
-    }
 
-    // Sayfa Yüklendiğinde Otomatik Karıştırmalar
-    document.addEventListener('DOMContentLoaded', () => {
-        // 1. Part 1 Dropdown Seçeneklerini Çeldiricilerle Dinamik ve Rastgele Doldurma
-        const part1Selects = document.querySelectorAll('#part1-container select');
-        part1Selects.forEach(select => {
-            const shuffled = shuffleArray([...part1OptionsPool]);
-            select.innerHTML = '<option value="">-- Select Meaning --</option>';
-            shuffled.forEach(optText => {
-                const opt = document.createElement('option');
-                opt.value = optText;
-                opt.textContent = optText;
-                select.appendChild(opt);
+        // Sayfa Yüklendiğinde Otomatik Karıştırmalar
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Part 1 Dropdown Seçeneklerini Çeldiricilerle Dinamik ve Rastgele Doldurma
+            const part1Selects = document.querySelectorAll('#part1-container select');
+            part1Selects.forEach(select => {
+                const shuffled = shuffleArray([...part1OptionsPool]);
+                select.innerHTML = '<option value="">-- Select Meaning --</option>';
+                shuffled.forEach(optText => {
+                    const opt = document.createElement('option');
+                    opt.value = optText;
+                    opt.textContent = optText;
+                    select.appendChild(opt);
+                });
+            });
+
+            // 2. Part 2 Çoktan Seçmeli Şıkları Karıştırma
+            document.querySelectorAll('.activity-card .grid-2').forEach(grid => {
+                const buttons = Array.from(grid.children);
+                shuffleArray(buttons);
+                buttons.forEach(btn => grid.appendChild(btn));
+            });
+
+            // 3. Part 4 Kelime Çiplerini Karıştırma
+            document.querySelectorAll('.unscramble-pool').forEach(pool => {
+                const chips = Array.from(pool.children);
+                shuffleArray(chips);
+                chips.forEach(chip => pool.appendChild(chip));
             });
         });
 
-        // 2. Part 2 Çoktan Seçmeli Şıkları Karıştırma
-        document.querySelectorAll('.activity-card .grid-2').forEach(grid => {
-            const buttons = Array.from(grid.children);
-            shuffleArray(buttons);
-            buttons.forEach(btn => grid.appendChild(btn));
-        });
+        // Part 1: Eşleştirme Kontrolü
+        function checkPart1() {
+            const selects = document.querySelectorAll('#part1-container select');
+            selects.forEach(select => {
+                const correctAnswer = select.getAttribute('data-answer');
+                if (select.value === correctAnswer) {
+                    select.className = 'custom-select correct';
+                } else {
+                    select.className = 'custom-select wrong';
+                }
+            });
+        }
 
-        // 3. Part 4 Kelime Çiplerini Karıştırma
-        document.querySelectorAll('.unscramble-pool').forEach(pool => {
-            const chips = Array.from(pool.children);
-            shuffleArray(chips);
-            chips.forEach(chip => pool.appendChild(chip));
-        });
-    });
+        // Part 2: Çoktan Seçmeli Kontrolü (Düzeltildi: Seçenekler kilitlenmiyor, tekrar denenebilir)
+        function checkPart2(btn, isCorrect) {
+            const parentGrid = btn.parentElement;
+            const siblings = parentGrid.querySelectorAll('.opt-btn');
 
-    // Part 1: Eşleştirme Kontrolü
-    function checkPart1() {
-        const selects = document.querySelectorAll('#part1-container select');
-        selects.forEach(select => {
-            const correctAnswer = select.getAttribute('data-answer');
-            if (select.value === correctAnswer) {
-                select.className = 'custom-select correct';
+            siblings.forEach(b => {
+                b.classList.remove('correct', 'wrong', 'shake');
+            });
+
+            if (isCorrect) {
+                btn.classList.add('correct');
             } else {
-                select.className = 'custom-select wrong';
+                btn.classList.add('wrong');
+                btn.classList.add('shake');
+                setTimeout(() => btn.classList.remove('shake'), 300);
             }
-        });
-    }
-
-    // Part 2: Çoktan Seçmeli Kontrolü
-    function checkPart2(btn, isCorrect) {
-        const parentGrid = btn.parentElement;
-        const siblings = parentGrid.querySelectorAll('.opt-btn');
-        
-        siblings.forEach(b => {
-            b.classList.remove('correct', 'wrong');
-            b.disabled = true;
-        });
-
-        if (isCorrect) {
-            btn.classList.add('correct');
-        } else {
-            btn.classList.add('wrong');
-            btn.classList.add('shake');
         }
-    }
 
-    // Part 3: True / False Kontrolü
-    function checkPart3() {
-        const selects = document.querySelectorAll('#part3-container select');
-        selects.forEach(select => {
-            const correctAnswer = select.getAttribute('data-answer');
-            if (select.value === correctAnswer) {
-                select.className = 'custom-select correct';
+        // Part 3: True / False Buton Seçimi
+        function selectTF(btn) {
+            const group = btn.parentElement;
+            group.querySelectorAll('.tf-btn').forEach(b => {
+                b.classList.remove('selected', 'correct', 'wrong', 'shake');
+            });
+            btn.classList.add('selected');
+        }
+
+        // Part 3: True / False Kontrolü
+        function checkPart3() {
+            const items = document.querySelectorAll('#part3-container .quiz-item');
+            items.forEach(item => {
+                const correctAnswer = item.getAttribute('data-answer');
+                const selectedBtn = item.querySelector('.tf-btn.selected');
+                const allBtns = item.querySelectorAll('.tf-btn');
+
+                allBtns.forEach(b => b.classList.remove('correct', 'wrong', 'shake'));
+
+                if (selectedBtn) {
+                    const userVal = selectedBtn.getAttribute('data-value');
+                    if (userVal === correctAnswer) {
+                        selectedBtn.classList.add('correct');
+                    } else {
+                        selectedBtn.classList.add('wrong');
+                        selectedBtn.classList.add('shake');
+                        setTimeout(() => selectedBtn.classList.remove('shake'), 300);
+                    }
+                }
+            });
+        }
+
+        // Part 4: İnteraktif Çip Taşıma
+        function moveChip(chip, zoneId, poolId) {
+            const zone = document.getElementById(zoneId);
+            const pool = document.getElementById(poolId);
+
+            if (chip.parentElement.id === poolId) {
+                zone.appendChild(chip);
             } else {
-                select.className = 'custom-select wrong';
+                pool.appendChild(chip);
             }
-        });
-    }
-
-    // Part 4: İnteraktif Çip Taşıma
-    function moveChip(chip, zoneId, poolId) {
-        const zone = document.getElementById(zoneId);
-        const pool = document.getElementById(poolId);
-        
-        if (chip.parentElement.id === poolId) {
-            zone.appendChild(chip);
-        } else {
-            pool.appendChild(chip);
         }
-    }
 
-    // Part 4: Cümle Kontrolü
-    function checkSentence(zoneId, correctSentence) {
-        const zone = document.getElementById(zoneId);
-        const chips = zone.querySelectorAll('.item-chip');
-        const userSentence = Array.from(chips).map(c => c.innerText.trim()).join(' ');
+        // Part 4: Cümle Kontrolü (Tekli metin veya Doğru cevap dizisi kabul eder)
+        function checkSentence(zoneId, correctSentences) {
+            const zone = document.getElementById(zoneId);
+            const chips = zone.querySelectorAll('.item-chip');
+            const userSentence = Array.from(chips).map(c => c.innerText.trim()).join(' ');
 
-        if (userSentence === correctSentence) {
-            zone.style.borderColor = 'var(--green)';
-            zone.style.background = 'var(--green-soft)';
-        } else {
-            zone.style.borderColor = 'var(--red)';
-            zone.style.background = 'var(--red-soft)';
-            zone.classList.add('shake');
-            setTimeout(() => zone.classList.remove('shake'), 300);
+            // Eğer dizi olarak gönderildiyse listede var mı bak, tek metin gönderildiyse eşitle
+            const isCorrect = Array.isArray(correctSentences) ?
+                correctSentences.includes(userSentence) :
+                userSentence === correctSentences;
+
+            if (isCorrect) {
+                zone.style.borderColor = 'var(--green)';
+                zone.style.background = 'var(--green-soft)';
+            } else {
+                zone.style.borderColor = 'var(--red)';
+                zone.style.background = 'var(--red-soft)';
+                zone.classList.add('shake');
+                setTimeout(() => zone.classList.remove('shake'), 300);
+            }
         }
-    }
-</script>
+    </script>
 
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
+
 </html>
