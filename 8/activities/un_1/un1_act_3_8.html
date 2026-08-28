@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 1: Friendship - Interactive Learning Activity</title>
+    <link rel="stylesheet" href="../../../theme.css">
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-soft: #EEECFD;
+            --pink: #FD79A8;
+            --pink-soft: #FDEDF3;
+            --green: #00B894;
+            --green-soft: #E6F9F5;
+            --yellow: #FDCB6E;
+            --yellow-soft: #FEF9E7;
+            --red: #FF7675;
+            --red-soft: #FFEAE9;
+            --blue: #0984E3;
+            --blue-soft: #E3F2FD;
+            --bg: #F4F7FE;
+            --card-bg: #e2eff8;
+            --text-dark: #2D3436;
+            --text-muted: #636E72;
+            --border-color: #E2E8F0;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        .app-container, .app-container * {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            margin: 0;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #FD79A8 100%);
+            color: #FFFFFF;
+            padding: 26px 24px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner h1 {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .hero-banner p {
+            font-size: 15px;
+            opacity: 0.95;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        /* Interactive Activity Cards */
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            border: 2px solid #a4aeb9;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed #cbd5e0;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .card-title h2 {
+            font-size: 19px;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .card-title p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            margin-bottom: 0;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .space-y {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Question & Option Boxes */
+        .quiz-item {
+            background: #F8FAFC;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-item label {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        .opt-btn {
+            width: 100%;
+            padding: 11px 14px;
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            font-size: 15px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        select.custom-select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border-color);
+            font-weight: 600;
+            font-size: 14px;
+            outline: none;
+            background: #FFFFFF;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-dark);
+        }
+
+        select.custom-select:hover:not(:disabled) {
+            border-color: var(--primary);
+        }
+
+        /* Inputs */
+        input.text-input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input.text-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+        }
+
+        /* Answer Feedback Styles */
+        .correct {
+            background: var(--green-soft) !important;
+            border-color: var(--green) !important;
+            color: #007955 !important;
+            font-weight: bold;
+        }
+
+        .wrong {
+            background: var(--red-soft) !important;
+            border-color: var(--red) !important;
+            color: #C0392B !important;
+            font-weight: bold;
+        }
+
+        .opt-btn.correct::after { content: "  ✓"; color: #007955; }
+        .opt-btn.wrong::after { content: "  ✕"; color: #C0392B; }
+
+        /* Unscramble Styles */
+        .unscramble-zone {
+            min-height: 58px;
+            padding: 10px 14px;
+            background: #FFFFFF;
+            border: 2px dashed #CBD5E0;
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .unscramble-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .item-chip {
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            user-select: none;
+        }
+
+        .item-chip:hover {
+            border-color: var(--yellow);
+            transform: translateY(-2px);
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            cursor: pointer;
+            align-self: flex-start;
+            transition: background 0.2s;
+            margin-top: 6px;
+        }
+
+        .action-btn:hover {
+            background: #5b4cc4;
+        }
+
+        /* Animations */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .shake { animation: shake 0.3s ease; }
+
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border-color);
+            background: #FFFFFF;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="navbar-placeholder" style="min-height: 0px;"></div>
+    <script src="../../../navbar.js"></script>
+
+    <div class="app-container">
+        
+        <!-- Hero Header -->
+        <header class="hero-banner">
+            <h1>UNIT 1: FRIENDSHIP</h1>
+            <p>Interactive Practice & Revision Workbook for 8th Grade</p>
+        </header>
+
+        <!-- PART 1: Multiple Choice -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon">💡</div>
+                <div class="card-title">
+                    <h2>Part 1: Choice & Comprehension</h2>
+                    <p>Read each question carefully and select the correct option.</p>
+                </div>
+            </div>
+
+            <div class="space-y">
+                <div class="quiz-item">
+                    <label>1. A true friend always backs you up when you need help. What does "back up" mean?</label>
+                    <div class="grid-2">
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q1')">A) Argue with someone</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, true, 'q1')">B) Support and help someone</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q1')">C) Refuse an offer</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q1')">D) Break a promise</button>
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <label>2. Tim: "Would you like to come to my birthday party on Sunday?" <br> Leo: "______! I can't miss it."</label>
+                    <div class="grid-2">
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q2')">A) I'm sorry, I'm busy</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q2')">B) No, thanks. I'm full</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, true, 'q2')">C) I'd love to, that sounds awesome</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q2')">D) I have to stay at home</button>
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <label>3. Which of the following is an **excuse** for refusing an invitation?</label>
+                    <div class="grid-2">
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q3')">A) Great! What time does it start?</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, true, 'q3')">B) I'd love to, but I must study for an exam.</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q3')">C) Sure, why not?</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q3')">D) Yeah, that sounds wonderful!</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART 2: Vocabulary & Concept Matching -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon">🔗</div>
+                <div class="card-title">
+                    <h2>Part 2: Word & Synonym Matching</h2>
+                    <p>Select the correct definition or synonym for each friendship term.</p>
+                </div>
+            </div>
+
+            <div class="space-y">
+                <div class="quiz-item">
+                    <label>1. Buddy / Mate</label>
+                    <select class="custom-select" id="match1" onchange="checkMatch('match1', 'friend')">
+                        <option value="">-- Choose correct synonym --</option>
+                        <option value="enemy">A person you dislike</option>
+                        <option value="friend">A close friend</option>
+                        <option value="stranger">Someone you don't know</option>
+                    </select>
+                </div>
+
+                <div class="quiz-item">
+                    <label>2. Count on</label>
+                    <select class="custom-select" id="match2" onchange="checkMatch('match2', 'rely')">
+                        <option value="">-- Choose correct definition --</option>
+                        <option value="rely">To trust someone and depend on them</option>
+                        <option value="forget">To lose memory of something</option>
+                        <option value="invite">To ask someone to an event</option>
+                    </select>
+                </div>
+
+                <div class="quiz-item">
+                    <label>3. Loyal</label>
+                    <select class="custom-select" id="match3" onchange="checkMatch('match3', 'faithful')">
+                        <option value="">-- Choose correct definition --</option>
+                        <option value="rude">Behaving disrespectfully</option>
+                        <option value="faithful">Always staying true and supportive</option>
+                        <option value="selfish">Only caring about oneself</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART 3: Interactive Word Ordering (Unscramble) -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon">🧩</div>
+                <div class="card-title">
+                    <h2>Part 3: Sentence Builder (Unscramble)</h2>
+                    <p>Click words in order to construct correct invitation and response sentences.</p>
+                </div>
+            </div>
+
+            <div class="space-y">
+                <!-- Sentence 1 -->
+                <div class="quiz-item">
+                    <label>1. Make an invitation sentence:</label>
+                    <div class="unscramble-zone" id="zone1"></div>
+                    <div class="unscramble-pool" id="pool1">
+                        <span class="item-chip" onclick="moveChip(this, 'zone1', 'pool1')">about</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone1', 'pool1')">going</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone1', 'pool1')">to</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone1', 'pool1')">How</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone1', 'pool1')">the</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone1', 'pool1')">cinema?</span>
+                    </div>
+                    <button class="action-btn" onclick="checkUnscramble('zone1', 'How about going to the cinema?', this)">Check Sentence</button>
+                </div>
+
+                <!-- Sentence 2 -->
+                <div class="quiz-item">
+                    <label>2. Make a refusal sentence with an excuse:</label>
+                    <div class="unscramble-zone" id="zone2"></div>
+                    <div class="unscramble-pool" id="pool2">
+                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">sorry,</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">must</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">I'm</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">help</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">my</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">parents.</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">but</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">I</span>
+                    </div>
+                    <button class="action-btn" onclick="checkUnscramble('zone2', 'I\'m sorry, but I must help my parents.', this)">Check Sentence</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART 4: Short Answer & Fill in the Blanks -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon">✍️</div>
+                <div class="card-title">
+                    <h2>Part 4: Short Answer Completion</h2>
+                    <p>Type the appropriate missing words to complete the dialogue.</p>
+                </div>
+            </div>
+
+            <div class="space-y">
+                <div class="quiz-item">
+                    <label>1. Complete the invitation phrase: "______ you like to join our picnic on Saturday?"</label>
+                    <input type="text" class="text-input" id="sa1" placeholder="Type your answer here...">
+                </div>
+
+                <div class="quiz-item">
+                    <label>2. Complete the accepting response: "Sounds ______, I have nothing better to do!" (Awesome / Great)</label>
+                    <input type="text" class="text-input" id="sa2" placeholder="Type your answer here...">
+                </div>
+
+                <div class="quiz-item">
+                    <label>3. Complete the statement: "True friends never tell your secrets to anyone because they are ______." (Reliable / Trustworthy / Honest)</label>
+                    <input type="text" class="text-input" id="sa3" placeholder="Type your answer here...">
+                </div>
+
+                <button class="action-btn" onclick="checkShortAnswers()">Submit Answers</button>
+            </div>
+        </section>
+
+        <footer>
+            8th Grade English Language Teaching Resources &copy; 2026. All rights reserved.
+        </footer>
+    </div>
+
+    <script>
+        // Part 1: Multiple Choice Logic
+        function checkMCQ(btn, isCorrect, questionId) {
+            const parentContainer = btn.closest('.quiz-item');
+            const buttons = parentContainer.querySelectorAll('.opt-btn');
+            
+            buttons.forEach(b => {
+                b.disabled = true;
+                b.classList.remove('correct', 'wrong');
+            });
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+            } else {
+                btn.classList.add('wrong');
+                // Highlight correct answer
+                buttons.forEach(b => {
+                    if (b.getAttribute('onclick').includes('true')) {
+                        b.classList.add('correct');
+                    }
+                });
+            }
+        }
+
+        // Part 2: Matching Dropdown Logic
+        function checkMatch(selectId, targetValue) {
+            const el = document.getElementById(selectId);
+            el.classList.remove('correct', 'wrong');
+            if (el.value === '') return;
+
+            if (el.value === targetValue) {
+                el.classList.add('correct');
+            } else {
+                el.classList.add('wrong');
+            }
+        }
+
+        // Part 3: Unscramble Interactive Logic
+        function moveChip(chip, zoneId, poolId) {
+            const zone = document.getElementById(zoneId);
+            const pool = document.getElementById(poolId);
+
+            if (chip.parentElement.id === poolId) {
+                zone.appendChild(chip);
+            } else {
+                pool.appendChild(chip);
+            }
+        }
+
+        function checkUnscramble(zoneId, targetSentence, btn) {
+            const zone = document.getElementById(zoneId);
+            const words = Array.from(zone.children).map(c => c.textContent.trim());
+            const userSentence = words.join(' ');
+
+            zone.classList.remove('correct', 'wrong', 'shake');
+
+            if (userSentence.toLowerCase() === targetSentence.toLowerCase()) {
+                zone.classList.add('correct');
+            } else {
+                zone.classList.add('wrong', 'shake');
+                setTimeout(() => zone.classList.remove('shake'), 400);
+            }
+        }
+
+        // Part 4: Short Answer Logic
+        function checkShortAnswers() {
+            const ans1 = document.getElementById('sa1');
+            const ans2 = document.getElementById('sa2');
+            const ans3 = document.getElementById('sa3');
+
+            // Q1: Would
+            validateInput(ans1, ['would']);
+
+            // Q2: Great / Awesome / Good
+            validateInput(ans2, ['great', 'awesome', 'good']);
+
+            // Q3: Trustworthy / Reliable / Honest / Loyal
+            validateInput(ans3, ['trustworthy', 'reliable', 'honest', 'loyal']);
+        }
+
+        function validateInput(inputEl, validList) {
+            const val = inputEl.value.trim().toLowerCase();
+            inputEl.classList.remove('correct', 'wrong');
+
+            if (val !== "" && validList.includes(val)) {
+                inputEl.classList.add('correct');
+            } else {
+                inputEl.classList.add('wrong');
+            }
+        }
+    </script>
+</body>
+</html>
