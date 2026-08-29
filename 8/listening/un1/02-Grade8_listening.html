@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>8th Grade Listening Activity — What Makes a True Friend?</title>
+  <title>8th Grade Listening Activity — Movie Night Invitation</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.css" />
   <style>
     :root {
@@ -116,7 +116,7 @@
       transition: opacity 0.25s ease, transform 0.25s ease;
       position: sticky;
       top: 76px;
-      z-index: 1001;   /* 20 yerine */
+      z-index: 1001;
       background: var(--card-bg);
       padding: 10px 0;
     }
@@ -257,25 +257,32 @@
   <script src="../../../navbar.js" defer></script>
 
   <div class="card">
-    <p class="eyebrow">GRADE 8 LISTENING ACTIVITY 1</p>
-    <h1>What Makes a True Friend?</h1>
+    <p class="eyebrow">GRADE 8 LISTENING ACTIVITY 2</p>
+    <h1>Movie Night Invitation</h1>
 
     <!-- TRANSKRİPT -->
     <div id="transcriptBox">
-      <p>What does friendship mean to you? For most people, a true friend is someone you can always count on. Friendship is built on trust, respect, and unconditional love. True friends share similar interests, support each other in tough times, and make life much happier.<br><br>
-      But friendship isn't just about people! Many of us share a special bond with our pets, like dogs or cats. They may not speak our language, but they understand our feelings and offer pure loyalty.<br><br>
-      As an old saying goes, 'When a person finds a true friend, he finds a priceless treasure.' So, cherish your friends, whether they have two legs or four!</p>
+      <p>
+        <strong>Leo:</strong> Hi, Maya! Are you doing anything this Saturday evening?<br>
+        <strong>Maya:</strong> No, not at all. Why?<br>
+        <strong>Leo:</strong> We are organizing a movie night at my house. Would you like to join us?<br>
+        <strong>Maya:</strong> That sounds great! I’d love to. Who else is coming?<br>
+        <strong>Leo:</strong> Tom and Lily are coming, too. We’ll order pizza and watch a comedy.<br>
+        <strong>Maya:</strong> Awesome! What time should I come over?<br>
+        <strong>Leo:</strong> At seven o'clock.<br>
+        <strong>Maya:</strong> Okay, see you on Saturday!
+      </p>
     </div>
 
     <button id="listenBtn">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor"/><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
-      Listen to Text
+      Listen to Dialogue
     </button>
 
     <!-- OYNATICI ALANI -->
     <div id="playerWrap">
       <audio id="player" controls preload="metadata">
-        <source src="https://cdn.teachermurat.com/8/un1_listens/01-Grade8_listening.mp3?v=3" type="audio/mp3" />
+        <source src="https://cdn.teachermurat.com/8/un1_listens/02-Grade8_listening.mp3?v=3" type="audio/mp3" />
       </audio>
     </div>
 
@@ -283,53 +290,53 @@
     <div class="quiz">
       <h2>MULTIPLE CHOICE</h2>
       <div class="question" data-type="mc" data-key="b">
-        <p class="q-text"><span>1. What is friendship built on?</span><span class="q-mark"></span></p>
+        <p class="q-text"><span>1. What is the main purpose of Leo’s conversation?</span><span class="q-mark"></span></p>
         <div class="options">
-          <label><input type="radio" name="mc1" value="a"> A) Money and popularity</label>
-          <label><input type="radio" name="mc1" value="b"> B) Trust, respect, and unconditional love</label>
-          <label><input type="radio" name="mc1" value="c"> C) Competition and tests</label>
-          <label><input type="radio" name="mc1" value="d"> D) Secret games</label>
+          <label><input type="radio" name="mc1" value="a"> A) To ask for help with homework</label>
+          <label><input type="radio" name="mc1" value="b"> B) To invite Maya to a movie night</label>
+          <label><input type="radio" name="mc1" value="c"> C) To refuse an invitation</label>
+          <label><input type="radio" name="mc1" value="d"> D) To plan an outdoor picnic</label>
         </div>
         <p class="correct-hint"></p>
       </div>
 
-      <div class="question" data-type="mc" data-key="c">
-        <p class="q-text"><span>2. Which animals are mentioned as pets in the text?</span><span class="q-mark"></span></p>
+      <div class="question" data-type="mc" data-key="b">
+        <p class="q-text"><span>2. Which of the following is CORRECT according to the dialogue?</span><span class="q-mark"></span></p>
         <div class="options">
-          <label><input type="radio" name="mc2" value="a"> A) Birds and fish</label>
-          <label><input type="radio" name="mc2" value="b"> B) Horses and sheep</label>
-          <label><input type="radio" name="mc2" value="c"> C) Dogs or cats</label>
-          <label><input type="radio" name="mc2" value="d"> D) Rabbits and hamsters</label>
+          <label><input type="radio" name="mc2" value="a"> A) Maya has other plans for Saturday.</label>
+          <label><input type="radio" name="mc2" value="b"> B) Maya accepts the invitation.</label>
+          <label><input type="radio" name="mc2" value="c"> C) They are going to watch a horror movie.</label>
+          <label><input type="radio" name="mc2" value="d"> D) Tom and Lily will not join them.</label>
         </div>
         <p class="correct-hint"></p>
       </div>
 
-      <div class="question" data-type="mc" data-key="a">
-        <p class="q-text"><span>3. What does the old saying compare a true friend to?</span><span class="q-mark"></span></p>
+      <div class="question" data-type="mc" data-key="b">
+        <p class="q-text"><span>3. What will they eat during the event?</span><span class="q-mark"></span></p>
         <div class="options">
-          <label><input type="radio" name="mc3" value="a"> A) A priceless treasure</label>
-          <label><input type="radio" name="mc3" value="b"> B) A gold medal</label>
-          <label><input type="radio" name="mc3" value="c"> C) A big house</label>
-          <label><input type="radio" name="mc3" value="d"> D) A beautiful book</label>
+          <label><input type="radio" name="mc3" value="a"> A) Chocolate muffins</label>
+          <label><input type="radio" name="mc3" value="b"> B) Pizza</label>
+          <label><input type="radio" name="mc3" value="c"> C) Sandwiches</label>
+          <label><input type="radio" name="mc3" value="d"> D) Popcorn</label>
         </div>
         <p class="correct-hint"></p>
       </div>
 
       <h2>SHORT ANSWER</h2>
-      <div class="question" data-type="sa" data-key="unconditional love|unconditional">
-        <p class="q-text"><span>4. What kind of love is friendship built on?</span><span class="q-mark"></span></p>
+      <div class="question" data-type="sa" data-key="at 7 o'clock|7 o'clock|at seven o'clock|seven o'clock|at 7|7">
+        <p class="q-text"><span>4. What time will the movie night start?</span><span class="q-mark"></span></p>
         <div class="short-answer"><input type="text" name="sa1" placeholder="Type your answer here..."></div>
         <p class="correct-hint"></p>
       </div>
 
-      <div class="question" data-type="sa" data-key="loyalty|pure loyalty">
-        <p class="q-text"><span>5. What do pets offer us even though they cannot speak?</span><span class="q-mark"></span></p>
+      <div class="question" data-type="sa" data-key="tom and lily|lily and tom">
+        <p class="q-text"><span>5. Who are the other guests attending the movie night?</span><span class="q-mark"></span></p>
         <div class="short-answer"><input type="text" name="sa2" placeholder="Type your answer here..."></div>
         <p class="correct-hint"></p>
       </div>
 
-      <div class="question" data-type="sa" data-key="a priceless treasure|priceless treasure|treasure">
-        <p class="q-text"><span>6. According to the old saying, what does a person find when he finds a true friend?</span><span class="q-mark"></span></p>
+      <div class="question" data-type="sa" data-key="saturday">
+        <p class="q-text"><span>6. On which day of the week is the event taking place?</span><span class="q-mark"></span></p>
         <div class="short-answer"><input type="text" name="sa3" placeholder="Type your answer here..."></div>
         <p class="correct-hint"></p>
       </div>
@@ -413,7 +420,7 @@
         } else {
           q.classList.add('incorrect');
           mark.textContent = '✗';
-          hint.textContent = 'Correct answer: ' + q.dataset.key.split('|')[0];
+          hint.textContent = 'Coorect answer: ' + q.dataset.key.split('|')[0];
         }
       });
 
