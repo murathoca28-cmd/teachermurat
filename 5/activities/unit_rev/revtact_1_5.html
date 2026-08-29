@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>5th Grade English - Fun Practice Hub</title>
-    <link rel="stylesheet" href="../../../theme.css">
     <style>
     :root {
         --primary: #6C5CE7;
@@ -27,12 +26,10 @@
         --radius-sm: 12px;
     }
 
-    /* Navbar'ı bozmayan güvenli sıfırlama */
     *, *::before, *::after {
         box-sizing: border-box;
     }
 
-    /* Font ve sıfırlamayı sadece etkinlik alanına uygular */
     .app-container, .app-container * {
         font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
@@ -46,10 +43,9 @@
         user-select: none;
     }
 
-    /* Sayfa Genişliği Sınırlandırması (780px'e çekilerek ana kart ile hizalandı) */
     .app-container {
         width: 100%;
-        max-width: 780px; /* Sağa ve sola genişlemeyi önlemek için 880px'den 780px'e düşürüldü */
+        max-width: 780px;
         margin: 0 auto;
         padding: 20px 16px 40px;
         flex-grow: 1;
@@ -58,7 +54,6 @@
         gap: 20px;
     }
 
-    /* Hero Kartı */
     .hero-banner {
         background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #FD79A8 100%);
         color: #FFFFFF;
@@ -84,7 +79,6 @@
         font-weight: 500;
     }
 
-    /* İnteraktif Görev Kartları */
     .activity-card {
         background: var(--card-bg);
         border-radius: var(--radius-lg);
@@ -126,7 +120,6 @@
         margin-top: 2px;
     }
 
-    /* Izgara Yapıları */
     .grid-2 {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -139,7 +132,6 @@
         gap: 12px;
     }
 
-    /* Soru / Seçenek Kutuları */
     .quiz-item {
         background: #F8FAFC;
         padding: 16px;
@@ -216,7 +208,6 @@
         opacity: 0.9;
     }
 
-    /* Yanıt Durum Stilleri */
     .correct {
         background: var(--green-soft) !important;
         border-color: var(--green) !important;
@@ -234,7 +225,6 @@
     .opt-btn.correct::after { content: "  ✓"; }
     .opt-btn.wrong::after { content: "  ✕"; }
 
-    /* Sürükle-Bırak / Kova Alanı */
     .pool-box {
         background: #F8FAFC;
         border: 2px dashed #CBD5E0;
@@ -307,7 +297,6 @@
         pointer-events: auto;
     }
 
-    /* Animasyonlar */
     @keyframes shake {
         0%, 100% { transform: translateX(0); }
         25% { transform: translateX(-4px); }
@@ -333,10 +322,8 @@
     }
 
     #jobsContainer .opt-btn {
-    font-weight: 400;
+        font-weight: 400;
     }
-
-
 </style>
 <link rel="stylesheet" href="../../../theme.css">
 </head>
@@ -345,7 +332,6 @@
     <script src="../../../navbar.js"></script>
 
     <div class="app-container">
-        <!-- Site Navbar Altında Şık İçerik Başlığı -->
         <header class="hero-banner">
             <h1>🎓 5th Grade English Practice</h1>
             <p>Jobs, Places in Town & Healthy vs Unhealthy Food</p>
@@ -406,7 +392,7 @@
         // --- DATA & LOGIC ---
         const jobsData = [
             { duty: "I help sick people in a hospital.", job: "Doctor", opts: ["Farmer", "Doctor", "Singer"], id: "j1" },
-            { duty: "I grow fruit and work on a farm.", job: "Farmer", opts: ["Farmer", "Teacher", "Police"], id: "j2" },
+            { duty: "I grow fruits and vegetables on a farm.", job: "Farmer", opts: ["Farmer", "Teacher", "Police Officer"], id: "j2" },
             { duty: "I teach English to students.", job: "Teacher", opts: ["Singer", "Doctor", "Teacher"], id: "j3" },
             { duty: "I keep the city safe.", job: "Police Officer", opts: ["Police Officer", "Farmer", "Singer"], id: "j4" }
         ];
@@ -436,10 +422,10 @@
         }
 
         const placesData = [
-            { clue: "1. Buy fresh bread here in the morning.", ans: "bakery", id: "p1" },
-            { clue: "2. Look at ancient history objects here.", ans: "museum", id: "p2" },
-            { clue: "3. Buy medicine when you are sick.", ans: "chemist's", id: "p3" },
-            { clue: "4. Watch new films with friends.", ans: "cinema", id: "p4" }
+            { clue: "1. You can buy fresh bread here in the morning.", ans: "bakery", id: "p1" },
+            { clue: "2. You can see historical objects here.", ans: "museum", id: "p2" },
+            { clue: "3. You can buy medicine here when you are sick.", ans: "chemist's", id: "p3" },
+            { clue: "4. You can watch new films with your friends here.", ans: "cinema", id: "p4" }
         ];
 
         function renderPlaces() {
@@ -472,7 +458,7 @@
         const foodData = [
             { name: "Chips", type: "unhealthy" },
             { name: "Green Salad", type: "healthy" },
-            { name: "Noodles", type: "unhealthy" },
+            { name: "Fizzy Drinks", type: "unhealthy" },
             { name: "Yoghurt", type: "healthy" },
             { name: "Sweets", type: "unhealthy" },
             { name: "Broccoli", type: "healthy" },
@@ -536,6 +522,5 @@
             renderFood();
         };
     </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
