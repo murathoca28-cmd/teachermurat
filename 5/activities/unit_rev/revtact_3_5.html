@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>5th Grade English - Weather & Looks</title>
-    <link rel="stylesheet" href="../../../theme.css">
     <style>
         :root {
             --primary: #6C5CE7;
@@ -29,7 +28,7 @@
             --radius-sm: 12px;
         }
 
-                /* Her zaman güvenli olan kısım */
+        /* Her zaman güvenli olan kısım */
         *, *::before, *::after {
             box-sizing: border-box;
         }
@@ -303,7 +302,7 @@
         }
 
         #sarahQuizContainer .opt-btn {
-        font-weight: 400;
+            font-weight: 400;
         }
     </style>
     <link rel="stylesheet" href="../../../theme.css">
@@ -331,7 +330,7 @@
                 </div>
                 <div class="story-box">
                     <strong>💬 Sarah says:</strong><br>
-                    "Hello, everyone! I'm short and thin. I have got long wavy hair and brown eyes. I'm kind and friendly. In this winter photo, I was four years old. It was cold and snowy. I had a coat, boots, gloves, and a hat. I could make a snowman! In my summer photo, the weather was hot and sunny. I had a pink dress, sandals, and sunglasses. I like summers!"
+                    "Hello, everyone! I'm short and thin. I have got long wavy hair and brown eyes. I'm kind and friendly. In this winter photo, I was four years old. It was cold and snowy. I wore a coat, boots, gloves, and a hat. I could make a snowman! In my summer photo, the weather was hot and sunny. I wore a pink dress, sandals, and sunglasses. I like summer!"
                 </div>
                 <div id="sarahQuizContainer" class="grid-2"></div>
             </section>
@@ -365,10 +364,10 @@
     <script>
         // --- SARAH QUIZ DATA & LOGIC ---
         const sarahQuestions = [
-            { q: "1. What does Sarah look like?", opts: ["Fat and tall", "Short and thin", "Tall and blonde"], ans: "Short and thin", id: "sq1" },
+            { q: "1. What does Sarah look like?", opts: ["Tall and plump", "Short and slim", "Tall and blonde"], ans: "Short and thin", id: "sq1" },
             { q: "2. What is Sarah like?", opts: ["Kind and friendly", "Funny and rude", "Shy and quiet"], ans: "Kind and friendly", id: "sq2" },
             { q: "3. What could Sarah do in winter?", opts: ["Build a tree house", "Make a snowman", "Fly a kite"], ans: "Make a snowman", id: "sq3" },
-            { q: "4. What did Sarah wear in summer?", opts: ["A coat and boots", "Pink dress, sandals, sunglasses", "A raincoat"], ans: "Pink dress, sandals, sunglasses", id: "sq4" }
+            { q: "4. What did Sarah wear in summer?", opts: ["A coat and boots", "A pink dress, sandals, and sunglasses", "A raincoat"], ans: "A pink dress, sandals, and sunglasses", id: "sq4" }
         ];
 
         function renderSarahQuiz() {
