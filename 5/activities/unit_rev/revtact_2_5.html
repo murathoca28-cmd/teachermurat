@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>5th Grade English - Idioms, Objects & Rules</title>
-    <link rel="stylesheet" href="../../../theme.css">
     <style>
         :root {
             --primary: #6C5CE7;
@@ -29,15 +28,13 @@
             --radius-sm: 12px;
         }
 
-        /* DÜZELTİLMİŞ KISIM */
         *, *::before, *::after {
             box-sizing: border-box;
         }
 
-        /* Sadece etkinlik alanının fontunu ve sıfırlamasını belirler, Navbar'a dokunmaz */
-            .app-container, .app-container * {
+        .app-container, .app-container * {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-}
+        }
 
         body {
             background-color: var(--bg);
@@ -48,7 +45,6 @@
             user-select: none;
         }
 
-        /* Sayfa Genişliği Sınırlandırması ve Alan Dengesi */
         .app-container {
             width: 100%;
             max-width: 880px;
@@ -60,7 +56,6 @@
             gap: 20px;
         }
 
-        /* Hero Kartı */
         .hero-banner {
             background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #FD79A8 100%);
             color: #FFFFFF;
@@ -86,7 +81,6 @@
             font-weight: 500;
         }
 
-        /* İnteraktif Görev Kartları */
         .activity-card {
             background: var(--card-bg);
             border-radius: var(--radius-lg);
@@ -128,7 +122,6 @@
             margin-top: 2px;
         }
 
-        /* Izgara Yapıları */
         .grid-2 {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -141,7 +134,6 @@
             gap: 12px;
         }
 
-        /* Soru / Seçenek Kutuları */
         .quiz-item {
             background: #F8FAFC;
             padding: 16px;
@@ -191,7 +183,6 @@
             border-color: var(--primary);
         }
 
-        /* Yanıt Durum Stilleri */
         .correct {
             background: var(--green-soft) !important;
             border-color: var(--green) !important;
@@ -221,7 +212,6 @@
         .opt-btn.correct::after { content: "  ✓"; color: #007955; }
         .opt-btn.wrong::after { content: "  ✕"; color: #C0392B; }
 
-        /* Cümle Düzenleme (Unscramble) Stilleri */
         .unscramble-zone {
             min-height: 58px;
             padding: 10px 14px;
@@ -266,7 +256,6 @@
             transform: scale(1.05);
         }
 
-        /* Animasyonlar */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-4px); }
@@ -298,7 +287,6 @@
     <script src="../../../navbar.js"></script>
 
     <div class="app-container">
-        <!-- Site Navbar Altında Şık İçerik Başlığı -->
         <header class="hero-banner">
             <h1>🎓 5th Grade English - Revision Activities</h1>
             <p>Expressions & Idioms + Classroom Objects + Classroom Rules</p>
@@ -351,7 +339,7 @@
     <script>
         // --- PART A: IDIOMS DATA & LOGIC ---
         const idiomsData = [
-            { q: "1. ..................... . But I don't have an umbrella.", ans: "It's raining cats and dogs.", id: "i1" },
+            { q: "1. Should I take an umbrella?", ans: "Yes, it's raining cats and dogs.", id: "i1" },
             { q: "2. I really like this jacket.", ans: "Yes, it fits like a glove.", id: "i2" },
             { q: "3. My cat ran away.", ans: "I'm sorry to hear that.", id: "i3" },
             { q: "4. Oh, I don't have a highlighter.", ans: "Feel free to use this!", id: "i4" },
@@ -360,7 +348,7 @@
         ];
         const idiomOptions = [
             "Feel free to use this!",
-            "It's raining cats and dogs.",
+            "Yes, it's raining cats and dogs.",
             "Yes, it fits like a glove.",
             "I'm glad to hear that.",
             "Sure, let's break the ice.",
@@ -455,16 +443,18 @@
                 selectedMatchItem = null;
             } else {
                 targetBtn.classList.add('wrong', 'shake');
-                setTimeout(() => targetBtn.classList.remove('shake'), 300);
+                setTimeout(() => {
+                    targetBtn.classList.remove('shake', 'wrong');
+                }, 800);
             }
         }
 
         // --- PART C: UNSCRAMBLE CLASSROOM RULES ---
         const unscrambleData = [
-            { words: ["Look", "at", "the", "screen", "please!"], id: "u1" },
-            { words: ["Listen", "carefully", "to", "your", "teacher!"], id: "u2" },
-            { words: ["Talk", "with", "your", "peers", "please!"], id: "u3" },
-            { words: ["Write", "down", "this", "note!"], id: "u4" }
+            { words: ["Look", "at", "the", "board,", "please."], id: "u1" },
+            { words: ["Listen", "carefully", "to", "your", "teacher."], id: "u2" },
+            { words: ["Talk", "with", "your", "peers,", "please."], id: "u3" },
+            { words: ["Write", "down", "these", "notes,", "please."], id: "u4" }
         ];
         const userUnscrambleState = {};
 
@@ -477,7 +467,7 @@
                         <p style="font-size:14px; font-weight:700; color:var(--text-muted);">Instruction ${idx+1}</p>
                         <div id="zone-${item.id}" class="unscramble-zone"></div>
                         <div class="unscramble-pool" id="pool-${item.id}">
-                            ${shuffled.map((w, wIdx) => `<button id="btn-${item.id}-${wIdx}" onclick="clickUnscrambleWord('${item.id}', '${w}', ${wIdx})" class="item-chip">${w}</button>`).join('')}
+                            ${shuffled.map((w, wIdx) => `<button id="btn-${item.id}-${wIdx}" onclick="clickUnscrambleWord('${item.id}', '${w.replace(/'/g, "\\'")}', ${wIdx})" class="item-chip">${w}</button>`).join('')}
                         </div>
                     </div>
                 `;
@@ -551,6 +541,5 @@
             renderUnscramble();
         };
     </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
