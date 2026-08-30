@@ -116,7 +116,7 @@
       transition: opacity 0.25s ease, transform 0.25s ease;
       position: sticky;
       top: 76px;
-      z-index: 1001;   /* 20 yerine */
+      z-index: 1001;
       background: var(--card-bg);
       padding: 10px 0;
     }
@@ -278,7 +278,7 @@
 
     <button id="listenBtn">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor"/><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
-      Listen to Text
+      Listen to the Dialogue
     </button>
 
     <!-- OYNATICI ALANI -->
@@ -313,11 +313,11 @@
         <p class="correct-hint"></p>
       </div>
 
-      <div class="question" data-type="mc" data-key="b">
+      <div class="question" data-type="mc" data-key="a">
         <p class="q-text"><span>3. What will Sofia bring to the picnic?</span><span class="q-mark"></span></p>
         <div class="options">
-          <label><input type="radio" name="mc3" value="a"> A) Sandwiches and cookies</label>
-          <label><input type="radio" name="mc3" value="b"> B) Homemade lemonade</label>
+          <label><input type="radio" name="mc3" value="a"> A) Homemade lemonade</label>
+          <label><input type="radio" name="mc3" value="b"> B) Sandwiches and cookies</label>
           <label><input type="radio" name="mc3" value="c"> C) Chocolate cake</label>
           <label><input type="radio" name="mc3" value="d"> D) Fruit juice</label>
         </div>
@@ -325,25 +325,25 @@
       </div>
 
       <h2>SHORT ANSWER</h2>
-      <div class="question" data-type="sa" data-key="at two o'clock|at 2 o'clock|two o'clock|2 o'clock|2:00">
+      <div class="question" data-type="sa" data-key="at two o'clock|at 2 o'clock|two o'clock|2 o'clock|2:00|at 2:00|at 2|2|at two o'clock.|two o'clock.|2 o'clock.">
         <p class="q-text"><span>4. What time are they meeting on Saturday?</span><span class="q-mark"></span></p>
         <div class="short-answer"><input type="text" name="sa1" placeholder="Type your answer here..."></div>
         <p class="correct-hint"></p>
       </div>
 
-      <div class="question" data-type="sa" data-key="near the big tree|the big tree|big tree">
+      <div class="question" data-type="sa" data-key="near the big tree|the big tree|big tree|by the big tree|near the big tree.|the big tree.">
         <p class="q-text"><span>5. Where will they meet in the park?</span><span class="q-mark"></span></p>
         <div class="short-answer"><input type="text" name="sa2" placeholder="Type your answer here..."></div>
         <p class="correct-hint"></p>
       </div>
 
-      <div class="question" data-type="sa" data-key="mark">
+      <div class="question" data-type="sa" data-key="mark|mark.">
         <p class="q-text"><span>6. Who is going to bring the snacks (cookies and sandwiches)?</span><span class="q-mark"></span></p>
         <div class="short-answer"><input type="text" name="sa3" placeholder="Type your answer here..."></div>
         <p class="correct-hint"></p>
       </div>
 
-      <button id="checkBtn">Check the Answers</button>
+      <button id="checkBtn">Check Answers</button>
       <p id="warning">Please answer all the questions before continuing.</p>
       <div id="scoreBanner"></div>
       <button id="transcriptBtn">See the text</button>
@@ -422,7 +422,12 @@
         } else {
           q.classList.add('incorrect');
           mark.textContent = '✗';
-          hint.textContent = 'Correct answer: ' + q.dataset.key.split('|')[0];
+          if (type === 'mc') {
+            const correctOpt = q.querySelector(`input[value="${q.dataset.key.split('|')[0]}"]`).parentNode.textContent.trim();
+            hint.textContent = 'Correct answer: ' + correctOpt;
+          } else {
+            hint.textContent = 'Correct answer: ' + q.dataset.key.split('|')[0];
+          }
         }
       });
 
@@ -440,6 +445,5 @@
       box.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
