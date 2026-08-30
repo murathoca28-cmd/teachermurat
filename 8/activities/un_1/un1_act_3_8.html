@@ -336,20 +336,20 @@
                 <div class="quiz-item">
                     <label>1. A true friend always backs you up when you need help. What does "back up" mean?</label>
                     <div class="grid-2">
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q1')">A) Argue with someone</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, true, 'q1')">B) Support and help someone</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q1')">C) Refuse an offer</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q1')">D) Break a promise</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q1')">A) Argue with someone.</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, true, 'q1')">B) Support and help someone.</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q1')">C) Refuse an offer.</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q1')">D) Break a promise.</button>
                     </div>
                 </div>
 
                 <div class="quiz-item">
                     <label>2. Tim: "Would you like to come to my birthday party on Sunday?" <br> Leo: "______! I can't miss it."</label>
                     <div class="grid-2">
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q2')">A) I'm sorry, I'm busy</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q2')">B) No, thanks. I'm full</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, true, 'q2')">C) I'd love to, that sounds awesome</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q2')">D) I have to stay at home</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q2')">A) I'm sorry, I'm busy.</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q2')">B) No, thanks. I'm full.</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, true, 'q2')">C) I'd love to! That sounds awesome.</button>
+                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q2')">D) I have to stay at home.</button>
                     </div>
                 </div>
 
@@ -466,26 +466,22 @@
             <div class="space-y">
                 <div class="quiz-item">
                     <label>1. Complete the invitation phrase: "______ you like to join our picnic on Saturday?"</label>
-                    <input type="text" class="text-input" id="sa1" placeholder="Type your answer here...">
+                    <input type="text" class="text-input" id="sa1" placeholder="Type your answer here..." oninput="this.classList.remove('correct', 'wrong')">
                 </div>
 
                 <div class="quiz-item">
-                    <label>2. Complete the accepting response: "Sounds ______, I have nothing better to do!" (Awesome / Great)</label>
-                    <input type="text" class="text-input" id="sa2" placeholder="Type your answer here...">
+                    <label>2. Complete the accepting response: "Sounds ______! I have nothing better to do!" (Awesome / Great)</label>
+                    <input type="text" class="text-input" id="sa2" placeholder="Type your answer here..." oninput="this.classList.remove('correct', 'wrong')">
                 </div>
 
                 <div class="quiz-item">
                     <label>3. Complete the statement: "True friends never tell your secrets to anyone because they are ______."</label>
-                    <input type="text" class="text-input" id="sa3" placeholder="Type your answer here...">
+                    <input type="text" class="text-input" id="sa3" placeholder="Type your answer here..." oninput="this.classList.remove('correct', 'wrong')">
                 </div>
 
                 <button class="action-btn" onclick="checkShortAnswers()">Submit Answers</button>
             </div>
         </section>
-
-        <footer>
-            8th Grade English Language Teaching Resources &copy; 2026. All rights reserved.
-        </footer>
     </div>
 
     <script>
@@ -503,7 +499,6 @@
                 btn.classList.add('correct');
             } else {
                 btn.classList.add('wrong');
-                // Highlight correct answer
                 buttons.forEach(b => {
                     if (b.getAttribute('onclick').includes('true')) {
                         b.classList.add('correct');
@@ -535,6 +530,9 @@
             } else {
                 pool.appendChild(chip);
             }
+
+            // Kartlar taşındığında stil bildirimlerini temizle
+            zone.classList.remove('correct', 'wrong', 'shake');
         }
 
         function checkUnscramble(zoneId, targetSentence, btn) {
@@ -561,8 +559,8 @@
             // Q1: Would
             validateInput(ans1, ['would']);
 
-            // Q2: Great / Awesome / Good
-            validateInput(ans2, ['great', 'awesome', 'good']);
+            // Q2: Great / Awesome / Good / Cool / Amazing / Wonderful
+            validateInput(ans2, ['great', 'awesome', 'good', 'cool', 'amazing', 'wonderful']);
 
             // Q3: Trustworthy / Reliable / Honest / Loyal
             validateInput(ans3, ['trustworthy', 'reliable', 'honest', 'loyal']);

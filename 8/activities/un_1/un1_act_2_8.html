@@ -426,7 +426,7 @@
                 </div>
 
                 <div class="quiz-item">
-                    <label>2. "Would you like to come over this evening?" expression is used for ________.</label>
+                    <label>2. The expression "Would you like to come over this evening?" is used for ________.</label>
                     <div class="grid-2">
                         <button class="opt-btn" onclick="checkPart2(this, true)">making an invitation</button>
                         <button class="opt-btn" onclick="checkPart2(this, false)">refusing an offer</button>
@@ -465,7 +465,7 @@
             </div>
 
             <div class="reading-box">
-                <strong>Janet:</strong> "Hello Mert, How are you doing? I am giving a movie night party tomorrow. Would you like to come over? Please, let me know if you can join us as soon as possible."<br><br>
+                <strong>Janet:</strong> "Hello Mert, how are you doing? I am organizing a movie night party tomorrow. Would you like to come over? Please, let me know if you can join us as soon as possible."<br><br>
                 <strong>Mert:</strong> "Hi Janet, I'd love to join you, but I can't because I have a guitar performance tomorrow. How about coming to my concert instead? It's at seven o'clock in the city hall."<br><br>
                 <strong>Janet:</strong> "You have a concert! It sounds great. Of course, I'd like to come. I'll mail our friends, too. We'll be there before seven."
             </div>
@@ -552,10 +552,6 @@
 
     </div>
 
-    <footer>
-        8th Grade English Material | Unit 1: Friendship
-    </footer>
-
     <script>
         // Part 1 için Tanım Havuzu (4 Doğru Tanım + 2 Çeldirici Seçenek)
         const part1OptionsPool = [
@@ -619,7 +615,7 @@
             });
         }
 
-        // Part 2: Çoktan Seçmeli Kontrolü (Düzeltildi: Seçenekler kilitlenmiyor, tekrar denenebilir)
+        // Part 2: Çoktan Seçmeli Kontrolü
         function checkPart2(btn, isCorrect) {
             const parentGrid = btn.parentElement;
             const siblings = parentGrid.querySelectorAll('.opt-btn');
@@ -679,15 +675,18 @@
             } else {
                 pool.appendChild(chip);
             }
+
+            // Çip hareket ettirildiğinde kontrol stilini sıfırla
+            zone.style.borderColor = '#CBD5E0';
+            zone.style.background = '#FFFFFF';
         }
 
-        // Part 4: Cümle Kontrolü (Tekli metin veya Doğru cevap dizisi kabul eder)
+        // Part 4: Cümle Kontrolü
         function checkSentence(zoneId, correctSentences) {
             const zone = document.getElementById(zoneId);
             const chips = zone.querySelectorAll('.item-chip');
             const userSentence = Array.from(chips).map(c => c.innerText.trim()).join(' ');
 
-            // Eğer dizi olarak gönderildiyse listede var mı bak, tek metin gönderildiyse eşitle
             const isCorrect = Array.isArray(correctSentences) ?
                 correctSentences.includes(userSentence) :
                 userSentence === correctSentences;
