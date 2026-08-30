@@ -418,7 +418,7 @@
                 <!-- Part 2: Short Answer Questions -->
                 <h2 class="section-title">Part 2: Short Answer Questions</h2>
 
-                <div class="question-card" data-type="sa" data-answers='["refuse"]'>
+                <div class="question-card" data-type="sa" data-answers='["refuse", "to refuse"]'>
                     <span class="question-text">6. Write the verb in the text that means to say "no" to an offer or
                         invitation.</span>
                     <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..."
@@ -426,14 +426,14 @@
                     <div class="feedback-detail"></div>
                 </div>
 
-                <div class="question-card" data-type="sa" data-answers='["mark"]'>
-                    <span class="question-text">7. Who is host of the slumber party on Sunday night?</span>
+                <div class="question-card" data-type="sa" data-answers='["mark", "Mark"]'>
+                    <span class="question-text">7. Who is the host of the slumber party on Sunday night?</span>
                     <input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..."
                         autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
-                <div class="question-card" data-type="sa" data-answers='["count on"]'>
+                <div class="question-card" data-type="sa" data-answers='["count on", "count on him"]'>
                     <span class="question-text">8. Write the phrasal verb from the text that means to rely on or trust
                         someone.</span>
                     <input type="text" class="short-answer-input" name="q8" placeholder="Type your answer here..."
@@ -441,7 +441,7 @@
                     <div class="feedback-detail"></div>
                 </div>
 
-                <div class="question-card" data-type="sa" data-answers='["sci-fi", "sci-fi movie", "science fiction"]'>
+                <div class="question-card" data-type="sa" data-answers='["sci-fi", "sci-fi movie", "science fiction", "a sci-fi movie", "sci fi", "a sci fi movie"]'>
                     <span class="question-text">9. What type of movie do Tom and Sam plan to watch on Saturday
                         afternoon?</span>
                     <input type="text" class="short-answer-input" name="q9" placeholder="Type your answer here..."
@@ -494,7 +494,7 @@
 
         // Cevap Kontrol Mantığı
         function normalizeText(text) {
-            return text.toLowerCase().trim().replace(/\s+/g, ' ');
+            return text.toLowerCase().trim().replace(/[.,!?:;]+$/, '').replace(/\s+/g, ' ');
         }
 
         function checkQuiz() {
