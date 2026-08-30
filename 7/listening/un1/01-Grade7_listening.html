@@ -343,7 +343,7 @@
     <div id="transcriptBox">
       <p>
         Hello. My name is Archie. I am a middle school student with long straight blonde hair and brown eyes. I wear glasses when I read books.<br /><br />
-        My best friend is Mak. He is tall and well built with short dark hair. Mark is very cheerful and outgoing, but I am a bit shy.<br /><br />
+        My best friend is Mark. He is tall and well-built with short dark hair. Mark is very cheerful and outgoing, but I am a bit shy.<br /><br />
         We both enjoy playing chess and riding our bikes after school.
       </p>
     </div>
@@ -455,6 +455,18 @@
       player.play();
     });
 
+    function getCorrectAnswerText(q) {
+      const firstKey = q.dataset.key.split('|')[0];
+      if (q.dataset.type === 'mc') {
+        const input = q.querySelector(`input[value="${firstKey}"]`);
+        const label = input ? input.closest('label') : null;
+        if (label) {
+          return label.textContent.trim().replace(/^[A-D]\)\s*/i, '');
+        }
+      }
+      return firstKey;
+    }
+
     function allAnswered() {
       const questions = document.querySelectorAll('.question');
       return Array.from(questions).every(q => {
@@ -505,7 +517,7 @@
         } else {
           q.classList.add('incorrect');
           mark.textContent = '✗';
-          hint.textContent = 'The correct answer: ' + q.dataset.key.split('|')[0];
+          hint.textContent = 'The correct answer: ' + getCorrectAnswerText(q);
         }
       });
 
