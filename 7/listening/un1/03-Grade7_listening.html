@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -361,7 +361,7 @@
         <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor" />
         <path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none" />
       </svg>
-      Listen to Text
+      Listen to the Text
     </button>
 
     <!-- OYNATICI ALANI -->
@@ -437,7 +437,7 @@
       <button id="checkBtn">Check the Answers</button>
       <p id="warning">Please answer all the questions before continuing.</p>
       <div id="scoreBanner"></div>
-      <button id="transcriptBtn">See the text</button>
+      <button id="transcriptBtn">See the Text</button>
     </div>
   </div>
 
@@ -513,7 +513,9 @@
         } else {
           q.classList.add('incorrect');
           mark.textContent = '✗';
-          hint.textContent = 'The correct answer: ' + q.dataset.key.split('|')[0];
+          const correctAnswer = q.dataset.key.split('|')[0];
+          const displayAnswer = correctAnswer.charAt(0).toUpperCase() + correctAnswer.slice(1);
+          hint.textContent = 'The correct answer is: ' + displayAnswer;
         }
       });
 
