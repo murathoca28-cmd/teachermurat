@@ -313,7 +313,7 @@
             <p>
                 Hi! My name is Alex. <span class="vocab" data-translation="Arkadaşlık">Friendship</span> is very
                 important to me because true <span class="vocab" data-translation="dostlar / arkadaşlar">buddies</span>
-                always <span class="vocab" data-translation="desteklemek / arkasında durmak">back up</span> each other.
+                always <span class="vocab" data-translation="desteklemek / arkasında durmak">back each other up</span>.
                 Yesterday, my best
                 friend Liam sent me an <span class="vocab" data-translation="davet">invitation</span> text message for
                 his birthday party at a cafe this Saturday.
@@ -408,7 +408,7 @@
 
                 <h2 class="section-title">Part 2: Short Answer Questions</h2>
 
-                <div class="question-card" data-type="sa" data-answers='["back up", "backup"]'>
+                <div class="question-card" data-type="sa" data-answers='["back up", "back ... up", "back each other up", "backup"]'>
                     <span class="question-text">6. Write the phrasal verb in the text that means "to support or help
                         someone".</span>
                     <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..."
@@ -417,7 +417,7 @@
                 </div>
 
                 <div class="question-card" data-type="sa"
-                    data-answers='["volleyball", "volleyball match", "volleyball tournament"]'>
+                    data-answers='["volleyball", "volleyball match", "a volleyball match", "volleyball game", "important volleyball match"]'>
                     <span class="question-text">7. What sports match prevents Alex from attending the party?</span>
                     <input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..."
                         autocomplete="off">
@@ -431,14 +431,14 @@
                     <div class="feedback-detail"></div>
                 </div>
 
-                <div class="question-card" data-type="sa" data-answers='["at a cafe", "cafe", "a cafe"]'>
+                <div class="question-card" data-type="sa" data-answers='["at a cafe", "cafe", "a cafe", "at cafe", "in a cafe"]'>
                     <span class="question-text">9. Where is Liam's birthday party taking place on Saturday?</span>
                     <input type="text" class="short-answer-input" name="q9" placeholder="Type your answer here..."
                         autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
-                <div class="question-card" data-type="sa" data-answers='["count on"]'>
+                <div class="question-card" data-type="sa" data-answers='["count on", "count on him"]'>
                     <span class="question-text">10. Write the phrasal verb in the text that means "to trust or rely on
                         someone".</span>
                     <input type="text" class="short-answer-input" name="q10" placeholder="Type your answer here..."
@@ -482,7 +482,7 @@
 
         // Cevap Kontrol Mantığı
         function normalizeText(text) {
-            return text.toLowerCase().trim().replace(/\s+/g, ' ');
+            return text.toLowerCase().trim().replace(/[.,!?:;]+$/, '').replace(/\s+/g, ' ');
         }
 
         function checkQuiz() {

@@ -307,7 +307,7 @@
                 Friendship is not just about spending time together; it is about finding someone you can truly <span class="vocab" data-translation="güvenmek / bel bağlamak">count on</span>. My best friend Ege and I have known each other since primary school. Although we have different personalities—he is usually calm and <span class="vocab" data-translation="rahat / sakince yaklaşan">laid-back</span>, while I am more energetic—we <span class="vocab" data-translation="iyi geçinmek">get on well with</span> each other. He is a <span class="vocab" data-translation="ince düşünceli / kibar">tactful</span> person who never hurts his friends' feelings.
             </p>
             <p>
-                True friends always <span class="vocab" data-translation="desteklemek / arkasında durmak">back up</span> each other when times are hard. Last Friday, Ege invited me to a rock concert. I had to <span class="vocab" data-translation="reddetmek">refuse</span> his offer at first because I needed to study for an important exam. When I explained my <span class="vocab" data-translation="mazeret / bahane">excuse</span>, he didn't get angry; instead, he offered to study together after the event. A bad friend might be selfish or <span class="vocab" data-translation="inatçı">stubborn</span>, but Ege always shows understanding.
+                True friends always <span class="vocab" data-translation="desteklemek / arkasında durmak">back each other up</span> when times are hard. Last Friday, Ege invited me to a rock concert. I had to <span class="vocab" data-translation="reddetmek">refuse</span> his offer at first because I needed to study for an important exam. When I explained my <span class="vocab" data-translation="mazeret / bahane">excuse</span>, he didn't get angry; instead, he offered to study together after the event. A bad friend might be selfish or <span class="vocab" data-translation="inatçı">stubborn</span>, but Ege always shows understanding.
             </p>
             <p>
                 We also have common hobbies like playing basketball and attending sci-fi film festivals. Having <span class="vocab" data-translation="ortak ilgi alanları">shared interests</span> makes our bond even stronger. In short, a genuine companion should be <span class="vocab" data-translation="güvenilir">reliable</span> and supportive. I know that whenever I face a problem, I can <span class="vocab" data-translation="güvenmek">rely on</span> Ege without hesitation.
@@ -377,19 +377,19 @@
                 <!-- Part 2: Short Answer Questions -->
                 <h2 class="section-title">Part 2: Short Answer Questions</h2>
 
-                <div class="question-card" data-type="sa" data-answers='["laid-back", "tactful", "reliable"]'>
+                <div class="question-card" data-type="sa" data-answers='["calm", "laid-back", "tactful", "understanding", "reliable", "supportive"]'>
                     <span class="question-text">6. Write ONE positive adjective from the text that describes Ege's character.</span>
                     <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..." autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
-                <div class="question-card" data-type="sa" data-answers='["exam", "studying for an exam", "study for an exam", "an exam"]'>
+                <div class="question-card" data-type="sa" data-answers='["exam", "studying for an exam", "study for an exam", "an exam", "studying for an important exam", "important exam", "to study for an exam", "study for exam", "studying for exam"]'>
                     <span class="question-text">7. What was the narrator's excuse for refusing the rock concert offer?</span>
                     <input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..." autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
-                <div class="question-card" data-type="sa" data-answers='["back up", "backup"]'>
+                <div class="question-card" data-type="sa" data-answers='["back up", "back ... up", "back each other up", "backup"]'>
                     <span class="question-text">8. Which phrasal verb in Paragraph 2 means "to support someone"?</span>
                     <input type="text" class="short-answer-input" name="q8" placeholder="Type your answer here..." autocomplete="off">
                     <div class="feedback-detail"></div>
@@ -445,7 +445,7 @@
 
         // Cevap Kontrol Mantığı
         function normalizeText(text) {
-            return text.toLowerCase().trim().replace(/\s+/g, ' ');
+            return text.toLowerCase().trim().replace(/[.,!?:;]+$/, '').replace(/\s+/g, ' ');
         }
 
         function checkQuiz() {
