@@ -401,7 +401,7 @@
                 <div class="card-header">
                     <div class="card-icon" style="background: var(--yellow-soft); color: #D63031;">💬</div>
                     <div class="card-title">
-                        <h2>Part B: Social Expressions (Accept vs Refuse)</h2>
+                        <h2>Part B: Social Expressions (Accept vs. Refuse)</h2>
                         <p>Drag each response card into the correct category box.</p>
                     </div>
                 </div>
@@ -409,7 +409,7 @@
                 <div class="drag-pool" id="pool" ondragover="allowDrop(event)" ondrop="drop(event, 'pool')">
                     <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag1" data-type="accept">"Sure, that sounds awesome!"</div>
                     <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag2" data-type="refuse">"I'm sorry, but I have to study."</div>
-                    <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag3" data-type="accept">"Yeah, why not!"</div>
+                    <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag3" data-type="accept">"Yeah, why not?"</div>
                     <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag4" data-type="refuse">"I'd love to, but I'm visiting my aunt."</div>
                     <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag5" data-type="accept">"Of course! Count me in."</div>
                     <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag6" data-type="refuse">"No, thanks. I'm full."</div>
@@ -436,7 +436,7 @@
                 </div>
 
                 <div class="mcq-item" data-correct="B">
-                    <div class="mcq-question">1. Alex: "Would you like to come over for a movie night on Friday?"<br>Sam: "______ I have to prepare for my math exam."</div>
+                    <div class="mcq-question">1. Alex: "Would you like to come over for a movie night on Friday?"<br>Sam: "______. I have to prepare for my math exam."</div>
                     <div class="mcq-options">
                         <div class="mcq-option" onclick="selectMCQ(this, 'A')">A) Sure, sounds great!</div>
                         <div class="mcq-option" onclick="selectMCQ(this, 'B')">B) I'd love to, but I can't.</div>
@@ -475,8 +475,6 @@
             </div>
         </main>
     </div>
-
-    <footer>Designed for 8th Grade English Students • Unit 1 Friendship Interactive Hub</footer>
 
     <script>
         // --- MATCHING GAME LOGIC ---
@@ -552,6 +550,18 @@
             let totalPoints = 0;
             let maxPoints = 0;
 
+            // Öğrenci cevabını değiştirip tekrar kontrol ettiğinde stilleri sıfırla
+            document.querySelectorAll('.draggable').forEach(item => {
+                item.style.borderColor = '';
+                item.style.background = '';
+                item.style.color = '';
+            });
+            document.querySelectorAll('.mcq-option').forEach(opt => {
+                opt.style.borderColor = '';
+                opt.style.background = '';
+                opt.style.color = '';
+            });
+
             // 1. Matching Points (5 items)
             maxPoints += 5;
             totalPoints += matchesFound;
@@ -622,5 +632,6 @@
             resultBox.scrollIntoView({ behavior: 'smooth' });
         }
     </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
