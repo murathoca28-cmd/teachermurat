@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5th Grade English - Fun Practice Hub</title>
+    <style>
+    :root {
+        --primary: #6C5CE7;
+        --primary-soft: #EEECFD;
+        --pink: #FD79A8;
+        --pink-soft: #FDEDF3;
+        --green: #00B894;
+        --green-soft: #E6F9F5;
+        --yellow: #FDCB6E;
+        --yellow-soft: #FEF9E7;
+        --red: #FF7675;
+        --red-soft: #FFEAE9;
+        --bg: #F4F7FE;
+        --card-bg: #e2eff8;
+        --text-dark: #2D3436;
+        --text-muted: #636E72;
+        --border-color: #E2E8F0;
+        --radius-lg: 24px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+    }
+
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    .app-container, .app-container * {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+        background-color: var(--bg);
+        color: var(--text-dark);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        user-select: none;
+    }
+
+    .app-container {
+        width: 100%;
+        max-width: 780px;
+        margin: 0 auto;
+        padding: 20px 16px 40px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .hero-banner {
+        background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #FD79A8 100%);
+        color: #FFFFFF;
+        padding: 26px 24px;
+        border-radius: var(--radius-lg);
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(108, 92, 231, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-banner h1 {
+        font-size: 25px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+
+    .hero-banner p {
+        font-size: 15px;
+        opacity: 0.95;
+        font-weight: 500;
+    }
+
+    .activity-card {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: 22px;
+        border: 2px solid #a4aeb9;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+        transition: transform 0.2s ease;
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+        padding-bottom: 12px;
+        border-bottom: 2px dashed var(--bg);
+    }
+
+    .card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .card-title h2 {
+        font-size: 19px;
+        color: var(--text-dark);
+        font-weight: 700;
+    }
+
+    .card-title p {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin-top: 2px;
+    }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 14px;
+    }
+
+    .space-y {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .quiz-item {
+        background: #F8FAFC;
+        padding: 16px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .quiz-item-row {
+        background: #F8FAFC;
+        padding: 14px 16px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .opt-btn {
+        width: 100%;
+        padding: 11px 14px;
+        background: #FFFFFF;
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--text-dark);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .opt-btn:hover:not(:disabled) {
+        border-color: var(--primary);
+        background: var(--primary-soft);
+        color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .custom-input {
+        padding: 9px 12px;
+        border-radius: var(--radius-sm);
+        border: 2px solid var(--border-color);
+        font-weight: 600;
+        font-size: 15px;
+        outline: none;
+        transition: all 0.2s;
+        width: 140px;
+    }
+
+    .custom-input:focus {
+        border-color: var(--pink);
+        box-shadow: 0 0 0 3px rgba(253, 121, 168, 0.2);
+    }
+
+    .action-btn {
+        background: var(--pink);
+        color: #FFFFFF;
+        border: none;
+        padding: 9px 18px;
+        border-radius: var(--radius-sm);
+        font-weight: 700;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 10px rgba(253, 121, 168, 0.3);
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        opacity: 0.9;
+    }
+
+    .correct {
+        background: var(--green-soft) !important;
+        border-color: var(--green) !important;
+        color: #007955 !important;
+        font-weight: bold;
+    }
+
+    .wrong {
+        background: var(--red-soft) !important;
+        border-color: var(--red) !important;
+        color: #C0392B !important;
+        font-weight: bold;
+    }
+
+    .opt-btn.correct::after { content: "  ✓"; }
+    .opt-btn.wrong::after { content: "  ✕"; }
+
+    .pool-box {
+        background: #F8FAFC;
+        border: 2px dashed #CBD5E0;
+        border-radius: var(--radius-md);
+        padding: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 14px;
+        min-height: 64px;
+        align-items: center;
+    }
+
+    .item-chip {
+        background: #FFFFFF;
+        border: 2px solid var(--border-color);
+        padding: 9px 16px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+    }
+
+    .item-chip:hover {
+        border-color: var(--yellow);
+        transform: translateY(-2px);
+    }
+
+    .item-chip.active-select {
+        border-color: var(--primary);
+        background: var(--primary-soft);
+        color: var(--primary);
+        transform: scale(1.05);
+    }
+
+    .bucket-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+    }
+
+    .bucket {
+        min-height: 140px;
+        border-radius: var(--radius-md);
+        padding: 14px;
+        border: 2px solid;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .bucket h3 {
+        font-size: 16px;
+        margin-bottom: 12px;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .bucket-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        pointer-events: none;
+    }
+
+    .bucket-items .item-chip {
+        pointer-events: auto;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-4px); }
+        75% { transform: translateX(4px); }
+    }
+    .shake { animation: shake 0.3s ease; }
+
+    @keyframes pop {
+        0% { transform: scale(0.95); }
+        50% { transform: scale(1.03); }
+        100% { transform: scale(1); }
+    }
+    .pop { animation: pop 0.25s ease; }
+
+    footer {
+        text-align: center;
+        padding: 16px;
+        color: var(--text-muted);
+        font-size: 13px;
+        border-top: 1px solid var(--border-color);
+        background: #FFFFFF;
+        margin-top: auto;
+    }
+
+    #jobsContainer .opt-btn {
+        font-weight: 400;
+    }
+</style>
+<link rel="stylesheet" href="../../../theme.css">
+</head>
+<body>
+    <div id="navbar-placeholder" style="min-height: 0px;"></div>
+    <script src="../../../navbar.js"></script>
+
+    <div class="app-container">
+        <header class="hero-banner">
+            <h1>🎓 5th Grade English Practice</h1>
+            <p>Jobs, Places in Town & Healthy vs Unhealthy Food</p>
+        </header>
+
+        <main class="space-y">
+            <!-- WHO AM I? (JOBS) -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">💼</div>
+                    <div class="card-title">
+                        <h2>Part A: Who Am I? (Jobs & Duties)</h2>
+                        <p>Read the clue and choose the correct job!</p>
+                    </div>
+                </div>
+                <div id="jobsContainer" class="grid-2"></div>
+            </section>
+
+            <!-- WHERE AM I? (PLACES) -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--pink-soft); color: var(--pink);">🏪</div>
+                    <div class="card-title">
+                        <h2>Part B: Where Am I? (Places in Town)</h2>
+                        <p>Type the correct place name! (e.g. bakery, chemist's)</p>
+                    </div>
+                </div>
+                <div id="placesContainer" class="space-y"></div>
+            </section>
+
+            <!-- HEALTHY VS UNHEALTHY FOOD SORT -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--green-soft); color: var(--green);">🥗</div>
+                    <div class="card-title">
+                        <h2>Part C: Healthy vs Unhealthy Food Sort</h2>
+                        <p>1. Click a food to select it. 2. Click the correct bucket to place it!</p>
+                    </div>
+                </div>
+                <div id="foodPool" class="pool-box"></div>
+                <div class="bucket-container">
+                    <div id="healthyBucket" class="bucket" style="background: var(--green-soft); border-color: #A3E4D7;" onclick="placeFood('healthy')">
+                        <h3 style="color: #0E6251;">❤️ Healthy Food</h3>
+                        <div class="bucket-items" id="healthyItems"></div>
+                    </div>
+                    <div id="unhealthyBucket" class="bucket" style="background: var(--red-soft); border-color: #F5B7B1;" onclick="placeFood('unhealthy')">
+                        <h3 style="color: #78281F;">🍔 Unhealthy Food</h3>
+                        <div class="bucket-items" id="unhealthyItems"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- DATA & LOGIC ---
+        const jobsData = [
+            { duty: "I help sick people in a hospital.", job: "Doctor", opts: ["Farmer", "Doctor", "Singer"], id: "j1" },
+            { duty: "I grow fruits and vegetables on a farm.", job: "Farmer", opts: ["Farmer", "Teacher", "Police Officer"], id: "j2" },
+            { duty: "I teach English to students.", job: "Teacher", opts: ["Singer", "Doctor", "Teacher"], id: "j3" },
+            { duty: "I keep the city safe.", job: "Police Officer", opts: ["Police Officer", "Farmer", "Singer"], id: "j4" }
+        ];
+
+        function renderJobs() {
+            document.getElementById('jobsContainer').innerHTML = jobsData.map(j => {
+                const shuffledOpts = [...j.opts].sort(() => Math.random() - 0.5);
+                return `
+                <div class="quiz-item">
+                    <p style="font-weight:700; font-size:15px; color:var(--text-dark);">"${j.duty}"</p>
+                    <div style="display:flex; flex-direction:column; gap:6px;" id="jobOpts-${j.id}">
+                        ${shuffledOpts.map(o => `<button onclick="checkJob('${j.id}', this, '${j.job}')" class="opt-btn">${o}</button>`).join('')}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function checkJob(id, btn, correct) {
+            if (btn.innerText === correct) {
+                const parent = document.getElementById(`jobOpts-${id}`);
+                parent.querySelectorAll('button').forEach(b => b.disabled = true);
+                btn.classList.add('correct', 'pop');
+            } else {
+                btn.classList.add('wrong', 'shake');
+                setTimeout(() => btn.classList.remove('shake'), 300);
+            }
+        }
+
+        const placesData = [
+            { clue: "1. You can buy fresh bread here in the morning.", ans: "bakery", id: "p1" },
+            { clue: "2. You can see historical objects here.", ans: "museum", id: "p2" },
+            { clue: "3. You can buy medicine here when you are sick.", ans: "chemist's", id: "p3" },
+            { clue: "4. You can watch new films with your friends here.", ans: "cinema", id: "p4" }
+        ];
+
+        function renderPlaces() {
+            document.getElementById('placesContainer').innerHTML = placesData.map(p => `
+                <div class="quiz-item-row">
+                    <span style="font-weight:700; font-size:15px;">${p.clue}</span>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" id="in-${p.id}" placeholder="Type place..." class="custom-input">
+                        <button onclick="checkPlace('${p.id}')" class="action-btn">Check</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function checkPlace(id) {
+            const input = document.getElementById(`in-${id}`);
+            const val = input.value.trim().toLowerCase().replace(/['`’]/g, "");
+            const target = placesData.find(p => p.id === id).ans.toLowerCase().replace(/['`’]/g, "");
+
+            if (val === target) {
+                input.classList.remove('wrong');
+                input.classList.add('correct');
+                input.disabled = true;
+            } else {
+                input.classList.add('wrong', 'shake');
+                setTimeout(() => input.classList.remove('shake'), 300);
+            }
+        }
+
+        const foodData = [
+            { name: "Chips", type: "unhealthy" },
+            { name: "Green Salad", type: "healthy" },
+            { name: "Fizzy Drinks", type: "unhealthy" },
+            { name: "Yoghurt", type: "healthy" },
+            { name: "Sweets", type: "unhealthy" },
+            { name: "Broccoli", type: "healthy" },
+            { name: "Hamburger", type: "unhealthy" },
+            { name: "Fish", type: "healthy" },
+            { name: "Chocolate", type: "unhealthy" },
+            { name: "Eggs", type: "healthy" },
+            { name: "Nuts", type: "healthy" },
+            { name: "Sausages", type: "unhealthy" },
+            { name: "Spinach", type: "healthy" },
+            { name: "Ice Cream", type: "unhealthy" }
+        ];
+        let activeFoodIdx = null;
+
+        function renderFood() {
+            const shuffled = foodData.map((f, i) => ({ ...f, originalIndex: i })).sort(() => Math.random() - 0.5);
+            document.getElementById('foodPool').innerHTML = shuffled.map(f => `
+                <div id="food-${f.originalIndex}" onclick="selectFood(${f.originalIndex})" class="item-chip">${f.name}</div>
+            `).join('');
+        }
+
+        function selectFood(index) {
+            document.querySelectorAll('#foodPool .item-chip').forEach(el => el.classList.remove('active-select'));
+            activeFoodIdx = index;
+            const el = document.getElementById(`food-${index}`);
+            if (el) el.classList.add('active-select');
+        }
+
+        function placeFood(type) {
+            if (activeFoodIdx === null) return;
+            const index = activeFoodIdx;
+            const item = foodData[index];
+            const el = document.getElementById(`food-${index}`);
+            const bucketContainer = document.getElementById(`${type}Items`);
+
+            el.classList.remove('active-select');
+            bucketContainer.appendChild(el);
+
+            if (item.type === type) {
+                el.classList.add('correct', 'pop');
+                el.classList.remove('wrong');
+                el.onclick = null;
+            } else {
+                el.classList.add('wrong', 'shake');
+                setTimeout(() => el.classList.remove('shake'), 300);
+                el.onclick = () => returnFoodToPool(index);
+            }
+            activeFoodIdx = null;
+        }
+
+        function returnFoodToPool(index) {
+            const el = document.getElementById(`food-${index}`);
+            document.getElementById('foodPool').appendChild(el);
+            el.classList.remove('wrong', 'correct');
+            el.onclick = () => selectFood(index);
+        }
+
+        window.onload = () => {
+            renderJobs();
+            renderPlaces();
+            renderFood();
+        };
+    </script>
+</body>
+</html>
