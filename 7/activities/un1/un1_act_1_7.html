@@ -1,0 +1,582 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7th Grade English - Appearance & Personality</title>
+    <link rel="stylesheet" href="../../../theme.css">
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-soft: #EEECFD;
+            --pink: #FD79A8;
+            --pink-soft: #FDEDF3;
+            --green: #00B894;
+            --green-soft: #E6F9F5;
+            --yellow: #FDCB6E;
+            --yellow-soft: #FEF9E7;
+            --red: #FF7675;
+            --red-soft: #FFEAE9;
+            --blue: #0984E3;
+            --blue-soft: #E3F2FD;
+            --bg: #F4F7FE;
+            --card-bg: #e2eff8;
+            --text-dark: #2D3436;
+            --text-muted: #636E72;
+            --border-color: #E2E8F0;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        .app-container, .app-container * {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            margin: 0;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Hero Kartı */
+        .hero-banner {
+            background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #FD79A8 100%);
+            color: #FFFFFF;
+            padding: 26px 24px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner h1 {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .hero-banner p {
+            font-size: 15px;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        /* İnteraktif Görev Kartları */
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            border: 2px solid #a4aeb9;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed #cbd5e0;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .card-title h2 {
+            font-size: 19px;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .card-title p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            margin-bottom: 0;
+        }
+
+        /* Izgara Yapıları */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .space-y {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Soru / Seçenek Kutuları */
+        .quiz-item {
+            background: #F8FAFC;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-item label {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        .opt-btn {
+            width: 100%;
+            padding: 11px 14px;
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-weight: 400;
+            font-size: 15px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        select.custom-select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border-color);
+            font-weight: 600;
+            font-size: 14px;
+            outline: none;
+            background: #FFFFFF;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-dark);
+        }
+
+        select.custom-select:hover:not(:disabled) {
+            border-color: var(--primary);
+        }
+
+        /* Yanıt Durum Stilleri */
+        .correct {
+            background: var(--green-soft) !important;
+            border-color: var(--green) !important;
+            color: #007955 !important;
+            font-weight: bold;
+        }
+
+        .wrong {
+            background: var(--red-soft) !important;
+            border-color: var(--red) !important;
+            color: #C0392B !important;
+            font-weight: bold;
+        }
+
+        .opt-btn.correct::after { content: "  ✓"; color: #007955; }
+        .opt-btn.wrong::after { content: "  ✕"; color: #C0392B; }
+
+        /* Cümle Düzenleme (Unscramble) Stilleri */
+        .unscramble-zone {
+            min-height: 58px;
+            padding: 10px 14px;
+            background: #FFFFFF;
+            border: 2px dashed #CBD5E0;
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .unscramble-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .item-chip {
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            padding: 9px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            user-select: none;
+        }
+
+        .item-chip:hover {
+            border-color: var(--yellow);
+            transform: translateY(-2px);
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            cursor: pointer;
+            align-self: flex-start;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #5b4cc4;
+        }
+
+        /* Animasyonlar */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .shake { animation: shake 0.3s ease; }
+
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border-color);
+            background: #FFFFFF;
+            margin-top: auto;
+        }
+
+    
+    </style>
+    <link rel="stylesheet" href="../../../theme.css">
+</head>
+<body>
+    <div id="navbar-placeholder" style="min-height: 0px;"></div>
+    <script src="../../../navbar.js"></script>
+
+    <div class="app-container">
+        
+        <!-- Hero Banner -->
+        <header class="hero-banner">
+            <h1>🎓 7th Grade English - Unit 1 Activities</h1>
+            <p>Appearance, Personality & Comparatives Revision</p>
+        </header>
+
+        <!-- Activity A: Matching Physical Appearance -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon">👤</div>
+                <div class="card-title">
+                    <h2>Part A: Physical Appearance Matching</h2>
+                    <p>Match the definitions with the correct appearance adjectives!</p>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="quiz-item">
+                    <label>1. She has light-colored, fair hair.</label>
+                    <select class="custom-select" data-answer="blonde" onchange="checkSelect(this)">
+                        <option value="">-- Choose Option --</option>
+                        <option value="blonde">blonde</option>
+                        <option value="plump">plump</option>
+                        <option value="glasses">glasses</option>
+                        <option value="headscarf">headscarf</option>
+                    </select>
+                </div>
+
+                <div class="quiz-item">
+                    <label>2. He is a bit overweight, not thin.</label>
+                    <select class="custom-select" data-answer="plump" onchange="checkSelect(this)">
+                        <option value="">-- Choose Option --</option>
+                        <option value="curly">curly hair</option>
+                        <option value="plump">plump</option>
+                        <option value="middle-aged">middle-aged</option>
+                        <option value="blonde">blonde</option>
+                    </select>
+                </div>
+
+                <div class="quiz-item">
+                    <label>3. She covers her head with a piece of cloth.</label>
+                    <select class="custom-select" data-answer="headscarf" onchange="checkSelect(this)">
+                        <option value="">-- Choose Option --</option>
+                        <option value="glasses">glasses</option>
+                        <option value="headscarf">headscarf</option>
+                        <option value="plump">plump</option>
+                        <option value="middle-aged">middle-aged</option>
+                    </select>
+                </div>
+
+                <div class="quiz-item">
+                    <label>4. He is around 45-50 years old.</label>
+                    <select class="custom-select" data-answer="middle-aged" onchange="checkSelect(this)">
+                        <option value="">-- Choose Option --</option>
+                        <option value="blonde">blonde</option>
+                        <option value="middle-aged">middle-aged</option>
+                        <option value="curly">curly hair</option>
+                        <option value="glasses">glasses</option>
+                    </select>
+                </div>
+
+                <div class="quiz-item">
+                    <label>5. She wears these to see better.</label>
+                    <select class="custom-select" data-answer="glasses" onchange="checkSelect(this)">
+                        <option value="">-- Choose Option --</option>
+                        <option value="glasses">glasses</option>
+                        <option value="headscarf">headscarf</option>
+                        <option value="plump">plump</option>
+                        <option value="middle-aged">middle-aged</option>
+                    </select>
+                </div>
+
+                <div class="quiz-item">
+                    <label>6. His hair has round curves/waves.</label>
+                    <select class="custom-select" data-answer="curly" onchange="checkSelect(this)">
+                        <option value="">-- Choose Option --</option>
+                        <option value="blonde">blonde</option>
+                        <option value="curly">curly hair</option>
+                        <option value="headscarf">headscarf</option>
+                        <option value="plump">plump</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Activity B: Personality Traits Multiple Choice -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon">🧠</div>
+                <div class="card-title">
+                    <h2>Part B: Personality Traits Quiz</h2>
+                    <p>Choose the correct option that matches the description!</p>
+                </div>
+            </div>
+
+            <div class="space-y">
+                <!-- Question 1 -->
+                <div class="quiz-item">
+                    <label>1. Jack always buys gifts for his friends and likes sharing. What is he like?</label>
+                    <div class="grid-2">
+                        <button class="opt-btn" onclick="checkOption(this, false)">Stubborn</button>
+                        <button class="opt-btn" onclick="checkOption(this, true)">Generous</button>
+                        <button class="opt-btn" onclick="checkOption(this, false)">Lazy</button>
+                        <button class="opt-btn" onclick="checkOption(this, false)">Shy</button>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="quiz-item">
+                    <label>2. Mary never changes her mind and never listens to others. She is ________.</label>
+                    <div class="grid-2">
+                        <button class="opt-btn" onclick="checkOption(this, true)">Stubborn</button>
+                        <button class="opt-btn" onclick="checkOption(this, false)">Outgoing</button>
+                        <button class="opt-btn" onclick="checkOption(this, false)">Honest</button>
+                        <button class="opt-btn" onclick="checkOption(this, false)">Punctual</button>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="quiz-item">
+                    <label>3. Dave always comes to class on time. He is never late. What is he like?</label>
+                    <div class="grid-2">
+                        <button class="opt-btn" onclick="checkOption(this, false)">Clumsy</button>
+                        <button class="opt-btn" onclick="checkOption(this, false)">Selfish</button>
+                        <button class="opt-btn" onclick="checkOption(this, true)">Punctual</button>
+                        <button class="opt-btn" onclick="checkOption(this, false)">Forgetful</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Activity C: Sentence Ordering (Unscramble - 4 Questions) -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon">🔤</div>
+                <div class="card-title">
+                    <h2>Part C: Sentence Unscramble (Comparatives)</h2>
+                    <p>Click on the words below to build the correct comparative sentences!</p>
+                </div>
+            </div>
+
+            <div class="space-y">
+                <!-- Sentence 1 -->
+                <div class="quiz-item">
+                    <label>1. Order the words: <i>(Sosyal/Dışa dönük karşılaştırması)</i></label>
+                    <div class="unscramble-zone" id="zone-1"></div>
+                    <div class="unscramble-pool" id="pool-1">
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">outgoing</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">Sue</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">than</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">is</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">more</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-1', 'pool-1')">Kate</span>
+                    </div>
+                    <button class="action-btn" onclick="checkUnscramble('zone-1', 'Sue is more outgoing than Kate')">Check Sentence</button>
+                </div>
+
+                <!-- Sentence 2 -->
+                <div class="quiz-item">
+                    <label>2. Order the words: <i>(Boy karşılaştırması)</i></label>
+                    <div class="unscramble-zone" id="zone-2"></div>
+                    <div class="unscramble-pool" id="pool-2">
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">taller</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">is</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">Jack</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">Mark</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-2', 'pool-2')">than</span>
+                    </div>
+                    <button class="action-btn" onclick="checkUnscramble('zone-2', 'Jack is taller than Mark')">Check Sentence</button>
+                </div>
+
+                <!-- Sentence 3 -->
+                <div class="quiz-item">
+                    <label>3. Order the words: <i>(Cömertlik karşılaştırması)</i></label>
+                    <div class="unscramble-zone" id="zone-3"></div>
+                    <div class="unscramble-pool" id="pool-3">
+                        <span class="item-chip" onclick="moveChip(this, 'zone-3', 'pool-3')">generous</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-3', 'pool-3')">than</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-3', 'pool-3')">is</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-3', 'pool-3')">Linda</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-3', 'pool-3')">more</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-3', 'pool-3')">Tom</span>
+                    </div>
+                    <button class="action-btn" onclick="checkUnscramble('zone-3', 'Linda is more generous than Tom')">Check Sentence</button>
+                </div>
+
+                <!-- Sentence 4 -->
+                <div class="quiz-item">
+                    <label>4. Order the words: <i>(Yaş karşılaştırması)</i></label>
+                    <div class="unscramble-zone" id="zone-4"></div>
+                    <div class="unscramble-pool" id="pool-4">
+                        <span class="item-chip" onclick="moveChip(this, 'zone-4', 'pool-4')">is</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-4', 'pool-4')">brother</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-4', 'pool-4')">younger</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-4', 'pool-4')">My</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-4', 'pool-4')">me</span>
+                        <span class="item-chip" onclick="moveChip(this, 'zone-4', 'pool-4')">than</span>
+                    </div>
+                    <button class="action-btn" onclick="checkUnscramble('zone-4', 'My brother is younger than me')">Check Sentence</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- JS Logic -->
+    <script>
+        // 1. Select / Dropdown Check
+        function checkSelect(element) {
+            const expected = element.getAttribute('data-answer');
+            const selected = element.value;
+
+            element.classList.remove('correct', 'wrong');
+
+            if (selected === "") return;
+
+            if (selected === expected) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('wrong');
+                element.parentElement.classList.add('shake');
+                setTimeout(() => element.parentElement.classList.remove('shake'), 300);
+            }
+        }
+
+        // 2. Multiple Choice Option Check
+        function checkOption(btn, isCorrect) {
+            const parent = btn.closest('.grid-2');
+            const siblings = parent.querySelectorAll('.opt-btn');
+
+            siblings.forEach(s => {
+                s.classList.remove('correct', 'wrong');
+            });
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+            } else {
+                btn.classList.add('wrong');
+                btn.classList.add('shake');
+                setTimeout(() => btn.classList.remove('shake'), 300);
+            }
+        }
+
+        // 3. Unscramble Chip Move Logic
+        function moveChip(chip, zoneId, poolId) {
+            const zone = document.getElementById(zoneId);
+            const pool = document.getElementById(poolId);
+
+            if (chip.parentElement.id === poolId) {
+                zone.appendChild(chip);
+            } else {
+                pool.appendChild(chip);
+            }
+            zone.classList.remove('correct', 'wrong');
+        }
+
+        // 4. Unscramble Sentence Check Logic
+        function checkUnscramble(zoneId, targetSentence) {
+            const zone = document.getElementById(zoneId);
+            const chips = zone.querySelectorAll('.item-chip');
+            
+            let userSentence = [];
+            chips.forEach(chip => userSentence.push(chip.innerText.trim()));
+            
+            const formedSentence = userSentence.join(' ');
+
+            zone.classList.remove('correct', 'wrong');
+
+            if (formedSentence.toLowerCase() === targetSentence.toLowerCase()) {
+                zone.classList.add('correct');
+            } else {
+                zone.classList.add('wrong');
+                zone.classList.add('shake');
+                setTimeout(() => zone.classList.remove('shake'), 300);
+            }
+        }
+    </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
+</body>
+</html>
