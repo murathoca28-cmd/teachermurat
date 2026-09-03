@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 1: Friendship - Interactive Learning Activity</title>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-soft: #EEECFD;
+            --pink: #FD79A8;
+            --pink-soft: #FDEDF3;
+            --green: #00B894;
+            --green-soft: #E6F9F5;
+            --yellow: #FDCB6E;
+            --yellow-soft: #FEF9E7;
+            --red: #FF7675;
+            --red-soft: #FFEAE9;
+            --blue: #0984E3;
+            --blue-soft: #E3F2FD;
+            --bg: #F4F7FE;
+            --card-bg: #e2eff8;
+            --text-dark: #2D3436;
+            --text-muted: #636E72;
+            --border-color: #E2E8F0;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        /* Navbar'ı ve genel temayı koruyan güvenli sıfırlama */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        /* Font ve stil izolasyonu (Sadece etkinlik alanına uygulanır) */
+        .app-container, .app-container * {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        /* Hizalama ve Genişlik Sınırı (Ana kartlar ile birebir uyumlu) */
+        .app-container {
+            width: 100%;
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Hero Başlık Kartı */
+        .hero-banner {
+            background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #FD79A8 100%);
+            color: #FFFFFF;
+            padding: 26px 24px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner h1 {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .hero-banner p {
+            font-size: 15px;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        /* İnteraktif Kart Yapısı */
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            border: 2px solid #a4aeb9;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed var(--bg);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .card-title h2 {
+            font-size: 19px;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .card-title p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .space-y {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* --- SECTION 1: MATCHING --- */
+        .matching-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .matching-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .match-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .match-btn {
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            transition: all 0.2s ease;
+        }
+
+        .match-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+
+        .match-btn.selected {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .match-btn.matched {
+            border-color: var(--green) !important;
+            background: var(--green-soft) !important;
+            color: #007955 !important;
+            cursor: default;
+        }
+
+        .match-btn.wrong {
+            border-color: var(--red) !important;
+            background: var(--red-soft) !important;
+            color: #C0392B !important;
+            animation: shake 0.3s;
+        }
+
+        /* --- SECTION 2: DRAG AND DROP --- */
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: #F8FAFC;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            min-height: 64px;
+            margin-bottom: 14px;
+            border: 2px dashed #CBD5E0;
+            align-items: center;
+        }
+
+        .draggable {
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            padding: 9px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: grab;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .draggable:hover {
+            border-color: var(--yellow);
+        }
+
+        .drop-zones {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .drop-target {
+            border-radius: var(--radius-md);
+            padding: 14px;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border: 2px solid;
+        }
+
+        .drop-target h3 {
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 2px dashed rgba(0,0,0,0.1);
+        }
+
+        .drop-target.accept-zone {
+            background: var(--green-soft);
+            border-color: #A3E4D7;
+        }
+        .drop-target.accept-zone h3 { color: #0E6251; }
+
+        .drop-target.refuse-zone {
+            background: var(--red-soft);
+            border-color: #F5B7B1;
+        }
+        .drop-target.refuse-zone h3 { color: #78281F; }
+
+        /* --- SECTION 3: MULTIPLE CHOICE --- */
+        .mcq-item {
+            background: #F8FAFC;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
+        }
+
+        .mcq-question {
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        .mcq-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+        }
+
+        .mcq-option {
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .mcq-option:hover {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        .mcq-option.selected {
+            background: var(--primary-soft);
+            border-color: var(--primary);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* --- CONTROLS & SCORE --- */
+        .controls {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .submit-btn {
+            background: var(--pink);
+            color: white;
+            border: none;
+            padding: 12px 36px;
+            font-size: 16px;
+            font-weight: 800;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(253, 121, 168, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+
+        .result-box {
+            display: none;
+            text-align: center;
+            padding: 18px;
+            background: var(--green-soft);
+            border: 2px solid var(--green);
+            border-radius: var(--radius-md);
+            margin-top: 16px;
+            color: #007955;
+        }
+
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border-color);
+            background: #FFFFFF;
+            margin-top: auto;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+    </style>
+    <link rel="stylesheet" href="../../../theme.css">
+</head>
+<body>
+    <div id="navbar-placeholder" style="min-height: 0px;"></div>
+    <script src="../../../navbar.js"></script>
+
+    <div class="app-container">
+        <!-- Site Navbar Altında Şık İçerik Başlığı -->
+        <header class="hero-banner">
+            <h1>🎓 8th Grade English - Unit 1: Friendship</h1>
+            <p>Interactive Vocabulary & Dialogue Practice</p>
+        </header>
+
+        <main class="space-y">
+            <!-- ACTIVITY 1: MATCHING -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">🤝</div>
+                    <div class="card-title">
+                        <h2>Part A: Vocabulary Matching</h2>
+                        <p>Click a target word on the left, then click its corresponding definition on the right.</p>
+                    </div>
+                </div>
+                
+                <div class="matching-grid">
+                    <div class="match-column" id="words-col">
+                        <button class="match-btn" data-id="1">Count on</button>
+                        <button class="match-btn" data-id="2">Laid-back</button>
+                        <button class="match-btn" data-id="3">Buddy</button>
+                        <button class="match-btn" data-id="4">Stuffed</button>
+                        <button class="match-btn" data-id="5">Come over</button>
+                    </div>
+                    <div class="match-column" id="defs-col">
+                        <button class="match-btn" data-id="3">A close friend or partner</button>
+                        <button class="match-btn" data-id="5">To visit someone at their home</button>
+                        <button class="match-btn" data-id="1">To rely on or trust someone</button>
+                        <button class="match-btn" data-id="4">Feeling completely full after eating</button>
+                        <button class="match-btn" data-id="2">Calm, relaxed, and not easily stressed</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ACTIVITY 2: DRAG AND DROP -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--yellow-soft); color: #D63031;">💬</div>
+                    <div class="card-title">
+                        <h2>Part B: Social Expressions (Accept vs. Refuse)</h2>
+                        <p>Drag each response card into the correct category box.</p>
+                    </div>
+                </div>
+
+                <div class="drag-pool" id="pool" ondragover="allowDrop(event)" ondrop="drop(event, 'pool')">
+                    <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag1" data-type="accept">"Sure, that sounds awesome!"</div>
+                    <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag2" data-type="refuse">"I'm sorry, but I have to study."</div>
+                    <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag3" data-type="accept">"Yeah, why not?"</div>
+                    <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag4" data-type="refuse">"I'd love to, but I'm visiting my aunt."</div>
+                    <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag5" data-type="accept">"Of course! Count me in."</div>
+                    <div class="draggable" draggable="true" ondragstart="drag(event)" id="drag6" data-type="refuse">"No, thanks. I'm full."</div>
+                </div>
+
+                <div class="drop-zones">
+                    <div class="drop-target accept-zone" ondragover="allowDrop(event)" ondrop="drop(event, 'accept')">
+                        <h3>❤️ Accepting an Invitation</h3>
+                    </div>
+                    <div class="drop-target refuse-zone" ondragover="allowDrop(event)" ondrop="drop(event, 'refuse')">
+                        <h3>❌ Refusing / Making Excuses</h3>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ACTIVITY 3: MULTIPLE CHOICE -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--pink-soft); color: var(--pink);">📝</div>
+                    <div class="card-title">
+                        <h2>Part C: Dialogue & Comprehension Quiz</h2>
+                        <p>Choose the correct option for each question.</p>
+                    </div>
+                </div>
+
+                <div class="mcq-item" data-correct="B">
+                    <div class="mcq-question">1. Alex: "Would you like to come over for a movie night on Friday?"<br>Sam: "______. I have to prepare for my math exam."</div>
+                    <div class="mcq-options">
+                        <div class="mcq-option" onclick="selectMCQ(this, 'A')">A) Sure, sounds great!</div>
+                        <div class="mcq-option" onclick="selectMCQ(this, 'B')">B) I'd love to, but I can't.</div>
+                        <div class="mcq-option" onclick="selectMCQ(this, 'C')">C) Yeah, why not!</div>
+                        <div class="mcq-option" onclick="selectMCQ(this, 'D')">D) Yes, please!</div>
+                    </div>
+                </div>
+
+                <div class="mcq-item" data-correct="C">
+                    <div class="mcq-question">2. True friends are reliable. You can always ______ them whenever you need help.</div>
+                    <div class="mcq-options">
+                        <div class="mcq-option" onclick="selectMCQ(this, 'A')">A) refuse</div>
+                        <div class="mcq-option" onclick="selectMCQ(this, 'B')">B) come over</div>
+                        <div class="mcq-option" onclick="selectMCQ(this, 'C')">C) count on</div>
+                        <div class="mcq-option" onclick="selectMCQ(this, 'D')">D) apologize</div>
+                    </div>
+                </div>
+
+                <div class="mcq-item" data-correct="A">
+                    <div class="mcq-question">3. Clara: "Would you like some chocolate cake?"<br>Leo: "No, thanks. I'm ______."</div>
+                    <div class="mcq-options">
+                        <div class="mcq-option" onclick="selectMCQ(this, 'A')">A) stuffed</div>
+                        <div class="mcq-option" onclick="selectMCQ(this, 'B')">B) laid-back</div>
+                        <div class="mcq-option" onclick="selectMCQ(this, 'C')">C) supportive</div>
+                        <div class="mcq-option" onclick="selectMCQ(this, 'D')">D) cool</div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="controls">
+                <button class="submit-btn" onclick="checkAnswers()">Check Final Score</button>
+                <div class="result-box" id="result-box">
+                    <h3 id="result-title" style="font-size: 18px; font-weight: 800;">Great Job!</h3>
+                    <p id="result-text" style="font-size: 15px; margin-top: 4px;">Your Score: 100%</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- MATCHING GAME LOGIC ---
+        let selectedWord = null;
+        let matchesFound = 0;
+
+        document.querySelectorAll('#words-col .match-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if(btn.classList.contains('matched')) return;
+                document.querySelectorAll('#words-col .match-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedWord = btn;
+            });
+        });
+
+        document.querySelectorAll('#defs-col .match-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if(btn.classList.contains('matched') || !selectedWord) return;
+
+                if(selectedWord.dataset.id === btn.dataset.id) {
+                    selectedWord.classList.remove('selected');
+                    selectedWord.classList.add('matched');
+                    btn.classList.add('matched');
+                    selectedWord.disabled = true;
+                    btn.disabled = true;
+                    selectedWord = null;
+                    matchesFound++;
+                } else {
+                    btn.classList.add('wrong');
+                    selectedWord.classList.add('wrong');
+                    setTimeout(() => {
+                        btn.classList.remove('wrong');
+                        if(selectedWord) selectedWord.classList.remove('wrong');
+                    }, 400);
+                }
+            });
+        });
+
+        // --- DRAG AND DROP LOGIC ---
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev, targetCategory) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const draggedElement = document.getElementById(data);
+            
+            let dropTarget = ev.target;
+            if (!dropTarget.classList.contains('drop-target') && !dropTarget.classList.contains('drag-pool')) {
+                dropTarget = dropTarget.closest('.drop-target') || dropTarget.closest('.drag-pool');
+            }
+
+            if (dropTarget) {
+                dropTarget.appendChild(draggedElement);
+            }
+        }
+
+        // --- MCQ LOGIC ---
+        function selectMCQ(element, option) {
+            const parent = element.closest('.mcq-options');
+            parent.querySelectorAll('.mcq-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            element.dataset.selectedOption = option;
+        }
+
+        // --- CHECK ALL ANSWERS ---
+        function checkAnswers() {
+            let totalPoints = 0;
+            let maxPoints = 0;
+
+            // Öğrenci cevabını değiştirip tekrar kontrol ettiğinde stilleri sıfırla
+            document.querySelectorAll('.draggable').forEach(item => {
+                item.style.borderColor = '';
+                item.style.background = '';
+                item.style.color = '';
+            });
+            document.querySelectorAll('.mcq-option').forEach(opt => {
+                opt.style.borderColor = '';
+                opt.style.background = '';
+                opt.style.color = '';
+            });
+
+            // 1. Matching Points (5 items)
+            maxPoints += 5;
+            totalPoints += matchesFound;
+
+            // 2. Drag and Drop Points (6 items)
+            maxPoints += 6;
+            document.querySelectorAll('.draggable').forEach(item => {
+                const parent = item.parentElement;
+                const itemType = item.dataset.type;
+                if (
+                    (itemType === 'accept' && parent.classList.contains('accept-zone')) ||
+                    (itemType === 'refuse' && parent.classList.contains('refuse-zone'))
+                ) {
+                    totalPoints++;
+                    item.style.borderColor = 'var(--green)';
+                    item.style.background = 'var(--green-soft)';
+                    item.style.color = '#007955';
+                } else if (!parent.classList.contains('drag-pool')) {
+                    item.style.borderColor = 'var(--red)';
+                    item.style.background = 'var(--red-soft)';
+                    item.style.color = '#C0392B';
+                }
+            });
+
+            // 3. MCQ Points (3 items)
+            maxPoints += 3;
+            document.querySelectorAll('.mcq-item').forEach(item => {
+                const correctOpt = item.dataset.correct;
+                const selected = item.querySelector('.mcq-option.selected');
+                if (selected && selected.dataset.selectedOption === correctOpt) {
+                    totalPoints++;
+                    selected.style.background = 'var(--green-soft)';
+                    selected.style.borderColor = 'var(--green)';
+                    selected.style.color = '#007955';
+                } else if (selected) {
+                    selected.style.background = 'var(--red-soft)';
+                    selected.style.borderColor = 'var(--red)';
+                    selected.style.color = '#C0392B';
+                }
+            });
+
+            // Display Score
+            const scorePercentage = Math.round((totalPoints / maxPoints) * 100);
+            const resultBox = document.getElementById('result-box');
+            const resultTitle = document.getElementById('result-title');
+            const resultText = document.getElementById('result-text');
+
+            resultBox.style.display = 'block';
+            resultText.innerText = `You scored ${totalPoints} out of ${maxPoints} (${scorePercentage}%)`;
+
+            if (scorePercentage >= 80) {
+                resultTitle.innerText = "Awesome Job! 🌟";
+                resultBox.style.borderColor = "var(--green)";
+                resultBox.style.background = "var(--green-soft)";
+                resultBox.style.color = "#007955";
+            } else if (scorePercentage >= 50) {
+                resultTitle.innerText = "Good Effort! 👍";
+                resultBox.style.borderColor = "var(--yellow)";
+                resultBox.style.background = "var(--yellow-soft)";
+                resultBox.style.color = "#D63031";
+            } else {
+                resultTitle.innerText = "Keep Practicing! 💪";
+                resultBox.style.borderColor = "var(--red)";
+                resultBox.style.background = "var(--red-soft)";
+                resultBox.style.color = "#C0392B";
+            }
+
+            resultBox.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
+</body>
+</html>
