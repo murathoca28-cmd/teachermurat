@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7th Grade Unit 1: Appearance & Personality - Interactive Activities</title>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-soft: #EEECFD;
+            --pink: #FD79A8;
+            --pink-soft: #FDEDF3;
+            --green: #00B894;
+            --green-soft: #E6F9F5;
+            --red: #FF7675;
+            --red-soft: #FFEAE9;
+            --blue: #0984E3;
+            --blue-soft: #E3F2FD;
+            --bg: #F4F7FE;
+            --card-bg: #e2eff8;
+            --text-dark: #2D3436;
+            --text-muted: #636E72;
+            --border-color: #CBD5E0;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            padding-bottom: 40px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #FD79A8 100%);
+            color: #FFFFFF;
+            padding: 28px 24px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.25);
+            position: relative;
+        }
+
+        .hero-banner h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .hero-banner p {
+            font-size: 15px;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        /* Nav Pills */
+        .section-nav {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            scrollbar-width: thin;
+        }
+
+        .nav-btn {
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+
+        /* Activity Cards */
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 2px solid #A4AEB9;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding-bottom: 14px;
+            border-bottom: 2px dashed #BCC6D0;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+            background: #FFFFFF;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+        }
+
+        .card-title h2 {
+            font-size: 20px;
+            color: var(--text-dark);
+            font-weight: 800;
+        }
+
+        .card-title p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .instruction-box {
+            background: #FFFFFF;
+            border-left: 4px solid var(--primary);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Control Buttons */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .btn-action {
+            padding: 12px 22px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #5B4BC4;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #FFFFFF;
+            color: var(--text-muted);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #F1F5F9;
+            color: var(--text-dark);
+        }
+
+        /* SECTION 1: Categorization Styles */
+        .cat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .word-pool-box {
+            background: #FFFFFF;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 2px dashed var(--primary);
+            min-height: 80px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .cat-box {
+            background: #FFFFFF;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-color);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 180px;
+        }
+
+        .cat-box h3 {
+            font-size: 16px;
+            font-weight: 700;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--bg);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cat-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-content: flex-start;
+            flex-grow: 1;
+        }
+
+        .chip {
+            background: var(--primary-soft);
+            color: var(--primary);
+            border: 2px solid #D6D0FA;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .chip.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: #FFFFFF;
+        }
+
+        .chip.correct {
+            background: var(--green-soft) !important;
+            border-color: var(--green) !important;
+            color: #007955 !important;
+        }
+
+        .chip.wrong {
+            background: var(--red-soft) !important;
+            border-color: var(--red) !important;
+            color: #C0392B !important;
+        }
+
+        /* SECTION 2: Quiz Styles */
+        .quiz-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .quiz-card {
+            background: #FFFFFF;
+            padding: 18px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-q {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-dark);
+            display: flex;
+            gap: 10px;
+        }
+
+        .q-num {
+            background: var(--primary);
+            color: #FFFFFF;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 10px;
+        }
+
+        .opt-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: #F8FAFC;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-weight: 400;
+            font-size: 14px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .opt-btn.correct {
+            background: var(--green-soft) !important;
+            border-color: var(--green) !important;
+            color: #007955 !important;
+            font-weight: 700;
+        }
+
+        .opt-btn.wrong {
+            background: var(--red-soft) !important;
+            border-color: var(--red) !important;
+            color: #C0392B !important;
+            font-weight: 700;
+        }
+
+        /* SECTION 3: Fill Blanks Styles */
+        .fill-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .fill-item {
+            background: #FFFFFF;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.8;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .blank-input {
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 6px 12px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            outline: none;
+            width: 170px;
+            transition: all 0.2s ease;
+            background: #F8FAFC;
+        }
+
+        .blank-input:focus {
+            border-color: var(--primary);
+            background: #FFFFFF;
+            box-shadow: 0 0 0 3px var(--primary-soft);
+        }
+
+        .blank-input.correct {
+            border-color: var(--green) !important;
+            background: var(--green-soft) !important;
+            color: #007955 !important;
+        }
+
+        .blank-input.wrong {
+            border-color: var(--red) !important;
+            background: var(--red-soft) !important;
+            color: #C0392B !important;
+        }
+
+        .feedback-text {
+            font-size: 13px;
+            font-weight: 700;
+            margin-left: 6px;
+        }
+
+        .feedback-text.correct { color: #007955; }
+        .feedback-text.wrong { color: #C0392B; }
+
+        /* SECTION 5: Matching Styles */
+        .match-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .match-row {
+            background: #FFFFFF;
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            align-items: center;
+        }
+
+        @media (max-width: 600px) {
+            .match-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .match-q {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        select.custom-select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border-color);
+            font-weight: 600;
+            font-size: 14px;
+            outline: none;
+            background: #FFFFFF;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-dark);
+        }
+
+        select.custom-select:focus, select.custom-select:hover:not(:disabled) {
+            border-color: var(--primary);
+        }
+
+        select.custom-select.correct {
+            background: var(--green-soft) !important;
+            border-color: var(--green) !important;
+            color: #007955 !important;
+        }
+
+        select.custom-select.wrong {
+            background: var(--red-soft) !important;
+            border-color: var(--red) !important;
+            color: #C0392B !important;
+        }
+
+        /* Animations */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .shake { animation: shake 0.3s ease; }
+
+        @keyframes pop {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        .pop { animation: pop 0.25s ease; }
+
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border-color);
+            background: #FFFFFF;
+            margin-top: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="../../../theme.css">
+</head>
+<body>
+    <div id="navbar-placeholder" style="min-height: 0px;"></div>
+    <script src="../../../navbar.js"></script>
+
+    <div class="app-container">
+
+        <!-- HERO HEADER -->
+        <header class="hero-banner">
+            <h1>7th Grade Unit 1: Appearance & Personality</h1>
+            <p>Appearance, Personality & Comparatives Revision</p>
+        </header>
+
+        <!-- SECTION 1: CATEGORIZATION -->
+        <section class="activity-card" id="sec1">
+            <div class="card-header">
+                <div class="card-icon">👤</div>
+                <div class="card-title">
+                    <h2>Part 1: Appearance vs. Personality</h2>
+                </div>
+            </div>
+
+            <div class="instruction-box">
+                👉 <strong>Guidelines:</strong> Select a word by clicking on it, then click on the box where you want to place it. (To undo this, click on the word again.)
+            </div>
+
+            <div class="cat-container">
+                <div class="word-pool-box" id="sec1Pool">
+                    <!-- Words rendered via JS -->
+                </div>
+
+                <div class="cat-grid">
+                    <div class="cat-box" onclick="placeSelectedChip('appearance')">
+                        <h3>🎨 Physical Appearance</h3>
+                        <div class="cat-items" id="appearanceBox"></div>
+                    </div>
+                    <div class="cat-box" onclick="placeSelectedChip('personality')">
+                        <h3>🧠 Personality Traits</h3>
+                        <div class="cat-items" id="personalityBox"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-action btn-primary" onclick="checkSection1()">✓ Kontrol Et</button>
+                <button class="btn-action btn-secondary" onclick="resetSection1()">↺ Yeniden Başla</button>
+            </div>
+        </section>
+
+        <!-- SECTION 2: MULTIPLE CHOICE -->
+        <section class="activity-card" id="sec2">
+            <div class="card-header">
+                <div class="card-icon">❓</div>
+                <div class="card-title">
+                    <h2>Part 2: Multiple Choice Test</h2>
+                </div>
+            </div>
+
+            <div class="instruction-box">
+                👉 <strong>Guideline:</strong> Read the questions carefully and click on the correct answer.
+            </div>
+
+            <div class="quiz-list" id="sec2List">
+                <!-- Rendered via JS -->
+            </div>
+        </section>
+
+        <!-- SECTION 3: FILL IN THE BLANKS -->
+        <section class="activity-card" id="sec3">
+            <div class="card-header">
+                <div class="card-icon">⚖️</div>
+                <div class="card-title">
+                    <h2>Part 3: Comparatives (Karşılaştırma)</h2>
+                </div>
+            </div>
+
+            <div class="instruction-box">
+                👉 <strong>Guideline:</strong> Fill in the blanks by writing the adjectives in brackets in accordance with the <u>Comparative</u> (-er / more ...) rule.
+            </div>
+
+            <div class="fill-list" id="sec3List">
+                <!-- Rendered via JS -->
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-action btn-primary" onclick="checkSection3()">✓ Kontrol Et</button>
+                <button class="btn-action btn-secondary" onclick="resetSection3()">↺ Temizle</button>
+            </div>
+        </section>
+
+        <!-- SECTION 4: MATCHING -->
+        <section class="activity-card" id="sec5">
+            <div class="card-header">
+                <div class="card-icon">💬</div>
+                <div class="card-title">
+                    <h2>Part 4: Matching</h2>
+                </div>
+            </div>
+
+            <div class="instruction-box">
+                👉 <strong>Guideline:</strong> Select the answer that best matches the questions/scenarios on the left from the drop-down menu.
+            </div>
+
+            <div class="match-list" id="sec5List">
+                <!-- Rendered via JS -->
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-action btn-primary" onclick="checkSection5()">✓ Eşleştirmeleri Kontrol Et</button>
+                <button class="btn-action btn-secondary" onclick="resetSection5()">↺ Sıfırla</button>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // DATA STRUCTURES
+
+        // Sec 1 Data
+        const sec1Words = [
+            { id: 'w1', text: 'Hazel eyes', category: 'appearance' },
+            { id: 'w2', text: 'Generous', category: 'personality' },
+            { id: 'w3', text: 'Wavy hair', category: 'appearance' },
+            { id: 'w4', text: 'Stubborn', category: 'personality' },
+            { id: 'w5', text: 'Well-built', category: 'appearance' },
+            { id: 'w6', text: 'Punctual', category: 'personality' },
+            { id: 'w7', text: 'Wears glasses', category: 'appearance' },
+            { id: 'w8', text: 'Outgoing', category: 'personality' }
+        ];
+        let sec1State = { selectedChipId: null, userPlacements: {}, checked: false };
+
+        // Sec 2 Data
+        const sec2Data = [
+            {
+                q: "Selin is a very <b>punctual</b> student. What does this mean?",
+                options: [
+                    "She never tells lies.",
+                    "She always arrives at school on time.",
+                    "She loves sharing her books.",
+                    "She gets nervous easily."
+                ],
+                correct: 1
+            },
+            {
+                q: "If you want to learn about someone's <b>physical appearance</b>, which question should you ask?",
+                options: [
+                    "What is he like?",
+                    "What does he like doing?",
+                    "What does he look like?",
+                    "Who is more outgoing?"
+                ],
+                correct: 2
+            },
+            {
+                q: "Arthur is a <b>stubborn</b> boy. Which sentence best describes him?",
+                options: [
+                    "He never changes his mind.",
+                    "He helps everyone in class.",
+                    "He works hard for his exams.",
+                    "He makes jokes all the time."
+                ],
+                correct: 0
+            },
+            {
+                q: "Which pair shows <b>opposite</b> (zıt) personality traits?",
+                options: [
+                    "generous – helpful",
+                    "honest – cheerful",
+                    "outgoing – shy",
+                    "stubborn – selfish"
+                ],
+                correct: 2
+            },
+            {
+                q: "Mert is 14 years old and Efe is 11 years old. Mert is ________ than Efe.",
+                options: [
+                    "younger",
+                    "older",
+                    "shorter",
+                    "more hardworking"
+                ],
+                correct: 1
+            }
+        ];
+        let sec2Answers = {};
+
+        // Sec 3 Data
+        const sec3Data = [
+            { textBefore: "1. Kerem (1.85m) is ", textAfter: " (tall) than Mehmet (1.68m).", answer: "taller" },
+            { textBefore: "2. Ayşe makes jokes and smiles all day. She is ", textAfter: " (cheerful) than Defne.", answer: "more cheerful" },
+            { textBefore: "3. Zeynep studies 3 hours every day, but Ali rarely studies. Zeynep is ", textAfter: " (hardworking) than Ali.", answer: "more hardworking" },
+            { textBefore: "4. My aunt is 65 years old, and my mother is 45. My aunt is ", textAfter: " (old) than my mother.", answer: "older" },
+            { textBefore: "5. Caner always shares his lunch and gifts. He is ", textAfter: " (generous) than his brother.", answer: "more generous" },
+            { textBefore: "6. An elephant weighs 4,000 kg and a horse weighs 500 kg. An elephant is ", textAfter: " (heavy) than a horse.", answer: "heavier" }
+        ];
+
+        // Sec 5 Data
+        const sec5Data = [
+            { q: "1. What is Sarah like?", answer: "She is easy-going and thoughtful." },
+            { q: "2. What does your English teacher look like?", answer: "She has got wavy blonde hair and wears glasses." },
+            { q: "3. Why do you like Kevin?", answer: "Because he is very honest and generous." },
+            { q: "4. Who is more hardworking, Mert or Efe?", answer: "Mert is more hardworking because he studies daily." },
+            { q: "5. What does your brother like doing in his free time?", answer: "He likes playing chess and basketball." }
+        ];
+        let sec5Answers = {};
+
+        // --- SECTION 1 LOGIC ---
+        function renderSection1() {
+            const pool = document.getElementById('sec1Pool');
+            const appBox = document.getElementById('appearanceBox');
+            const persBox = document.getElementById('personalityBox');
+
+            pool.innerHTML = '';
+            appBox.innerHTML = '';
+            persBox.innerHTML = '';
+
+            sec1Words.forEach(w => {
+                const placedCat = sec1State.userPlacements[w.id];
+                const chip = document.createElement('div');
+                chip.className = 'chip';
+                chip.innerText = w.text;
+                chip.id = `chip_${w.id}`;
+
+                if (sec1State.selectedChipId === w.id) {
+                    chip.classList.add('selected');
+                }
+
+                if (sec1State.checked) {
+                    if (placedCat === w.category) {
+                        chip.classList.add('correct');
+                        chip.innerHTML = w.text + ' ✓';
+                    } else if (placedCat) {
+                        chip.classList.add('wrong');
+                        chip.innerHTML = w.text + ' ✕';
+                    }
+                }
+
+                chip.onclick = (e) => {
+                    e.stopPropagation();
+                    if (sec1State.checked) return;
+
+                    if (placedCat) {
+                        // Return to pool if clicked in category box
+                        delete sec1State.userPlacements[w.id];
+                        sec1State.selectedChipId = null;
+                    } else {
+                        // Toggle select
+                        sec1State.selectedChipId = sec1State.selectedChipId === w.id ? null : w.id;
+                    }
+                    renderSection1();
+                };
+
+                if (!placedCat) {
+                    pool.appendChild(chip);
+                } else if (placedCat === 'appearance') {
+                    appBox.appendChild(chip);
+                } else if (placedCat === 'personality') {
+                    persBox.appendChild(chip);
+                }
+            });
+        }
+
+        function placeSelectedChip(targetCat) {
+            if (sec1State.checked || !sec1State.selectedChipId) return;
+            sec1State.userPlacements[sec1State.selectedChipId] = targetCat;
+            sec1State.selectedChipId = null;
+            renderSection1();
+        }
+
+        function checkSection1() {
+            sec1State.checked = true;
+            renderSection1();
+        }
+
+        function resetSection1() {
+            sec1State = { selectedChipId: null, userPlacements: {}, checked: false };
+            renderSection1();
+        }
+
+        // --- SECTION 2 LOGIC ---
+        function renderSection2() {
+            const container = document.getElementById('sec2List');
+            container.innerHTML = '';
+
+            sec2Data.forEach((item, qIdx) => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card';
+
+                const qTitle = document.createElement('div');
+                qTitle.className = 'quiz-q';
+                qTitle.innerHTML = `<span class="q-num">${qIdx + 1}</span> <span>${item.q}</span>`;
+                card.appendChild(qTitle);
+
+                const optGrid = document.createElement('div');
+                optGrid.className = 'options-grid';
+
+                item.options.forEach((opt, optIdx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'opt-btn';
+                    btn.innerText = opt;
+
+                    if (sec2Answers[qIdx] !== undefined) {
+                        if (optIdx === item.correct) {
+                            btn.classList.add('correct');
+                        } else if (sec2Answers[qIdx] === optIdx) {
+                            btn.classList.add('wrong');
+                        }
+                    }
+
+                    btn.onclick = () => {
+                        sec2Answers[qIdx] = optIdx;
+                        renderSection2();
+                    };
+
+                    optGrid.appendChild(btn);
+                });
+
+                card.appendChild(optGrid);
+                container.appendChild(card);
+            });
+        }
+
+        function resetSection2() {
+            sec2Answers = {};
+            renderSection2();
+        }
+
+        // --- SECTION 3 LOGIC ---
+        function renderSection3() {
+            const container = document.getElementById('sec3List');
+            container.innerHTML = '';
+
+            sec3Data.forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = 'fill-item';
+
+                div.innerHTML = `
+                    <span>${item.textBefore}</span>
+                    <input type="text" class="blank-input" id="fill_${idx}" placeholder="cevabınız..." autocomplete="off">
+                    <span>${item.textAfter}</span>
+                    <span class="feedback-text" id="fb_${idx}"></span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function checkSection3() {
+            sec3Data.forEach((item, idx) => {
+                const input = document.getElementById(`fill_${idx}`);
+                const fb = document.getElementById(`fb_${idx}`);
+                const val = input.value.trim().toLowerCase();
+
+                if (val === item.answer.toLowerCase()) {
+                    input.className = 'blank-input correct';
+                    fb.className = 'feedback-text correct';
+                    fb.innerText = '✓ Doğru!';
+                } else {
+                    input.className = 'blank-input wrong';
+                    fb.className = 'feedback-text wrong';
+                    fb.innerText = `✕ (Doğru: ${item.answer})`;
+                }
+            });
+        }
+
+        function resetSection3() {
+            sec3Data.forEach((item, idx) => {
+                const input = document.getElementById(`fill_${idx}`);
+                const fb = document.getElementById(`fb_${idx}`);
+                if (input) {
+                    input.value = '';
+                    input.className = 'blank-input';
+                }
+                if (fb) fb.innerText = '';
+            });
+        }
+
+        // --- SECTION 5 LOGIC ---
+        function renderSection5() {
+            const container = document.getElementById('sec5List');
+            container.innerHTML = '';
+
+            // Shuffle answer choices for dropdowns
+            const allAnswers = sec5Data.map(d => d.answer);
+
+            sec5Data.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'match-row';
+
+                const qText = document.createElement('div');
+                qText.className = 'match-q';
+                qText.innerText = item.q;
+
+                const select = document.createElement('select');
+                select.className = 'custom-select';
+                select.id = `match_${idx}`;
+
+                const defaultOpt = document.createElement('option');
+                defaultOpt.value = '';
+                defaultOpt.innerText = '-- Doğru Açıklamayı / Cevabı Seçin --';
+                select.appendChild(defaultOpt);
+
+                allAnswers.forEach(ans => {
+                    const opt = document.createElement('option');
+                    opt.value = ans;
+                    opt.innerText = ans;
+                    select.appendChild(opt);
+                });
+
+                select.onchange = () => {
+                    sec5Answers[idx] = select.value;
+                };
+
+                row.appendChild(qText);
+                row.appendChild(select);
+                container.appendChild(row);
+            });
+        }
+
+        function checkSection5() {
+            sec5Data.forEach((item, idx) => {
+                const sel = document.getElementById(`match_${idx}`);
+                if (sel.value === item.answer) {
+                    sel.className = 'custom-select correct';
+                } else {
+                    sel.className = 'custom-select wrong';
+                }
+            });
+        }
+
+        function resetSection5() {
+            sec5Answers = {};
+            renderSection5();
+        }
+
+        // INIT
+        window.onload = () => {
+            renderSection1();
+            renderSection2();
+            renderSection3();
+            renderSection5();
+        };
+    </script>
+</body>
+</html>

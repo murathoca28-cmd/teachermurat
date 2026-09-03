@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive English Lesson: Comparatives</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --secondary: #f5a623;
+            --success: #7ed321;
+            --error: #ff5e5b;
+            --bg: #f0f7ff;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 70px 20px 20px 20px;
+            margin: 0px;
+        }
+
+        .container {
+            max-width: 680px;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: -35px;
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        /* Vocabulary Tooltip Styling */
+        .vocab {
+            text-decoration: underline wavy var(--secondary);
+            cursor: help;
+            font-weight: bold;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .vocab:hover::after {
+            content: attr(data-translation);
+            position: absolute;
+            bottom: 135%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 8px 22px;
+            border-radius: 8px;
+            font-size: 1rem;
+            white-space: nowrap;
+            z-index: 1010;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .vocab:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 122%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+            z-index: 1010;
+        }
+
+        .reading-section {
+            margin-bottom: 0px;
+            font-size: 1rem;
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        .reading-section p {
+            margin: 0 0 1.2em 0;
+        }
+
+        .passage-title {
+            color: var(--primary);
+            font-size: 1.25rem;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* Quiz Styling */
+        .quiz-section {
+            border-top: 2px solid #eee;
+            padding-top: 0px;
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 1.15rem;
+            margin: 25px 0 15px 0;
+            border-bottom: 2px dashed #ddd;
+            padding-bottom: 5px;
+        }
+
+        .question-card {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-left: 5px solid var(--primary);
+            background: #fafafa;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .options label {
+            display: block;
+            padding: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-radius: 5px;
+        }
+
+        .options label:hover {
+            background: #eef2f7;
+        }
+
+        .options input {
+            margin-right: 10px;
+        }
+
+        .short-answer-input {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 1rem;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-top: 5px;
+            transition: border-color 0.2s;
+        }
+
+        .short-answer-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        button.action-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        button.action-btn:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+        }
+
+        /* Floating Read Passage Button */
+        #floatingReadBtn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 14px 22px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            z-index: 999;
+            transition: transform 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #floatingReadBtn:hover {
+            background-color: #e09216;
+            transform: scale(1.05);
+        }
+
+        /* Modal Overlay & Card */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 650px;
+            max-height: 85vh;
+            border-radius: 20px;
+            padding: 30px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #888;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-close-btn:hover {
+            color: var(--error);
+        }
+
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .correct-msg {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .wrong-msg {
+            color: var(--error);
+            font-weight: bold;
+        }
+
+        .feedback-detail {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="../../../theme.css">
+</head>
+
+<body>
+    <div id="navbar-placeholder" style="min-height: 64px;"></div>
+    <script src="../../../navbar.js"></script>
+
+    <!-- Floating Button -->
+    <button id="floatingReadBtn" onclick="openTextModal()">📖 Read Passage</button>
+
+    <!-- Modal Text Box -->
+    <div id="textModal" class="modal-overlay" onclick="closeModalOnOutsideClick(event)">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeTextModal()">&times;</button>
+            <h2
+                style="color: var(--primary); margin-top: 0; border-bottom: 2px solid var(--secondary); padding-bottom: 8px;">
+                🌟 Reading Passage</h2>
+            <div id="modal-text-container" class="reading-section"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>🌟 Comparing Friends: Alex and Liam 🌟</h1>
+
+        <p
+            style="text-align: center; font-size: 0.85rem; color: black; background: #e9f0fc; font-weight: bold; padding: 4px 10px; border-radius: 30px; margin: 0 0 20px 0; border: 2px solid #e0e7ef;">
+            🖱️ Altı çizili kelimenin Türkçe anlamını görmek için farenizi kelimenin üzerine getiriniz.
+        </p>
+
+        <!-- 7. Sınıf Seviyesine Uygun Comparative Okuma Metni -->
+        <div class="reading-section" id="reading-text">
+            <p>
+                Hi! My name is Alex. Today, I want to tell you about my best friend, Liam. We are both in the 7th grade,
+                but we have very different <span class="vocab" data-translation="kişilikler">personalities</span> and
+                habits. I am 12 years old, so I am <span class="vocab" data-translation="daha genç">younger</span> than
+                Liam, who is 13. I am also <span class="vocab" data-translation="daha uzun">taller</span> than him
+                because I play basketball every weekend.
+            </p>
+            <p>
+                Liam has a lot of friends at school because he is <span class="vocab"
+                    data-translation="daha dışa dönük / sosyal">more outgoing</span> and <span class="vocab"
+                    data-translation="daha neşeli">more cheerful</span> than me. He loves meeting new people and telling
+                funny stories. He is also <span class="vocab" data-translation="daha konuşkan">more talkative</span> in
+                class, while I am quiet and calm.
+            </p>
+            <p>
+                However, I am <span class="vocab" data-translation="daha dakik">more punctual</span> than Liam. I always
+                arrive at school on time, but Liam is sometimes late. When it comes to school subjects, Liam is <span
+                    class="vocab" data-translation="daha iyi">better</span> than me at English, but my maths marks are
+                <span class="vocab" data-translation="daha yüksek">higher</span> than his. <span class="vocab"
+                    data-translation="rağmen">Even though</span> we are <span class="vocab"
+                    data-translation="farklı">different</span>, we always enjoy spending time together!
+            </p>
+        </div>
+
+        <div class="quiz-section">
+            <form id="quizForm">
+                <!-- Part 1: Multiple Choice Questions -->
+                <h2 class="section-title">Part 1: Multiple Choice Questions</h2>
+
+                <div class="question-card" data-type="mc" data-answer="b">
+                    <span class="question-text">1. Why does Liam have a lot of friends at school?</span>
+                    <div class="options">
+                        <label><input type="radio" name="q1" value="a"> a) Because he is quieter than Alex.</label>
+                        <label><input type="radio" name="q1" value="b"> b) Because he is more outgoing and cheerful than
+                            Alex.</label>
+                        <label><input type="radio" name="q1" value="c"> c) Because he plays basketball every
+                            weekend.</label>
+                        <label><input type="radio" name="q1" value="d"> d) Because he is always very punctual.</label>
+                    </div>
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <div class="question-card" data-type="mc" data-answer="b">
+                    <span class="question-text">2. Who is younger according to the text?</span>
+                    <div class="options">
+                        <label><input type="radio" name="q2" value="a"> a) Liam</label>
+                        <label><input type="radio" name="q2" value="b"> b) Alex</label>
+                        <label><input type="radio" name="q2" value="c"> c) They are the same age.</label>
+                        <label><input type="radio" name="q2" value="d"> d) Neither of them.</label>
+                    </div>
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <div class="question-card" data-type="mc" data-answer="a">
+                    <span class="question-text">3. Alex is more punctual than Liam because Alex ________.</span>
+                    <div class="options">
+                        <label><input type="radio" name="q3" value="a"> a) always arrives at school on time</label>
+                        <label><input type="radio" name="q3" value="b"> b) gets better marks in English</label>
+                        <label><input type="radio" name="q3" value="c"> c) tells funny stories in class</label>
+                        <label><input type="radio" name="q3" value="d"> d) is 13 years old</label>
+                    </div>
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <div class="question-card" data-type="mc" data-answer="c">
+                    <span class="question-text">4. In which school subject is Liam better than Alex?</span>
+                    <div class="options">
+                        <label><input type="radio" name="q4" value="a"> a) Maths</label>
+                        <label><input type="radio" name="q4" value="b"> b) Science</label>
+                        <label><input type="radio" name="q4" value="c"> c) English</label>
+                        <label><input type="radio" name="q4" value="d"> d) Art</label>
+                    </div>
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <div class="question-card" data-type="mc" data-answer="d">
+                    <span class="question-text">5. Which sentence is CORRECT according to the text?</span>
+                    <div class="options">
+                        <label><input type="radio" name="q5" value="a"> a) Alex is shorter than Liam.</label>
+                        <label><input type="radio" name="q5" value="b"> b) Liam is quiet and calm in class.</label>
+                        <label><input type="radio" name="q5" value="c"> c) Alex is more talkative than Liam.</label>
+                        <label><input type="radio" name="q5" value="d"> d) Alex is taller than Liam.</label>
+                    </div>
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <!-- Part 2: Short Answer Questions -->
+                <h2 class="section-title">Part 2: Short Answer Questions</h2>
+
+                <div class="question-card" data-type="sa" data-answers='["alex", "alex is taller"]'>
+                    <span class="question-text">6. Who is taller, Alex or Liam?</span>
+                    <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..."
+                        autocomplete="off">
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <div class="question-card" data-type="sa" data-answers='["better"]'>
+                    <span class="question-text">7. Write the comparative form of "good" used in the text to describe
+                        Liam's English skills.</span>
+                    <input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..."
+                        autocomplete="off">
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <div class="question-card" data-type="sa" data-answers='["liam"]'>
+                    <span class="question-text">8. Which boy is more talkative in class?</span>
+                    <input type="text" class="short-answer-input" name="q8" placeholder="Type your answer here..."
+                        autocomplete="off">
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <div class="question-card" data-type="sa" data-answers='["punctual", "more punctual"]'>
+                    <span class="question-text">9. Which adjective in the text describes someone who always arrives on
+                        time?</span>
+                    <input type="text" class="short-answer-input" name="q9" placeholder="Type your answer here..."
+                        autocomplete="off">
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <div class="question-card" data-type="sa" data-answers='["13", "13 years old", "thirteen"]'>
+                    <span class="question-text">10. How old is Liam?</span>
+                    <input type="text" class="short-answer-input" name="q10" placeholder="Type your answer here..."
+                        autocomplete="off">
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <button type="button" class="action-btn" onclick="checkQuiz()">Check Answers & Finish Quiz</button>
+
+                <!-- İndirme Butonu -->
+                <a href="https://cdn.teachermurat.com/7/read_acts/03-Grade7_readact.pdf"
+                    download="https://cdn.teachermurat.com/7/read_acts/03-Grade7_readact.pdf"
+                    class="action-btn download-btn" style="display:flex; flex-direction:column; align-items:center; justify-content:center; 
+                          width:fit-content; margin:15px auto 0 auto; padding:12px 30px; 
+                          text-decoration:none; line-height:1.4;">
+                    <span style="font-size:1.3rem;">⬇️</span>
+                    <span>Download Reading Activity</span>
+                </a>
+
+                <div id="result"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Modal Yönetimi
+        function openTextModal() {
+            const textContent = document.getElementById('reading-text').innerHTML;
+            document.getElementById('modal-text-container').innerHTML = textContent;
+            document.getElementById('textModal').style.display = 'flex';
+        }
+
+        function closeTextModal() {
+            document.getElementById('textModal').style.display = 'none';
+        }
+
+        function closeModalOnOutsideClick(event) {
+            if (event.target.id === 'textModal') {
+                closeTextModal();
+            }
+        }
+
+        // Cevap Kontrol Mantığı
+        function normalizeText(text) {
+            return text.toLowerCase().trim().replace(/\s+/g, ' ');
+        }
+
+        function checkQuiz() {
+            const form = document.getElementById('quizForm');
+            const questions = document.querySelectorAll('.question-card');
+            let score = 0;
+            let total = questions.length;
+
+            questions.forEach((q, index) => {
+                const type = q.getAttribute('data-type');
+                const feedback = q.querySelector('.feedback-detail');
+
+                if (type === 'mc') {
+                    const correctAnswer = q.getAttribute('data-answer');
+                    const userAnswer = form.querySelector(`input[name="q${index + 1}"]:checked`);
+
+                    if (userAnswer) {
+                        if (userAnswer.value === correctAnswer) {
+                            score++;
+                            feedback.innerHTML = "<span class='correct-msg'>✓ Correct! Well done!</span>";
+                        } else {
+                            feedback.innerHTML = `<span class='wrong-msg'>✗ Wrong. The correct answer was "${getOptionText(q, correctAnswer)}".</span>`;
+                        }
+                    } else {
+                        feedback.innerHTML = `<span class='wrong-msg'>✗ You didn't answer this one! The correct answer was "${getOptionText(q, correctAnswer)}".</span>`;
+                    }
+                } else if (type === 'sa') {
+                    const validAnswers = JSON.parse(q.getAttribute('data-answers'));
+                    const inputElement = q.querySelector('input[type="text"]');
+                    const userInputValue = normalizeText(inputElement.value);
+
+                    if (userInputValue !== "") {
+                        const isCorrect = validAnswers.some(ans => normalizeText(ans) === userInputValue);
+
+                        if (isCorrect) {
+                            score++;
+                            feedback.innerHTML = "<span class='correct-msg'>✓ Correct! Well done!</span>";
+                        } else {
+                            feedback.innerHTML = `<span class='wrong-msg'>✗ Wrong. Acceptable answer: "${validAnswers[0]}".</span>`;
+                        }
+                    } else {
+                        feedback.innerHTML = `<span class='wrong-msg'>✗ You didn't answer this one! Acceptable answer: "${validAnswers[0]}".</span>`;
+                    }
+                }
+            });
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `<h2>Your Score: ${score} / ${total}</h2>`;
+
+            if (score === total) {
+                resultDiv.innerHTML += "<p>🌟 Perfect! You are a superstar! 🌟</p>";
+                resultDiv.style.backgroundColor = "#e6fffa";
+            } else if (score >= total / 2) {
+                resultDiv.innerHTML += "<p>👍 Good job! Keep practicing!</p>";
+                resultDiv.style.backgroundColor = "#fffaf0";
+            } else {
+                resultDiv.innerHTML += "<p>📚 Don't give up! Read the text again and try again!</p>";
+                resultDiv.style.backgroundColor = "#fff5f5";
+            }
+
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function getOptionText(questionElement, value) {
+            const options = questionElement.querySelectorAll('label');
+            for (let label of options) {
+                const input = label.querySelector('input');
+                if (input && input.value === value) {
+                    let text = label.textContent.trim();
+                    text = text.replace(/^[a-d]\)\s*/, '');
+                    return text;
+                }
+            }
+            return "";
+        }
+    </script>
+    <script type="module"
+        src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496"
+        integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ=="
+        data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}'
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

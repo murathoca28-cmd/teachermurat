@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>7th Grade Listening Activity — Describing People</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.css" />
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --card-bg: #ffffff;
+      --ink: #1f2321;
+      --muted: #6b6f6c;
+      --accent: #2f5d50;
+      --accent-soft: #e4ede9;
+      --border: #e3ded3;
+      --bad: #b3452f;
+      --bad-soft: #fbe9e4;
+      --good: #2f5d50;
+      --good-soft: #e4ede9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      padding: 40px 16px 80px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 560px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 36px 32px 40px;
+      box-shadow: 0 24px 48px -32px rgba(31, 35, 33, 0.35);
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 0 0 10px;
+    }
+
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 24px;
+      line-height: 1.3;
+      margin: 0 0 8px;
+      font-weight: 600;
+    }
+
+    p.lead {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0 0 22px;
+      line-height: 1.55;
+    }
+
+    /* --- Transkript kutusu --- */
+    #transcriptBox {
+      display: none;
+      margin-bottom: 18px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      border: 1px solid var(--border);
+    }
+
+    #transcriptBox.visible {
+      display: block;
+    }
+
+    #transcriptBox h3 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+    }
+
+    #transcriptBox p {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 14.5px;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+
+    /* --- Listen butonu --- */
+    #listenBtn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #listenBtn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px -12px rgba(47, 93, 80, 0.6);
+    }
+
+    #listenBtn:active {
+      transform: translateY(0);
+    }
+
+    #listenBtn svg {
+      flex-shrink: 0;
+    }
+
+    /* --- Oynatıcı alanı --- */
+    #playerWrap {
+      display: none;
+      margin-top: 14px;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      position: sticky;
+      top: 76px;
+      z-index: 1001;
+      background: var(--card-bg);
+      padding: 10px 0;
+    }
+    .plyr__menu__container { top: 100% !important; bottom: auto !important; margin-top: 10px; margin-bottom: 0; }
+
+    #playerWrap.visible {
+      display: block;
+    }
+
+    #playerWrap.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .plyr {
+      --plyr-color-main: var(--accent);
+      --plyr-audio-controls-background: #fbfaf7;
+      --plyr-audio-control-color: var(--ink);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 16px -12px rgba(31, 35, 33, 0.25);
+    }
+
+    /* --- Sorular --- */
+    .quiz {
+      margin-top: 30px;
+    }
+
+    .quiz h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin: 30px 0 18px;
+    }
+
+    .question {
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .question.correct {
+      border-color: var(--good);
+      background: var(--good-soft);
+    }
+
+    .question.incorrect {
+      border-color: var(--bad);
+      background: var(--bad-soft);
+    }
+
+    .q-text {
+      font-size: 14.5px;
+      font-weight: 600;
+      margin: 0 0 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .q-mark {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .question.correct .q-mark {
+      color: var(--good);
+    }
+
+    .question.incorrect .q-mark {
+      color: var(--bad);
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .options label {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 13.5px;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .options input[type="radio"] {
+      accent-color: var(--accent);
+      width: 15px;
+      height: 15px;
+    }
+
+    .short-answer input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 13.5px;
+      font-family: inherit;
+      background: #fff;
+    }
+
+    .short-answer input[type="text"]:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+
+    .correct-hint {
+      margin-top: 8px;
+      font-size: 12.5px;
+      display: none;
+    }
+
+    .question.correct .correct-hint,
+    .question.incorrect .correct-hint {
+      display: block;
+    }
+
+    .question.correct .correct-hint {
+      color: var(--good);
+    }
+
+    .question.incorrect .correct-hint {
+      color: var(--bad);
+    }
+
+    #checkBtn {
+      width: 100%;
+      margin-top: 8px;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 14.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    #checkBtn:hover {
+      opacity: 0.9;
+    }
+
+    #warning {
+      display: none;
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--bad);
+      text-align: center;
+    }
+
+    #scoreBanner {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 14.5px;
+      text-align: center;
+    }
+
+    #transcriptBtn {
+      display: none;
+      width: 100%;
+      margin-top: 10px;
+      background: #fff;
+      color: var(--accent);
+      border: 1.5px solid var(--accent);
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    #transcriptBtn:hover {
+      background: var(--accent-soft);
+    }
+  </style>
+  <link rel="stylesheet" href="../../../theme.css" />
+</head>
+<body>
+  <div id="navbar-placeholder" style="min-height: 64px;"></div>
+  <script src="../../../navbar.js" defer></script>
+
+  <div class="card">
+    <p class="eyebrow">GRADE 7 LISTENING ACTIVITY 3</p>
+    <h1>Meet Mia, Sarah & Leo!</h1>
+
+    <!-- TRANSKRİPT -->
+    <div id="transcriptBox">
+      <p>
+        <strong>Mia:</strong> Hi Leo! Have you met my new neighbor, Sarah?<br />
+        <strong>Leo:</strong> Not yet. What is she like?<br />
+        <strong>Mia:</strong> She is easy-going and thoughtful. She also wears glasses.<br />
+        <strong>Leo:</strong> Cool! What about your brother? What does he look like?<br />
+        <strong>Mia:</strong> He is well-built and tall.<br />
+        <strong>Leo:</strong> And what is your brother like in daily life?<br />
+        <strong>Mia:</strong> He is funny and outgoing.<br />
+        <strong>Leo:</strong> Why do you like them so much?<br />
+        <strong>Mia:</strong> I like them because they are kind and friendly.<br />
+        <strong>Leo:</strong> That's great! What do you like doing together?<br />
+        <strong>Mia:</strong> I like doing sports with them!
+      </p>
+    </div>
+
+    <button id="listenBtn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor" />
+        <path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none" />
+      </svg>
+      Listen to the Dialogue
+    </button>
+
+    <!-- OYNATICI ALANI -->
+    <div id="playerWrap">
+      <audio id="player" controls preload="metadata">
+        <source src="https://cdn.teachermurat.com/7/un1_listens/03-Grade7_listening.mp3?" type="audio/mp3" />
+      </audio>
+    </div>
+
+    <!-- SORULAR -->
+    <div class="quiz">
+      <h2>MULTIPLE CHOICE</h2>
+
+      <div class="question" data-type="mc" data-key="b">
+        <p class="q-text"><span>1. What is Sarah like?</span><span class="q-mark"></span></p>
+        <div class="options">
+          <label><input type="radio" name="mc1" value="a" /> A) She is rude and selfish.</label>
+          <label><input type="radio" name="mc1" value="b" /> B) She is easy-going and thoughtful.</label>
+          <label><input type="radio" name="mc1" value="c" /> C) She is stubborn and clumsy.</label>
+          <label><input type="radio" name="mc1" value="d" /> D) She is quiet and shy.</label>
+        </div>
+        <p class="correct-hint"></p>
+      </div>
+
+      <div class="question" data-type="mc" data-key="b">
+        <p class="q-text"><span>2. What does Mia's brother look like?</span><span class="q-mark"></span></p>
+        <div class="options">
+          <label><input type="radio" name="mc2" value="a" /> A) He is short and plump.</label>
+          <label><input type="radio" name="mc2" value="b" /> B) He is well-built and tall.</label>
+          <label><input type="radio" name="mc2" value="c" /> C) He has long dark hair.</label>
+          <label><input type="radio" name="mc2" value="d" /> D) He is short with blonde hair.</label>
+        </div>
+        <p class="correct-hint"></p>
+      </div>
+
+      <div class="question" data-type="mc" data-key="a">
+        <p class="q-text"><span>3. Why does Mia like her neighbor and brother?</span><span class="q-mark"></span></p>
+        <div class="options">
+          <label><input type="radio" name="mc3" value="a" /> A) Because they are kind and friendly.</label>
+          <label><input type="radio" name="mc3" value="b" /> B) Because they are hardworking and smart.</label>
+          <label><input type="radio" name="mc3" value="c" /> C) Because they love playing computer games.</label>
+          <label><input type="radio" name="mc3" value="d" /> D) Because they are very rich.</label>
+        </div>
+        <p class="correct-hint"></p>
+      </div>
+
+      <h2>SHORT ANSWER</h2>
+
+      <div class="question" data-type="sa" data-key="yes|yes she does|yes, she does">
+        <p class="q-text"><span>4. Does Sarah wear glasses? (Yes / No)</span><span class="q-mark"></span></p>
+        <div class="short-answer">
+          <input type="text" name="sa1" placeholder="Type your answer here..." />
+        </div>
+        <p class="correct-hint"></p>
+      </div>
+
+      <div class="question" data-type="sa" data-key="tall|he is tall|well-built and tall">
+        <p class="q-text"><span>5. Is Mia's brother tall or short?</span><span class="q-mark"></span></p>
+        <div class="short-answer">
+          <input type="text" name="sa2" placeholder="Type your answer here..." />
+        </div>
+        <p class="correct-hint"></p>
+      </div>
+
+      <div class="question" data-type="sa" data-key="sports|doing sports|doing sports with them">
+        <p class="q-text"><span>6. What activity does Mia like doing with them?</span><span class="q-mark"></span></p>
+        <div class="short-answer">
+          <input type="text" name="sa3" placeholder="Type your answer here..." />
+        </div>
+        <p class="correct-hint"></p>
+      </div>
+
+      <button id="checkBtn">Check Answers</button>
+      <p id="warning">Please answer all the questions before continuing.</p>
+      <div id="scoreBanner"></div>
+      <button id="transcriptBtn">See the Text</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.min.js"></script>
+  <script>
+    const player = new Plyr('#player', {
+      controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'settings'],
+      settings: ['speed'],
+    });
+
+    const listenBtn = document.getElementById('listenBtn');
+    const playerWrap = document.getElementById('playerWrap');
+    let started = false;
+
+    listenBtn.addEventListener('click', () => {
+      if (!started) {
+        playerWrap.classList.add('visible');
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => playerWrap.classList.add('show'));
+        });
+        started = true;
+      }
+      player.play();
+    });
+
+    function allAnswered() {
+      const questions = document.querySelectorAll('.question');
+      return Array.from(questions).every(q => {
+        if (q.dataset.type === 'mc') {
+          return q.querySelector('input[type="radio"]:checked') !== null;
+        }
+        return q.querySelector('input[type="text"]').value.trim() !== '';
+      });
+    }
+
+    document.getElementById('checkBtn').addEventListener('click', () => {
+      const warning = document.getElementById('warning');
+
+      if (!allAnswered()) {
+        warning.style.display = 'block';
+        return;
+      }
+      warning.style.display = 'none';
+
+      const questions = document.querySelectorAll('.question');
+      let correctCount = 0;
+
+      questions.forEach(q => {
+        const type = q.dataset.type;
+        const key = q.dataset.key.toLowerCase().split('|');
+        let studentAnswer = '';
+        let isCorrect = false;
+
+        if (type === 'mc') {
+          const checked = q.querySelector('input[type="radio"]:checked');
+          studentAnswer = checked ? checked.value : '';
+          isCorrect = key.includes(studentAnswer);
+        } else {
+          const input = q.querySelector('input[type="text"]');
+          studentAnswer = input.value.trim().toLowerCase();
+          isCorrect = key.includes(studentAnswer);
+        }
+
+        q.classList.remove('correct', 'incorrect');
+        const mark = q.querySelector('.q-mark');
+        const hint = q.querySelector('.correct-hint');
+
+        if (isCorrect) {
+          q.classList.add('correct');
+          mark.textContent = '✓';
+          hint.textContent = '';
+          correctCount++;
+        } else {
+          q.classList.add('incorrect');
+          mark.textContent = '✗';
+          const correctAnswer = q.dataset.key.split('|')[0];
+          const displayAnswer = correctAnswer.charAt(0).toUpperCase() + correctAnswer.slice(1);
+          hint.textContent = 'The correct answer is: ' + displayAnswer;
+        }
+      });
+
+      const banner = document.getElementById('scoreBanner');
+      banner.style.display = 'block';
+      banner.textContent = correctCount + ' / ' + questions.length + ' correct';
+
+      document.getElementById('transcriptBtn').style.display = 'block';
+    });
+
+    document.getElementById('transcriptBtn').addEventListener('click', () => {
+      const box = document.getElementById('transcriptBox');
+      box.classList.add('visible');
+      document.getElementById('transcriptBtn').style.display = 'none';
+      box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
+</body>
+</html>
