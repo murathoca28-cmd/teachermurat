@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade 6 - Learning Hub</title>
+    <title>Grade 7 - Learning Hub</title>
     <style>
         /* ----- GENEL AYARLAR ----- */
         html, body {
@@ -18,10 +18,20 @@
         body {
             display: flex;
             flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        /* DİKEY MERKEZLEME SAĞLAYAN KAPSAYICI */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px 15px;
+            width: 100%;
             box-sizing: border-box;
+            transform: translateY(-80px);
         }
 
         /* BAŞLIK */
@@ -30,7 +40,7 @@
             margin-bottom: 25px;
         }
         .page-title h1 {
-            font-size: 38px;
+            font-size: 2.375rem; /* 38px */
             margin: 0;
             font-weight: 800;
             background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #FFC371 100%);
@@ -41,7 +51,7 @@
             letter-spacing: -1px;
         }
         .page-title .sub-desc {
-            font-size: 18px;
+            font-size: 1.125rem; /* 18px */
             color: #5d6d7e;
             margin-top: 5px;
             font-weight: 500;
@@ -91,8 +101,8 @@
             width: 185px;
             height: 165px;
         }
-        .menu-card .icon { font-size: 46px; margin-bottom: 8px; }
-        .menu-card .label { font-size: 19px; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); }
+        .menu-card .icon { font-size: 2.875rem; margin-bottom: 8px; } /* 46px */
+        .menu-card .label { font-size: 1.1875rem; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); } /* 19px */
 
         .card-tests { background: linear-gradient(135deg, #4facfe, #00f2fe); }
         .card-activities { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1a3c2a; }
@@ -129,8 +139,8 @@
             background: #f8f9fa;
             box-shadow: 0 8px 20px rgba(0,0,0,0.18);
         }
-        .unit-card .icon { font-size: 26px; margin-bottom: 4px; }
-        .unit-card .label { font-size: 14px; font-weight: 600; color: #2c3e50; text-shadow: none; }
+        .unit-card .icon { font-size: 1.625rem; margin-bottom: 4px; } /* 26px */
+        .unit-card .label { font-size: 0.875rem; font-weight: 600; color: #2c3e50; text-shadow: none; } /* 14px */
 
         /* Back Button */
         .back-btn {
@@ -144,7 +154,7 @@
             color: #2c3e50;
             padding: 8px 30px;
             border-radius: 50px;
-            font-size: 15px;
+            font-size: 0.9375rem; /* 15px */
             font-weight: 600;
             cursor: pointer;
             transition: 0.3s;
@@ -162,13 +172,15 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Grid aralığı */
+        /* Grid aralığı - tam 5 buton genişliğinde, eksik son satır otomatik ortalanır */
         #unitGrid {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
             width: 100%;
+            max-width: 590px; /* 5 x 110px + 4 x 10px boşluk */
+            margin: 0 auto;
         }
 
         /* Kategori başlığı */
@@ -176,23 +188,24 @@
             width: 100%;
             text-align: center;
             margin-bottom: 6px;
-            font-size: 20px;
+            font-size: 1.25rem; /* 20px */
             font-weight: bold;
         }
 
         /* --- MOBİL UYUMLULUK --- */
         @media (max-width: 768px) {
-            .page-title h1 { font-size: 28px; }
+            .page-title h1 { font-size: 1.75rem; } /* 28px */
             .menu-card { width: 160px; height: 140px; }
-            .menu-card .icon { font-size: 36px; }
-            .menu-card .label { font-size: 16px; }
+            .menu-card .icon { font-size: 2.25rem; } /* 36px */
+            .menu-card .label { font-size: 1rem; } /* 16px */
+
             .unit-card {
                 width: calc(50% - 15px);
                 max-width: 110px;
                 height: 85px;
             }
-            .unit-card .icon { font-size: 22px; }
-            .unit-card .label { font-size: 13px; }
+            .unit-card .icon { font-size: 1.375rem; } /* 22px */
+            .unit-card .label { font-size: 0.8125rem; } /* 13px */
         }
 
         @media (max-width: 400px) {
@@ -200,14 +213,15 @@
                 width: 130px;
                 height: 120px;
             }
-            .menu-card .icon { font-size: 30px; }
-            .menu-card .label { font-size: 14px; }
+            .menu-card .icon { font-size: 1.875rem; } /* 30px */
+            .menu-card .label { font-size: 0.875rem; } /* 14px */
+
             .unit-card {
                 width: calc(50% - 12px);
                 height: 80px;
             }
-            .unit-card .icon { font-size: 20px; }
-            .unit-card .label { font-size: 12px; }
+            .unit-card .icon { font-size: 1.25rem; } /* 20px */
+            .unit-card .label { font-size: 0.75rem; } /* 12px */
         }
     </style>
     <link rel="stylesheet" href="../theme.css">
@@ -217,47 +231,49 @@
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
     <script src="../navbar.js"></script>
     
-    <!-- BAŞLIK -->
-    <div class="page-title">
-        <h1>📘 GRADE 6</h1>
-        <p class="sub-desc">Choose your activity below</p>
-    </div>
-
-    <!-- 1. AŞAMA: ANA MENÜ (4 BUTON) -->
-    <div id="menuContainer" class="menu-container">
-        <button onclick="showUnits('tests')" class="card menu-card card-tests">
-            <div class="icon">📝</div>
-            <div class="label">Tests</div>
-        </button>
-        <button onclick="showUnits('activities')" class="card menu-card card-activities">
-            <div class="icon">🎯</div>
-            <div class="label">Worksheets<br>& Activities</div>
-        </button>
-        <button onclick="showUnits('slides')" class="card menu-card card-slides">
-            <div class="icon">📊</div>
-            <div class="label">Slides</div>
-        </button>
-        <button onclick="showUnits('games')" class="card menu-card card-worksheets">
-            <div class="icon">🎲</div>
-            <div class="label">Games</div>
-        </button>
-    </div>
-
-    <!-- 2. AŞAMA: ÜNİTE LİSTESİ (Başlangıçta Gizli) -->
-    <div id="unitContainer" class="unit-container">
-        <div class="back-btn">
-            <button onclick="goBack()">⬅ Back</button>
+    <!-- DİKEY MERKEZLEME SAĞLAYAN ANA İÇERİK KAPSAYICISI -->
+    <main class="main-content">
+        <!-- BAŞLIK -->
+        <div class="page-title">
+            <h1>📘 GRADE 7</h1>
+            <p class="sub-desc">Choose your activity below</p>
         </div>
-        <div id="unitGrid"></div>
-    </div>
+
+        <!-- 1. AŞAMA: ANA MENÜ (4 BUTON) -->
+        <div id="menuContainer" class="menu-container">
+            <button onclick="showUnits('tests')" class="card menu-card card-tests">
+                <div class="icon">📝</div>
+                <div class="label">Tests</div>
+            </button>
+            <button onclick="showUnits('activities')" class="card menu-card card-activities">
+                <div class="icon">🎯</div>
+                <div class="label">Worksheets<br>& Activities</div>
+            </button>
+            <button onclick="showUnits('slides')" class="card menu-card card-slides">
+                <div class="icon">📊</div>
+                <div class="label">Slides</div>
+            </button>
+            <button onclick="showUnits('games')" class="card menu-card card-worksheets">
+                <div class="icon">🎲</div>
+                <div class="label">Games</div>
+            </button>
+        </div>
+
+        <!-- 2. AŞAMA: ÜNİTE LİSTESİ (Başlangıçta Gizli) -->
+        <div id="unitContainer" class="unit-container">
+            <div class="back-btn">
+                <button onclick="goBack()">⬅ Back</button>
+            </div>
+            <div id="unitGrid"></div>
+        </div>
+    </main>
 
     <script>
         // ============================================================
         // VERİ LİSTELERİ
         // ============================================================
         const testsUnits = [
-            { name: 'Revs', icon: '📝', url: 'multop_buton_6.html' },
-            { name: 'Unit 1', icon: '📝', url: '****** TEST - UNITE 1 ******' },
+            { name: 'Unit 1', icon: '📝', url: 'multop_buton_7.html'},
             { name: 'Unit 2', icon: '📝', url: '****** TEST - UNITE 2 ******' },
             { name: 'Unit 3', icon: '📝', url: '****** TEST - UNITE 3 ******' },
             { name: 'Unit 4', icon: '📝', url: '****** TEST - UNITE 4 ******' },
@@ -265,23 +281,25 @@
             { name: 'Unit 6', icon: '📝', url: '****** TEST - UNITE 6 ******' },
             { name: 'Unit 7', icon: '📝', url: '****** TEST - UNITE 7 ******' },
             { name: 'Unit 8', icon: '📝', url: '****** TEST - UNITE 8 ******' },
+            { name: 'Unit 9', icon: '📝', url: '****** TEST - UNITE 9 ******' },
+            { name: 'Unit 10', icon: '📝', url: '****** TEST - UNITE 10 ******'},
         ];
 
         const worksheetsActivitiesUnits = [
-            { name: 'Revs', icon: '🎮', url: 'rev_buton_6.html' },
-            { name: 'Unit 1', icon: '🎮', url: '****** ACTIVITY - UNITE 1 ******' },
-            { name: 'Unit 2', icon: '🎮', url: '****** ACTIVITY - UNITE 2 ******' },
-            { name: 'Unit 3', icon: '🎮', url: '****** ACTIVITY - UNITE 3 ******' },
-            { name: 'Unit 4', icon: '🎮', url: '****** ACTIVITY - UNITE 4 ******' },
-            { name: 'Unit 5', icon: '🎮', url: '****** ACTIVITY - UNITE 5 ******' },
-            { name: 'Unit 6', icon: '🎮', url: '****** ACTIVITY - UNITE 6 ******' },
-            { name: 'Unit 7', icon: '🎮', url: '****** ACTIVITY - UNITE 7 ******' },
-            { name: 'Unit 8', icon: '🎮', url: '****** ACTIVITY - UNITE 8 ******' },
+            { name: 'Unit 1', icon: '🎯', url: 'un1_buton_7.html' },
+            { name: 'Unit 2', icon: '🎯', url: '****** ACTIVITY - UNITE 2 ******' },
+            { name: 'Unit 3', icon: '🎯', url: '****** ACTIVITY - UNITE 3 ******' },
+            { name: 'Unit 4', icon: '🎯', url: '****** ACTIVITY - UNITE 4 ******' },
+            { name: 'Unit 5', icon: '🎯', url: '****** ACTIVITY - UNITE 5 ******' },
+            { name: 'Unit 6', icon: '🎯', url: '****** ACTIVITY - UNITE 6 ******' },
+            { name: 'Unit 7', icon: '🎯', url: '****** ACTIVITY - UNITE 7 ******' },
+            { name: 'Unit 8', icon: '🎯', url: '****** ACTIVITY - UNITE 8 ******' },
+            { name: 'Unit 9', icon: '🎯', url: '****** ACTIVITY - UNITE 9 ******' },
+            { name: 'Unit 10', icon: '🎯', url: '****** ACTIVITY - UNITE 10 ******'},
         ];
 
         const slidesUnits = [
-            { name: 'Revs', icon: '📊', url: 'un_rev/grade_6_slide.html' },
-            { name: 'Unit 1', icon: '📊', url: '****** PRES - UNITE 1 ******' },
+            { name: 'Unit 1', icon: '📊', url: 'slides/un1/grade_7_slide.html' },
             { name: 'Unit 2', icon: '📊', url: '****** PRES - UNITE 2 ******' },
             { name: 'Unit 3', icon: '📊', url: '****** PRES - UNITE 3 ******' },
             { name: 'Unit 4', icon: '📊', url: '****** PRES - UNITE 4 ******' },
@@ -289,11 +307,12 @@
             { name: 'Unit 6', icon: '📊', url: '****** PRES - UNITE 6 ******' },
             { name: 'Unit 7', icon: '📊', url: '****** PRES - UNITE 7 ******' },
             { name: 'Unit 8', icon: '📊', url: '****** PRES - UNITE 8 ******' },
+            { name: 'Unit 9', icon: '📊', url: '****** PRES - UNITE 9 ******' },
+            { name: 'Unit 10', icon: '📊', url: '****** PRES - UNITE 10 ******'},
         ];
 
         const gamesUnits = [
-            { name: 'Revs', icon: '🎲', url: 'games/unit_rev/games_uni_rev_6.html' },
-            { name: 'Unit 1', icon: '🎲', url: '****** GAME - UNITE 1 ******' },
+            { name: 'Unit 1', icon: '🎲', url: 'games/un1/games_un1_7.html'},
             { name: 'Unit 2', icon: '🎲', url: '****** GAME - UNITE 2 ******' },
             { name: 'Unit 3', icon: '🎲', url: '****** GAME - UNITE 3 ******' },
             { name: 'Unit 4', icon: '🎲', url: '****** GAME - UNITE 4 ******' },
@@ -301,6 +320,8 @@
             { name: 'Unit 6', icon: '🎲', url: '****** GAME - UNITE 6 ******' },
             { name: 'Unit 7', icon: '🎲', url: '****** GAME - UNITE 7 ******' },
             { name: 'Unit 8', icon: '🎲', url: '****** GAME - UNITE 8 ******' },
+            { name: 'Unit 9', icon: '🎲', url: '****** GAME - UNITE 9 ******' },
+            { name: 'Unit 10', icon: '🎲', url: '****** GAME - UNITE 10 ******'},
         ];
 
         const categoryConfig = {
@@ -356,5 +377,6 @@
             document.getElementById('unitContainer').style.display = 'none';
         });
     </script>
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>

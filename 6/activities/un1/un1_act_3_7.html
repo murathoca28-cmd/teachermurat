@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 1 - Appearance & Personality | Interactive Activities</title>
+<style>
+    :root {
+        --primary: #6C5CE7;
+        --primary-soft: #EEECFD;
+        --pink: #FD79A8;
+        --pink-soft: #FDEDF3;
+        --green: #00B894;
+        --green-soft: #E6F9F5;
+        --yellow: #FDCB6E;
+        --yellow-soft: #FEF9E7;
+        --red: #FF7675;
+        --red-soft: #FFEAE9;
+        --blue: #0984E3;
+        --blue-soft: #E3F2FD;
+        --bg: #F4F7FE;
+        --card-bg: #e2eff8;
+        --text-dark: #2D3436;
+        --text-muted: #636E72;
+        --border-color: #E2E8F0;
+        --radius-lg: 24px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    .app-container, .app-container * {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+        margin: 0;
+        background-color: var(--bg);
+        color: var(--text-dark);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .app-container {
+        width: 100%;
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 20px 16px 40px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Hero */
+    .hero-banner {
+        background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #FD79A8 100%);
+        color: #FFFFFF;
+        padding: 26px 24px;
+        border-radius: var(--radius-lg);
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(108, 92, 231, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-banner h1 {
+        font-size: 25px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        margin: 0 0 6px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+
+    .hero-banner p {
+        font-size: 15px;
+        opacity: 0.95;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    /* Card */
+    .activity-card {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: 22px;
+        border: 2px solid #a4aeb9;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+        padding-bottom: 12px;
+        border-bottom: 2px dashed var(--bg);
+    }
+
+    .card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        flex-shrink: 0;
+        background: var(--primary-soft);
+    }
+
+    .card-title h2 { font-size: 19px; color: var(--text-dark); font-weight: 700; margin: 0; }
+    .card-title p { font-size: 14px; color: var(--text-muted); margin: 2px 0 0; }
+
+    .space-y { display: flex; flex-direction: column; gap: 12px; }
+
+    /* quiz item */
+    .quiz-item {
+        background: #F8FAFC;
+        padding: 16px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .quiz-item .q-text { font-weight: 700; font-size: 15px; }
+    .quiz-item .q-sub { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+    .opt-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    @media (max-width: 480px) {
+        .opt-grid { grid-template-columns: 1fr; }
+    }
+
+    .opt-btn {
+        width: 100%;
+        padding: 11px 14px;
+        background: #FFFFFF;
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        font-weight: 400;
+        font-size: 14px;
+        color: var(--text-dark);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: left;
+    }
+    .opt-btn:hover:not(:disabled) {
+        border-color: var(--primary);
+        background: var(--primary-soft);
+        color: var(--primary);
+        transform: translateY(-2px);
+    }
+    .opt-btn:disabled { cursor: not-allowed; }
+
+    .correct { background: var(--green-soft) !important; border-color: var(--green) !important; color: #007955 !important; font-weight: bold; }
+    .wrong { background: var(--red-soft) !important; border-color: var(--red) !important; color: #C0392B !important; font-weight: bold; }
+    .opt-btn.correct::after { content: "  ✓"; color: #007955; }
+    .opt-btn.wrong::after { content: "  ✕"; color: #C0392B; }
+
+    /* matching */
+    .match-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 560px) { .match-wrap { grid-template-columns: 1fr; } }
+    .match-col { display: flex; flex-direction: column; gap: 10px; }
+    .match-col-title { font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); font-weight: 800; margin-bottom: 2px; }
+    .match-chip {
+        padding: 12px 14px;
+        background: #FFFFFF;
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .match-chip:hover:not(.matched) { border-color: var(--yellow); transform: translateY(-2px); }
+    .match-chip.selected { border-color: var(--primary); background: var(--primary-soft); color: var(--primary); }
+    .match-chip.matched { border-color: var(--green); background: var(--green-soft); color: #007955; cursor: default; }
+    .match-chip.wrong-flash { border-color: var(--red); background: var(--red-soft); color: #C0392B; }
+
+    /* unscramble / drag-drop */
+    .unscramble-zone {
+        min-height: 46px;
+        padding: 8px 12px;
+        background: #FFFFFF;
+        border: 2px dashed #CBD5E0;
+        border-radius: var(--radius-md);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+    .unscramble-zone.filled { border-style: solid; }
+    .unscramble-pool { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .item-chip {
+        background: #FFFFFF;
+        border: 2px solid var(--border-color);
+        padding: 9px 16px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+        user-select: none;
+    }
+    .item-chip:hover { border-color: var(--yellow); transform: translateY(-2px); }
+    .item-chip.selected { border-color: var(--primary); background: var(--primary-soft); color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(108,92,231,0.25); }
+    .item-chip.placed { opacity: 0.35; cursor: default; }
+    .drop-slot {
+        display: inline-flex;
+        min-width: 90px;
+        min-height: 30px;
+        border: 2px dashed var(--primary);
+        padding: 2px 10px;
+        margin: 0 2px;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 13.5px;
+        color: var(--primary);
+        background: var(--primary-soft);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .drop-slot:hover { border-color: var(--yellow); }
+    .drop-slot.filled { border-style: solid; }
+
+    /* compact comparison row (Part 3) */
+    .compare-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 4px 6px;
+        background: #F8FAFC;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        padding: 10px 14px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    .compare-row .row-num { font-weight: 800; color: var(--text-muted); margin-right: 2px; }
+
+    /* short answer */
+    textarea.sa-input {
+        width: 100%;
+        min-height: 80px;
+        padding: 12px 14px;
+        border-radius: var(--radius-sm);
+        border: 2px solid var(--border-color);
+        font-family: inherit;
+        font-size: 14px;
+        resize: vertical;
+        outline: none;
+        transition: all .2s ease;
+    }
+    textarea.sa-input:focus { border-color: var(--primary); }
+    textarea.sa-input.saved { background-color: #F0FDF4; border-color: var(--green); }
+    
+    .sa-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12.5px;
+        color: var(--text-muted);
+        margin-top: -4px;
+        font-weight: 600;
+    }
+    .word-count { font-weight: 700; color: var(--text-muted); }
+    .word-count.valid { color: var(--green); }
+    .word-count.invalid { color: var(--red); }
+
+    .sa-hint-box {
+        display: none;
+        padding: 8px 12px;
+        background: var(--yellow-soft);
+        border-left: 4px solid var(--yellow);
+        border-radius: 8px;
+        font-size: 13px;
+        color: #854d0e;
+        font-weight: 600;
+    }
+    .sa-hint-box.show { display: block; }
+
+    .sa-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+    .btn {
+        border: none;
+        padding: 10px 18px;
+        border-radius: var(--radius-sm);
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: #5847d1; }
+    .btn-success { background: var(--green); color: #fff; }
+    .btn-success:hover { background: #00997b; }
+    .btn-outline { background: #fff; border: 2px solid var(--border-color); color: var(--text-dark); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+    .sample-answer {
+        display: none;
+        margin-top: 8px;
+        padding: 14px;
+        background: var(--blue-soft);
+        border-left: 4px solid var(--blue);
+        border-radius: 10px;
+        font-size: 13.5px;
+        color: #0b4a72;
+    }
+    .sample-answer.show { display: block; }
+
+    /* true false */
+    .tf-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        background: #F8FAFC;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 12px 16px;
+    }
+    .tf-row .tf-text { font-size: 14.5px; font-weight: 600; flex: 1; }
+    .tf-btns { display: flex; gap: 6px; }
+    .tf-btn {
+        border: 2px solid var(--border-color);
+        background: #fff;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 13px;
+        cursor: pointer;
+    }
+    .tf-btn.selected-true { border-color: var(--green); background: var(--green-soft); color: #007955; }
+    .tf-btn.selected-false { border-color: var(--red); background: var(--red-soft); color: #C0392B; }
+
+    .story-box {
+        background: #FFFFFF;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 16px 18px;
+        font-size: 14.5px;
+        line-height: 1.7;
+        margin-bottom: 16px;
+    }
+    .story-box b { color: var(--primary); }
+
+    .feedback-banner {
+        margin-top: 14px;
+        padding: 12px 16px;
+        border-radius: var(--radius-md);
+        font-weight: 700;
+        font-size: 14px;
+        display: none;
+    }
+    .feedback-banner.show { display: block; }
+    .feedback-banner.ok { background: var(--green-soft); color: #007955; }
+    .feedback-banner.mid { background: var(--yellow-soft); color: #96690a; }
+
+    footer {
+        text-align: center;
+        padding: 16px;
+        color: var(--text-muted);
+        font-size: 13px;
+        border-top: 1px solid var(--border-color);
+        background: #FFFFFF;
+        margin-top: auto;
+    }
+
+    .hidden { display: none !important; }
+
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+    .shake { animation: shake 0.3s ease; }
+    @keyframes pop { 0% { transform: scale(0.95); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+    .pop { animation: pop 0.25s ease; }
+
+    .final-card {
+        text-align: center;
+        padding: 30px 22px;
+    }
+    .final-card .big-emoji { font-size: 46px; }
+    .final-card h2 { margin: 10px 0 4px; }
+</style>
+<link rel="stylesheet" href="../../../theme.css">
+</head>
+<body>
+    <div id="navbar-placeholder" style="min-height: 0px;"></div>
+    <script src="../../../navbar.js"></script>
+<div class="app-container">
+
+    <div class="hero-banner">
+        <h1>👀 Appearance & Personality</h1>
+        <p>Grade 7 · Unit 1 · Appearance and Personality Activities</p>
+    </div>
+
+    <!-- SECTION 1: MULTIPLE CHOICE -->
+    <section class="activity-card" id="section-1" data-section="1">
+        <div class="card-header">
+            <div class="card-icon">🧑‍🦱</div>
+            <div class="card-title">
+                <h2>Part 1: What Do They Look Like?</h2>
+                <p>Choose the correct description (Multiple Choice)</p>
+            </div>
+        </div>
+        <div class="space-y" id="mcqContainer"></div>
+        <div class="feedback-banner" id="mcqFeedback"></div>
+    </section>
+
+    <!-- SECTION 2: MATCHING -->
+    <section class="activity-card" id="section-2" data-section="2">
+        <div class="card-header">
+            <div class="card-icon">🔗</div>
+            <div class="card-title">
+                <h2>Part 2: Personality Traits</h2>
+                <p>Match the word with its definition (Matching)</p>
+            </div>
+        </div>
+        <p class="q-sub" style="margin-top:-6px;">First select a word on the left, then select the definition you think matches it on the right.</p>
+        <div class="match-wrap">
+            <div class="match-col">
+                <div class="match-col-title">Words</div>
+                <div id="matchWords"></div>
+            </div>
+            <div class="match-col">
+                <div class="match-col-title">Definitions</div>
+                <div id="matchDefs"></div>
+            </div>
+        </div>
+        <div class="feedback-banner" id="matchFeedback"></div>
+    </section>
+
+    <!-- SECTION 3: DRAG & DROP -->
+    <section class="activity-card" id="section-3" data-section="3">
+        <div class="card-header">
+            <div class="card-icon">🧩</div>
+            <div class="card-title">
+                <h2>Part 3: Let's Compare!</h2>
+                <p>Tap the correct comparative form, then tap the blank to place it</p>
+            </div>
+        </div>
+        <div class="space-y" id="dragContainer" style="gap:8px;"></div>
+        <p class="q-sub" style="margin-top:12px;">👆 Word Bank — tap a word, then tap a blank above:</p>
+        <div class="unscramble-pool" id="dragPool"></div>
+        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn btn-primary" id="checkDragBtn">Check Answers</button>
+            <button class="btn btn-outline" id="resetDragBtn">Reset</button>
+        </div>
+        <div class="feedback-banner" id="dragFeedback"></div>
+    </section>
+
+    <!-- SECTION 4: SHORT ANSWER -->
+    <section class="activity-card" id="section-4" data-section="4">
+        <div class="card-header">
+            <div class="card-icon">✍️</div>
+            <div class="card-title">
+                <h2>Part 4: Write Your Own Sentences</h2>
+                <p>Answer the questions in English (Short Answer)</p>
+            </div>
+        </div>
+        <div class="space-y" id="saContainer"></div>
+    </section>
+
+    <!-- SECTION 5: TRUE/FALSE READING -->
+    <section class="activity-card" id="section-5" data-section="5">
+        <div class="card-header">
+            <div class="card-icon">📖</div>
+            <div class="card-title">
+                <h2>Part 5: Read the Text - True or False?</h2>
+                <p>Read the text and decide if the sentences are true or false</p>
+            </div>
+        </div>
+        <div class="story-box">
+            My name is <b>Elif</b>. I am 13 years old. I am tall and slim, and I have long, straight, black hair and brown eyes.
+            My best friend is <b>Kaan</b>. He is of medium height and well-built. He has short, curly, brown hair and green eyes. He wears glasses.
+            Kaan is more outgoing than me because he loves meeting new people, but I am more punctual than him because I am never late.
+            He is also funnier than me, and he makes everyone laugh. We are very different, but we are great friends!
+        </div>
+        <div class="space-y" id="tfContainer"></div>
+        <div style="margin-top:14px;">
+            <button class="btn btn-primary" id="checkTfBtn">Check Answers</button>
+        </div>
+        <div class="feedback-banner" id="tfFeedback"></div>
+    </section>
+
+    <!-- FINAL -->
+    <section class="activity-card final-card hidden" id="finalCard">
+        <div class="big-emoji">🎉</div>
+        <h2>Congratulations!</h2>
+        <p>You have completed all the activities in Unit 1: Appearance & Personality.</p>
+        <button class="btn btn-primary" id="restartBtn">Start Again</button>
+    </section>
+
+</div>
+
+<script>
+/* ===================== STATE ===================== */
+const completedSections = new Set();
+const totalSections = 5;
+
+function markSectionComplete(n){
+    completedSections.add(n);
+    if(completedSections.size === totalSections){
+        setTimeout(()=>{ document.getElementById('finalCard').classList.remove('hidden'); document.getElementById('finalCard').scrollIntoView({behavior:'smooth'}); }, 500);
+    }
+}
+
+/* ===================== SECTION 1: MCQ ===================== */
+const mcqData = [
+  {
+    q: "Berrin has long, wavy, blonde hair. Which sentence describes her correctly?",
+    options: ["She has short curly black hair.", "She has long wavy blonde hair.", "She is bald and wears a hat.", "She has straight grey hair."],
+    correct: 1
+  },
+  {
+    q: "A person is very tall and very thin. Which sentence is correct for this person?",
+    options: ["He is short and plump.", "He is of medium height.", "He is tall and thin.", "He is well-built and old."],
+    correct: 2
+  },
+  {
+    q: "What is the best answer to the question \"What does your uncle look like?\"?",
+    options: ["He is honest and generous.", "He likes playing football.", "He is well-built with short grey hair.", "He is my father's brother."],
+    correct: 2
+  },
+  {
+    q: "Which description best fits a 70-year-old man with a beard and glasses?",
+    options: ["a young man with a beard and glasses", "an old man with a beard and glasses", "a middle-aged woman with curly hair", "a short boy with straight hair"],
+    correct: 1
+  },
+  {
+    q: "What do we learn about the person in the sentence \"He has got a moustache and short black hair.\"?",
+    options: ["The colour of his eyes", "His height", "His facial hair and hair style", "His age"],
+    correct: 2
+  }
+];
+
+const mcqContainer = document.getElementById('mcqContainer');
+let mcqAnswered = 0;
+mcqData.forEach((item, qi) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'quiz-item';
+    const qEl = document.createElement('div');
+    qEl.className = 'q-text';
+    qEl.textContent = (qi+1)+'. '+item.q;
+    wrap.appendChild(qEl);
+    const grid = document.createElement('div');
+    grid.className = 'opt-grid';
+    item.options.forEach((opt, oi) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.textContent = opt;
+        btn.addEventListener('click', () => {
+            const allBtns = grid.querySelectorAll('.opt-btn');
+            allBtns.forEach(b => b.disabled = true);
+            if(oi === item.correct){
+                btn.classList.add('correct','pop');
+            } else {
+                btn.classList.add('wrong','shake');
+                allBtns[item.correct].classList.add('correct');
+            }
+            mcqAnswered++;
+            if(mcqAnswered === mcqData.length){
+                const fb = document.getElementById('mcqFeedback');
+                fb.textContent = 'Part 1 completed! Great job. 🌟';
+                fb.classList.add('show','ok');
+                markSectionComplete(1);
+            }
+        });
+        grid.appendChild(btn);
+    });
+    wrap.appendChild(grid);
+    mcqContainer.appendChild(wrap);
+});
+
+/* ===================== SECTION 2: MATCHING ===================== */
+const matchData = [
+    {word:"honest", def:"Always tells the truth."},
+    {word:"generous", def:"Likes giving presents and sharing things."},
+    {word:"stubborn", def:"Never changes his/her mind."},
+    {word:"punctual", def:"Always arrives on time."},
+    {word:"outgoing", def:"Loves meeting new people."},
+    {word:"shy", def:"Feels nervous when talking to others."}
+];
+function shuffleArr(a){ const arr=[...a]; for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+
+const wordsWrap = document.getElementById('matchWords');
+const defsWrap = document.getElementById('matchDefs');
+const shuffledDefs = shuffleArr(matchData);
+
+let selectedWord = null;
+let matchedCount = 0;
+
+matchData.forEach((item, idx) => {
+    const chip = document.createElement('div');
+    chip.className = 'match-chip';
+    chip.textContent = item.word;
+    chip.dataset.word = item.word;
+    chip.addEventListener('click', () => {
+        if(chip.classList.contains('matched')) return;
+        document.querySelectorAll('#matchWords .match-chip').forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+        selectedWord = item.word;
+    });
+    wordsWrap.appendChild(chip);
+});
+
+shuffledDefs.forEach((item) => {
+    const chip = document.createElement('div');
+    chip.className = 'match-chip';
+    chip.textContent = item.def;
+    chip.dataset.word = item.word;
+    chip.addEventListener('click', () => {
+        if(chip.classList.contains('matched') || !selectedWord) return;
+        if(chip.dataset.word === selectedWord){
+            chip.classList.remove('selected');
+            chip.classList.add('matched','pop');
+            const wordChip = document.querySelector('#matchWords .match-chip[data-word="'+selectedWord+'"]');
+            wordChip.classList.remove('selected');
+            wordChip.classList.add('matched','pop');
+            selectedWord = null;
+            matchedCount++;
+            if(matchedCount === matchData.length){
+                const fb = document.getElementById('matchFeedback');
+                fb.textContent = 'Part 2 completed! All matches are correct. 🎯';
+                fb.classList.add('show','ok');
+                markSectionComplete(2);
+            }
+        } else {
+            chip.classList.add('wrong-flash','shake');
+            setTimeout(()=> chip.classList.remove('wrong-flash','shake'), 500);
+        }
+    });
+    defsWrap.appendChild(chip);
+});
+
+/* ===================== SECTION 3: DRAG & DROP ===================== */
+const dragData = [
+    {before:"My brother is", adj:"tall", form:"taller", after:"than me."},
+    {before:"This joke is", adj:"funny", form:"funnier", after:"than the last one."},
+    {before:"My aunt is", adj:"generous", form:"more generous", after:"than my uncle."},
+    {before:"The weather today is", adj:"bad", form:"worse", after:"than yesterday."},
+    {before:"Kerem is", adj:"good", form:"better", after:"at basketball than Mehmet."}
+];
+
+const dragContainer = document.getElementById('dragContainer');
+const dragPool = document.getElementById('dragPool');
+let selectedChip = null;
+
+dragData.forEach((item, idx) => {
+    const line = document.createElement('div');
+    line.className = 'compare-row';
+    line.innerHTML = '<span class="row-num">'+(idx+1)+'.</span> '+item.before+' <span class="drop-slot" data-idx="'+idx+'" data-answer="'+item.form+'">('+item.adj+')</span> '+item.after;
+    dragContainer.appendChild(line);
+});
+
+const poolItems = shuffleArr(dragData.map(d => d.form));
+poolItems.forEach((form) => {
+    const chip = document.createElement('div');
+    chip.className = 'item-chip';
+    chip.textContent = form;
+    chip.dataset.value = form;
+    chip.addEventListener('click', () => {
+        if(chip.classList.contains('placed')) return;
+        if(chip.classList.contains('selected')){
+            chip.classList.remove('selected');
+            selectedChip = null;
+            return;
+        }
+        dragPool.querySelectorAll('.item-chip.selected').forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+        selectedChip = chip;
+    });
+    dragPool.appendChild(chip);
+});
+
+document.querySelectorAll('.drop-slot').forEach(slot => {
+    slot.addEventListener('click', () => {
+        if(slot.dataset.filled){
+            const val = slot.dataset.filled;
+            slot.textContent = '('+dragData[slot.dataset.idx].adj+')';
+            slot.classList.remove('filled');
+            slot.style.background = '';
+            slot.style.borderColor = '';
+            slot.style.color = '';
+            delete slot.dataset.filled;
+            const chip = [...dragPool.querySelectorAll('.item-chip')].find(c => c.dataset.value === val && c.classList.contains('placed'));
+            if(chip) chip.classList.remove('placed');
+            return;
+        }
+        if(!selectedChip) return;
+        slot.textContent = selectedChip.dataset.value;
+        slot.dataset.filled = selectedChip.dataset.value;
+        slot.classList.add('filled');
+        selectedChip.classList.remove('selected');
+        selectedChip.classList.add('placed');
+        selectedChip = null;
+    });
+});
+
+document.getElementById('checkDragBtn').addEventListener('click', () => {
+    let correctCount = 0;
+    document.querySelectorAll('.drop-slot').forEach(slot => {
+        const filled = slot.dataset.filled;
+        if(filled && filled === slot.dataset.answer){
+            slot.style.background = 'var(--green-soft)';
+            slot.style.borderColor = 'var(--green)';
+            slot.style.color = '#007955';
+            correctCount++;
+        } else {
+            slot.style.background = 'var(--red-soft)';
+            slot.style.borderColor = 'var(--red)';
+            slot.style.color = '#C0392B';
+            if(!filled){ slot.textContent = '('+dragData[slot.dataset.idx].adj+')'; }
+        }
+    });
+    const fb = document.getElementById('dragFeedback');
+    fb.classList.add('show');
+    if(correctCount === dragData.length){
+        fb.className = 'feedback-banner show ok';
+        fb.textContent = 'Part 3 completed! ' + correctCount + '/' + dragData.length + ' correct. Excellent! 🏆';
+        markSectionComplete(3);
+    } else {
+        fb.className = 'feedback-banner show mid';
+        fb.textContent = correctCount + '/' + dragData.length + ' correct. Try the red ones again!';
+    }
+});
+
+document.getElementById('resetDragBtn').addEventListener('click', () => {
+    document.querySelectorAll('.drop-slot').forEach(slot => {
+        slot.textContent = '('+dragData[slot.dataset.idx].adj+')';
+        slot.classList.remove('filled');
+        slot.removeAttribute('data-filled');
+        slot.style.background = '';
+        slot.style.borderColor = '';
+        slot.style.color = '';
+    });
+    document.querySelectorAll('#dragPool .item-chip').forEach(c => c.classList.remove('placed', 'selected'));
+    selectedChip = null;
+    document.getElementById('dragFeedback').classList.remove('show');
+});
+
+/* ===================== SECTION 4: SHORT ANSWER (ENHANCED) ===================== */
+const saData = [
+    {
+        q: "Describe your best friend's physical appearance in English in 2-3 sentences. (e.g. hair, eyes, height)",
+        sample: "My best friend is tall and slim. She has long curly brown hair and green eyes.",
+        minWords: 10,
+        requiredKeyword: null,
+        hint: "💡 Tip: Include hair style, eye color, or height in your sentence!"
+    },
+    {
+        q: "Write two personality traits a good friend should have in English and briefly explain why.",
+        sample: "A good friend should be honest and helpful. I think honesty is important because I can trust him/her.",
+        minWords: 12,
+        requiredKeyword: null,
+        hint: "💡 Tip: Try using personality adjectives like 'honest', 'generous', or 'kind'."
+    },
+    {
+        q: "Compare yourself with a family member using the pattern \"more...than\".",
+        sample: "I am more talkative than my brother, but he is more punctual than me.",
+        minWords: 3,
+        requiredKeyword: "than",
+        hint: "💡 Hint: Don't forget to use 'than' in your comparison! (e.g. 'more patient than' or 'taller than')"
+    }
+];
+
+const saContainer = document.getElementById('saContainer');
+let saDone = new Set();
+
+saData.forEach((item, idx) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'quiz-item';
+    
+    // Question text
+    const qEl = document.createElement('div');
+    qEl.className = 'q-text';
+    qEl.textContent = (idx+1)+'. '+item.q;
+    wrap.appendChild(qEl);
+
+    // Textarea
+    const ta = document.createElement('textarea');
+    ta.className = 'sa-input';
+    ta.placeholder = 'Write your answer in English here...';
+    wrap.appendChild(ta);
+
+    // Meta bar (Word Count & Hints)
+    const metaBar = document.createElement('div');
+    metaBar.className = 'sa-meta';
+    
+    const wordCounter = document.createElement('span');
+    wordCounter.className = 'word-count';
+    wordCounter.textContent = '0 words (Min: ' + item.minWords + ' words)';
+    metaBar.appendChild(wordCounter);
+
+    wrap.appendChild(metaBar);
+
+    // Dynamic Hint Box
+    const hintBox = document.createElement('div');
+    hintBox.className = 'sa-hint-box';
+    wrap.appendChild(hintBox);
+
+    // Actions
+    const actions = document.createElement('div');
+    actions.className = 'sa-actions';
+    
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'btn btn-primary';
+    saveBtn.textContent = 'Save Answer ✓';
+
+    const showBtn = document.createElement('button');
+    showBtn.className = 'btn btn-outline';
+    showBtn.textContent = 'Show Sample Answer 💡';
+    
+    actions.appendChild(saveBtn);
+    actions.appendChild(showBtn);
+    wrap.appendChild(actions);
+
+    // Sample Answer Box
+    const sample = document.createElement('div');
+    sample.className = 'sample-answer';
+    sample.innerHTML = '<b>💡 Sample Answer:</b> ' + item.sample;
+    wrap.appendChild(sample);
+
+    // Live word count handler
+    let isSaved = false;
+    
+    function getWordCount(text) {
+        const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+        return words.length;
+    }
+
+    ta.addEventListener('input', () => {
+        const count = getWordCount(ta.value);
+        wordCounter.textContent = count + ' words (Min: ' + item.minWords + ' words)';
+        
+        if (count >= item.minWords) {
+            wordCounter.classList.add('valid');
+            wordCounter.classList.remove('invalid');
+        } else {
+            wordCounter.classList.remove('valid');
+        }
+
+        // Hide hint box when user starts modifying again
+        hintBox.classList.remove('show');
+    });
+
+    showBtn.addEventListener('click', () => sample.classList.toggle('show'));
+
+    saveBtn.addEventListener('click', () => {
+        const text = ta.value.trim();
+        const words = getWordCount(text);
+
+        // State 1: Currently Saved -> Switch to Edit Mode
+        if (isSaved) {
+            isSaved = false;
+            ta.readOnly = false;
+            ta.classList.remove('saved');
+            saveBtn.textContent = 'Save Answer ✓';
+            saveBtn.className = 'btn btn-primary';
+            return;
+        }
+
+        // Validation 1: Word Count
+        if (words < item.minWords) {
+            ta.style.borderColor = 'var(--red)';
+            ta.classList.add('shake');
+            wordCounter.classList.add('invalid');
+            hintBox.textContent = '⚠️ Please write at least ' + item.minWords + ' words in English to complete your answer.';
+            hintBox.classList.add('show');
+            setTimeout(() => {
+                ta.classList.remove('shake');
+            }, 400);
+            return;
+        }
+
+        // Validation 2: Specific Keyword Check (e.g. 'than' for comparisons)
+        if (item.requiredKeyword && !text.toLowerCase().includes(item.requiredKeyword)) {
+            hintBox.textContent = item.hint;
+            hintBox.classList.add('show');
+        } else {
+            hintBox.classList.remove('show');
+        }
+
+        // Successfully Save
+        isSaved = true;
+        ta.readOnly = true;
+        ta.classList.add('saved');
+        ta.style.borderColor = 'var(--green)';
+        saveBtn.textContent = 'Edit Answer ✏️';
+        saveBtn.className = 'btn btn-success';
+        
+        // Auto-show sample answer for self evaluation
+        sample.classList.add('show');
+
+        saDone.add(idx);
+        if (saDone.size === saData.length) {
+            markSectionComplete(4);
+        }
+    });
+
+    saContainer.appendChild(wrap);
+});
+
+/* ===================== SECTION 5: TRUE/FALSE ===================== */
+const tfData = [
+    {text:"Elif is short and slim.", answer:false},
+    {text:"Elif has long straight black hair.", answer:true},
+    {text:"Kaan wears glasses.", answer:true},
+    {text:"Kaan is more punctual than Elif.", answer:false},
+    {text:"Kaan is funnier than Elif.", answer:true}
+];
+
+const tfContainer = document.getElementById('tfContainer');
+tfData.forEach((item, idx) => {
+    const row = document.createElement('div');
+    row.className = 'tf-row';
+    row.dataset.idx = idx;
+    row.dataset.answer = item.answer;
+    row.innerHTML = '<div class="tf-text">'+(idx+1)+'. '+item.text+'</div>' +
+        '<div class="tf-btns">' +
+        '<button class="tf-btn" data-val="true">True</button>' +
+        '<button class="tf-btn" data-val="false">False</button>' +
+        '</div>';
+    tfContainer.appendChild(row);
+});
+
+tfContainer.addEventListener('click', (e) => {
+    if(!e.target.classList.contains('tf-btn')) return;
+    const row = e.target.closest('.tf-row');
+    row.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('selected-true','selected-false'));
+    e.target.classList.add(e.target.dataset.val === 'true' ? 'selected-true' : 'selected-false');
+    row.dataset.selected = e.target.dataset.val;
+});
+
+document.getElementById('checkTfBtn').addEventListener('click', () => {
+    let correct = 0;
+    let answeredAll = true;
+    document.querySelectorAll('.tf-row').forEach(row => {
+        if(!row.dataset.selected){ answeredAll = false; return; }
+        const isCorrect = row.dataset.selected === row.dataset.answer;
+        row.style.background = isCorrect ? 'var(--green-soft)' : 'var(--red-soft)';
+        if(isCorrect) correct++;
+    });
+    const fb = document.getElementById('tfFeedback');
+    fb.classList.add('show');
+    if(!answeredAll){
+        fb.className = 'feedback-banner show mid';
+        fb.textContent = 'Please answer all the questions.';
+        return;
+    }
+    if(correct === tfData.length){
+        fb.className = 'feedback-banner show ok';
+        fb.textContent = 'Part 5 completed! ' + correct + '/' + tfData.length + ' correct. You understood the text very well! 📚';
+        markSectionComplete(5);
+    } else {
+        fb.className = 'feedback-banner show mid';
+        fb.textContent = correct + '/' + tfData.length + ' correct. Try reading the text again.';
+    }
+});
+
+/* ===================== RESTART ===================== */
+document.getElementById('restartBtn').addEventListener('click', () => location.reload());
+</script>
+</body>
+</html>

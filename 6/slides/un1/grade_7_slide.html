@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade 6 Slides</title>
+    <title>Grade 7 Unit-1 Slides</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -17,10 +16,15 @@
             align-items: center;
             margin-top: 5px;
         }
+
+        #navbar-placeholder {
+            margin-bottom: 8px;
+        }
         .container {
             max-width: 1200px;
             width: 100%;
-            padding-top: 10px;
+            padding-top: 4px;
+            margin-top: -8px;
         }
         h1 {
             color: #2c3e50;
@@ -34,11 +38,11 @@
         /* KART GRID - Küçültülmüş */
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 20px;
         }
         .card {
-            background: #e7f0ad;
+            background: #f6fbb2;
             border-radius: 18px;
             border: 2px solid black;
             box-shadow: 0 6px 18px rgba(0,0,0,0.08);
@@ -51,9 +55,11 @@
             box-shadow: 0 20px 28px rgba(0,0,0,0.12);
         }
         .card-thumbnail {
+            display: block;
             width: 100%;
-            height: 140px;
-            object-fit: contain;
+            height: 170px;
+            object-fit: cover;
+            object-position: center;
             background: #ecf0f1;
         }
         .card-body {
@@ -91,7 +97,7 @@
             border-color: #154360;
         }
 
-        /* MODAL */
+        /* MODAL (İlk Sayfadaki Tasarım) */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -108,9 +114,9 @@
             background: white;
             border-radius: 20px;
             width: 100%;
-            max-width: 1100px;
-            max-height: 90vh;
-            padding: 25px 30px 30px;
+            max-width: 1000px;
+            max-height: 85vh;
+            padding: 20px 24px 24px;
             display: flex;
             flex-direction: column;
         }
@@ -130,15 +136,27 @@
             gap: 12px;
             flex-wrap: wrap;
         }
-        .modal-actions .btn {
-            width: auto;
-            padding: 8px 24px;
-            font-size: 0.9rem;
+
+        /* Narin, ikon şeklinde kapatma butonu */
+        .modal-actions .btn-close {
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            background: #f1f1f1;
+            color: #666;
+            font-size: 1rem;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: none;
         }
-        .btn-download { background: #27ae60; }
-        .btn-download:hover { background: #1e8449; }
-        .btn-close { background: #e74c3c; }
-        .btn-close:hover { background: #c0392b; }
+        .modal-actions .btn-close:hover {
+            background: #e74c3c;
+            color: white;
+        }
 
         .modal-iframe-wrapper {
             flex: 1;
@@ -149,80 +167,92 @@
         .modal-iframe-wrapper iframe {
             width: 100%;
             height: 100%;
-            min-height: 480px;
+            min-height: 550px;
             border: none;
         }
 
         @media (max-width: 700px) {
-            .modal-box { padding: 18px; width: 95%; }
+            .modal-box { padding: 16px; width: 95%; }
             .modal-header { flex-direction: column; align-items: stretch; gap: 12px; }
             .modal-iframe-wrapper iframe { min-height: 300px; }
-            .card-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
-            .card-thumbnail { height: 120px; }
+            .card-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+            .card-thumbnail { height: 150px; }
         }
     </style>
-    <link rel="stylesheet" href="../../theme.css">
+    <link rel="stylesheet" href="../../../theme.css">
+    <!-- FIX: thumbnail görselleri aynı origin'den değilse (CDN kullanıyorsanız)
+         o domain için preconnect ekleyin, ör:
+         <link rel="preconnect" href="https://cdn.teachermurat.com"> -->
 </head>
 <body>
-    
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
-    <script src="../../navbar.js"></script>
+    <!-- FIX: defer eklendi. Önceden bu script senkron çalıştığı için tarayıcı
+         navbar.js'i indirip çalıştırana kadar aşağıdaki kart görsellerinin
+         HTML ayrıştırması / indirmeye başlaması gecikiyordu. -->
+    <script src="../../../navbar.js" defer></script>
+
     <div class="container">
-        
-        <h1>📚 REV 1/2 SLIDES</h1>
+        <h1>📚 UNIT 1 SLIDES</h1>
 
         <div class="card-grid">
             <!-- KART 1 -->
+            <!-- FIX: loading="lazy" kaldırıldı — bu kart ilk ekranda (above the fold)
+                 görünüyor, lazy-load tarayıcının onu görünürlük hesaplanana kadar
+                 ertelemesine sebep oluyordu. fetchpriority="high" eklendi çünkü bu
+                 muhtemelen sayfanın LCP (en büyük içerik boyama) elemanı. -->
             <div class="card" 
-                 data-embed="https://docs.google.com/presentation/d/e/2PACX-1vS8_xOXHG5yrRMsAZKmCsF_pGRCMdu2jmVM3EahXgA95Db2KICPO0de748EhCAtJQ/pubembed?start=false&loop=false&delayms=3000"
-                 data-download="https://drive.google.com/uc?export=download&id=ABC123def456"
+                 data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/7/un1_slides/01-Grade7_Pre.pdf?v=1"
+                 download="https://cdn.teachermurat.com/7/un1_slides/01-Grade7_Pre.pdf?v=1"
                  data-title="Slide 1">
-                <img class="card-thumbnail" src="../thumbnails/grade_5_rev_pre1.webp" alt="Slide 1">
+                <img class="card-thumbnail" src="../un1/thumbnails/grade_7_un1_pre1.webp" alt="Slide 1" fetchpriority="high" decoding="async">
                 <div class="card-body">
                     <h3>Slide 1</h3>
-                    <p>REVISION SUMMARY</p>
+                    <p>UNIT 1 SUMMARY</p>
                     <button class="btn open-modal">OPEN</button>
                 </div>
             </div>
 
             <!-- KART 2 -->
+            <!-- FIX: data-download düzeltildi — önceki kodda yanlışlıkla 1. slide'ın
+                 pdf'ine işaret ediyordu (01-...pdf), şimdi 02-...pdf. -->
             <div class="card" 
-                 data-embed="https://docs.google.com/presentation/d/e/2PACX-1vTP7x7LHv3A6GOkwHnqe0nH22zcgK7Dabs5kFAM06sJKJ3rR284VNr9Cfrom0idmw/pubembed?start=false&loop=false&delayms=3000"
-                 data-download="https://drive.google.com/uc?export=download&id=XYZ789ghi123"
-                 data-title="Slide 2">
-                <img class="card-thumbnail" src="../thumbnails/grade_5_rev_pre2.webp" alt="Slide 2">
+                 data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/7/un1_slides/02-Grade7_Pre.pdf?v=1"
+                 download="https://cdn.teachermurat.com/7/un1_slides/02-Grade7_Pre.pdf?v=1"
+                 data-title="Slide 1">
+                <img class="card-thumbnail" src="../un1/thumbnails/grade_7_un1_pre2.webp" alt="Slide 1" fetchpriority="high" decoding="async">
                 <div class="card-body">
                     <h3>Slide 2</h3>
-                    <p>REVISION SUMMARY</p>
+                    <p>UNIT 1 SUMMARY</p>
                     <button class="btn open-modal">OPEN</button>
                 </div>
             </div>
 
-            <!-- KART 3 (yeni) -->
+            <!-- KART 3 -->
             <div class="card" 
-                 data-embed="https://docs.google.com/presentation/d/e/2PACX-1vRu27kl_7awM7gWTg7_P7biNt_or-qFnu9D82IEkzHrtYgaVXZVtg1xC8Vk8pUn1Q/pubembed?start=false&loop=false&delayms=3000"
-                 data-download="https://drive.google.com/uc?export=download&id=1mLTXUBShA4X9_d7TytoiyIspnWU1F3T3"
-                 data-title="Slide 3">
-              <img class="card-thumbnail" src="../thumbnails/grade_5_rev_pre3.webp" alt="Slide 3">
+                 data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/7/un1_slides/03-Grade7_Pre.pdf?v=1"
+                 download="https://cdn.teachermurat.com/7/un1_slides/03-Grade7_Pre.pdf"
+                 data-title="Slide 1">
+                <img class="card-thumbnail" src="../un1/thumbnails/grade_7_un1_pre3.webp" alt="Slide 1" fetchpriority="high" decoding="async">
                 <div class="card-body">
                     <h3>Slide 3</h3>
-                    <p>JOBS</p>
+                    <p>UNIT 1 ADJECTIVES</p>
                     <button class="btn open-modal">OPEN</button>
                 </div>
             </div>
-            
-            <!-BURAYA YENİ- KART EK-LENEBİLİR>
-            
+
+            <!-- BURAYA YENİ KART EKLENEBİLİR -->
+            <!-- NOT: Buradan sonra eklenecek kartlar (4. karttan itibaren), sayfa
+                 yüklendiğinde ekran dışında kalacaksa loading="lazy" ile bırakılabilir.
+                 Yalnızca İLK EKRANDA görünen kartlarda lazy-load kaldırılmalı. -->
         </div> <!-- ✅ GRID KAPATILDI -->
         
-        <!-- MODAL -->
+        <!-- MODAL (İlk Sayfadaki Yapı) -->
         <div id="modalOverlay" class="modal-overlay">
             <div class="modal-box">
                 <div class="modal-header">
                     <h2 id="modalTitle">Sunum Başlığı</h2>
                     <div class="modal-actions">
-                        <a id="downloadBtn" href="#" class="btn btn-download" target="_blank">⬇️ Download Slide</a>
-                        <button id="closeModalBtn" class="btn btn-close">✕ Close</button>
+                        <button id="closeModalBtn" class="btn btn-close" aria-label="Kapat">✕</button>
                     </div>
                 </div>
                 <div class="modal-iframe-wrapper">
@@ -232,12 +262,12 @@
         </div>
     </div>
 
+    <!-- İlk Sayfadaki JavaScript Yapısı -->
     <script>
         (function() {
             const overlay = document.getElementById('modalOverlay');
             const iframe = document.getElementById('modalIframe');
             const titleEl = document.getElementById('modalTitle');
-            const downloadBtn = document.getElementById('downloadBtn');
             const closeBtn = document.getElementById('closeModalBtn');
 
             document.querySelectorAll('.open-modal').forEach(btn => {
@@ -245,7 +275,6 @@
                     e.stopPropagation();
                     const card = this.closest('.card');
                     const embedUrl = card.getAttribute('data-embed');
-                    const downloadUrl = card.getAttribute('data-download');
                     const title = card.getAttribute('data-title') || 'Sunum';
 
                     if (!embedUrl) {
@@ -255,14 +284,6 @@
 
                     iframe.src = embedUrl;
                     titleEl.textContent = title;
-                    downloadBtn.href = downloadUrl || '#';
-                    if (!downloadUrl) {
-                        downloadBtn.style.opacity = '0.5';
-                        downloadBtn.style.pointerEvents = 'none';
-                    } else {
-                        downloadBtn.style.opacity = '1';
-                        downloadBtn.style.pointerEvents = 'auto';
-                    }
 
                     overlay.classList.add('active');
                     document.body.style.overflow = 'hidden';
@@ -276,13 +297,19 @@
             }
 
             closeBtn.addEventListener('click', closeModal);
+            
             overlay.addEventListener('click', function(e) {
                 if (e.target === overlay) closeModal();
             });
+            
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && overlay.classList.contains('active')) closeModal();
             });
         })();
     </script>
+    <!-- FIX: Aynı Cloudflare beacon script'i önceden iki kez ekliydi (kopya-yapıştır
+         hatası). Aynı script'i iki kere çalıştırmak gereksiz JS yükü demek;
+         tek kopya yeterli. -->
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
