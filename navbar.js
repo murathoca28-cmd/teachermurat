@@ -5,10 +5,6 @@ document.getElementById('navbar-placeholder').innerHTML = `
   margin: 0;
   padding: 0;
 }
-  html {
-    overflow-y: scroll;
-    scrollbar-gutter: stable;
-  }
   .tm-navbar {
     position: fixed;
     top: 0;
@@ -92,8 +88,8 @@ document.getElementById('navbar-placeholder').innerHTML = `
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     cursor: pointer;
     border-radius: 8px;
     border: none;
