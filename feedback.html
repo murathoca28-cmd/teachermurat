@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedback | Teacher Murat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: 'Nunito', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #cfeaf9 0%, #eaf6fd 45%, #f5fbfe 100%);
+    min-height: 100vh;
+    padding-top: 64px; /* fixed navbar yüksekliği */
+    color: #1e3a5f;
+  }
+  .fb-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+  .fb-header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .fb-header h1 {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #1e3a5f;
+    letter-spacing: -0.5px;
+  }
+  .fb-header p {
+    margin-top: 10px;
+    font-size: 1.05rem;
+    color: #4a6178;
+  }
+  .fb-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 36px 32px;
+    box-shadow: 0 20px 45px rgba(30, 58, 95, 0.12);
+  }
+  .fb-field {
+    margin-bottom: 20px;
+  }
+  .fb-field label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #2c5282;
+    margin-bottom: 6px;
+  }
+  .fb-field input,
+  .fb-field textarea {
+    width: 100%;
+    border: 1.5px solid #dbe7f0;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #1e3a5f;
+    background: #f8fbfd;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .fb-field input:focus,
+  .fb-field textarea:focus {
+    outline: none;
+    border-color: #2b6cb0;
+    background: #ffffff;
+  }
+  .fb-field textarea {
+    min-height: 150px;
+    resize: vertical;
+  }
+  .fb-submit {
+    width: 100%;
+    background: #f39c12;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+  }
+  .fb-submit:hover {
+    background: #d68910;
+  }
+  .fb-submit:disabled {
+    background: #f3c98a;
+    cursor: not-allowed;
+  }
+  .fb-note {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #8296a8;
+    margin-top: 16px;
+  }
+  .fb-status {
+    display: none;
+    text-align: center;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .fb-status.success {
+    display: block;
+    background: #e8f7ee;
+    color: #1e7a43;
+  }
+  .fb-status.error {
+    display: block;
+    background: #fdecec;
+    color: #c0392b;
+  }
+  /* honeypot alanı - kullanıcıya görünmez, botları yakalamak için */
+  .fb-hp {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+  }
+</style>
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<div class="fb-wrap">
+  <div class="fb-header">
+    <h1>Feedback</h1>
+    <p>Found a typo, have a suggestion, or just want to say hi? Let me know below.</p>
+  </div>
+
+  <div class="fb-card">
+    <div id="fbStatus" class="fb-status"></div>
+
+    <form id="feedbackForm">
+      <!-- Web3Forms: buraya kendi ücretsiz access key'ini ekle (web3forms.com) -->
+      <input type="hidden" name="access_key" value="c64d9f28-9aa8-425d-80c7-26485ae9d2fb">
+      <input type="hidden" name="subject" value="New feedback - Teacher Murat">
+      <input type="checkbox" name="botcheck" class="fb-hp" tabindex="-1" autocomplete="off">
+
+      <div class="fb-field">
+        <label for="fbName">Name</label>
+        <input type="text" id="fbName" name="name" placeholder="Your name" required>
+      </div>
+
+      <div class="fb-field">
+        <label for="fbEmail">Email <span style="font-weight:400;color:#8296a8;">(optional, if you'd like a reply)</span></label>
+        <input type="email" id="fbEmail" name="email" placeholder="you@example.com">
+      </div>
+
+      <div class="fb-field">
+        <label for="fbMessage">Your feedback</label>
+        <textarea id="fbMessage" name="message" placeholder="Write your thoughts or suggestions here..." required></textarea>
+      </div>
+
+      <button type="submit" class="fb-submit" id="fbSubmitBtn">Send Feedback</button>
+    </form>
+
+    <p class="fb-note">Your message goes straight to my inbox. Thank you for helping improve the site!</p>
+  </div>
+</div>
+
+<script src="/navbar.js"></script>
+<script>
+  const form = document.getElementById('feedbackForm');
+  const statusBox = document.getElementById('fbStatus');
+  const submitBtn = document.getElementById('fbSubmitBtn');
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    statusBox.className = 'fb-status';
+    statusBox.textContent = '';
+
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        statusBox.textContent = "Thanks! Your feedback has been sent.";
+        statusBox.className = 'fb-status success';
+        form.reset();
+      } else {
+        statusBox.textContent = "Something went wrong. Please try again in a moment.";
+        statusBox.className = 'fb-status error';
+      }
+    } catch (err) {
+      statusBox.textContent = "Something went wrong. Please check your connection and try again.";
+      statusBox.className = 'fb-status error';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Feedback';
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -82,6 +82,23 @@ document.getElementById('navbar-placeholder').innerHTML = `
   .tm-links a.active::after {
     transform: scaleX(1);
   }
+  /* Feedback butonu - diğer linklerden ayrışsın diye hafif vurgulu */
+  .tm-links a.tm-feedback-link {
+    background: #fff7ed;
+    border-radius: 8px;
+    color: #d35400;
+  }
+  .tm-links a.tm-feedback-link:hover {
+    background: #ffedd5;
+    color: #b34700;
+  }
+  .tm-links a.tm-feedback-link::after {
+    display: none;
+  }
+  .tm-links a.tm-feedback-link.active {
+    background: #ffedd5;
+    color: #b34700;
+  }
   /* Mobil hamburger menü */
   .tm-hamburger {
     display: none;
@@ -135,6 +152,9 @@ document.getElementById('navbar-placeholder').innerHTML = `
     }
     .tm-links a::after {
       display: none;
+    }
+    .tm-links a.tm-feedback-link {
+      border-radius: 0;
     }
   }
 
@@ -194,11 +214,12 @@ document.getElementById('navbar-placeholder').innerHTML = `
       <span></span><span></span><span></span>
     </button>
     <div class="tm-links" id="nav-links">
-      <a href="/index.html">Ana Sayfa</a>
+      <a href="/index.html">Main Page</a>
       <a href="/5/grade5.html">Grade 5</a>
       <a href="javascript:void(0)" id="grade6-link">Grade 6</a>
       <a href="/7/grade7.html">Grade 7</a>
       <a href="/8/grade8.html">Grade 8</a>
+      <a href="/feedback.html" class="tm-feedback-link">Feedback</a>
     </div>
   </div>
 </div>
