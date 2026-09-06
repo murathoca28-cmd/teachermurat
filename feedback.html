@@ -22,11 +22,11 @@
   .fb-wrap {
     max-width: 640px;
     margin: 0 auto;
-    padding: 60px 24px 80px;
+    padding: 36px 24px 60px;
   }
   .fb-header {
     text-align: center;
-    margin-bottom: 36px;
+    margin-bottom: 24px;
   }
   .fb-header h1 {
     font-size: 2.1rem;
@@ -42,7 +42,7 @@
   .fb-card {
     background: #ffffff;
     border-radius: 20px;
-    padding: 36px 32px;
+    padding: 28px 32px;
     box-shadow: 0 20px 45px rgba(30, 58, 95, 0.12);
   }
   .fb-field {
@@ -74,7 +74,7 @@
     background: #ffffff;
   }
   .fb-field textarea {
-    min-height: 150px;
+    min-height: 110px;
     resize: vertical;
   }
   .fb-submit {
@@ -104,21 +104,31 @@
     margin-top: 16px;
   }
   .fb-status {
-    display: none;
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-12px);
+    z-index: 1500;
+    max-width: 90%;
     text-align: center;
     border-radius: 12px;
-    padding: 14px 16px;
+    padding: 14px 20px;
     font-size: 0.95rem;
     font-weight: 600;
-    margin-bottom: 20px;
+    box-shadow: 0 12px 30px rgba(30, 58, 95, 0.18);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .fb-status.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
   .fb-status.success {
-    display: block;
     background: #e8f7ee;
     color: #1e7a43;
   }
   .fb-status.error {
-    display: block;
     background: #fdecec;
     color: #c0392b;
   }
@@ -176,14 +186,22 @@
   const form = document.getElementById('feedbackForm');
   const statusBox = document.getElementById('fbStatus');
   const submitBtn = document.getElementById('fbSubmitBtn');
+  let statusTimer = null;
+
+  function showStatus(message, type) {
+    clearTimeout(statusTimer);
+    statusBox.textContent = message;
+    statusBox.className = 'fb-status ' + type + ' show';
+    statusTimer = setTimeout(function() {
+      statusBox.classList.remove('show');
+    }, 4000);
+  }
 
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending...';
-    statusBox.className = 'fb-status';
-    statusBox.textContent = '';
 
     const formData = new FormData(form);
 
@@ -196,16 +214,13 @@
       const result = await response.json();
 
       if (result.success) {
-        statusBox.textContent = "Thanks! Your feedback has been sent.";
-        statusBox.className = 'fb-status success';
+        showStatus("Thanks! Your feedback has been sent.", 'success');
         form.reset();
       } else {
-        statusBox.textContent = "Something went wrong. Please try again in a moment.";
-        statusBox.className = 'fb-status error';
+        showStatus("Something went wrong. Please try again in a moment.", 'error');
       }
     } catch (err) {
-      statusBox.textContent = "Something went wrong. Please check your connection and try again.";
-      statusBox.className = 'fb-status error';
+      showStatus("Something went wrong. Please check your connection and try again.", 'error');
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Send Feedback';
