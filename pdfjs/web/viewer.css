@@ -8174,6 +8174,14 @@ dialog :link{
 #editorHighlight,
 #editorInk,
 #editorStamp,
+#viewFindButton,
+#sidebarToggleButton,
 #editorSignature {
     display: none !important;
+}
+
+/* İndir ve Yazdır butonlarını ekran boyutundan bağımsız her zaman göster */
+#downloadButton,
+#printButton {
+    display: flex !important;
 }
