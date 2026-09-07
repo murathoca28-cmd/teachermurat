@@ -1228,5 +1228,76 @@ See https://github.com/adobe-type-tools/cmap-resources
     </div>
     <!-- outerContainer -->
     <div id="printContainer"></div>
+    <style>
+  #pdfCustomHint {
+    position: fixed;
+    top: 52px;
+    right: 12px;
+    z-index: 9999;
+    max-width: 260px;
+    background: #1a73e8;
+    color: #fff;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    font-family: sans-serif;
+  }
+  #pdfHintClose {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 4px;
+    flex-shrink: 0;
+  }
+  @media (max-width: 480px) {
+    #pdfCustomHint {
+      top: auto;
+      bottom: 16px;
+      left: 12px;
+      right: 12px;
+      max-width: none;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    var HINT_KEY = 'pdfHintShown_v1';
+    if (localStorage.getItem(HINT_KEY)) return;
+
+    // Buton DOM'a geç yüklenebilir, bu yüzden hazır olana kadar kontrol ediyoruz
+    var tries = 0;
+    var checkInterval = setInterval(function () {
+      tries++;
+      var anchor = document.getElementById('downloadButton');
+      if (anchor || tries > 40) { // yaklaşık 4 saniye dener, sonra vazgeçer
+        clearInterval(checkInterval);
+        if (anchor) showHint();
+      }
+    }, 100);
+
+    function showHint() {
+      var popup = document.createElement('div');
+      popup.id = 'pdfCustomHint';
+      popup.innerHTML =
+        '<span>💡 Yukarıdan sunum moduna geçebilir veya dosyayı indirebilirsiniz</span>' +
+        '<button id="pdfHintClose" aria-label="Kapat">✕</button>';
+      document.body.appendChild(popup);
+
+      var close = function () {
+        popup.remove();
+        localStorage.setItem(HINT_KEY, '1');
+      };
+      document.getElementById('pdfHintClose').addEventListener('click', close);
+      setTimeout(close, 6000); // 6 saniye sonra kendiliğinden kapansın
+    }
+  })();
+</script>
   </body>
 </html>
