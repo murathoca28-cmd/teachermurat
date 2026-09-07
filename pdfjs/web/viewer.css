@@ -8175,29 +8175,36 @@ dialog :link{
 #editorInk,
 #editorStamp,
 #viewFindButton,
-#sidebarToggleButton,
 #editorSignature {
     display: none !important;
 }
 
-/* İndir butonunu ekran boyutundan bağımsız her zaman göster ve vurgula */
+/* Önce butonları saran grubu geri aç (pdf.js'in mobil gizlemesini iptal eder) */
+#outerContainer .toolbarHorizontalGroup.hiddenMediumView {
+  display: flex !important;
+}
+
+#printButton {
+  display: none !important;
+}
+
 #downloadButton {
-    display: flex !important;
-    background-color: #1a73e8 !important;
-    border-radius: 6px !important;
-    padding: 4px !important;
+  display: flex !important;
+  background-color: #1a73e8 !important;
+  border-radius: 6px !important;
+  padding: 4px !important;
 }
 
 #downloadButton svg,
 #downloadButton .toolbarButtonIcon {
-    filter: brightness(0) invert(1) !important;
+  filter: brightness(0) invert(1) !important;
 }
 
-div.toolbarHorizontalGroup:has(#downloadButton) {
-    display: flex !important;
+/* "⋮ Araçlar" menüsündeki kopyaları da kapat */
+#secondaryPrint {
+  display: none !important;
 }
 
-/* Yazdır butonunu tamamen gizle */
-#printButton {
-    display: none !important;
+#secondaryDownload {
+  display: none !important;
 }
