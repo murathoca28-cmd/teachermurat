@@ -8180,13 +8180,24 @@ dialog :link{
     display: none !important;
 }
 
-/* İndir ve Yazdır butonlarını ekran boyutundan bağımsız her zaman göster */
-#downloadButton,
-#printButton {
+/* İndir butonunu ekran boyutundan bağımsız her zaman göster ve vurgula */
+#downloadButton {
+    display: flex !important;
+    background-color: #1a73e8 !important;
+    border-radius: 6px !important;
+    padding: 4px !important;
+}
+
+#downloadButton svg,
+#downloadButton .toolbarButtonIcon {
+    filter: brightness(0) invert(1) !important;
+}
+
+div.toolbarHorizontalGroup:has(#downloadButton) {
     display: flex !important;
 }
 
-div.toolbarHorizontalGroup:has(#downloadButton),
-div.toolbarHorizontalGroup:has(#printButton) {
-    display: flex !important;
+/* Yazdır butonunu tamamen gizle */
+#printButton {
+    display: none !important;
 }
