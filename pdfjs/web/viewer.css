@@ -8185,3 +8185,19 @@ dialog :link{
 #printButton {
     display: flex !important;
 }
+
+div.toolbarHorizontalGroup:has(#downloadButton),
+div.toolbarHorizontalGroup:has(#printButton) {
+    display: flex !important;
+}
+
+function debugButton(id) {
+    let el = document.querySelector('#' + id);
+    if (!el) { console.log('Bu id bulunamadı:', id); return; }
+    while (el) {
+        console.log(el.tagName, '#' + el.id, '.' + el.className, '→ display:', getComputedStyle(el).display);
+        el = el.parentElement;
+    }
+}
+debugButton('sidebarToggle');       // önce bunu deneyin
+debugButton('sidebarToggleButton'); // olmazsa bunu deneyin
