@@ -8168,3 +8168,12 @@ dialog :link{
     display:none;
   }
 }
+
+/* Sadeleştirilmiş araç çubuğu: çizim / metin / resim ekleme butonlarını gizle */
+#editorFreeText,
+#editorHighlight,
+#editorInk,
+#editorStamp,
+#editorSignature {
+    display: none !important;
+}
