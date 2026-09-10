@@ -8199,12 +8199,3 @@ dialog :link{
 #downloadButton .toolbarButtonIcon {
   filter: brightness(0) invert(1) !important;
 }
-
-/* "⋮ Araçlar" menüsündeki kopyaları da kapat */
-#secondaryPrint {
-  display: none !important;
-}
-
-#secondaryDownload {
-  display: none !important;
-}
