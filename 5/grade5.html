@@ -142,6 +142,25 @@
         .unit-card .icon { font-size: 1.625rem; margin-bottom: 4px; } /* 26px */
         .unit-card .label { font-size: 0.875rem; font-weight: 600; color: #2c3e50; text-shadow: none; } /* 14px */
 
+        /* --- YAPIM AŞAMASINDAKİ ÜNİTELER (görsel ayrım) --- */
+        .unit-card.locked {
+            background: #f1f3f5;
+            border-color: #e0e4e8;
+            color: #9aa5b1;
+        }
+        .unit-card.locked .label { color: #9aa5b1; }
+        .unit-card.locked:hover {
+            border-color: #c3cbd4;
+            background: #f1f3f5;
+            transform: scale(1.03) translateY(-3px);
+        }
+        .unit-card.locked .lock-badge {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            font-size: 0.75rem;
+        }
+
         /* Back Button */
         .back-btn {
             width: 100%;
@@ -223,6 +242,69 @@
             .unit-card .icon { font-size: 1.25rem; } /* 20px */
             .unit-card .label { font-size: 0.75rem; } /* 12px */
         }
+
+        /* --- POPUP (YAPIM AŞAMASINDA) --- */
+        .cs-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(20, 30, 40, 0.55);
+            backdrop-filter: blur(3px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .cs-box {
+            background: white;
+            border-radius: 22px;
+            max-width: 340px;
+            width: 100%;
+            padding: 30px 24px 24px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            animation: fadeIn 0.25s ease;
+            position: relative;
+        }
+        .cs-icon { font-size: 3rem; margin-bottom: 10px; }
+        .cs-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #1E3C32;
+            margin: 0 0 8px;
+        }
+        .cs-text {
+            font-size: 0.95rem;
+            color: #5d6d7e;
+            margin: 0 0 20px;
+            line-height: 1.4;
+        }
+        .cs-close-btn {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border: none;
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 10px 32px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .cs-close-btn:hover { transform: scale(1.05); }
+        .cs-x {
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: #aab4bf;
+            cursor: pointer;
+            line-height: 1;
+            padding: 4px;
+        }
+        .cs-x:hover { color: #5d6d7e; }
     </style>
     <link rel="stylesheet" href="../theme.css">
 </head>
@@ -268,6 +350,17 @@
             <div id="unitGrid"></div>
         </div>
     </main>
+
+    <!-- YAPIM AŞAMASINDA POPUP -->
+    <div id="comingSoonOverlay" class="cs-overlay" onclick="if(event.target===this) closeComingSoon()">
+        <div class="cs-box">
+            <button class="cs-x" onclick="closeComingSoon()">✕</button>
+            <div class="cs-icon">🚧</div>
+            <p class="cs-title" id="comingSoonTitle">Yapım Aşamasında</p>
+            <p class="cs-text" id="comingSoonText">Bu içerik henüz hazır değil. Çok yakında burada olacak!</p>
+            <button class="cs-close-btn" onclick="closeComingSoon()">Tamam</button>
+        </div>
+    </div>
 
     <script>
         // ============================================================
@@ -328,6 +421,32 @@
             games: { title: '🎲 Games', color: '#ff7a45' }
         };
 
+        // ============================================================
+        // YAPIM AŞAMASI TESPİTİ + POPUP
+        // ============================================================
+        // Bir linkin gerçek içeriği olup olmadığını buradan anlıyoruz:
+        // url "******" ile başlıyorsa henüz hazır değildir.
+        function isPlaceholder(url) {
+            return typeof url === 'string' && url.trim().startsWith('******');
+        }
+
+        function openComingSoon(unitName) {
+            document.getElementById('comingSoonText').innerText =
+                `"${unitName}" içeriği yapım aşamasındadır. Çok yakında burada olacak!`;
+            document.getElementById('comingSoonOverlay').style.display = 'flex';
+        }
+
+        function closeComingSoon() {
+            document.getElementById('comingSoonOverlay').style.display = 'none';
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeComingSoon();
+        });
+
+        // ============================================================
+        // RENDER
+        // ============================================================
         function renderUnits(type) {
             const grid = document.getElementById('unitGrid');
             grid.innerHTML = '';
@@ -348,10 +467,21 @@
             grid.appendChild(titleDiv);
 
             data.forEach(unit => {
-                const link = document.createElement('a');
-                link.href = unit.url;
-                link.className = 'card unit-card';
-                link.innerHTML = `<div class="icon">${unit.icon}</div><div class="label">${unit.name}</div>`;
+                const placeholder = isPlaceholder(unit.url);
+
+                // Hazır içerik varsa <a>, yoksa tıklanabilir <button> oluşturuluyor.
+                const link = document.createElement(placeholder ? 'button' : 'a');
+                link.className = 'card unit-card' + (placeholder ? ' locked' : '');
+                link.innerHTML = `<div class="icon">${unit.icon}</div><div class="label">${unit.name}</div>` +
+                                  (placeholder ? '<div class="lock-badge">🔒</div>' : '');
+
+                if (placeholder) {
+                    link.type = 'button';
+                    link.addEventListener('click', () => openComingSoon(unit.name));
+                } else {
+                    link.href = unit.url;
+                }
+
                 grid.appendChild(link);
             });
         }
@@ -375,5 +505,6 @@
         });
     </script>
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1,"spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
