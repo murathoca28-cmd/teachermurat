@@ -124,6 +124,11 @@
             animation: fadeIn 0.3s ease-in-out;
         }
 
+        /* Worksheets panelinde 4 buton olduğu için bu panele özel 4 sütunlu grid */
+        #worksheets.tab-panel.active {
+            grid-template-columns: repeat(4, minmax(90px, 135px));
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -255,6 +260,11 @@
                 gap: 8px;
             }
 
+            /* Worksheets panelinde 4 buton mobilde 2x2 olarak daha rahat sığar */
+            #worksheets.tab-panel.active {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
             .card-btn {
                 padding: 14px 4px;
                 font-size: 0.88rem;
@@ -286,6 +296,9 @@
 
         <!-- 1. WORKSHEETS PANELİ (Artık Varsayılan Aktif) -->
         <div class="tab-panel active" id="worksheets">
+            <button class="card-btn btn-work worksheet-btn"
+                data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_worksheets/Grade_5_revs_work_4.pdf?v=1"
+                data-title="Unit Summary">📝Summary</button>
             <button class="card-btn btn-work worksheet-btn"
                 data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_worksheets/Grade_5_revs_work_2.pdf?v=1"
                 data-title="Worksheet 1">📝 Sheet 1</button>
