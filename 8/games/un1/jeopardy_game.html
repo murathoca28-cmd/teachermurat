@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeopardy - 8. Sınıf 1. Ünite FRIENDSHIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+            min-height: 100vh;
+        }
+        
+        .game-btn {
+            background: linear-gradient(to bottom, #059669 0%, #047857 100%);
+            border-bottom: 6px solid #064e3b;
+            border-radius: 1.5rem;
+            transition: all 0.2s ease-in-out;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .game-btn:hover:not(:disabled) {
+            transform: translateY(-4px) scale(1.05);
+            border-bottom-width: 10px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-btn:active:not(:disabled) {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+        
+        .game-btn:disabled {
+            background: #cbd5e1;
+            border-bottom: 6px solid #94a3b8;
+            color: #f1f5f9;
+            cursor: not-allowed;
+            text-shadow: none;
+            transform: none;
+        }
+        
+        .active-group {
+            background: #fde047 !important;
+            border: 4px solid #f59e0b !important;
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.5);
+        }
+
+        .modal-pop {
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 relative">
+
+    <!-- Tam Ekran Butonu -->
+    <button onclick="toggleFullScreen()" class="fixed top-4 right-4 z-50 bg-white/90 text-emerald-900 p-3 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all border-2 border-emerald-200 flex items-center justify-center cursor-pointer" title="Tam Ekran / Çıkış">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+
+    <!-- Kurulum Üst Bar -->
+    <div id="setup-bar" class="bg-white/95 backdrop-blur-md shadow-2xl p-6 flex flex-wrap items-center justify-center gap-6 rounded-3xl mx-auto max-w-5xl relative z-10 border-4 border-white">
+        <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600 drop-shadow-sm">🤝 8. Sınıf 1. Ünite: FRIENDSHIP</h1>
+        
+        <!-- Kategori / Set Seçimi -->
+        <div class="flex items-center gap-2 bg-emerald-50 px-4 py-2 rounded-2xl border-2 border-emerald-200">
+            <label for="category-select" class="font-bold text-emerald-800">Kategori / Konu:</label>
+            <select id="category-select" class="bg-white border-2 border-emerald-300 rounded-xl p-1 font-bold text-emerald-900 focus:outline-none focus:border-emerald-500">
+                <option value="all" selected>1. Ünite: Karma </option>
+                <option value="traits_verbs">1. Ünite: Kişilik Sıfatları & Fiiller</option>
+                <option value="invitations_events">1. Ünite: Davet, Kabul, Red & Etkinlikler</option>
+            </select>
+        </div>
+
+        <!-- Grup Sayısı -->
+        <div class="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-2xl border-2 border-blue-200">
+            <label for="group-count" class="font-bold text-blue-800">Grup Sayısı:</label>
+            <select id="group-count" class="bg-white border-2 border-blue-300 rounded-xl p-1 font-bold text-blue-900 focus:outline-none focus:border-blue-500 text-center">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+        </div>
+
+        <!-- Süre Ayarı -->
+        <div class="flex items-center gap-2 bg-orange-50 px-4 py-2 rounded-2xl border-2 border-orange-200">
+            <label for="timer-setting" class="font-bold text-orange-800">Süre (sn):</label>
+            <input type="number" id="timer-setting" value="10" min="5" max="60" class="bg-white border-2 border-orange-300 rounded-xl p-1 w-16 font-bold text-orange-900 focus:outline-none focus:border-orange-500 text-center">
+        </div>
+
+        <button id="start-btn" onclick="startGame()" class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-extrabold py-3 px-8 rounded-full shadow-lg border-b-4 border-green-800 hover:translate-y-1 active:border-b-0 transition-all text-xl">
+            🚀 Başla!
+        </button>
+    </div>
+
+    <!-- Oyun Alanı -->
+    <div id="game-area" class="hidden flex-col items-center mt-8">
+        
+        <!-- Puan Tablosu -->
+        <div id="scoreboard" class="flex flex-wrap justify-center gap-6 mb-10 w-full max-w-5xl">
+            <!-- Gruplar dinamik eklenecek -->
+        </div>
+
+        <!-- Jeopardy Grid -->
+        <div class="bg-white/40 p-6 rounded-[2.5rem] shadow-2xl backdrop-blur-md border-4 border-white/50">
+            <div id="jeopardy-grid" class="grid grid-cols-5 gap-4 md:gap-6">
+                <!-- Butonlar dinamik eklenecek -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Soru Modalı -->
+    <div id="question-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-2xl rounded-[2rem] shadow-2xl flex flex-col border-8 border-emerald-500 modal-pop">
+            <!-- Modal Header -->
+            <div class="p-5 border-b-4 border-gray-100 flex justify-between items-center bg-emerald-50 rounded-t-[1.5rem]">
+                <h2 id="modal-title" class="text-2xl font-extrabold text-emerald-900">1. Grup 100 Puan</h2>
+                <div class="text-xl font-extrabold bg-white px-4 py-2 rounded-full shadow-inner border-2 border-gray-200">
+                    ⏳ Süre: <span id="timer" class="text-emerald-600 text-2xl">10</span>
+                </div>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="p-10 flex flex-col items-center min-h-[300px] justify-center relative bg-gradient-to-b from-white to-emerald-50 rounded-b-[1.5rem]">
+                <h1 id="english-word" class="text-4xl md:text-5xl font-extrabold text-teal-800 mb-10 text-center drop-shadow-sm px-4">word</h1>
+                
+                <button id="show-answer-btn" onclick="showAnswer()" class="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-white font-extrabold py-4 px-10 rounded-full shadow-xl border-b-4 border-orange-600 text-2xl transition-transform hover:scale-105 active:scale-95 active:border-b-0">
+                    Cevabı Göster 🎯
+                </button>
+
+                <!-- Cevap Alanı -->
+                <div id="answer-area" class="hidden flex-col items-center w-full">
+                    <div id="turkish-word" class="bg-emerald-900 text-white text-2xl md:text-3xl font-extrabold py-4 px-8 md:px-12 rounded-2xl mb-8 shadow-inner border-4 border-emerald-950 text-center">
+                        cevap
+                    </div>
+                    <div class="flex gap-6 w-full justify-center">
+                        <button onclick="handleResult(true)" class="bg-gradient-to-r from-green-400 to-green-600 border-b-4 border-green-800 hover:from-green-500 hover:to-green-700 text-white font-extrabold py-4 px-10 rounded-2xl flex-1 shadow-lg transition-transform hover:-translate-y-1 active:translate-y-1 active:border-b-0 text-2xl">
+                            ✅ DOĞRU
+                        </button>
+                        <button onclick="handleResult(false)" class="bg-gradient-to-r from-red-400 to-red-600 border-b-4 border-red-800 hover:from-red-500 hover:to-red-700 text-white font-extrabold py-4 px-10 rounded-2xl flex-1 shadow-lg transition-transform hover:-translate-y-1 active:translate-y-1 active:border-b-0 text-2xl">
+                            ❌ YANLIŞ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Oyun Sonu Modalı -->
+    <div id="end-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[3rem] p-12 text-center shadow-2xl border-8 border-yellow-400 modal-pop max-w-3xl w-full relative overflow-hidden">
+            <div class="absolute -top-10 -left-10 w-32 h-32 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+            <div class="absolute top-0 -right-4 w-32 h-32 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+            <div class="absolute -bottom-8 left-20 w-32 h-32 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+
+            <div class="relative z-10">
+                <h1 class="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 mb-6 drop-shadow-md">🏆 TEBRİKLER LGS ŞAMPİYONU! 🏆</h1>
+                <p id="winner-text" class="text-3xl md:text-4xl font-bold text-emerald-900 mb-10 bg-emerald-50 py-4 px-8 rounded-3xl border-2 border-emerald-200 inline-block shadow-sm">
+                    Kazanan: 1. Grup
+                </p>
+                <br>
+                <button onclick="location.reload()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold py-4 px-12 rounded-full shadow-2xl border-b-4 border-teal-900 text-2xl transition-transform hover:scale-105 active:scale-95 active:border-b-0">
+                    🔄 Yeniden Oyna
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Görsellerdeki 1. Ünite (Friendship) Rehberinden Birebir Çıkarılan Kelime Setleri
+        const unit1WordSets = {
+            // Kişilik Sıfatları & Fiiller / Deyimler (Görsel 1)
+            traits_verbs: [
+                // Personal Qualities & Personality Traits
+                { en: "Reliable / Dependable (+)", tr: "Güvenilir" },
+                { en: "Supportive / Helpful (+)", tr: "Destekleyici, yardımsever" },
+                { en: "Generous (+)", tr: "Cömert, eliaçık" },
+                { en: "Tactful / Thoughtful (+)", tr: "İnce düşünceli, nazik" },
+                { en: "Honest / Sincere (+)", tr: "Dürüst, samimi" },
+                { en: "Laid-back / Calm (+)", tr: "Rahat, gamsız, sakin" },
+                { en: "Arrogant (-)", tr: "Kibirli, kendini beğenmiş" },
+                { en: "Stubborn (-)", tr: "İnatçı" },
+                { en: "Jealous / Envious (-)", tr: "Kıskanç" },
+                { en: "Unreliable (-)", tr: "Güvenilmez" },
+                { en: "Bad-tempered (-)", tr: "Aksi, huysuz" },
+                { en: "Selfish (-)", tr: "Bencil" },
+                
+                // Phrasal Verbs & Core Friendship Expressions
+                { en: "Count on / Depend on / Trust", tr: "Güvenmek, bel bağlamak" },
+                { en: "Back up / Support", tr: "Arkasında durmak, desteklemek" },
+                { en: "Get on well with", tr: "İyi geçinmek, iyi anlaşmak" },
+                { en: "Come over", tr: "Uğramak, eve konuk gelmek" },
+                { en: "Have in common", tr: "Ortak noktası olmak" },
+                { en: "Keep a secret", tr: "Sır tutmak" },
+                { en: "Tell the truth", tr: "Doğruyu söylemek" },
+                { en: "Pick up", tr: "Birini (araçla) gidip almak" }
+            ],
+
+            // Davet, Kabul, Red & Etkinlikler (Görsel 1 & Görsel 2)
+            invitations_events: [
+                // Making Invitations & Offers
+                { en: "Would you like to + V1 ...?", tr: "İster misin? / Arzular mısın?" },
+                { en: "How about / What about + V-ing / Noun ...?", tr: "... -e ne dersin?" },
+                { en: "Why don't we + V1 ...?", tr: "Neden yapmıyoruz? / Yapalım mı?" },
+                { en: "Shall we + V1 ...?", tr: "Yapalım mı? / Edelim mi?" },
+                { en: "Let's + V1 ...", tr: "Hadi yapalım / edelim!" },
+
+                // Accepting Expressions
+                { en: "Yes, I'd love to! / Sure!", tr: "Evet, çok isterim! / Tabii ki! (Kabul)" },
+                { en: "That sounds great / awesome!", tr: "Kulağa harika / müthiş geliyor! (Kabul)" },
+                { en: "Yeah, why not? I have no plans.", tr: "Evet, neden olmasın? Yapacak işim yok. (Kabul)" },
+
+                // Refusing Expressions & Excuses
+                { en: "I'd love to, but I can't.", tr: "Çok isterdim ama gelemem / yapamam. (Red)" },
+                { en: "No, thanks. I'm full / stuffed.", tr: "Hayır teşekkürler, karnım tok / doymuşum. (Red)" },
+                { en: "I'm sorry, but I have to study.", tr: "Üzgünüm ama ders çalışmak zorundayım. (Bahane)" },
+                { en: "I'm visiting my relatives / aunt.", tr: "Akrabalarımı / teyzemi ziyaret edeceğim. (Bahane)" },
+                { en: "I promised my cousin / friend.", tr: "Kuzenime / arkadaşıma söz verdim. (Bahane)" },
+
+                // Social Events & Activities
+                { en: "Slumber party / Pyjama party", tr: "Pijama partisi" },
+                { en: "Book fair", tr: "Kitap fuarı" },
+                { en: "Amusement park", tr: "Lunapark" },
+                { en: "Movie night / Film night", tr: "Film gecesi" },
+                { en: "Art exhibition", tr: "Sanat sergisi" },
+                { en: "Concert / Music show", tr: "Konser" }
+            ]
+        };
+
+        let activeWordList = [];
+        let numGroups = 1;
+        let scores = [];
+        let currentGroup = 0;
+        let gameDuration = 10;
+        let answeredQuestionsCount = 0;
+        
+        let currentPoints = 0;
+        let currentCellBtn = null;
+        let timerInterval;
+        let timeLeft = 0;
+        let isAnswerShown = false;
+        
+        const pointValues = [50, 100, 150, 200, 250, 300]; 
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startGame() {
+            const selectedSetKey = document.getElementById('category-select').value;
+            numGroups = parseInt(document.getElementById('group-count').value);
+            gameDuration = parseInt(document.getElementById('timer-setting').value);
+            
+            if(isNaN(gameDuration) || gameDuration < 5) gameDuration = 10;
+
+            let pool = [];
+            if (selectedSetKey === 'all') {
+                pool = [...unit1WordSets.traits_verbs, ...unit1WordSets.invitations_events];
+            } else {
+                pool = [...unit1WordSets[selectedSetKey]];
+            }
+
+            // Seçilen kategoride 30'dan az eleman varsa, tüm listeden eksikleri tamamla
+            if (pool.length < 30) {
+                let allPool = [...unit1WordSets.traits_verbs, ...unit1WordSets.invitations_events];
+                let extraPool = allPool.filter(item => !pool.includes(item));
+                shuffle(extraPool);
+                while (pool.length < 30 && extraPool.length > 0) {
+                    pool.push(extraPool.pop());
+                }
+            }
+
+            shuffle(pool);
+            activeWordList = pool.slice(0, 30); // 30 Tanesini al
+
+            document.getElementById('setup-bar').classList.add('hidden');
+            document.getElementById('game-area').classList.remove('hidden');
+            document.getElementById('game-area').classList.add('flex');
+            
+            scores = Array(numGroups).fill(0);
+            currentGroup = 0;
+            answeredQuestionsCount = 0;
+            
+            renderScoreboard();
+            renderGrid();
+        }
+
+        function renderScoreboard() {
+            const board = document.getElementById('scoreboard');
+            board.innerHTML = '';
+            for (let i = 0; i < numGroups; i++) {
+                const groupDiv = document.createElement('div');
+                groupDiv.id = `group-score-${i}`;
+                groupDiv.className = `px-8 py-4 rounded-3xl border-4 border-white bg-white/80 font-extrabold text-2xl shadow-lg transition-all duration-300 text-emerald-900 ${i === currentGroup ? 'active-group' : ''}`;
+                groupDiv.innerHTML = `<span class="opacity-70">${i + 1}. Grup:</span> <span id="score-val-${i}" class="text-3xl text-teal-700">${scores[i]}</span>`;
+                board.appendChild(groupDiv);
+            }
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('jeopardy-grid');
+            grid.innerHTML = '';
+            let wordIndex = 0;
+
+            pointValues.forEach(points => {
+                for (let col = 0; col < 5; col++) {
+                    const btn = document.createElement('button');
+                    const wordData = activeWordList[wordIndex];
+                    
+                    btn.className = "game-btn text-white font-extrabold py-6 px-4 md:px-8 shadow-lg text-2xl md:text-3xl tracking-wider";
+                    btn.innerText = points;
+                    btn.onclick = () => openQuestion(btn, points, wordData);
+                    
+                    grid.appendChild(btn);
+                    wordIndex++;
+                }
+            });
+        }
+
+        function openQuestion(btn, points, wordData) {
+            currentCellBtn = btn;
+            currentPoints = points;
+            isAnswerShown = false;
+            
+            document.getElementById('modal-title').innerText = `${currentGroup + 1}. Grup • ${points} Puan`;
+            document.getElementById('english-word').innerText = wordData.en;
+            document.getElementById('turkish-word').innerText = wordData.tr;
+            
+            document.getElementById('show-answer-btn').classList.remove('hidden');
+            document.getElementById('answer-area').classList.add('hidden');
+            document.getElementById('question-modal').classList.remove('hidden');
+            
+            startTimer();
+        }
+
+        function startTimer() {
+            timeLeft = gameDuration;
+            updateTimerUI();
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    if (!isAnswerShown) {
+                        handleResult(false);
+                    }
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            const timerEl = document.getElementById('timer');
+            timerEl.innerText = Math.max(0, timeLeft);
+            
+            if (timeLeft <= 3) {
+                timerEl.classList.remove('text-emerald-600');
+                timerEl.classList.add('text-red-600', 'animate-pulse');
+            } else {
+                timerEl.classList.add('text-emerald-600');
+                timerEl.classList.remove('text-red-600', 'animate-pulse');
+            }
+        }
+
+        function showAnswer() {
+            isAnswerShown = true;
+            clearInterval(timerInterval);
+            document.getElementById('show-answer-btn').classList.add('hidden');
+            document.getElementById('answer-area').classList.remove('hidden');
+            document.getElementById('answer-area').classList.add('flex');
+        }
+
+        function handleResult(isCorrect) {
+            clearInterval(timerInterval);
+            
+            if (isCorrect) {
+                scores[currentGroup] += currentPoints;
+            } else {
+                scores[currentGroup] -= currentPoints;
+            }
+            
+            document.getElementById(`score-val-${currentGroup}`).innerText = scores[currentGroup];
+            
+            currentCellBtn.disabled = true;
+            currentCellBtn.innerText = '✔';
+            currentCellBtn.classList.add('text-4xl', 'opacity-50');
+            
+            currentGroup = (currentGroup + 1) % numGroups;
+            document.getElementById('question-modal').classList.add('hidden');
+            updateScoreboardUI();
+            
+            answeredQuestionsCount++;
+            if(answeredQuestionsCount === 30) {
+                setTimeout(showEndGameScreen, 500);
+            }
+        }
+
+        function updateScoreboardUI() {
+            for (let i = 0; i < numGroups; i++) {
+                const groupDiv = document.getElementById(`group-score-${i}`);
+                if (i === currentGroup) {
+                    groupDiv.classList.add('active-group');
+                } else {
+                    groupDiv.classList.remove('active-group');
+                }
+            }
+        }
+
+        function showEndGameScreen() {
+            const maxScore = Math.max(...scores);
+            const winners = [];
+            
+            for(let i = 0; i < scores.length; i++) {
+                if(scores[i] === maxScore) {
+                    winners.push(`${i + 1}. Grup`);
+                }
+            }
+            
+            let winnerMessage = "";
+            if(winners.length === 1) {
+                winnerMessage = `🎉 Harika! Kazanan: ${winners[0]} (${maxScore} Puan) 🎉`;
+            } else {
+                winnerMessage = `🤝 Beraberlik! ${winners.join(' ve ')} kazandı! (${maxScore} Puan) 🤝`;
+            }
+            
+            document.getElementById('winner-text').innerText = winnerMessage;
+            document.getElementById('game-area').classList.add('hidden');
+            document.getElementById('end-modal').classList.remove('hidden');
+            document.getElementById('end-modal').classList.add('flex');
+        }
+    </script>
+</body>
+</html>
