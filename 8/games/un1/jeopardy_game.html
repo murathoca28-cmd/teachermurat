@@ -58,62 +58,64 @@
         }
     </style>
 </head>
-<body class="text-gray-800 p-4 relative">
+<body class="text-gray-800 p-2 md:p-4 relative">
 
     <!-- Tam Ekran Butonu -->
-    <button onclick="toggleFullScreen()" class="fixed top-4 right-4 z-50 bg-white/90 text-emerald-900 p-3 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all border-2 border-emerald-200 flex items-center justify-center cursor-pointer" title="Tam Ekran / Çıkış">
+    <button onclick="toggleFullScreen()" class="fixed top-4 right-4 z-50 bg-white/90 text-emerald-900 p-2 md:p-3 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all border-2 border-emerald-200 flex items-center justify-center cursor-pointer" title="Tam Ekran / Çıkış">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
         </svg>
     </button>
 
     <!-- Kurulum Üst Bar -->
-    <div id="setup-bar" class="bg-white/95 backdrop-blur-md shadow-2xl p-6 flex flex-wrap items-center justify-center gap-6 rounded-3xl mx-auto max-w-5xl relative z-10 border-4 border-white">
-        <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600 drop-shadow-sm">🤝 Unit 1 - FRIENDSHIP</h1>
+    <div id="setup-bar" class="bg-white/95 backdrop-blur-md shadow-2xl p-4 md:p-6 flex flex-col md:flex-row flex-wrap items-center justify-center gap-4 md:gap-6 rounded-[2rem] mx-auto w-full max-w-5xl relative z-10 border-4 border-white">
+        <h1 class="text-xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600 drop-shadow-sm text-center">🤝 Unit 1 - FRIENDSHIP</h1>
         
         <!-- Kategori / Set Seçimi -->
-        <div class="flex items-center gap-2 bg-emerald-50 px-4 py-2 rounded-2xl border-2 border-emerald-200">
-            <label for="category-select" class="font-bold text-emerald-800">Kategori / Konu:</label>
-            <select id="category-select" class="bg-white border-2 border-emerald-300 rounded-xl p-1 font-bold text-emerald-900 focus:outline-none focus:border-emerald-500">
+        <div class="flex items-center gap-2 bg-emerald-50 px-3 py-2 md:px-4 rounded-2xl border-2 border-emerald-200 w-full md:w-auto justify-center">
+            <label for="category-select" class="font-bold text-emerald-800 text-sm md:text-base">Kategori:</label>
+            <select id="category-select" class="bg-white border-2 border-emerald-300 rounded-xl p-1 font-bold text-emerald-900 focus:outline-none focus:border-emerald-500 text-sm md:text-base">
                 <option value="all" selected>Karma </option>
                 <option value="traits_verbs">Kişilik Sıfatları & Fiiller</option>
                 <option value="invitations_events">Davet, Kabul, Red & Etkinlikler</option>
             </select>
         </div>
 
-        <!-- Grup Sayısı -->
-        <div class="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-2xl border-2 border-blue-200">
-            <label for="group-count" class="font-bold text-blue-800">Grup Sayısı:</label>
-            <select id="group-count" class="bg-white border-2 border-blue-300 rounded-xl p-1 font-bold text-blue-900 focus:outline-none focus:border-blue-500 text-center">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-            </select>
+        <div class="flex gap-4 w-full md:w-auto justify-center">
+            <!-- Grup Sayısı -->
+            <div class="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-2xl border-2 border-blue-200">
+                <label for="group-count" class="font-bold text-blue-800 text-sm md:text-base">Grup:</label>
+                <select id="group-count" class="bg-white border-2 border-blue-300 rounded-xl p-1 font-bold text-blue-900 focus:outline-none focus:border-blue-500 text-center text-sm md:text-base">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+            </div>
+
+            <!-- Süre Ayarı -->
+            <div class="flex items-center gap-2 bg-orange-50 px-3 py-2 rounded-2xl border-2 border-orange-200">
+                <label for="timer-setting" class="font-bold text-orange-800 text-sm md:text-base">Süre(sn):</label>
+                <input type="number" id="timer-setting" value="10" min="5" max="60" class="bg-white border-2 border-orange-300 rounded-xl p-1 w-12 md:w-16 font-bold text-orange-900 focus:outline-none focus:border-orange-500 text-center text-sm md:text-base">
+            </div>
         </div>
 
-        <!-- Süre Ayarı -->
-        <div class="flex items-center gap-2 bg-orange-50 px-4 py-2 rounded-2xl border-2 border-orange-200">
-            <label for="timer-setting" class="font-bold text-orange-800">Süre (sn):</label>
-            <input type="number" id="timer-setting" value="10" min="5" max="60" class="bg-white border-2 border-orange-300 rounded-xl p-1 w-16 font-bold text-orange-900 focus:outline-none focus:border-orange-500 text-center">
-        </div>
-
-        <button id="start-btn" onclick="startGame()" class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-extrabold py-3 px-8 rounded-full shadow-lg border-b-4 border-green-800 hover:translate-y-1 active:border-b-0 transition-all text-xl">
+        <button id="start-btn" onclick="startGame()" class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-extrabold py-3 px-8 md:py-3 md:px-8 rounded-full shadow-lg border-b-4 border-green-800 hover:translate-y-1 active:border-b-0 transition-all text-lg md:text-xl w-full md:w-auto">
             🚀 Başla!
         </button>
     </div>
 
     <!-- Oyun Alanı -->
-    <div id="game-area" class="hidden flex-col items-center mt-8">
+    <div id="game-area" class="hidden flex-col items-center mt-6 md:mt-8 w-full">
         
         <!-- Puan Tablosu -->
-        <div id="scoreboard" class="flex flex-wrap justify-center gap-6 mb-10 w-full max-w-5xl">
+        <div id="scoreboard" class="flex flex-wrap justify-center gap-3 md:gap-6 mb-6 md:mb-10 w-full max-w-5xl px-2">
             <!-- Gruplar dinamik eklenecek -->
         </div>
 
         <!-- Jeopardy Grid -->
-        <div class="bg-white/40 p-6 rounded-[2.5rem] shadow-2xl backdrop-blur-md border-4 border-white/50">
-            <div id="jeopardy-grid" class="grid grid-cols-5 gap-4 md:gap-6">
+        <div class="bg-white/40 p-3 md:p-6 rounded-2xl md:rounded-[2.5rem] shadow-2xl backdrop-blur-md border-2 md:border-4 border-white/50 w-full max-w-4xl mx-auto">
+            <div id="jeopardy-grid" class="grid grid-cols-5 gap-2 md:gap-5">
                 <!-- Butonlar dinamik eklenecek -->
             </div>
         </div>
@@ -121,33 +123,33 @@
 
     <!-- Soru Modalı -->
     <div id="question-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-2xl rounded-[2rem] shadow-2xl flex flex-col border-8 border-emerald-500 modal-pop">
+        <div class="bg-white w-full max-w-2xl rounded-[1.5rem] md:rounded-[2rem] shadow-2xl flex flex-col border-4 md:border-8 border-emerald-500 modal-pop">
             <!-- Modal Header -->
-            <div class="p-5 border-b-4 border-gray-100 flex justify-between items-center bg-emerald-50 rounded-t-[1.5rem]">
-                <h2 id="modal-title" class="text-2xl font-extrabold text-emerald-900">1. Grup 100 Puan</h2>
-                <div class="text-xl font-extrabold bg-white px-4 py-2 rounded-full shadow-inner border-2 border-gray-200">
-                    ⏳ Süre: <span id="timer" class="text-emerald-600 text-2xl">10</span>
+            <div class="p-3 md:p-5 border-b-2 md:border-b-4 border-gray-100 flex justify-between items-center bg-emerald-50 rounded-t-[1rem] md:rounded-t-[1.5rem]">
+                <h2 id="modal-title" class="text-base md:text-2xl font-extrabold text-emerald-900">1. Grup 100 Puan</h2>
+                <div class="text-sm md:text-xl font-extrabold bg-white px-3 py-1 md:px-4 md:py-2 rounded-full shadow-inner border-2 border-gray-200">
+                    ⏳ Süre: <span id="timer" class="text-emerald-600 text-lg md:text-2xl">10</span>
                 </div>
             </div>
             
             <!-- Modal Body -->
-            <div class="p-10 flex flex-col items-center min-h-[300px] justify-center relative bg-gradient-to-b from-white to-emerald-50 rounded-b-[1.5rem]">
-                <h1 id="english-word" class="text-4xl md:text-5xl font-extrabold text-teal-800 mb-10 text-center drop-shadow-sm px-4">word</h1>
+            <div class="p-6 md:p-10 flex flex-col items-center min-h-[250px] md:min-h-[300px] justify-center relative bg-gradient-to-b from-white to-emerald-50 rounded-b-[1rem] md:rounded-b-[1.5rem]">
+                <h1 id="english-word" class="text-3xl md:text-5xl font-extrabold text-teal-800 mb-6 md:mb-10 text-center drop-shadow-sm px-2 md:px-4 break-words w-full">word</h1>
                 
-                <button id="show-answer-btn" onclick="showAnswer()" class="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-white font-extrabold py-4 px-10 rounded-full shadow-xl border-b-4 border-orange-600 text-2xl transition-transform hover:scale-105 active:scale-95 active:border-b-0">
+                <button id="show-answer-btn" onclick="showAnswer()" class="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-white font-extrabold py-3 px-6 md:py-4 md:px-10 rounded-full shadow-xl border-b-4 border-orange-600 text-lg md:text-2xl transition-transform hover:scale-105 active:scale-95 active:border-b-0 w-full md:w-auto">
                     Cevabı Göster 🎯
                 </button>
 
                 <!-- Cevap Alanı -->
                 <div id="answer-area" class="hidden flex-col items-center w-full">
-                    <div id="turkish-word" class="bg-emerald-900 text-white text-2xl md:text-3xl font-extrabold py-4 px-8 md:px-12 rounded-2xl mb-8 shadow-inner border-4 border-emerald-950 text-center">
+                    <div id="turkish-word" class="bg-emerald-900 text-white text-xl md:text-3xl font-extrabold py-3 px-4 md:py-4 md:px-12 rounded-2xl mb-6 md:mb-8 shadow-inner border-2 md:border-4 border-emerald-950 text-center w-full">
                         cevap
                     </div>
-                    <div class="flex gap-6 w-full justify-center">
-                        <button onclick="handleResult(true)" class="bg-gradient-to-r from-green-400 to-green-600 border-b-4 border-green-800 hover:from-green-500 hover:to-green-700 text-white font-extrabold py-4 px-10 rounded-2xl flex-1 shadow-lg transition-transform hover:-translate-y-1 active:translate-y-1 active:border-b-0 text-2xl">
+                    <div class="flex flex-col sm:flex-row gap-3 md:gap-6 w-full justify-center">
+                        <button id="correct-btn" onclick="handleResult(true)" class="bg-gradient-to-r from-green-400 to-green-600 border-b-4 border-green-800 hover:from-green-500 hover:to-green-700 text-white font-extrabold py-3 px-6 md:py-4 md:px-10 rounded-2xl flex-1 shadow-lg transition-transform hover:-translate-y-1 active:translate-y-1 active:border-b-0 text-xl md:text-2xl">
                             ✅ DOĞRU
                         </button>
-                        <button onclick="handleResult(false)" class="bg-gradient-to-r from-red-400 to-red-600 border-b-4 border-red-800 hover:from-red-500 hover:to-red-700 text-white font-extrabold py-4 px-10 rounded-2xl flex-1 shadow-lg transition-transform hover:-translate-y-1 active:translate-y-1 active:border-b-0 text-2xl">
+                        <button onclick="handleResult(false)" class="bg-gradient-to-r from-red-400 to-red-600 border-b-4 border-red-800 hover:from-red-500 hover:to-red-700 text-white font-extrabold py-3 px-6 md:py-4 md:px-10 rounded-2xl flex-1 shadow-lg transition-transform hover:-translate-y-1 active:translate-y-1 active:border-b-0 text-xl md:text-2xl">
                             ❌ YANLIŞ
                         </button>
                     </div>
@@ -158,18 +160,18 @@
 
     <!-- Oyun Sonu Modalı -->
     <div id="end-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-[3rem] p-12 text-center shadow-2xl border-8 border-yellow-400 modal-pop max-w-3xl w-full relative overflow-hidden">
+        <div class="bg-white rounded-[2rem] md:rounded-[3rem] p-6 md:p-12 text-center shadow-2xl border-4 md:border-8 border-yellow-400 modal-pop max-w-3xl w-full relative overflow-hidden">
             <div class="absolute -top-10 -left-10 w-32 h-32 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
             <div class="absolute top-0 -right-4 w-32 h-32 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
             <div class="absolute -bottom-8 left-20 w-32 h-32 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
 
             <div class="relative z-10">
-                <h1 class="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 mb-6 drop-shadow-md">🏆 TEBRİKLER! 🏆</h1>
-                <p id="winner-text" class="text-3xl md:text-4xl font-bold text-emerald-900 mb-10 bg-emerald-50 py-4 px-8 rounded-3xl border-2 border-emerald-200 inline-block shadow-sm">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 mb-4 md:mb-6 drop-shadow-md leading-tight">🏆 TEBRİKLER! 🏆</h1>
+                <p id="winner-text" class="text-xl md:text-4xl font-bold text-emerald-900 mb-8 md:mb-10 bg-emerald-50 py-3 px-4 md:py-4 md:px-8 rounded-2xl md:rounded-3xl border-2 border-emerald-200 inline-block shadow-sm">
                     Kazanan: 1. Grup
                 </p>
                 <br>
-                <button onclick="location.reload()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold py-4 px-12 rounded-full shadow-2xl border-b-4 border-teal-900 text-2xl transition-transform hover:scale-105 active:scale-95 active:border-b-0">
+                <button onclick="location.reload()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold py-3 px-8 md:py-4 md:px-12 rounded-full shadow-2xl border-b-4 border-teal-900 text-lg md:text-2xl transition-transform hover:scale-105 active:scale-95 active:border-b-0">
                     🔄 Yeniden Oyna
                 </button>
             </div>
@@ -177,11 +179,8 @@
     </div>
 
     <script>
-        // Görsellerdeki 1. Ünite (Friendship) Rehberinden Birebir Çıkarılan Kelime Setleri
         const unit1WordSets = {
-            // Kişilik Sıfatları & Fiiller / Deyimler (Görsel 1)
             traits_verbs: [
-                // Personal Qualities & Personality Traits
                 { en: "Reliable / Dependable (+)", tr: "Güvenilir" },
                 { en: "Supportive / Helpful (+)", tr: "Destekleyici, yardımsever" },
                 { en: "Generous (+)", tr: "Cömert, eliaçık" },
@@ -194,8 +193,6 @@
                 { en: "Unreliable (-)", tr: "Güvenilmez" },
                 { en: "Bad-tempered (-)", tr: "Aksi, huysuz" },
                 { en: "Selfish (-)", tr: "Bencil" },
-                
-                // Phrasal Verbs & Core Friendship Expressions
                 { en: "Count on / Depend on / Trust", tr: "Güvenmek, bel bağlamak" },
                 { en: "Back up / Support", tr: "Arkasında durmak, desteklemek" },
                 { en: "Get on well with", tr: "İyi geçinmek, iyi anlaşmak" },
@@ -205,29 +202,20 @@
                 { en: "Tell the truth", tr: "Doğruyu söylemek" },
                 { en: "Pick up", tr: "Birini (araçla) gidip almak" }
             ],
-
-            // Davet, Kabul, Red & Etkinlikler (Görsel 1 & Görsel 2)
             invitations_events: [
-                // Making Invitations & Offers
                 { en: "Would you like to...?", tr: "İster misin? / Arzular mısın?" },
                 { en: "How about / What about...?", tr: "... -e ne dersin?" },
                 { en: "Why don't we...?", tr: "Neden yapmıyoruz?" },
                 { en: "Shall we...?", tr: "Yapalım mı? / Edelim mi?" },
                 { en: "Let's + ...!", tr: "Hadi!" },
-
-                // Accepting Expressions
                 { en: "Yes, I'd love to! / Sure!", tr: "Evet, çok isterim! / Tabii ki! (Kabul)" },
                 { en: "That sounds great / awesome!", tr: "Kulağa harika / müthiş geliyor! (Kabul)" },
                 { en: "Yeah, why not? I have no plans.", tr: "Evet, neden olmasın? Yapacak işim yok. (Kabul)" },
-
-                // Refusing Expressions & Excuses
                 { en: "I'd love to, but I can't.", tr: "Çok isterdim ama gelemem / yapamam. (Red)" },
                 { en: "No, thanks. I'm full / stuffed.", tr: "Hayır teşekkürler, karnım tok. (Red)" },
                 { en: "I'm sorry, but I have to study.", tr: "Üzgünüm ama ders çalışmak zorundayım. (Bahane)" },
                 { en: "I'm visiting my relatives.", tr: "Akrabalarımı ziyaret edeceğim. (Bahane)" },
                 { en: "I promised my cousin / friend.", tr: "Kuzenime / arkadaşıma söz verdim. (Bahane)" },
-
-                // Social Events & Activities
                 { en: "Slumber party / Pyjama party", tr: "Pijama partisi" },
                 { en: "Book fair", tr: "Kitap fuarı" },
                 { en: "Amusement park", tr: "Lunapark" },
@@ -294,7 +282,6 @@
                 pool = [...unit1WordSets[selectedSetKey]];
             }
 
-            // Seçilen kategoride 30'dan az eleman varsa, tüm listeden eksikleri tamamla
             if (pool.length < 30) {
                 let allPool = [...unit1WordSets.traits_verbs, ...unit1WordSets.invitations_events];
                 let extraPool = allPool.filter(item => !pool.includes(item));
@@ -305,7 +292,7 @@
             }
 
             shuffle(pool);
-            activeWordList = pool.slice(0, 30); // 30 Tanesini al
+            activeWordList = pool.slice(0, 30); 
 
             document.getElementById('setup-bar').classList.add('hidden');
             document.getElementById('game-area').classList.remove('hidden');
@@ -325,8 +312,8 @@
             for (let i = 0; i < numGroups; i++) {
                 const groupDiv = document.createElement('div');
                 groupDiv.id = `group-score-${i}`;
-                groupDiv.className = `px-8 py-4 rounded-3xl border-4 border-white bg-white/80 font-extrabold text-2xl shadow-lg transition-all duration-300 text-emerald-900 ${i === currentGroup ? 'active-group' : ''}`;
-                groupDiv.innerHTML = `<span class="opacity-70">${i + 1}. Grup:</span> <span id="score-val-${i}" class="text-3xl text-teal-700">${scores[i]}</span>`;
+                groupDiv.className = `px-3 py-2 md:px-8 md:py-4 rounded-xl md:rounded-3xl border-2 md:border-4 border-white bg-white/80 font-extrabold text-sm md:text-2xl shadow-lg transition-all duration-300 text-emerald-900 ${i === currentGroup ? 'active-group' : ''}`;
+                groupDiv.innerHTML = `<span class="opacity-70">${i + 1}. Grup:</span> <span id="score-val-${i}" class="text-lg md:text-3xl text-teal-700">${scores[i]}</span>`;
                 board.appendChild(groupDiv);
             }
         }
@@ -341,7 +328,7 @@
                     const btn = document.createElement('button');
                     const wordData = activeWordList[wordIndex];
                     
-                    btn.className = "game-btn text-white font-extrabold py-6 px-4 md:px-8 shadow-lg text-2xl md:text-3xl tracking-wider";
+                    btn.className = "game-btn text-white font-extrabold py-4 md:py-6 shadow-sm md:shadow-lg text-lg md:text-3xl tracking-wider w-full flex items-center justify-center";
                     btn.innerText = points;
                     btn.onclick = () => openQuestion(btn, points, wordData);
                     
@@ -360,6 +347,9 @@
             document.getElementById('english-word').innerText = wordData.en;
             document.getElementById('turkish-word').innerText = wordData.tr;
             
+            // Doğru butonunu tekrar görünür yap
+            document.getElementById('correct-btn').style.display = 'block';
+
             document.getElementById('show-answer-btn').classList.remove('hidden');
             document.getElementById('answer-area').classList.add('hidden');
             document.getElementById('question-modal').classList.remove('hidden');
@@ -379,7 +369,9 @@
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     if (!isAnswerShown) {
-                        handleResult(false);
+                        showAnswer();
+                        // Süre dolduğunda doğru butonunu gizleyerek sadece yanlış butonuna basılmasını zorunlu kıl
+                        document.getElementById('correct-btn').style.display = 'none';
                     }
                 }
             }, 1000);
@@ -419,7 +411,7 @@
             
             currentCellBtn.disabled = true;
             currentCellBtn.innerText = '✔';
-            currentCellBtn.classList.add('text-4xl', 'opacity-50');
+            currentCellBtn.classList.add('text-2xl', 'md:text-4xl', 'opacity-50');
             
             currentGroup = (currentGroup + 1) % numGroups;
             document.getElementById('question-modal').classList.add('hidden');
