@@ -1,16 +1,16 @@
-
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grade 5 - Games (Revs)</title>
     <style>
-    
-            :root {
+        :root {
             --theme-coral: #f5fb93;
             --theme-soft: #f5fb93;
         }
+
         * {
             margin: 0;
             padding: 0;
@@ -41,7 +41,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
+            filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.1));
         }
 
         .back-link {
@@ -50,19 +50,19 @@
             color: #2c3e50;
             text-decoration: none;
             font-weight: 600;
-            background: rgba(255,255,255,0.7);
+            background: rgba(255, 255, 255, 0.7);
             padding: 8px 20px;
             border-radius: 30px;
             backdrop-filter: blur(5px);
             transition: 0.3s;
-            border: 1px solid rgba(44,62,80,0.2);
+            border: 1px solid rgba(44, 62, 80, 0.2);
         }
 
         .back-link:hover {
             background: #2c3e50;
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         /* Oyun Kartları Grid */
@@ -72,32 +72,34 @@
             gap: 20px;
             width: 100%;
             max-width: 900px;
-            margin: 10px auto 0 auto; /* üstte 40px boşluk, yatayda ortala */
+            margin: 10px auto 0 auto;
+            /* üstte 40px boşluk, yatayda ortala */
         }
 
         /* Kart stili */
         .game-card {
-        background: white;
-        border-radius: 20px;
-        overflow: hidden;
-        cursor: pointer;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        transition: all 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        border: 2px solid  #4e8df4;
-     }
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid #4e8df4;
+        }
 
         .game-card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-             border-color: var(--theme-coral);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            border-color: var(--theme-coral);
         }
 
         /* Thumbnail konteyneri */
         .card-thumb {
             width: 100%;
-            aspect-ratio: 4/3; /* Wordwall küçük resim oranına yakın */
+            aspect-ratio: 4/3;
+            /* Wordwall küçük resim oranına yakın */
             background: linear-gradient(135deg, #fdf6ec, #ffe8e0);
             display: flex;
             align-items: center;
@@ -125,6 +127,10 @@
             padding: 12px 10px;
             text-align: center;
             background: var(--theme-soft);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .game-name {
@@ -156,7 +162,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(6px);
             display: flex;
             align-items: center;
@@ -171,7 +177,7 @@
             border-radius: 24px;
             width: 90%;
             max-width: 800px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
             animation: scaleIn 0.3s ease;
@@ -209,7 +215,8 @@
         .iframe-container {
             position: relative;
             width: 100%;
-            padding-top: 56.25%; /* 16:9 */
+            padding-top: 56.25%;
+            /* 16:9 */
             background: #f0f0f0;
         }
 
@@ -224,13 +231,25 @@
 
         /* Animasyonlar */
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes scaleIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         /* Mobil uyumluluk */
@@ -239,6 +258,7 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 15px;
             }
+
             .modal-content {
                 width: 95%;
             }
@@ -246,11 +266,12 @@
     </style>
     <link rel="stylesheet" href="../../../theme.css">
 </head>
+
 <body>
-    
+
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
     <script src="../../../navbar.js"></script>
-    
+
     <div class="page-header">
         <h1>🎲 Grade 5 – REV 1/2 Games</h1>
         <a href="javascript:history.back()" class="back-link">⬅ Back</a>
@@ -345,9 +366,19 @@
                 embedUrl: 'https://wordwall.net/embed/e463b556e5e942f5b445a79690e54582?themeId=41&templateId=79&fontStackId=0'
             },
             {
+                name: 'Turkish meanings of places',
+                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/a89378cac06c4c28aebb26717a7fcb23_41',
+                embedUrl: 'https://wordwall.net/embed/a89378cac06c4c28aebb26717a7fcb23?themeId=41&templateId=76&fontStackId=0'
+            },
+            {
                 name: 'Where am I?',
                 thumbnailUrl: 'https://screens.cdn.wordwall.net/200/234b7a42cd7844d8a3dfdb219c34ecf1_49',
                 embedUrl: 'https://wordwall.net/embed/234b7a42cd7844d8a3dfdb219c34ecf1?themeId=49&templateId=89&fontStackId=0'
+            },
+            {
+                name: 'Where am I?',
+                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/3fbdc37368a644f98b4d0be191ffadc8_68',
+                embedUrl: 'https://wordwall.net/embed/3fbdc37368a644f98b4d0be191ffadc8?themeId=68&templateId=3&fontStackId=0'
             },
             {
                 name: 'Healthy and Unhealthy Food',
@@ -359,7 +390,7 @@
                 thumbnailUrl: 'https://screens.cdn.wordwall.net/200/32b800d6b4df45ddbfc129cdc49b9545_65',
                 embedUrl: 'https://wordwall.net/embed/32b800d6b4df45ddbfc129cdc49b9545?themeId=65&templateId=2&fontStackId=0"'
             },
-            
+
 
             // ... diğer 7 oyunu aynı şekilde ekleyin (toplam 10)
         ];
@@ -387,7 +418,7 @@
                 img.alt = game.name;
                 img.loading = 'lazy';
                 // Resim yüklenemezse fallback göster
-                img.onerror = function() {
+                img.onerror = function () {
                     // Resim kırılırsa yedek bir simge koy
                     thumbDiv.innerHTML = '<span class="fallback-icon">🎲</span>';
                 };
@@ -433,14 +464,14 @@
 
         // Kapatma olayları
         closeModalBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', function(e) {
+        modal.addEventListener('click', function (e) {
             if (e.target === modal) {
                 closeModal();
             }
         });
 
         // Escape tuşu ile kapat
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && modal.style.display === 'flex') {
                 closeModal();
             }
@@ -450,4 +481,5 @@
         renderGames();
     </script>
 </body>
+
 </html>
