@@ -12,7 +12,6 @@
             background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
             min-height: 100vh;
         }
-        
         .game-btn {
             background: linear-gradient(to bottom, #059669 0%, #047857 100%);
             border-bottom: 6px solid #064e3b;
@@ -20,18 +19,15 @@
             transition: all 0.2s ease-in-out;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
-        
         .game-btn:hover:not(:disabled) {
             transform: translateY(-4px) scale(1.05);
             border-bottom-width: 10px;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
-        
         .game-btn:active:not(:disabled) {
             transform: translateY(2px);
             border-bottom-width: 2px;
         }
-        
         .game-btn:disabled {
             background: #cbd5e1;
             border-bottom: 6px solid #94a3b8;
@@ -40,18 +36,13 @@
             text-shadow: none;
             transform: none;
         }
-        
         .active-group {
             background: #fde047 !important;
             border: 4px solid #f59e0b !important;
             transform: scale(1.1);
             box-shadow: 0 10px 25px rgba(245, 158, 11, 0.5);
         }
-
-        .modal-pop {
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
+        .modal-pop { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         @keyframes popIn {
             0% { transform: scale(0.5); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
@@ -60,18 +51,46 @@
 </head>
 <body class="text-gray-800 p-2 md:p-4 relative">
 
-    <!-- Tam Ekran Butonu -->
-    <button onclick="toggleFullScreen()" class="fixed top-4 right-4 z-50 bg-white/90 text-emerald-900 p-2 md:p-3 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all border-2 border-emerald-200 flex items-center justify-center cursor-pointer" title="Tam Ekran / Çıkış">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Karşılama Ekranı -->
+    <div id="splash" class="fixed inset-0 z-40 flex flex-col items-center justify-center gap-4 sm:gap-6 p-6 text-center text-white bg-gradient-to-br from-emerald-700 via-teal-700 to-blue-700">
+        <p class="text-lg sm:text-2xl font-bold opacity-90">8. Sınıf • 1. Ünite</p>
+        <h1 class="text-3xl sm:text-6xl font-black drop-shadow-lg">Friendship – Jeopardy</h1>
+
+        <button onclick="closeSplash()" class="mt-2 sm:mt-4 bg-sky-400 hover:bg-sky-500 border-b-8 border-sky-600 rounded-3xl w-32 h-32 sm:w-40 sm:h-40 flex flex-col items-center justify-center shadow-2xl transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+            <span class="text-5xl sm:text-6xl leading-none">▶</span>
+            <span class="text-lg sm:text-2xl font-extrabold mt-1">BAŞLAT</span>
+        </button>
+
+        <p class="max-w-md text-sm sm:text-xl font-bold opacity-90">
+            Puan kutularını aç, kelimenin anlamını bul. <br class="hidden sm:block">Doğru bilirsen puan kazanırsın!
+        </p>
+    </div>
+
+    <!-- Tam Ekran Butonu (sağ alt) -->
+    <button onclick="toggleFullScreen()" class="fixed bottom-2 right-2 sm:bottom-4 sm:right-4 z-50 bg-white/90 text-emerald-900 p-2 sm:p-3 rounded-full shadow-lg hover:bg-white hover:scale-105 transition-all border-2 border-emerald-200 flex items-center justify-center cursor-pointer" title="Tam Ekran / Çıkış">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
         </svg>
     </button>
 
+    <!-- Menü Butonu (oyun başlayınca görünür) -->
+    <button id="menu-btn" onclick="openMenu()" title="Menü" class="hidden fixed bottom-2 left-2 sm:bottom-4 sm:left-4 z-[60] bg-neutral-900/90 text-white w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-lg border-2 border-neutral-600 hover:bg-neutral-800 hover:scale-105 transition-all text-xl cursor-pointer">
+        ☰
+    </button>
+
+    <!-- Menü Paneli -->
+    <div id="game-menu" class="hidden fixed inset-0 z-[60]" onclick="closeMenu()">
+        <div onclick="event.stopPropagation()" class="absolute bottom-14 left-2 sm:bottom-20 sm:left-4 w-56 sm:w-64 bg-neutral-900 text-white rounded-xl border-2 border-neutral-600 shadow-2xl p-3">
+            <p class="text-xs sm:text-sm font-bold tracking-widest text-neutral-400 pb-2 mb-2 border-b-2 border-black">JEOPARDY</p>
+            <button onclick="restartGame()" class="w-full text-left text-base sm:text-xl font-extrabold px-3 py-2 rounded-lg hover:bg-neutral-700 cursor-pointer">Yeniden başlat</button>
+            <button onclick="closeMenu()" class="w-full text-left text-base sm:text-xl font-extrabold px-3 py-2 rounded-lg hover:bg-neutral-700 cursor-pointer">Sürdür</button>
+        </div>
+    </div>
+
     <!-- Kurulum Üst Bar -->
     <div id="setup-bar" class="bg-white/95 backdrop-blur-md shadow-2xl p-4 md:p-6 flex flex-col md:flex-row flex-wrap items-center justify-center gap-4 md:gap-6 rounded-[2rem] mx-auto w-full max-w-5xl relative z-10 border-4 border-white">
         <h1 class="text-xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600 drop-shadow-sm text-center">🤝 Unit 1 - FRIENDSHIP</h1>
-        
-        <!-- Kategori / Set Seçimi -->
+
         <div class="flex items-center gap-2 bg-emerald-50 px-3 py-2 md:px-4 rounded-2xl border-2 border-emerald-200 w-full md:w-auto justify-center">
             <label for="category-select" class="font-bold text-emerald-800 text-sm md:text-base">Kategori:</label>
             <select id="category-select" class="bg-white border-2 border-emerald-300 rounded-xl p-1 font-bold text-emerald-900 focus:outline-none focus:border-emerald-500 text-sm md:text-base">
@@ -82,7 +101,6 @@
         </div>
 
         <div class="flex gap-4 w-full md:w-auto justify-center">
-            <!-- Grup Sayısı -->
             <div class="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-2xl border-2 border-blue-200">
                 <label for="group-count" class="font-bold text-blue-800 text-sm md:text-base">Grup:</label>
                 <select id="group-count" class="bg-white border-2 border-blue-300 rounded-xl p-1 font-bold text-blue-900 focus:outline-none focus:border-blue-500 text-center text-sm md:text-base">
@@ -92,64 +110,51 @@
                     <option value="4">4</option>
                 </select>
             </div>
-
-            <!-- Süre Ayarı -->
             <div class="flex items-center gap-2 bg-orange-50 px-3 py-2 rounded-2xl border-2 border-orange-200">
                 <label for="timer-setting" class="font-bold text-orange-800 text-sm md:text-base">Süre(sn):</label>
                 <input type="number" id="timer-setting" value="10" min="5" max="60" class="bg-white border-2 border-orange-300 rounded-xl p-1 w-12 md:w-16 font-bold text-orange-900 focus:outline-none focus:border-orange-500 text-center text-sm md:text-base">
             </div>
         </div>
 
-        <button id="start-btn" onclick="startGame()" class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-extrabold py-3 px-8 md:py-3 md:px-8 rounded-full shadow-lg border-b-4 border-green-800 hover:translate-y-1 active:border-b-0 transition-all text-lg md:text-xl w-full md:w-auto">
+        <button id="start-btn" onclick="startGame()" class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-extrabold py-3 px-8 md:py-3 md:px-8 rounded-full shadow-lg border-b-4 border-green-800 hover:translate-y-1 active:border-b-0 transition-all text-lg md:text-xl w-full md:w-auto cursor-pointer">
             🚀 Başla!
         </button>
     </div>
 
     <!-- Oyun Alanı -->
     <div id="game-area" class="hidden flex-col items-center mt-6 md:mt-8 w-full">
-        
-        <!-- Puan Tablosu -->
-        <div id="scoreboard" class="flex flex-wrap justify-center gap-3 md:gap-6 mb-6 md:mb-10 w-full max-w-5xl px-2">
-            <!-- Gruplar dinamik eklenecek -->
-        </div>
-
-        <!-- Jeopardy Grid -->
+        <div id="scoreboard" class="flex flex-wrap justify-center gap-3 md:gap-6 mb-6 md:mb-10 w-full max-w-5xl px-2"></div>
         <div class="bg-white/40 p-3 md:p-6 rounded-2xl md:rounded-[2.5rem] shadow-2xl backdrop-blur-md border-2 md:border-4 border-white/50 w-full max-w-4xl mx-auto">
-            <div id="jeopardy-grid" class="grid grid-cols-5 gap-2 md:gap-5">
-                <!-- Butonlar dinamik eklenecek -->
-            </div>
+            <div id="jeopardy-grid" class="grid grid-cols-5 gap-2 md:gap-5"></div>
         </div>
     </div>
 
     <!-- Soru Modalı -->
     <div id="question-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-2xl rounded-[1.5rem] md:rounded-[2rem] shadow-2xl flex flex-col border-4 md:border-8 border-emerald-500 modal-pop">
-            <!-- Modal Header -->
             <div class="p-3 md:p-5 border-b-2 md:border-b-4 border-gray-100 flex justify-between items-center bg-emerald-50 rounded-t-[1rem] md:rounded-t-[1.5rem]">
                 <h2 id="modal-title" class="text-base md:text-2xl font-extrabold text-emerald-900">1. Grup 100 Puan</h2>
                 <div class="text-sm md:text-xl font-extrabold bg-white px-3 py-1 md:px-4 md:py-2 rounded-full shadow-inner border-2 border-gray-200">
                     ⏳ Süre: <span id="timer" class="text-emerald-600 text-lg md:text-2xl">10</span>
                 </div>
             </div>
-            
-            <!-- Modal Body -->
+
             <div class="p-6 md:p-10 flex flex-col items-center min-h-[250px] md:min-h-[300px] justify-center relative bg-gradient-to-b from-white to-emerald-50 rounded-b-[1rem] md:rounded-b-[1.5rem]">
                 <h1 id="english-word" class="text-3xl md:text-5xl font-extrabold text-teal-800 mb-6 md:mb-10 text-center drop-shadow-sm px-2 md:px-4 break-words w-full">word</h1>
-                
-                <button id="show-answer-btn" onclick="showAnswer()" class="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-white font-extrabold py-3 px-6 md:py-4 md:px-10 rounded-full shadow-xl border-b-4 border-orange-600 text-lg md:text-2xl transition-transform hover:scale-105 active:scale-95 active:border-b-0 w-full md:w-auto">
+
+                <button id="show-answer-btn" onclick="showAnswer()" class="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-white font-extrabold py-3 px-6 md:py-4 md:px-10 rounded-full shadow-xl border-b-4 border-orange-600 text-lg md:text-2xl transition-transform hover:scale-105 active:scale-95 active:border-b-0 w-full md:w-auto cursor-pointer">
                     Cevabı Göster 🎯
                 </button>
 
-                <!-- Cevap Alanı -->
                 <div id="answer-area" class="hidden flex-col items-center w-full">
                     <div id="turkish-word" class="bg-emerald-900 text-white text-xl md:text-3xl font-extrabold py-3 px-4 md:py-4 md:px-12 rounded-2xl mb-6 md:mb-8 shadow-inner border-2 md:border-4 border-emerald-950 text-center w-full">
                         cevap
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3 md:gap-6 w-full justify-center">
-                        <button id="correct-btn" onclick="handleResult(true)" class="bg-gradient-to-r from-green-400 to-green-600 border-b-4 border-green-800 hover:from-green-500 hover:to-green-700 text-white font-extrabold py-3 px-6 md:py-4 md:px-10 rounded-2xl flex-1 shadow-lg transition-transform hover:-translate-y-1 active:translate-y-1 active:border-b-0 text-xl md:text-2xl">
+                        <button id="correct-btn" onclick="handleResult(true)" class="bg-gradient-to-r from-green-400 to-green-600 border-b-4 border-green-800 hover:from-green-500 hover:to-green-700 text-white font-extrabold py-3 px-6 md:py-4 md:px-10 rounded-2xl flex-1 shadow-lg transition-transform hover:-translate-y-1 active:translate-y-1 active:border-b-0 text-xl md:text-2xl cursor-pointer">
                             ✅ DOĞRU
                         </button>
-                        <button onclick="handleResult(false)" class="bg-gradient-to-r from-red-400 to-red-600 border-b-4 border-red-800 hover:from-red-500 hover:to-red-700 text-white font-extrabold py-3 px-6 md:py-4 md:px-10 rounded-2xl flex-1 shadow-lg transition-transform hover:-translate-y-1 active:translate-y-1 active:border-b-0 text-xl md:text-2xl">
+                        <button onclick="handleResult(false)" class="bg-gradient-to-r from-red-400 to-red-600 border-b-4 border-red-800 hover:from-red-500 hover:to-red-700 text-white font-extrabold py-3 px-6 md:py-4 md:px-10 rounded-2xl flex-1 shadow-lg transition-transform hover:-translate-y-1 active:translate-y-1 active:border-b-0 text-xl md:text-2xl cursor-pointer">
                             ❌ YANLIŞ
                         </button>
                     </div>
@@ -171,7 +176,7 @@
                     Kazanan: 1. Grup
                 </p>
                 <br>
-                <button onclick="location.reload()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold py-3 px-8 md:py-4 md:px-12 rounded-full shadow-2xl border-b-4 border-teal-900 text-lg md:text-2xl transition-transform hover:scale-105 active:scale-95 active:border-b-0">
+                <button onclick="restartGame()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold py-3 px-8 md:py-4 md:px-12 rounded-full shadow-2xl border-b-4 border-teal-900 text-lg md:text-2xl transition-transform hover:scale-105 active:scale-95 active:border-b-0 cursor-pointer">
                     🔄 Yeniden Oyna
                 </button>
             </div>
@@ -231,14 +236,50 @@
         let currentGroup = 0;
         let gameDuration = 10;
         let answeredQuestionsCount = 0;
-        
         let currentPoints = 0;
         let currentCellBtn = null;
         let timerInterval;
         let timeLeft = 0;
         let isAnswerShown = false;
-        
-        const pointValues = [50, 100, 150, 200, 250, 300]; 
+        let menuPausedTimer = false;
+
+        const pointValues = [50, 100, 150, 200, 250, 300];
+
+        function closeSplash() {
+            document.getElementById('splash').style.display = 'none';
+        }
+
+        function openMenu() {
+            menuPausedTimer = false;
+            const questionOpen = !document.getElementById('question-modal').classList.contains('hidden');
+            // Soru açıkken ve cevap henüz gösterilmediyse süreyi duraklat
+            if (questionOpen && !isAnswerShown && timeLeft > 0) {
+                clearInterval(timerInterval);
+                menuPausedTimer = true;
+            }
+            document.getElementById('game-menu').classList.remove('hidden');
+        }
+
+        function closeMenu() {
+            document.getElementById('game-menu').classList.add('hidden');
+            if (menuPausedTimer) {
+                menuPausedTimer = false;
+                runTimer();
+            }
+        }
+
+        function restartGame() {
+            menuPausedTimer = false;
+            clearInterval(timerInterval);
+            document.getElementById('game-menu').classList.add('hidden');
+            document.getElementById('question-modal').classList.add('hidden');
+            document.getElementById('end-modal').classList.add('hidden');
+            document.getElementById('end-modal').classList.remove('flex');
+            document.getElementById('game-area').classList.add('hidden');
+            document.getElementById('game-area').classList.remove('flex');
+            document.getElementById('menu-btn').classList.add('hidden');
+            document.getElementById('setup-bar').classList.remove('hidden');
+        }
 
         function toggleFullScreen() {
             if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
@@ -272,8 +313,7 @@
             const selectedSetKey = document.getElementById('category-select').value;
             numGroups = parseInt(document.getElementById('group-count').value);
             gameDuration = parseInt(document.getElementById('timer-setting').value);
-            
-            if(isNaN(gameDuration) || gameDuration < 5) gameDuration = 10;
+            if (isNaN(gameDuration) || gameDuration < 5) gameDuration = 10;
 
             let pool = [];
             if (selectedSetKey === 'all') {
@@ -292,16 +332,17 @@
             }
 
             shuffle(pool);
-            activeWordList = pool.slice(0, 30); 
+            activeWordList = pool.slice(0, 30);
 
             document.getElementById('setup-bar').classList.add('hidden');
+            document.getElementById('menu-btn').classList.remove('hidden');
             document.getElementById('game-area').classList.remove('hidden');
             document.getElementById('game-area').classList.add('flex');
-            
+
             scores = Array(numGroups).fill(0);
             currentGroup = 0;
             answeredQuestionsCount = 0;
-            
+
             renderScoreboard();
             renderGrid();
         }
@@ -327,11 +368,9 @@
                 for (let col = 0; col < 5; col++) {
                     const btn = document.createElement('button');
                     const wordData = activeWordList[wordIndex];
-                    
-                    btn.className = "game-btn text-white font-extrabold py-4 md:py-6 shadow-sm md:shadow-lg text-lg md:text-3xl tracking-wider w-full flex items-center justify-center";
+                    btn.className = "game-btn text-white font-extrabold py-4 md:py-6 shadow-sm md:shadow-lg text-lg md:text-3xl tracking-wider w-full flex items-center justify-center cursor-pointer";
                     btn.innerText = points;
                     btn.onclick = () => openQuestion(btn, points, wordData);
-                    
                     grid.appendChild(btn);
                     wordIndex++;
                 }
@@ -342,35 +381,38 @@
             currentCellBtn = btn;
             currentPoints = points;
             isAnswerShown = false;
-            
+
             document.getElementById('modal-title').innerText = `${currentGroup + 1}. Grup • ${points} Puan`;
             document.getElementById('english-word').innerText = wordData.en;
             document.getElementById('turkish-word').innerText = wordData.tr;
-            
-            // Doğru butonunu tekrar görünür yap
             document.getElementById('correct-btn').style.display = 'block';
 
             document.getElementById('show-answer-btn').classList.remove('hidden');
             document.getElementById('answer-area').classList.add('hidden');
+            document.getElementById('answer-area').classList.remove('flex');
             document.getElementById('question-modal').classList.remove('hidden');
-            
+
             startTimer();
         }
 
+        // Yeni soruda baştan, menüden dönünce kaldığı yerden çalışır
         function startTimer() {
             timeLeft = gameDuration;
             updateTimerUI();
-            
+            runTimer();
+        }
+
+        function runTimer() {
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 timeLeft--;
                 updateTimerUI();
-                
+
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     if (!isAnswerShown) {
                         showAnswer();
-                        // Süre dolduğunda doğru butonunu gizleyerek sadece yanlış butonuna basılmasını zorunlu kıl
+                        // Süre dolunca sadece YANLIŞ butonu kalsın
                         document.getElementById('correct-btn').style.display = 'none';
                     }
                 }
@@ -380,7 +422,7 @@
         function updateTimerUI() {
             const timerEl = document.getElementById('timer');
             timerEl.innerText = Math.max(0, timeLeft);
-            
+
             if (timeLeft <= 3) {
                 timerEl.classList.remove('text-emerald-600');
                 timerEl.classList.add('text-red-600', 'animate-pulse');
@@ -400,25 +442,25 @@
 
         function handleResult(isCorrect) {
             clearInterval(timerInterval);
-            
+
             if (isCorrect) {
                 scores[currentGroup] += currentPoints;
             } else {
                 scores[currentGroup] -= currentPoints;
             }
-            
+
             document.getElementById(`score-val-${currentGroup}`).innerText = scores[currentGroup];
-            
+
             currentCellBtn.disabled = true;
             currentCellBtn.innerText = '✔';
             currentCellBtn.classList.add('text-2xl', 'md:text-4xl', 'opacity-50');
-            
+
             currentGroup = (currentGroup + 1) % numGroups;
             document.getElementById('question-modal').classList.add('hidden');
             updateScoreboardUI();
-            
+
             answeredQuestionsCount++;
-            if(answeredQuestionsCount === 30) {
+            if (answeredQuestionsCount === 30) {
                 setTimeout(showEndGameScreen, 500);
             }
         }
@@ -437,20 +479,20 @@
         function showEndGameScreen() {
             const maxScore = Math.max(...scores);
             const winners = [];
-            
-            for(let i = 0; i < scores.length; i++) {
-                if(scores[i] === maxScore) {
+
+            for (let i = 0; i < scores.length; i++) {
+                if (scores[i] === maxScore) {
                     winners.push(`${i + 1}. Grup`);
                 }
             }
-            
+
             let winnerMessage = "";
-            if(winners.length === 1) {
+            if (winners.length === 1) {
                 winnerMessage = `🎉 Harika! Kazanan: ${winners[0]} (${maxScore} Puan) 🎉`;
             } else {
                 winnerMessage = `🤝 Beraberlik! ${winners.join(' ve ')} kazandı! (${maxScore} Puan) 🤝`;
             }
-            
+
             document.getElementById('winner-text').innerText = winnerMessage;
             document.getElementById('game-area').classList.add('hidden');
             document.getElementById('end-modal').classList.remove('hidden');
