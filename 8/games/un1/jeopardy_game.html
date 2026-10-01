@@ -368,7 +368,7 @@
                 for (let col = 0; col < 5; col++) {
                     const btn = document.createElement('button');
                     const wordData = activeWordList[wordIndex];
-                    btn.className = "game-btn text-white font-extrabold py-4 md:py-6 shadow-sm md:shadow-lg text-lg md:text-3xl tracking-wider w-full flex items-center justify-center cursor-pointer";
+                    btn.className = "game-btn text-white font-extrabold py-4 md:py-4 shadow-sm md:shadow-lg text-lg md:text-3xl tracking-wider w-full flex items-center justify-center cursor-pointer";
                     btn.innerText = points;
                     btn.onclick = () => openQuestion(btn, points, wordData);
                     grid.appendChild(btn);
