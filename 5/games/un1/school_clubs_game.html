@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Clubs - Train Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        html, body { height: 100%; overflow: hidden; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+            height: 100dvh;
+        }
+
+        /* ---------- Düğmeler (Jeopardy ile aynı stil) ---------- */
+        .game-btn {
+            background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%);
+            border-bottom: 4px solid #0284c7;
+            border-radius: 1rem;
+            transition: all 0.2s ease-in-out;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        @media (min-width: 640px) {
+            .game-btn { border-bottom-width: 6px; border-radius: 1.5rem; }
+        }
+        .game-btn:hover:not(:disabled) {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 8px 12px -3px rgba(0,0,0,0.25);
+        }
+        .game-btn:active:not(:disabled) { transform: translateY(2px); border-bottom-width: 2px; }
+        .game-btn:disabled {
+            background: #cbd5e1; border-bottom: 4px solid #94a3b8; color: #f1f5f9;
+            cursor: not-allowed; text-shadow: none; transform: none;
+        }
+
+        .active-group {
+            background: #fde047 !important;
+            border: 3px solid #f59e0b !important;
+            transform: scale(1.03);
+            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.4);
+        }
+
+        .modal-pop { animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* ---------- Yerleşim (kaydırma yok) ---------- */
+        #game-area { flex: 1; min-height: 0; }
+        #main { display: flex; flex-direction: row; gap: .5rem; flex: 1; min-height: 0; width: 100%; }
+        @media (orientation: portrait) { #main { flex-direction: column; } }
+
+        #board-wrap {
+            flex: 1; min-width: 0; min-height: 0; display: flex; padding: 6px;
+            background: rgba(255,255,255,.4); border: 4px solid rgba(255,255,255,.5);
+            border-radius: 1.5rem; backdrop-filter: blur(8px); box-shadow: 0 10px 25px rgba(0,0,0,.15);
+        }
+        #board-pad { flex: 1; min-width: 0; min-height: 0; display: flex; padding: 4px 3%; }
+        #board {
+            flex: 1; min-width: 0; min-height: 0; position: relative; display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-rows: repeat(4, minmax(0, 1fr));
+        }
+        #track { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 0; pointer-events: none; }
+
+        #side {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6rem;
+            width: clamp(130px, 19vw, 230px); flex-shrink: 0; padding: .5rem;
+            background: rgba(255,255,255,.4); border: 4px solid rgba(255,255,255,.5);
+            border-radius: 1.5rem; backdrop-filter: blur(8px); box-shadow: 0 10px 25px rgba(0,0,0,.15);
+        }
+        @media (orientation: portrait) {
+            #side { width: auto; flex-direction: row; justify-content: space-around; }
+        }
+
+        /* ---------- Zar ---------- */
+        .dice {
+            width: clamp(64px, min(14vw, 20vh), 150px); aspect-ratio: 1; border-radius: 22%;
+            background: linear-gradient(135deg, #e0e7ff, #a5b4fc);
+            border: 4px solid #818cf8; box-shadow: 5px 5px 0 #6366f1, 0 10px 18px rgba(0,0,0,.25);
+            font-size: clamp(2rem, min(8vw, 11vh), 5rem); font-weight: 900; line-height: 1;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; user-select: none;
+            transition: transform .15s;
+        }
+        .dice:hover { transform: scale(1.05); }
+        .dice.rolling { animation: shake .25s linear infinite; }
+        @keyframes shake {
+            0% { transform: rotate(0) scale(1.05); } 25% { transform: rotate(-14deg) scale(1.08); }
+            50% { transform: rotate(0) scale(1.05); } 75% { transform: rotate(14deg) scale(1.08); } 100% { transform: rotate(0) scale(1.05); }
+        }
+        .d1 { color: #f59e0b; } .d2 { color: #ef4444; } .d3 { color: #2563eb; } .d0 { color: #6366f1; }
+
+        /* ---------- Vagonlar ---------- */
+        .cell { position: relative; z-index: 1; container-type: size; padding: 2.5%; min-width: 0; min-height: 0; }
+        .cell.free { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2cqmin; }
+        .car {
+            position: relative; width: 100%; height: 100%; background: #fff; border-radius: 12px;
+            border-top: 5px solid #1d4ed8; box-shadow: 0 4px 8px rgba(0,0,0,.25);
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+            padding-top: 1cqmin;
+        }
+        .car .badge {
+            position: absolute; top: 2cqmin; left: 2cqmin; background: #1d4ed8; color: #fff; font-weight: 900;
+            font-size: 11cqmin; min-width: 16cqmin; height: 16cqmin; border-radius: 999px; padding: 0 2cqmin;
+            display: flex; align-items: center; justify-content: center; line-height: 1;
+        }
+        .car .icon { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; font-size: 34cqmin; line-height: 1; }
+        .car .label { font-size: 11cqmin; font-weight: 900; color: #1e3a8a; line-height: 1.05; text-align: center; padding: 0 2cqmin; }
+        .car .bar { width: 100%; height: 5cqmin; background: linear-gradient(#14b8a6, #0e7490); flex-shrink: 0; }
+        .car .wheels { position: absolute; left: 0; right: 0; bottom: -3.5cqmin; display: flex; justify-content: space-around; padding: 0 14%; pointer-events: none; }
+        .car .wheels i { width: 12cqmin; height: 12cqmin; border-radius: 50%; background: radial-gradient(circle, #fff 0 18%, #0e7490 20% 55%, #164e63 57%); }
+
+        .car.special .icon { font-size: 22cqmin; flex: 0 0 auto; }
+        .car.special { justify-content: space-between; }
+        .car.special .sp-mid { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .car.special .label { font-size: 10.5cqmin; }
+        .sp-oops { background: #fee2e2; border-top-color: #dc2626; } .sp-oops .label { color: #b91c1c; }
+        .sp-fwd  { background: #dcfce7; border-top-color: #16a34a; } .sp-fwd .label  { color: #15803d; }
+        .sp-back { background: #ffedd5; border-top-color: #ea580c; } .sp-back .label { color: #c2410c; }
+
+        .tokens { height: 22cqmin; display: flex; align-items: center; justify-content: center; gap: 1cqmin; flex-shrink: 0; }
+        .token {
+            width: 20cqmin; height: 20cqmin; border-radius: 50%; border: 0.8cqmin solid #fff; color: #fff;
+            font-weight: 900; font-size: 11cqmin; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,.4); line-height: 1;
+        }
+        .token.hop { animation: hop .35s ease-out; }
+        @keyframes hop { 0% { transform: translateY(0); } 40% { transform: translateY(-12cqmin) scale(1.25); } 100% { transform: translateY(0); } }
+
+        .sign {
+            width: 100%; height: 44cqmin; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(#fcd34d, #f59e0b); color: #1d4ed8; font-weight: 900;
+            font-size: 15cqmin; letter-spacing: .05em; filter: drop-shadow(0 3px 3px rgba(0,0,0,.3));
+        }
+        .sign-start  { clip-path: polygon(0 0, 80% 0, 100% 50%, 80% 100%, 0 100%); padding-right: 12%; }
+        .sign-finish { clip-path: polygon(20% 0, 100% 0, 100% 100%, 20% 100%, 0 50%); padding-left: 12%; }
+        .loco { font-size: 55cqmin; line-height: 1; }
+
+        .tok-dot { display: inline-block; width: 1.1em; height: 1.1em; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,.4); vertical-align: middle; }
+
+        .q-card { width: 100%; background: #fff; border: 3px solid #bfdbfe; border-radius: 1rem; padding: .6rem .9rem; box-shadow: 0 2px 6px rgba(0,0,0,.08); }
+        .q-card .ask { font-size: clamp(1rem, 2.6vw, 1.5rem); font-weight: 900; color: #6d28d9; }
+        .q-card .ans { font-size: clamp(.8rem, 2vw, 1.1rem); font-weight: 700; color: #0f766e; margin-top: .25rem; }
+    </style>
+</head>
+<body class="text-gray-800 p-2 sm:p-3 relative flex flex-col items-center">
+
+    <!-- Karşılama Ekranı -->
+    <div id="splash" class="fixed inset-0 z-40 flex flex-col items-center justify-center gap-4 sm:gap-6 p-6 text-center text-white bg-gradient-to-br from-indigo-700 via-purple-700 to-pink-600">
+        <p class="text-lg sm:text-2xl font-bold opacity-90">Pair Work Game</p>
+        <h1 class="text-3xl sm:text-6xl font-black drop-shadow-lg">🚂 School Clubs – Train Game</h1>
+
+        <button onclick="closeSplash()" class="mt-2 sm:mt-4 bg-sky-400 hover:bg-sky-500 border-b-8 border-sky-600 rounded-3xl w-32 h-32 sm:w-40 sm:h-40 flex flex-col items-center justify-center shadow-2xl transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+            <span class="text-5xl sm:text-6xl leading-none">▶</span>
+            <span class="text-lg sm:text-2xl font-extrabold mt-1">BAŞLAT</span>
+        </button>
+
+        <p class="max-w-md text-sm sm:text-xl font-bold opacity-90">
+            Zarı at, trenle ilerle. <br class="hidden sm:block">Kulüp vagonuna gelince partnerinle iki soru sor ve cevapla!
+        </p>
+    </div>
+
+    <!-- Tam Ekran Butonu -->
+    <button onclick="toggleFullScreen()" class="fixed top-2 right-2 sm:top-3 sm:right-3 z-[70] bg-white/90 text-blue-900 p-2 sm:p-3 rounded-full shadow-lg hover:bg-white hover:scale-105 transition-all border-2 border-blue-200 flex items-center justify-center cursor-pointer" title="Tam Ekran / Çıkış">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+
+    <!-- Menü Butonu -->
+    <button id="menu-btn" onclick="openMenu()" title="Menü" class="hidden fixed top-2 left-2 sm:top-3 sm:left-3 z-[70] bg-neutral-900/90 text-white w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-lg border-2 border-neutral-600 hover:bg-neutral-800 hover:scale-105 transition-all text-xl cursor-pointer">
+        ☰
+    </button>
+
+    <!-- Menü Paneli -->
+    <div id="game-menu" class="hidden fixed inset-0 z-[65]" onclick="closeMenu()">
+        <div onclick="event.stopPropagation()" class="absolute top-14 left-2 sm:top-[4.25rem] sm:left-3 w-56 sm:w-64 bg-neutral-900 text-white rounded-xl border-2 border-neutral-600 shadow-2xl p-3">
+            <p class="text-xs sm:text-sm font-bold tracking-widest text-neutral-400 pb-2 mb-2 border-b-2 border-black">SCHOOL CLUBS</p>
+            <button onclick="restartGame()" class="w-full text-left text-base sm:text-xl font-extrabold px-3 py-2 rounded-lg hover:bg-neutral-700 cursor-pointer">Yeniden başlat</button>
+            <button onclick="closeMenu()" class="w-full text-left text-base sm:text-xl font-extrabold px-3 py-2 rounded-lg hover:bg-neutral-700 cursor-pointer">Sürdür</button>
+        </div>
+    </div>
+
+    <!-- Kurulum -->
+    <div id="setup-bar" class="my-auto w-full max-w-3xl bg-white/90 backdrop-blur-md shadow-xl p-4 sm:p-8 flex flex-col items-center justify-center gap-3 sm:gap-5 rounded-2xl sm:rounded-3xl border-2 sm:border-4 border-white">
+        <h1 class="text-xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 text-center drop-shadow-sm">🚂 School Clubs Train Game</h1>
+        <p class="text-center text-xs sm:text-lg font-bold text-blue-900 bg-blue-50 border-2 border-blue-200 rounded-xl px-3 py-2">
+            Roll the cube to play the game. Ask and answer two questions about the school clubs and activities in pairs.
+        </p>
+
+        <div class="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-xl border-2 border-blue-200">
+            <label for="player-count" class="font-bold text-sm sm:text-lg text-blue-800">Oyuncu sayısı:</label>
+            <select id="player-count" class="bg-white border-2 border-blue-300 rounded-lg p-1 text-sm sm:text-lg font-bold text-blue-900 focus:outline-none text-center">
+                <option value="2" selected>2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+        </div>
+
+        <button onclick="startGame()" class="w-full sm:w-auto bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-extrabold py-2.5 sm:py-3 px-6 sm:px-10 rounded-xl sm:rounded-full shadow-lg border-b-4 border-green-800 transition-all text-base sm:text-2xl cursor-pointer">
+            🚀 Başla!
+        </button>
+    </div>
+
+    <!-- Oyun Alanı -->
+    <div id="game-area" class="hidden flex-col items-stretch w-full max-w-[1500px] gap-2">
+        <div id="scoreboard" class="flex flex-wrap justify-center gap-2 sm:gap-3 px-12 sm:px-16 shrink-0"></div>
+
+        <div id="main">
+            <div id="board-wrap">
+                <div id="board-pad">
+                    <div id="board"></div>
+                </div>
+            </div>
+
+            <div id="side">
+                <div id="turn-label" class="text-center font-extrabold text-sm sm:text-xl text-blue-900"></div>
+                <div id="dice" class="dice d0" onclick="rollDice()" title="Zarı at">?</div>
+                <button id="roll-btn" onclick="rollDice()" class="game-btn text-white font-extrabold py-2 px-3 sm:py-3 sm:px-5 text-sm sm:text-xl cursor-pointer">🎲 Zarı At!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bilgi / Soru Modalı -->
+    <div id="info-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-white w-full max-w-xl rounded-2xl sm:rounded-[2rem] shadow-2xl border-4 sm:border-8 border-blue-400 modal-pop max-h-[94dvh] overflow-y-auto">
+            <div id="info-header" class="p-3 sm:p-4 border-b-2 sm:border-b-4 border-gray-100 bg-blue-50 rounded-t-xl sm:rounded-t-[1.5rem] flex items-center gap-2 font-extrabold text-blue-800 text-base sm:text-xl"></div>
+            <div id="info-body" class="p-3 sm:p-6 bg-gradient-to-b from-white to-blue-50 flex flex-col items-center gap-2 sm:gap-3"></div>
+            <div class="p-3 sm:p-4 bg-blue-50 rounded-b-xl sm:rounded-b-[1.5rem]">
+                <button id="info-btn" class="w-full bg-gradient-to-r from-green-400 to-green-600 border-b-4 border-green-800 hover:from-green-500 hover:to-green-700 text-white font-extrabold py-3 px-4 rounded-xl sm:rounded-2xl shadow-lg text-lg sm:text-2xl cursor-pointer"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Oyun Sonu Modalı -->
+    <div id="end-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl sm:rounded-[3rem] p-6 sm:p-12 text-center shadow-2xl border-4 sm:border-8 border-yellow-400 modal-pop max-w-2xl w-full relative overflow-hidden">
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 mb-4 sm:mb-6 drop-shadow-md">🏁 FINISH! 🏁</h1>
+            <p id="winner-text" class="text-lg sm:text-3xl font-bold text-blue-900 mb-6 sm:mb-8 bg-blue-50 py-3 px-4 sm:py-4 sm:px-8 rounded-2xl border-2 border-blue-200 inline-block shadow-sm"></p>
+            <br>
+            <button onclick="restartGame()" class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-extrabold py-3 px-8 sm:py-4 sm:px-12 rounded-full shadow-xl border-b-4 border-purple-900 text-lg sm:text-2xl transition-transform hover:scale-105 cursor-pointer">
+                🔄 Yeniden Oyna
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ================= VERİ (buradan düzenleyebilirsin) =================
+        const Q1 = ["What is your favourite school club?", "Which school club do you like?"];
+
+        const CLUBS = {
+            1:  { icon: "🎸", name: "Music Club",    qs: ["Do you like playing the guitar?", "Do you like playing the keyboard?", "Do you like singing?"] },
+            2:  { icon: "♟️", name: "Chess Club",    qs: ["Do you like playing chess?", "Do you like playing board games?"] },
+            3:  { icon: "🧪", name: "Science Club",  qs: ["Do you like doing experiments?", "Do you like science?"] },
+            5:  { icon: "🧮", name: "Maths Club",    qs: ["Do you like maths?", "Do you like solving puzzles?"] },
+            6:  { icon: "⚽", name: "Sports Club",   qs: ["Do you like playing football?", "Do you like running?"] },
+            7:  { icon: "🎭", name: "Drama Club",    qs: ["Do you like acting?", "Do you like acting in school plays?"] },
+            9:  { icon: "🎨", name: "Art Club",      qs: ["Do you like painting?", "Do you like drawing pictures?"] },
+            10: { icon: "🤖", name: "Technology Club", qs: ["Do you like building robots?", "Do you like using computers?"] },
+            12: { icon: "🌱", name: "Environment Club",qs: ["Do you like planting flowers?", "Do you like growing vegetables?"] }
+        };
+
+        const SPECIALS = {
+            4:  { kind: "oops", icon: "😱", text: "OOPS! GO BACK TO THE START!" },
+            8:  { kind: "fwd",  icon: "⏩", text: "MOVE ONE STEP FORWARD!", delta: 1 },
+            11: { kind: "back", icon: "⏪", text: "MOVE ONE STEP BACK!", delta: -1 },
+            13: { kind: "back", icon: "⏪", text: "MOVE ONE STEP BACK!", delta: -1 }
+        };
+
+        const FINISH = 14;
+        const COLORS = ["#ef4444", "#2563eb", "#16a34a", "#f59e0b"];
+
+        // kare numarası -> [satır, sütun]
+        const GRID = {
+            0: [1,1], 1: [1,2], 2: [1,3], 3: [1,4],
+            4: [2,4], 5: [2,3], 6: [2,2], 7: [2,1],
+            8: [3,1], 9: [3,2], 10: [3,3], 11: [3,4],
+            12: [4,4], 13: [4,3], 14: [4,2]
+        };
+
+        // ================= DURUM =================
+        let N = 2, pos = [], cur = 0, busy = false, gameId = 0;
+        const $ = id => document.getElementById(id);
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+        const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+        // ================= TAHTA =================
+        function carHTML(n) {
+            const wheels = '<div class="wheels"><i></i><i></i></div>';
+            if (CLUBS[n]) {
+                const c = CLUBS[n];
+                return `<div class="car"><div class="badge">${n}</div><div class="icon">${c.icon}</div><div class="label">${c.name}</div><div class="tokens" id="tok-${n}"></div><div class="bar"></div>${wheels}</div>`;
+            }
+            const s = SPECIALS[n];
+            return `<div class="car special sp-${s.kind}"><div class="badge">${n}</div><div class="sp-mid"><div class="icon">${s.icon}</div><div class="label">${s.text}</div></div><div class="tokens" id="tok-${n}"></div><div class="bar"></div>${wheels}</div>`;
+        }
+
+        function buildBoard() {
+            const board = $('board');
+            let html = `<svg id="track" viewBox="0 0 400 400" preserveAspectRatio="none">
+                <polyline points="50,50 408,50 408,150 -8,150 -8,250 408,250 408,350 150,350" fill="none" stroke="#1e3a8a" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                <polyline points="50,50 408,50 408,150 -8,150 -8,250 408,250 408,350 150,350" fill="none" stroke="#93c5fd" stroke-width="2" stroke-dasharray="3 9" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+            </svg>`;
+            for (let n = 0; n <= FINISH; n++) {
+                const [r, c] = GRID[n];
+                const style = `grid-row:${r};grid-column:${c};`;
+                if (n === 0) {
+                    html += `<div class="cell free" style="${style}"><div class="sign sign-start">START</div><div class="tokens" id="tok-0"></div></div>`;
+                } else if (n === FINISH) {
+                    html += `<div class="cell free" style="${style}"><div class="sign sign-finish">FINISH</div><div class="tokens" id="tok-${FINISH}"></div></div>`;
+                } else {
+                    html += `<div class="cell" style="${style}">${carHTML(n)}</div>`;
+                }
+            }
+            html += `<div class="cell free" style="grid-row:4;grid-column:1;"><div class="loco">🚂</div></div>`;
+            board.innerHTML = html;
+        }
+
+        function renderTokens(hopIdx = -1) {
+            document.querySelectorAll('.tokens').forEach(el => el.innerHTML = '');
+            for (let i = 0; i < N; i++) {
+                const holder = $('tok-' + pos[i]);
+                if (!holder) continue;
+                const t = document.createElement('div');
+                t.className = 'token' + (i === hopIdx ? ' hop' : '');
+                t.style.background = COLORS[i];
+                t.textContent = i + 1;
+                holder.appendChild(t);
+            }
+        }
+
+        function renderScoreboard() {
+            const board = $('scoreboard');
+            board.innerHTML = '';
+            for (let i = 0; i < N; i++) {
+                const d = document.createElement('div');
+                d.id = 'pl-' + i;
+                d.className = 'px-3 py-1 sm:px-6 sm:py-2 rounded-lg sm:rounded-2xl border-2 sm:border-4 border-white bg-white/80 font-extrabold text-xs sm:text-xl shadow-md transition-all duration-300 text-blue-900 text-center';
+                d.innerHTML = `<span class="tok-dot" style="background:${COLORS[i]}"></span> ${i + 1}. Oyuncu`;
+                board.appendChild(d);
+            }
+            updateTurnUI();
+        }
+
+        function updateTurnUI() {
+            for (let i = 0; i < N; i++) {
+                const d = $('pl-' + i);
+                if (d) d.classList.toggle('active-group', i === cur);
+            }
+            $('turn-label').innerHTML = `<span class="tok-dot" style="background:${COLORS[cur]}"></span> ${cur + 1}. Oyuncu`;
+            $('roll-btn').disabled = busy;
+        }
+
+        function setDice(v, rolling = false) {
+            const d = $('dice');
+            d.textContent = v === 0 ? '?' : v;
+            d.className = 'dice d' + v + (rolling ? ' rolling' : '');
+        }
+
+        // ================= MODAL =================
+        function showModal(headerHTML, bodyHTML, btnText) {
+            return new Promise(resolve => {
+                $('info-header').innerHTML = headerHTML;
+                $('info-body').innerHTML = bodyHTML;
+                $('info-btn').textContent = btnText;
+                $('info-modal').classList.remove('hidden');
+                $('info-btn').onclick = () => {
+                    $('info-modal').classList.add('hidden');
+                    resolve();
+                };
+            });
+        }
+
+        const playerHeader = extra => `<span class="tok-dot" style="background:${COLORS[cur]}"></span> ${cur + 1}. Oyuncu ${extra}`;
+
+        function showClub(club) {
+            const body = `
+                <div class="text-center leading-none">
+                    <div style="font-size:clamp(3rem,10vw,5rem)">${club.icon}</div>
+                    <div class="text-xl sm:text-3xl font-black text-purple-700 mt-1">${club.name}</div>
+                </div>
+                <div class="q-card"><div class="ask">① ${pick(Q1)}</div><div class="ans">💬 My favourite school club is ______ club.</div></div>
+                <div class="q-card"><div class="ask">② ${pick(club.qs)}</div><div class="ans">💬 Yes, I do. / No, I don't.</div></div>
+                <p class="text-xs sm:text-base font-bold text-blue-900 text-center">👥 Partnerine sor, o da cevaplasın. Sonra rol değiştirin!</p>`;
+            return showModal(playerHeader('• ' + club.name), body, '✅ Tamam – Sıradaki!');
+        }
+
+        function showSpecial(sp) {
+            const colors = { oops: '#b91c1c', fwd: '#15803d', back: '#c2410c' };
+            const body = `
+                <div style="font-size:clamp(3rem,10vw,5rem)" class="leading-none">${sp.icon}</div>
+                <div class="text-2xl sm:text-4xl font-black text-center" style="color:${colors[sp.kind]}">${sp.text}</div>`;
+            return showModal(playerHeader(''), body, '▶ Devam');
+        }
+
+        // ================= OYUN AKIŞI =================
+        async function moveForward(steps, gid) {
+            for (let i = 0; i < steps; i++) {
+                if (pos[cur] >= FINISH) break;
+                pos[cur]++;
+                renderTokens(cur);
+                await sleep(380);
+                if (gid !== gameId) return;
+            }
+        }
+
+        async function applySpecial(sp, gid) {
+            if (sp.kind === 'oops') {
+                while (pos[cur] > 0) {
+                    pos[cur]--;
+                    renderTokens(cur);
+                    await sleep(170);
+                    if (gid !== gameId) return;
+                }
+            } else {
+                pos[cur] = Math.max(0, Math.min(FINISH, pos[cur] + sp.delta));
+                renderTokens(cur);
+                await sleep(500);
+            }
+        }
+
+        function win() {
+            $('winner-text').innerHTML = `🎉 Kazanan: <span class="tok-dot" style="background:${COLORS[cur]}"></span> ${cur + 1}. Oyuncu 🎉`;
+            $('end-modal').classList.remove('hidden');
+            $('end-modal').classList.add('flex');
+        }
+
+        function nextTurn() {
+            cur = (cur + 1) % N;
+            busy = false;
+            setDice(0);
+            updateTurnUI();
+        }
+
+        async function rollDice() {
+            if (busy) return;
+            busy = true;
+            const gid = gameId;
+            updateTurnUI();
+
+            for (let i = 0; i < 10; i++) {
+                setDice(1 + Math.floor(Math.random() * 3), true);
+                await sleep(80);
+                if (gid !== gameId) return;
+            }
+            const v = 1 + Math.floor(Math.random() * 3);
+            setDice(v);
+            await sleep(350);
+            if (gid !== gameId) return;
+
+            await moveForward(v, gid);
+            if (gid !== gameId) return;
+            if (pos[cur] >= FINISH) return win();
+
+            const sp = SPECIALS[pos[cur]];
+            if (sp) {
+                await showSpecial(sp);
+                if (gid !== gameId) return;
+                await applySpecial(sp, gid);
+                if (gid !== gameId) return;
+                if (pos[cur] >= FINISH) return win();
+            }
+
+            const club = CLUBS[pos[cur]];
+            if (club) {
+                await showClub(club);
+                if (gid !== gameId) return;
+            }
+            nextTurn();
+        }
+
+        function startGame() {
+            N = parseInt($('player-count').value);
+            gameId++;
+            busy = false;
+            pos = Array(N).fill(0);
+            cur = 0;
+
+            $('setup-bar').classList.add('hidden');
+            $('menu-btn').classList.remove('hidden');
+            $('game-area').classList.remove('hidden');
+            $('game-area').classList.add('flex');
+
+            setDice(0);
+            renderScoreboard();
+            renderTokens();
+        }
+
+        // ================= MENÜ / EKRAN =================
+        function closeSplash() { $('splash').style.display = 'none'; }
+        function openMenu() { $('game-menu').classList.remove('hidden'); }
+        function closeMenu() { $('game-menu').classList.add('hidden'); }
+
+        function restartGame() {
+            gameId++;
+            busy = false;
+            ['game-menu', 'info-modal', 'end-modal', 'game-area', 'menu-btn'].forEach(id => $(id).classList.add('hidden'));
+            $('end-modal').classList.remove('flex');
+            $('game-area').classList.remove('flex');
+            $('setup-bar').classList.remove('hidden');
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                const el = document.documentElement;
+                (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+            } else {
+                (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document);
+            }
+        }
+
+        buildBoard();
+    </script>
+</body>
+</html>
