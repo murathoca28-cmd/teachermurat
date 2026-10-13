@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dice Game - Make Sentences</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800&display=swap">
+<style>
+/* Düzen: solda zarlar + soru kartı + takım puanları, sağda 6x6 oyun tahtası. Her şey tek ekrana sığar, kaydırma yok. */
+:root{
+  --bg:#E8F4FC; --surface:#FFFFFF; --ink:#13284B; --muted:#4C6389; --line:#BFD6EA;
+  --blue:#1578C8; --on-blue:#FFFFFF; --hot:#F5A524; --on-hot:#2A1A00;
+  --cell-a:#FFFFFF; --cell-b:#FFE6AE; --bomb:#D8393B; --die-n:#6F7EE8; --good:#13825A;
+  --display:'Baloo 2','Trebuchet MS',system-ui,sans-serif;
+  --body:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --u0:min(1.5vw,2.4vh);
+  --star:none;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1A33; --surface:#172746; --ink:#EEF3FF; --muted:#A9BAD8; --line:#2C4270;
+    --blue:#5BB6F5; --on-blue:#0E1A33; --hot:#F5B13D; --on-hot:#2A1A00;
+    --cell-a:#172746; --cell-b:#4A3E1E; --bomb:#FF6B6B; --die-n:#6C79E0; --good:#4FD6A0;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1A33; --surface:#172746; --ink:#EEF3FF; --muted:#A9BAD8; --line:#2C4270;
+  --blue:#5BB6F5; --on-blue:#0E1A33; --hot:#F5B13D; --on-hot:#2A1A00;
+  --cell-a:#172746; --cell-b:#4A3E1E; --bomb:#FF6B6B; --die-n:#6C79E0; --good:#4FD6A0;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;padding-inline:16px;padding-block:10px;background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidden}
+@media (max-height:520px){body{overflow:auto}.app{min-height:560px}}
+:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+button{font-family:inherit;color:inherit}
+
+.app{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;min-height:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px 16px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:12px;min-width:0}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(20px,3vh,32px);margin:0;line-height:1}
+.crumb{color:var(--muted);font-size:13px;font-weight:700}
+.keys{color:var(--muted);font-size:12px;font-weight:700}
+.tools{display:flex;gap:8px}
+.btn{font-weight:800;font-size:14px;border:2px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 12px;cursor:pointer}
+.btn:hover:not(:disabled){border-color:var(--blue)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--blue);color:var(--on-blue);border-color:var(--blue)}
+
+.stage{display:grid;grid-template-columns:minmax(0,1fr) var(--S,520px);gap:16px;min-height:0}
+.stage.stack{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) var(--S,320px)}
+.left{display:flex;flex-direction:column;gap:12px;min-height:0;min-width:0}
+.right{display:grid;align-content:start;justify-items:end;min-width:0}
+.stack .right{justify-items:center}
+
+/* zarlar */
+.dice{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.die{width:calc(var(--u0)*4.6);min-width:52px;aspect-ratio:1;border-radius:16%;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:calc(var(--u0)*3);line-height:1;box-shadow:0 4px 0 rgba(0,0,0,.2)}
+.die.l{background:var(--hot);color:var(--on-hot)}
+.die.n{background:var(--die-n);color:#fff}
+.die.tumble{animation:tumble .28s infinite}
+@keyframes tumble{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(14deg) translateY(-6px)}}
+.roll{font-family:var(--display);font-weight:800;font-size:calc(var(--u0)*1.8);background:var(--blue);color:var(--on-blue);border:0;border-radius:14px;padding:calc(var(--u0)*.7) calc(var(--u0)*1.8);cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.2)}
+.roll:disabled{opacity:.6;cursor:default}
+.dice-note{color:var(--muted);font-weight:700;font-size:calc(var(--u0)*.9)}
+
+/* soru kartı */
+.card{--u:var(--u0);flex:1;min-height:0;background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:calc(var(--u)*.9) calc(var(--u)*1.3);display:flex;flex-direction:column;gap:calc(var(--u)*.6);overflow:auto}
+.card.big{--u:min(2.6vw,4.2vh);position:fixed;inset:0;z-index:50;border-radius:0;border:0;padding:calc(var(--u)*1 + env(safe-area-inset-top,0px)) calc(var(--u)*2) calc(var(--u)*1 + env(safe-area-inset-bottom,0px))}
+.idle{flex:1;display:grid;place-content:center;text-align:center;gap:calc(var(--u)*.5);padding:calc(var(--u)*1)}
+.idle-t{font-family:var(--display);font-weight:800;font-size:calc(var(--u)*3.4);margin:0;line-height:1}
+.idle-s{margin:0;color:var(--muted);font-weight:700;font-size:calc(var(--u)*1.15);max-width:34em;text-wrap:balance}
+.res{flex:1;min-height:0;display:flex;flex-direction:column;gap:calc(var(--u)*.6)}
+.meta{display:flex;align-items:center;gap:calc(var(--u)*.7);flex-wrap:wrap}
+.coord{font-family:var(--display);font-weight:800;font-size:calc(var(--u)*1.5);background:var(--blue);color:var(--on-blue);border-radius:10px;padding:0 .55em;line-height:1.5}
+.tag{font-weight:800;font-size:calc(var(--u)*.85);border:2px solid var(--line);border-radius:999px;padding:.1em .8em;color:var(--muted)}
+.pts{margin-left:auto;font-family:var(--display);font-weight:800;font-size:calc(var(--u)*1.4);background:var(--hot);color:var(--on-hot);border-radius:999px;padding:0 .8em;line-height:1.5}
+.res.bomb .pts{background:var(--bomb);color:#fff}
+.word{flex:1 1 auto;min-height:0;display:grid;place-items:center;text-align:center;font-family:var(--display);font-weight:800;font-size:calc(var(--u)*4.8);line-height:1.02;text-wrap:balance;overflow-wrap:anywhere}
+.res.bomb .word{color:var(--bomb)}
+.task{margin:0;text-align:center;color:var(--muted);font-weight:700;font-size:calc(var(--u)*1.05)}
+.ans{border-top:2px dashed var(--line);padding-top:calc(var(--u)*.6);display:grid;gap:calc(var(--u)*.35)}
+.ans p{margin:0}
+.lab{display:block;font-size:calc(var(--u)*.7);font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ans .q{font-size:calc(var(--u)*1.2);font-weight:800}
+.ans .s{font-family:var(--display);font-weight:700;font-size:calc(var(--u)*1.55);color:var(--good);line-height:1.15}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.actions .btn{font-size:calc(var(--u)*.95)}
+.onlybig{display:none}
+.big .onlybig{display:inline-block}
+
+/* takımlar */
+.teams{display:flex;gap:10px}
+.team{flex:1;min-width:0;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:8px 10px;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"n n" "s a";gap:4px 10px;align-items:center}
+.team input{grid-area:n;width:100%;min-width:0;border:0;border-bottom:2px solid var(--line);background:transparent;color:var(--ink);font:800 14px var(--body);padding:2px 0}
+.sc{grid-area:s;font-family:var(--display);font-weight:800;font-size:clamp(26px,4.6vh,46px);line-height:1;font-variant-numeric:tabular-nums;min-width:1.6ch}
+.acts{grid-area:a;display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.acts .btn{padding:5px 9px;font-size:13px}
+
+/* tahta */
+.board{--S:520px;width:var(--S);height:var(--S);display:grid;grid-template-columns:.5fr repeat(6,1fr);grid-template-rows:.5fr repeat(6,1fr);gap:3px;font-size:calc(var(--S)*.0215)}
+.bh{display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:calc(var(--S)*.04);color:var(--blue)}
+.cell{border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.15em;padding:2px;cursor:pointer;font-weight:800;line-height:1.08;min-width:0;overflow-wrap:anywhere;transition:transform .15s}
+.cell.a{background:var(--cell-a)}
+.cell.b{background:var(--cell-b)}
+.cell .p{font-size:.72em;font-weight:700;color:var(--muted)}
+.cell:hover{border-color:var(--blue)}
+.cell.done{opacity:.45}
+.cell.on{opacity:1;outline:4px solid var(--blue);z-index:2;transform:scale(1.1);box-shadow:0 6px 16px rgba(0,0,0,.25)}
+.boom{width:88%;aspect-ratio:1;background:var(--bomb);clip-path:var(--star);display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:800;font-size:1.05em}
+
+@media (max-width:700px){.keys{display:none}}
+@media (prefers-reduced-motion: reduce){.die.tumble{animation:none}.cell{transition:none}}
+
+[hidden]{display:none!important}
+#splash{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(12px,3vh,28px);padding:24px;text-align:center;color:#fff;background:linear-gradient(135deg,#4338ca,#7e22ce,#db2777);font-family:var(--body)}
+#splash .s1{margin:0;font-weight:800;font-size:clamp(16px,2.6vh,26px);opacity:.9}
+#splash h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(28px,7vh,64px);line-height:1.05;color:#fff;text-shadow:0 3px 8px rgba(0,0,0,.3);text-wrap:balance}
+#splash .s2{margin:0;max-width:30em;font-weight:800;font-size:clamp(14px,2.4vh,22px);opacity:.92;text-wrap:balance}
+#startBtn{width:clamp(110px,22vh,160px);aspect-ratio:1;border-radius:24px;border:0;border-bottom:8px solid #0284c7;background:#38bdf8;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;box-shadow:0 14px 28px rgba(0,0,0,.3);transition:transform .15s}
+#startBtn:hover{transform:scale(1.05)}
+#startBtn:active{transform:scale(.96)}
+#startBtn .ic{font-size:clamp(40px,9vh,64px);line-height:1}
+#startBtn .tx{font-family:var(--body);font-weight:800;font-size:clamp(16px,3vh,24px)}
+
+/* tam ekran düğmesi (karşılama ekranında da görünür) */
+.top{padding-right:52px}
+#fsBtn{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));right:8px;z-index:200;width:42px;height:42px;border-radius:50%;border:2px solid #BFD6EA;background:rgba(255,255,255,.92);color:#13284B;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.2);transition:transform .15s}
+#fsBtn:hover{transform:scale(1.08);background:#fff}
+#fsBtn svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+<button id="fsBtn" type="button" title="Tam ekran / Çıkış" aria-label="Tam ekran / Çıkış">
+  <svg id="fsOn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+  <svg id="fsOff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path></svg>
+</button>
+<div id="splash">
+  <p class="s1">Pair Work Game</p>
+  <h1>🎲 Dice Game – Make Sentences</h1>
+  <button id="startBtn" type="button"><span class="ic">▶</span><span class="tx">BAŞLAT</span></button>
+  <p class="s2">Harf ve sayı zarını at, kutudaki kelimeyle cümle kur. Bombaya dikkat!</p>
+</div>
+
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <h1>Zarla Cümle Kur</h1>
+      <span class="crumb">5. Sınıf · 1. Ünite · Sayfa 35</span>
+    </div>
+    <span class="keys">Boşluk: zar at · C: cevap · B: büyüt</span>
+    <div class="tools">
+      <button class="btn" id="addTeam" type="button">Takım ekle</button>
+      <button class="btn" id="reset" type="button">Baştan başla</button>
+    </div>
+  </header>
+
+  <main class="stage" id="stage">
+    <section class="left">
+      <div class="dice">
+        <div class="die l" id="dieL" role="img" aria-label="Harf zarı">?</div>
+        <div class="die n" id="dieN" role="img" aria-label="Sayı zarı">?</div>
+        <button class="roll" id="roll" type="button">Zarları At</button>
+        <span class="dice-note">Harf = sütun, sayı = satır</span>
+      </div>
+
+      <article class="card" id="card" aria-live="polite">
+        <div class="idle" id="idle">
+          <p class="idle-t">Zarları at!</p>
+          <p class="idle-s">Çıkan harf ve sayı tahtada bir kutuyu gösterir. O kutudaki kelimeyle bir cümle kur. Bomba çıkarsa takım 5 puan kaybeder.</p>
+        </div>
+        <div class="res" id="res" hidden>
+          <div class="meta">
+            <span class="coord" id="coord"></span>
+            <span class="tag" id="tag"></span>
+            <span class="pts" id="pts"></span>
+          </div>
+          <div class="word" id="word"></div>
+          <p class="task" id="task"></p>
+          <div class="ans" id="ans" hidden></div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="ansBtn" type="button" hidden>Cevabı göster</button>
+          <button class="btn" id="bigBtn" type="button">Büyüt</button>
+          <button class="btn primary onlybig" id="rollBig" type="button">Zarları at</button>
+        </div>
+      </article>
+
+      <section class="teams" id="teams" aria-label="Takım puanları"></section>
+    </section>
+
+    <section class="right">
+      <div class="board" id="board"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+  var COLS=["A","B","C","D","E","F"];
+  var TAGS={country:"Ülke",club:"Kulüp",rule:"Kural",word:"Kelime",ask:"Soru kalıbı"};
+  var TASKS={
+    country:"Bu ülkeyi kullanarak bir cümle kur. (… is from …)",
+    club:"Bu kulübü kullanarak bir cümle kur.",
+    rule:"Bu kelimeyle bir kural cümlesi kur.",
+    word:"Bu kelimeyle bir cümle kur.",
+    ask:"Bu kalıpla bir soru sor, arkadaşın cevaplasın."
+  };
+  var C={
+    A1:{w:"Türkiye",p:3,t:"country",q:"Where are you from?",a:["I'm from Türkiye.","Alp is from Türkiye."]},
+    B1:{w:"a",p:1,t:"word",q:"Who is Sara?",a:["She is a student.","I'm a student."]},
+    C1:{w:"I",p:2,t:"word",q:"Who are you?",a:["I'm Jack. I'm from Canada.","I'm a student."]},
+    D1:{w:"Argentina",p:3,t:"country",q:"Where is Mateo from?",a:["Mateo is from Argentina."]},
+    E1:{w:"maths club",p:3,t:"club",q:"What is your favourite school club?",a:["My favourite school club is maths club."]},
+    F1:{w:"can’t",p:5,t:"rule",q:"Can we run in the classroom?",a:["You can't run in the classroom.","No, you can't."]},
+    A2:{w:"mustn’t",p:5,t:"rule",q:"What mustn't we do in the library?",a:["You mustn't shout in the library."]},
+    B2:{bomb:true,p:-5},
+    C2:{w:"Germany",p:3,t:"country",q:"Where is Jurgen from?",a:["Jurgen is from Germany."]},
+    D2:{w:"fight",p:2,t:"rule",q:"What are the rules in your school?",a:["You mustn't fight at school.","Don't fight."]},
+    E2:{w:"What",p:5,t:"ask",a:["What is your favourite school club?","What are the rules in your school?"]},
+    F2:{w:"He",p:2,t:"word",q:"Who is Mr Adams? Where is the coach?",a:["He is the science teacher.","He is in the sports field."]},
+    A3:{w:"can’t",p:5,t:"rule",q:"What can't you do in Singapore?",a:["You can't chew gum in public."]},
+    B3:{w:"noise",p:2,t:"rule",q:"What mustn't we do in the library?",a:["You mustn't make noise in the library.","Don't make noise."]},
+    C3:{w:"favourite",p:4,t:"word",q:"What is Pedro's favourite school club?",a:["His favourite school club is drama club.","My favourite school club is music club."]},
+    D3:{w:"solve",p:2,t:"word",q:"Do you enjoy solving problems?",a:["Yes, I do. I like solving problems.","No, I don't."]},
+    E3:{w:"South Korea",p:3,t:"country",q:"Where is she from?",a:["She is from South Korea."]},
+    F3:{w:"Russia",p:3,t:"country",q:"Where is he from?",a:["He is from Russia."]},
+    A4:{w:"She",p:2,t:"word",q:"Where is Valeria from? Which club is she in?",a:["She is from Spain.","She is in the art club."]},
+    B4:{w:"drama club",p:3,t:"club",q:"What is Pedro's favourite school club?",a:["It is drama club.","My favourite school club is drama club."]},
+    C4:{w:"an",p:1,t:"word",q:"Who are the people at school?",a:["He is an assistant to the headmaster.","She is an English teacher."]},
+    D4:{w:"mustn’t",p:5,t:"rule",q:"What mustn't we do in the lab?",a:["You mustn't run in the lab."]},
+    E4:{w:"are",p:2,t:"word",q:"Which club are you in?",a:["We are in the music club.","They are at school."]},
+    F4:{w:"Mexico",p:3,t:"country",q:"Where is she from?",a:["She is from Mexico."]},
+    A5:{w:"Do you like …?",p:4,t:"ask",a:["Do you like playing the guitar? – Yes, I do.","Do you like reading books in your free time? – Yes, I do."]},
+    B5:{w:"China",p:3,t:"country",q:"Where are they from?",a:["They are from China."]},
+    C5:{w:"Who",p:5,t:"ask",a:["Who is your English teacher? – Ms Wilson is my English teacher.","Who is the science teacher? – He is Mr Adams."]},
+    D5:{bomb:true,p:-5},
+    E5:{w:"Uzbekistan",p:3,t:"country",q:"Where are you from?",a:["I'm from Uzbekistan."]},
+    F5:{w:"please",p:4,t:"rule",q:"What does Mr Adams say in the lab?",a:["Please, don't run in the lab.","Please, follow the rules."]},
+    A6:{w:"Kyrgyzstan",p:3,t:"country",q:"Where is she from?",a:["She is from Kyrgyzstan."]},
+    B6:{w:"Do you like …?",p:4,t:"ask",a:["Do you like drawing pictures? – Yes, I like drawing pictures in the art club.","Do you like solving problems? – No, I don't."]},
+    C6:{w:"environment club",p:3,t:"club",q:"What is your favourite school club?",a:["My favourite school club is environment club."]},
+    D6:{w:"an",p:1,t:"word",q:"What do the students arrange on Republic Day?",a:["We arrange an art exhibition.","He is an English teacher."]},
+    E6:{w:"love",p:3,t:"word",q:"What do you love doing?",a:["I love playing the piano.","I love drawing pictures."]},
+    F6:{w:"They",p:2,t:"word",q:"Where are the students?",a:["They are in the music club.","They are students."]}
+  };
+
+  function $(id){return document.getElementById(id)}
+  function sgn(p){return p<0?"−"+Math.abs(p):"+"+p}
+  function ptsText(p){var n=Math.abs(p);return (p<0?"−":"")+n+(n===1?" point":" points")}
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+
+  // bomba kutusu için yıldız şekli
+  (function(){
+    var pts=[],i,a,r;
+    for(i=0;i<16;i++){a=Math.PI*2*i/16-Math.PI/2;r=i%2?38:50;pts.push((50+r*Math.cos(a)).toFixed(1)+"% "+(50+r*Math.sin(a)).toFixed(1)+"%")}
+    document.documentElement.style.setProperty("--star","polygon("+pts.join(",")+")");
+  })();
+
+  // tahta
+  var board=$("board");
+  (function(){
+    var h='<div class="bh"></div>'+COLS.map(function(c){return '<div class="bh">'+c+'</div>'}).join("");
+    for(var r=1;r<=6;r++){
+      h+='<div class="bh">'+r+'</div>';
+      COLS.forEach(function(c,i){
+        var id=c+r,d=C[id],cls="cell "+((r+i)%2?"b":"a"),inner;
+        if(d.bomb){inner='<span class="boom">−5</span>'}
+        else{inner='<span>'+esc(d.w)+'</span><span class="p">'+ptsText(d.p)+'</span>'}
+        h+='<button type="button" class="'+cls+'" data-id="'+id+'" aria-label="'+id+(d.bomb?" bomba":" "+esc(d.w))+'">'+inner+'</button>';
+      });
+    }
+    board.innerHTML=h;
+  })();
+
+  var current=null,rolling=false,big=false,answerOpen=false,visited={};
+  var teams=[{n:"Takım 1",s:0,h:[]},{n:"Takım 2",s:0,h:[]}];
+
+  function setAnswerOpen(v){
+    answerOpen=v;
+    $("ans").hidden=!v;
+    $("ansBtn").textContent=v?"Cevabı gizle":"Cevabı göster";
+  }
+
+  function show(id){
+    var d=C[id];
+    current=id;visited[id]=true;
+    $("dieL").textContent=id.charAt(0);
+    $("dieN").textContent=id.charAt(1);
+    $("idle").hidden=true;
+    var res=$("res");res.hidden=false;
+    res.classList.toggle("bomb",!!d.bomb);
+    $("coord").textContent=id;
+    $("pts").textContent=d.bomb?"−5 points":ptsText(d.p);
+    if(d.bomb){
+      $("tag").textContent="Bomba";
+      $("word").textContent="BOOM!";
+      $("task").textContent="Bu kutuya gelen takım 5 puan kaybeder. Cümle kurmak yok.";
+      $("ans").innerHTML="";
+      $("ansBtn").hidden=true;
+      setAnswerOpen(false);
+    }else{
+      $("tag").textContent=TAGS[d.t];
+      $("word").textContent=d.w;
+      $("task").textContent=TASKS[d.t];
+      var h="";
+      if(d.q)h+='<p class="q"><span class="lab">Öğretmen sorusu</span>'+esc(d.q)+'</p>';
+      h+='<p><span class="lab">'+(d.t==="ask"?"Örnek sorular":"Örnek cevaplar")+'</span></p>';
+      d.a.forEach(function(s){h+='<p class="s">'+esc(s)+'</p>'});
+      $("ans").innerHTML=h;
+      $("ansBtn").hidden=false;
+      setAnswerOpen(false);
+    }
+    var cells=board.querySelectorAll(".cell");
+    for(var i=0;i<cells.length;i++){
+      var cid=cells[i].getAttribute("data-id");
+      cells[i].classList.toggle("on",cid===id);
+      cells[i].classList.toggle("done",!!visited[cid]&&cid!==id);
+    }
+    updateTeams();
+  }
+
+  function rnd(n){return Math.floor(Math.random()*n)}
+  function roll(){
+    if(rolling)return;
+    rolling=true;
+    var rb=$("roll");rb.disabled=true;$("rollBig").disabled=true;
+    var L=$("dieL"),N=$("dieN");
+    var reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+    L.classList.add("tumble");N.classList.add("tumble");
+    var iv=setInterval(function(){L.textContent=COLS[rnd(6)];N.textContent=String(1+rnd(6))},80);
+    setTimeout(function(){
+      clearInterval(iv);
+      L.classList.remove("tumble");N.classList.remove("tumble");
+      show(COLS[rnd(6)]+(1+rnd(6)));
+      rolling=false;rb.disabled=false;$("rollBig").disabled=false;
+    },reduce?200:1000);
+  }
+
+  function setBig(v){
+    big=v;
+    $("card").classList.toggle("big",v);
+    $("bigBtn").textContent=v?"Küçült":"Büyüt";
+  }
+
+  // takımlar
+  function renderTeams(){
+    var box=$("teams");
+    box.innerHTML=teams.map(function(t,i){
+      return '<div class="team"><input type="text" id="tn'+i+'" data-i="'+i+'" aria-label="Takım adı" maxlength="20">'
+        +'<div class="sc" id="sc'+i+'">0</div>'
+        +'<div class="acts"><button type="button" class="btn undo" data-i="'+i+'">Geri al</button>'
+        +'<button type="button" class="btn primary award" data-i="'+i+'">Puan ver</button></div></div>';
+    }).join("");
+    teams.forEach(function(t,i){$("tn"+i).value=t.n});
+    updateTeams();
+  }
+  function updateTeams(){
+    var d=current?C[current]:null;
+    teams.forEach(function(t,i){
+      var sc=$("sc"+i);if(!sc)return;
+      sc.textContent=t.s;
+      var aw=document.querySelector('.award[data-i="'+i+'"]');
+      aw.disabled=!d;
+      aw.textContent=d?"Puan ver "+sgn(d.p):"Puan ver";
+      document.querySelector('.undo[data-i="'+i+'"]').disabled=!t.h.length;
+    });
+  }
+  $("teams").addEventListener("click",function(e){
+    var b=e.target.closest("button");if(!b)return;
+    var t=teams[+b.getAttribute("data-i")];
+    if(b.classList.contains("award")&&current){var p=C[current].p;t.s+=p;t.h.push(p)}
+    else if(b.classList.contains("undo")&&t.h.length){t.s-=t.h.pop()}
+    updateTeams();
+  });
+  $("teams").addEventListener("input",function(e){
+    if(e.target.tagName==="INPUT")teams[+e.target.getAttribute("data-i")].n=e.target.value;
+  });
+  $("addTeam").addEventListener("click",function(){
+    if(teams.length>=4)return;
+    teams.push({n:"Takım "+(teams.length+1),s:0,h:[]});
+    renderTeams();
+    $("addTeam").disabled=teams.length>=4;
+  });
+  $("reset").addEventListener("click",function(){
+    teams.forEach(function(t){t.s=0;t.h=[]});
+    visited={};current=null;
+    $("dieL").textContent="?";$("dieN").textContent="?";
+    $("res").hidden=true;$("idle").hidden=false;$("ansBtn").hidden=true;
+    setAnswerOpen(false);setBig(false);
+    var cells=board.querySelectorAll(".cell");
+    for(var i=0;i<cells.length;i++){cells[i].classList.remove("on","done")}
+    updateTeams();
+  });
+
+  // olaylar
+  $("roll").addEventListener("click",roll);
+  $("rollBig").addEventListener("click",roll);
+  $("bigBtn").addEventListener("click",function(){setBig(!big)});
+  $("ansBtn").addEventListener("click",function(){setAnswerOpen(!answerOpen)});
+  board.addEventListener("click",function(e){
+    var b=e.target.closest(".cell");
+    if(b&&!rolling)show(b.getAttribute("data-id"));
+  });
+  document.addEventListener("keydown",function(e){
+    if(!$("splash").hidden)return;
+    var tg=e.target;
+    if(tg&&tg.tagName==="INPUT")return;
+    if(e.key==="Escape"&&big){setBig(false);return}
+    if(e.code==="Space"&&(!tg||tg.tagName!=="BUTTON")){e.preventDefault();roll();return}
+    if(e.key==="c"||e.key==="C"){if(current&&!C[current].bomb)setAnswerOpen(!answerOpen)}
+    if(e.key==="b"||e.key==="B"){setBig(!big)}
+  });
+
+  // ekrana sığdır
+  function fit(){
+    var st=$("stage"),w=st.clientWidth,h=st.clientHeight;
+    var stack=w<h*1.15;
+    st.classList.toggle("stack",stack);
+    var S=stack?Math.max(220,Math.min(w,h*0.5)):Math.min(h,w*0.52);
+    S=Math.floor(S);
+    st.style.setProperty("--S",S+"px");
+    board.style.setProperty("--S",S+"px");
+  }
+  if(window.ResizeObserver)new ResizeObserver(fit).observe($("stage"));
+  window.addEventListener("resize",fit);
+  fit();
+
+  renderTeams();
+  $("startBtn").addEventListener("click",function(){$("splash").hidden=true;fit()});
+
+  // tam ekran / tam ekrandan çık
+  function isFs(){return !!(document.fullscreenElement||document.webkitFullscreenElement)}
+  function syncFs(){
+    var on=isFs();
+    $("fsOn").hidden=on;$("fsOff").hidden=!on;
+    setTimeout(fit,100);
+  }
+  $("fsBtn").addEventListener("click",function(){
+    try{
+      if(!isFs()){
+        var el=document.documentElement;
+        var req=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+        if(req){var p=req.call(el);if(p&&p.catch)p.catch(function(){})}
+      }else{
+        var ex=document.exitFullscreen||document.webkitExitFullscreen||document.msExitFullscreen;
+        if(ex){var q=ex.call(document);if(q&&q.catch)q.catch(function(){})}
+      }
+    }catch(err){}
+  });
+  document.addEventListener("fullscreenchange",syncFs);
+  document.addEventListener("webkitfullscreenchange",syncFs);
+})();
+</script>
+</body>
+</html>
