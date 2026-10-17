@@ -6,34 +6,37 @@
     <title>Unit 1: Friendship - Interactive Learning Activity</title>
     <style>
         :root {
-            --primary: #6C5CE7;
-            --primary-soft: #EEECFD;
-            --pink: #FD79A8;
-            --pink-soft: #FDEDF3;
-            --green: #00B894;
-            --green-soft: #E6F9F5;
-            --yellow: #FDCB6E;
-            --yellow-soft: #FEF9E7;
-            --red: #FF7675;
-            --red-soft: #FFEAE9;
-            --blue: #0984E3;
-            --blue-soft: #E3F2FD;
+            --primary: #0F766E;
+            --primary-soft: #CCFBF1;
+            --pink: #C2410C;
+            --pink-soft: #FFEDD5;
+            --green: #00875F;
+            --green-soft: #D5F5E8;
+            --yellow: #F0A500;
+            --red: #D32F2F;
+            --red-soft: #FFDAD8;
+            --blue: #1D4ED8;
+            --blue-soft: #DBEAFE;
             --bg: #F4F7FE;
-            --card-bg: #e2eff8;
-            --text-dark: #2D3436;
-            --text-muted: #636E72;
-            --border-color: #E2E8F0;
+            --card-bg: #FFFFFF;
+            --text-dark: #1A1F23;
+            --text-muted: #3D4852;
+            --q-color: #0B4F4A;
+            --border-color: #64748B;
+            --border-strong: #334155;
             --radius-lg: 24px;
             --radius-md: 16px;
             --radius-sm: 12px;
         }
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { box-sizing: border-box; }
 
+        /* Margin/padding reset and font apply only inside the activity area,
+           so the site navbar and theme.css are not affected. */
         .app-container, .app-container * {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif;
         }
 
         body {
@@ -43,253 +46,664 @@
             display: flex;
             flex-direction: column;
             user-select: none;
-            margin: 0;
+            padding-bottom: 40px;
         }
+
+        textarea, input { user-select: text; }
 
         .app-container {
             width: 100%;
-            max-width: 780px;
+            max-width: 920px;
             margin: 0 auto;
-            padding: 20px 16px 40px;
-            flex-grow: 1;
+            padding: 20px 16px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
         }
 
-        /* Hero Banner */
         .hero-banner {
-            background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #FD79A8 100%);
+            background: linear-gradient(135deg, #115E59 0%, #0D9488 100%);
             color: #FFFFFF;
-            padding: 26px 24px;
+            padding: 28px 24px;
             border-radius: var(--radius-lg);
             text-align: center;
-            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.2);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(15, 118, 110, 0.3);
         }
 
         .hero-banner h1 {
-            font-size: 25px;
+            font-size: 30px;
             font-weight: 800;
             letter-spacing: 0.5px;
-            margin-bottom: 6px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        .hero-banner p {
-            font-size: 15px;
-            opacity: 0.95;
-            font-weight: 500;
-            margin: 0;
-        }
+        .hero-banner p { font-size: 18px; font-weight: 700; }
 
-        /* Interactive Activity Cards */
         .activity-card {
             background: var(--card-bg);
             border-radius: var(--radius-lg);
-            padding: 22px;
-            border: 2px solid #a4aeb9;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
-            transition: transform 0.2s ease;
+            padding: 24px;
+            border: 4px solid var(--border-strong);
+            box-shadow: 0 6px 0 #94A3B8, 0 12px 24px rgba(0, 0, 0, 0.12);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
         }
 
         .card-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 18px;
-            padding-bottom: 12px;
-            border-bottom: 2px dashed #cbd5e0;
+            gap: 14px;
+            padding-bottom: 14px;
+            border-bottom: 3px dashed #94A3B8;
         }
 
         .card-icon {
-            width: 48px;
-            height: 48px;
+            width: 56px;
+            height: 56px;
             border-radius: var(--radius-md);
+            border: 3px solid currentColor;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 28px;
             flex-shrink: 0;
-            background: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
-        .card-title h2 {
-            font-size: 19px;
-            color: var(--text-dark);
+        .card-title h2 { font-size: 23px; color: var(--text-dark); font-weight: 800; }
+        .card-title p { font-size: 16px; color: var(--text-muted); font-weight: 700; margin-top: 2px; }
+
+        .instruction-box {
+            background: #EEF2FF;
+            border: 3px solid var(--border-color);
+            border-left: 8px solid var(--primary);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 17px;
             font-weight: 700;
-            margin: 0;
+            line-height: 1.5;
+            color: var(--text-dark);
         }
 
-        .card-title p {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-top: 2px;
-            margin-bottom: 0;
+        /* Buttons */
+        .btn-group { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 4px; }
+
+        .btn-action {
+            padding: 11px 22px;
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* Grid Layouts */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 14px;
+        .btn-primary {
+            background: var(--pink);
+            color: #FFFFFF;
+            border: 3px solid #7C2D12;
+            box-shadow: 0 4px 0 #7C2D12;
         }
 
-        .space-y {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+        .btn-success {
+            background: var(--green);
+            color: #FFFFFF;
+            border: 3px solid #004D36;
+            box-shadow: 0 4px 0 #004D36;
         }
 
-        /* Question & Option Boxes */
-        .quiz-item {
-            background: #F8FAFC;
+        .btn-secondary {
+            background: #FFFFFF;
+            color: var(--text-dark);
+            border: 3px solid var(--border-strong);
+            box-shadow: 0 4px 0 var(--border-strong);
+        }
+
+        .btn-action:hover { transform: translateY(-2px); filter: brightness(1.06); }
+        .btn-action:active { transform: translateY(2px); box-shadow: none; }
+
+        /* Quiz (Part 1) */
+        .quiz-list { display: flex; flex-direction: column; gap: 16px; }
+
+        .quiz-card {
+            background: #EEF2FF;
             padding: 16px;
             border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
+            border: 3px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .quiz-item label {
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--text-dark);
+        .quiz-q {
+            font-weight: 800;
+            font-size: 18px;
+            line-height: 1.5;
+            color: var(--q-color);
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .q-num {
+            background: var(--primary);
+            color: #FFFFFF;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
         }
 
         .opt-btn {
             width: 100%;
-            padding: 11px 14px;
+            padding: 13px 14px;
             background: #FFFFFF;
-            border: 2px solid var(--border-color);
+            border: 3px solid var(--border-strong);
             border-radius: var(--radius-sm);
-            font-weight: 400;
-            font-size: 15px;
+            font-weight: 800;
+            font-size: 18px;
             color: var(--text-dark);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            box-shadow: 0 4px 0 var(--border-strong);
         }
 
         .opt-btn:hover:not(:disabled) {
             border-color: var(--primary);
             background: var(--primary-soft);
             color: var(--primary);
+            box-shadow: 0 4px 0 var(--primary);
             transform: translateY(-2px);
         }
 
-        select.custom-select {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: var(--radius-sm);
-            border: 2px solid var(--border-color);
-            font-weight: 600;
-            font-size: 14px;
-            outline: none;
-            background: #FFFFFF;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: var(--text-dark);
-        }
+        .opt-btn:disabled { cursor: default; }
 
-        select.custom-select:hover:not(:disabled) {
-            border-color: var(--primary);
-        }
-
-        /* Inputs */
-        input.text-input {
-            width: 100%;
-            padding: 11px 14px;
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            font-size: 15px;
-            outline: none;
-            transition: all 0.2s ease;
-        }
-
-        input.text-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
-        }
-
-        /* Answer Feedback Styles */
-        .correct {
+        .opt-btn.correct {
             background: var(--green-soft) !important;
             border-color: var(--green) !important;
-            color: #007955 !important;
-            font-weight: bold;
+            color: #004D36 !important;
+            box-shadow: 0 4px 0 var(--green);
         }
 
-        .wrong {
+        .opt-btn.wrong {
             background: var(--red-soft) !important;
             border-color: var(--red) !important;
-            color: #C0392B !important;
-            font-weight: bold;
+            color: #8E1B1B !important;
+            box-shadow: 0 4px 0 var(--red);
         }
 
-        .opt-btn.correct::after { content: "  ✓"; color: #007955; }
-        .opt-btn.wrong::after { content: "  ✕"; color: #C0392B; }
+        .opt-btn.correct::after { content: "✓"; }
+        .opt-btn.wrong::after { content: "✕"; }
 
-        /* Unscramble Styles */
-        .unscramble-zone {
-            min-height: 58px;
-            padding: 10px 14px;
+        /* Matching (Part 2) */
+        .match-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .match-col { display: flex; flex-direction: column; gap: 12px; }
+
+        .match-col-title {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--q-color);
+            font-weight: 800;
+        }
+
+        .match-chip {
+            width: 100%;
+            padding: 12px 14px;
             background: #FFFFFF;
-            border: 2px dashed #CBD5E0;
-            border-radius: var(--radius-md);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
-            transition: all 0.2s ease;
+            color: var(--text-dark);
+            border: 3px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            font-size: 18px;
+            line-height: 1.35;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 3px 0 var(--border-strong);
         }
 
-        .unscramble-pool {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 6px;
+        .match-chip:hover:not(.matched):not(:disabled) {
+            border-color: var(--yellow);
+            box-shadow: 0 3px 0 var(--yellow);
+            transform: translateY(-2px);
         }
 
+        .match-chip.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: #FFFFFF;
+            box-shadow: 0 3px 0 #064E48;
+        }
+
+        .match-chip.matched {
+            background: var(--green-soft);
+            border-color: var(--green);
+            color: #004D36;
+            box-shadow: 0 3px 0 var(--green);
+            cursor: default;
+        }
+
+        .match-chip.matched::before { content: "✓  "; }
+
+        .match-chip.wrong-flash {
+            background: var(--red-soft);
+            border-color: var(--red);
+            color: #8E1B1B;
+            box-shadow: 0 3px 0 var(--red);
+        }
+
+        /* Comparatives (Part 3) */
         .item-chip {
             background: #FFFFFF;
-            border: 2px solid var(--border-color);
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 14px;
+            color: var(--text-dark);
+            border: 3px solid var(--border-strong);
+            padding: 10px 18px;
+            border-radius: 22px;
+            font-weight: 800;
+            font-size: 18px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            transition: all 0.15s ease;
+            box-shadow: 0 3px 0 var(--border-strong);
             user-select: none;
         }
 
         .item-chip:hover {
             border-color: var(--yellow);
+            box-shadow: 0 3px 0 var(--yellow);
             transform: translateY(-2px);
         }
 
-        .action-btn {
-            padding: 10px 20px;
+        .item-chip.active-select {
+            border-color: var(--primary);
             background: var(--primary);
-            color: white;
-            border: none;
+            color: #FFFFFF;
+            box-shadow: 0 3px 0 #064E48;
+            transform: scale(1.06);
+        }
+
+        .pool-box {
+            background: #EEF2FF;
+            border: 3px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            min-height: 84px;
+            align-items: center;
+        }
+
+        .bank-empty { font-weight: 700; font-size: 17px; color: var(--text-muted); }
+
+        .compare-list { display: flex; flex-direction: column; gap: 14px; }
+
+        .compare-row {
+            background: #EEF2FF;
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            border: 3px solid var(--border-color);
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 1.9;
+            color: var(--q-color);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .row-num {
+            background: var(--primary);
+            color: #FFFFFF;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .drop-slot {
+            min-width: 150px;
+            min-height: 46px;
+            padding: 6px 14px;
+            background: #FFFFFF;
+            color: var(--text-muted);
+            border: 3px dashed var(--border-color);
             border-radius: var(--radius-sm);
-            font-weight: 700;
+            font-weight: 800;
+            font-size: 18px;
             cursor: pointer;
-            align-self: flex-start;
-            transition: background 0.2s;
-            margin-top: 6px;
+            transition: all 0.15s ease;
         }
 
-        .action-btn:hover {
-            background: #5b4cc4;
+        .drop-slot:hover { border-color: var(--pink); background: var(--pink-soft); color: #7C2D12; }
+
+        .drop-slot.filled {
+            border-style: solid;
+            border-color: var(--border-strong);
+            color: var(--text-dark);
         }
 
-        /* Animations */
+        .drop-slot.correct {
+            border-style: solid;
+            background: var(--green-soft) !important;
+            border-color: var(--green) !important;
+            color: #004D36 !important;
+        }
+
+        .drop-slot.wrong {
+            border-style: solid;
+            background: var(--red-soft) !important;
+            border-color: var(--red) !important;
+            color: #8E1B1B !important;
+        }
+
+        /* Reading (Part 4) */
+        .read-grid { display: flex; flex-direction: column; gap: 16px; }
+        .read-col { display: flex; flex-direction: column; gap: 14px; }
+
+        .story-box {
+            background: #FFFFFF;
+            border: 3px solid var(--border-strong);
+            border-left: 8px solid var(--primary);
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            font-size: 19px;
+            font-weight: 600;
+            line-height: 1.7;
+            color: var(--text-dark);
+        }
+
+        .story-box b { color: var(--pink); font-weight: 800; }
+
+        .tr-box {
+            display: none;
+            background: var(--pink-soft);
+            border: 3px dashed var(--pink);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .tr-box.show { display: block; }
+
+        .tf-list { display: flex; flex-direction: column; gap: 12px; }
+
+        .tf-row {
+            background: #EEF2FF;
+            border: 3px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tf-row.correct { background: var(--green-soft); border-color: var(--green); }
+        .tf-row.wrong { background: var(--red-soft); border-color: var(--red); }
+
+        .tf-text {
+            flex: 1 1 260px;
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 1.4;
+            color: var(--q-color);
+        }
+
+        .tf-btns { display: flex; gap: 10px; }
+
+        .tf-btn {
+            border: 3px solid var(--border-strong);
+            background: #FFFFFF;
+            color: var(--text-dark);
+            padding: 8px 18px;
+            border-radius: 22px;
+            font-weight: 800;
+            font-size: 17px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 var(--border-strong);
+        }
+
+        .tf-btn:hover { border-color: var(--yellow); box-shadow: 0 3px 0 var(--yellow); }
+
+        .tf-btn.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #FFFFFF;
+            box-shadow: 0 3px 0 #064E48;
+        }
+
+        .tf-mark { font-size: 20px; font-weight: 800; }
+        .tf-row.correct .tf-mark { color: #004D36; }
+        .tf-row.wrong .tf-mark { color: #8E1B1B; }
+
+
+        /* Sorting (Part B) */
+        .word-pool-box {
+            background: #EEF2FF;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 3px dashed var(--border-color);
+            min-height: 84px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .cat-box {
+            border-radius: var(--radius-md);
+            border: 4px solid;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 180px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .cat-box:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
+        .cat-box h3 { font-size: 20px; font-weight: 800; pointer-events: none; }
+        .cat-box .hint { font-size: 15px; font-weight: 700; color: var(--text-muted); pointer-events: none; }
+        .cat-items { display: flex; flex-wrap: wrap; gap: 10px; align-content: flex-start; flex-grow: 1; }
+
+        .chip {
+            background: #FFFFFF;
+            color: var(--text-dark);
+            border: 3px solid var(--border-strong);
+            padding: 10px 18px;
+            border-radius: 22px;
+            font-weight: 800;
+            font-size: 18px;
+            line-height: 1.35;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 3px 0 var(--border-strong);
+        }
+
+        .chip:hover { border-color: var(--yellow); box-shadow: 0 3px 0 var(--yellow); transform: translateY(-2px); }
+
+        .chip.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: #FFFFFF;
+            box-shadow: 0 3px 0 #064E48;
+            transform: scale(1.04);
+        }
+
+        .chip.correct { background: var(--green-soft) !important; border-color: var(--green) !important; color: #004D36 !important; box-shadow: 0 3px 0 var(--green); }
+        .chip.wrong { background: var(--red-soft) !important; border-color: var(--red) !important; color: #8E1B1B !important; box-shadow: 0 3px 0 var(--red); }
+
+        /* Turkish help box */
+        .tr-list { display: flex; flex-direction: column; gap: 6px; }
+        .tr-list div { font-size: 17px; font-weight: 700; line-height: 1.5; }
+        .tr-list b { color: #7C2D12; font-weight: 800; }
+        .quiz-q span:last-child { white-space: pre-line; }
+
+
+        /* Matching rows (Part 1) */
+        .match-list { display: flex; flex-direction: column; gap: 14px; }
+
+        .match-row {
+            background: #EEF2FF;
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            border: 3px solid var(--border-color);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .match-q { font-weight: 800; font-size: 18px; color: var(--q-color); }
+
+        .slot {
+            width: 100%;
+            min-height: 56px;
+            padding: 12px 14px;
+            background: #FFFFFF;
+            border: 3px dashed var(--border-color);
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            font-size: 17px;
+            line-height: 1.35;
+            color: var(--text-muted);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .slot:hover { border-color: var(--pink); background: var(--pink-soft); color: #7C2D12; }
+        .slot.filled { border-style: solid; border-color: var(--border-strong); color: var(--text-dark); }
+        .slot.correct { border-style: solid; background: var(--green-soft) !important; border-color: var(--green) !important; color: #004D36 !important; }
+        .slot.wrong { border-style: solid; background: var(--red-soft) !important; border-color: var(--red) !important; color: #8E1B1B !important; }
+        .chip-long { border-radius: var(--radius-md); text-align: left; line-height: 1.35; }
+
+        /* Sentence building (Part 4) */
+        .unscramble-zone {
+            min-height: 66px;
+            padding: 10px 14px;
+            background: #FFFFFF;
+            border: 3px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .unscramble-zone.correct { border-style: solid; border-color: var(--green); background: var(--green-soft); }
+        .unscramble-zone.wrong { border-style: solid; border-color: var(--red); background: var(--red-soft); }
+        .unscramble-pool { display: flex; flex-wrap: wrap; gap: 10px; }
+        .us-result { font-size: 18px; font-weight: 800; color: #004D36; display: none; }
+        .us-result.show { display: block; }
+        .activity-card.expanded #mcqContainer { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .activity-card.expanded #usContainer { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+        .activity-card.expanded #sec1List { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+        @media (max-width: 700px) { .match-row { grid-template-columns: 1fr; } }
+
+
+        /* Fill in (Part 4) */
+        .fill-list { display: flex; flex-direction: column; gap: 14px; }
+
+        .fill-item {
+            background: #EEF2FF;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 3px solid var(--border-color);
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.9;
+            color: var(--q-color);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .blank-input {
+            border: 3px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            padding: 6px 12px;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-dark);
+            outline: none;
+            width: 190px;
+            background: #FFFFFF;
+        }
+
+        .blank-input::placeholder { color: #5B6671; font-weight: 600; }
+        .blank-input:focus { border-color: var(--pink); box-shadow: 0 0 0 4px rgba(194, 65, 12, 0.25); }
+        .blank-input.correct { border-color: var(--green) !important; background: var(--green-soft) !important; color: #004D36 !important; }
+        .blank-input.wrong { border-color: var(--red) !important; background: var(--red-soft) !important; color: #8E1B1B !important; }
+        .fill-fb { font-size: 16px; font-weight: 800; }
+        .fill-fb.correct { color: #004D36; }
+        .fill-fb.wrong { color: #8E1B1B; }
+        .quiz-q b { color: var(--pink); }
+        .activity-card.expanded #mcqContainer { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .activity-card.expanded #usContainer { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .activity-card.expanded #sec1List { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .activity-card.expanded #fillContainer { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+
+        /* Feedback + final */
+        .feedback-banner {
+            display: none;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            border: 3px solid;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .feedback-banner.show { display: block; }
+        .feedback-banner.ok { background: var(--green-soft); border-color: var(--green); color: #004D36; }
+        .feedback-banner.mid { background: #FEF3C7; border-color: var(--yellow); color: #5B3A00; }
+
+        .final-card { text-align: center; align-items: center; padding: 30px 22px; }
+        .final-card .big-emoji { font-size: 56px; }
+        .final-card h2 { font-size: 28px; font-weight: 800; }
+        .final-card p { font-size: 18px; font-weight: 700; }
+        .hidden { display: none !important; }
+
+        :focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
+
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-4px); }
@@ -297,285 +711,701 @@
         }
         .shake { animation: shake 0.3s ease; }
 
+        @keyframes pop {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.04); }
+            100% { transform: scale(1); }
+        }
+        .pop { animation: pop 0.25s ease; }
+
+        /* Enlarge button */
+        /* Never let a section's children shrink inside the enlarged (fixed-height) card; the card scrolls instead. */
+        .activity-card > * { flex-shrink: 0; }
+
+        .zoom-btn {
+            margin-left: auto;
+            flex-shrink: 0;
+            background: #FFFFFF;
+            color: #0B4F4A;
+            border: 3px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            font-size: 16px;
+            padding: 8px 14px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 var(--border-strong);
+        }
+
+        .zoom-btn:hover { background: var(--primary-soft); }
+        .zoom-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--border-strong); }
+
+        .activity-card.expanded {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100000;
+            border-radius: 0;
+            border-width: 0;
+            box-shadow: none;
+            overflow: auto;
+            justify-content: safe center;
+        }
+
+        .activity-card.expanded #mcqContainer {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            align-items: start;
+        }
+
+        .activity-card.expanded #mcqContainer .options-grid { grid-template-columns: minmax(0, 1fr); }
+
+        .activity-card.expanded #dragContainer {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .activity-card.expanded .read-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-items: start;
+        }
+
+        @media (max-width: 700px) {
+            .zoom-btn { display: none; }
+            .match-wrap { grid-template-columns: 1fr; }
+        }
+
         footer {
             text-align: center;
             padding: 16px;
             color: var(--text-muted);
-            font-size: 13px;
+            font-size: 15px;
             border-top: 1px solid var(--border-color);
             background: #FFFFFF;
-            margin-top: auto;
+            margin-top: 20px;
         }
     </style>
     <link rel="stylesheet" href="../../../theme.css">
 </head>
 <body>
-
     <div id="navbar-placeholder" style="min-height: 0px;"></div>
     <script src="../../../navbar.js"></script>
 
     <div class="app-container">
-        
-        <!-- Hero Header -->
+
         <header class="hero-banner">
             <h1>UNIT 1: FRIENDSHIP</h1>
             <p>Interactive Practice & Revision Workbook for 8th Grade</p>
         </header>
 
-        <!-- PART 1: Multiple Choice -->
-        <section class="activity-card">
+        <!-- PART 1: MULTIPLE CHOICE -->
+        <section class="activity-card" id="section-1">
             <div class="card-header">
-                <div class="card-icon">💡</div>
+                <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">💡</div>
                 <div class="card-title">
                     <h2>Part 1: Choice & Comprehension</h2>
-                    <p>Read each question carefully and select the correct option.</p>
+                    <p>Read each question carefully and select the correct option</p>
                 </div>
             </div>
-
-            <div class="space-y">
-                <div class="quiz-item">
-                    <label>1. A true friend always backs you up when you need help. What does "back up" mean?</label>
-                    <div class="grid-2">
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q1')">A) Argue with someone.</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, true, 'q1')">B) Support and help someone.</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q1')">C) Refuse an offer.</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q1')">D) Break a promise.</button>
-                    </div>
-                </div>
-
-                <div class="quiz-item">
-                    <label>2. Tim: "Would you like to come to my birthday party on Sunday?" <br> Leo: "______! I can't miss it."</label>
-                    <div class="grid-2">
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q2')">A) I'm sorry, I'm busy.</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q2')">B) No, thanks. I'm full.</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, true, 'q2')">C) I'd love to! That sounds awesome.</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q2')">D) I have to stay at home.</button>
-                    </div>
-                </div>
-
-                <div class="quiz-item">
-                    <label>3. Which of the following is an **excuse** for refusing an invitation?</label>
-                    <div class="grid-2">
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q3')">A) Great! What time does it start?</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, true, 'q3')">B) I'd love to, but I must study for an exam.</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q3')">C) Sure, why not?</button>
-                        <button class="opt-btn" onclick="checkMCQ(this, false, 'q3')">D) Yeah, that sounds wonderful!</button>
-                    </div>
-                </div>
-            </div>
+            <div class="quiz-list" id="mcqContainer"></div>
+            <div class="feedback-banner" id="mcqFeedback"></div>
         </section>
 
-        <!-- PART 2: Vocabulary & Concept Matching -->
-        <section class="activity-card">
+        <!-- PART 2: WORD MATCHING -->
+        <section class="activity-card" id="section-2">
             <div class="card-header">
-                <div class="card-icon">🔗</div>
+                <div class="card-icon" style="background: var(--pink-soft); color: var(--pink);">🔗</div>
                 <div class="card-title">
                     <h2>Part 2: Word & Synonym Matching</h2>
-                    <p>Select the correct definition or synonym for each friendship term.</p>
+                    <p>Find the correct definition or synonym for each friendship term</p>
                 </div>
             </div>
-
-            <div class="space-y">
-                <div class="quiz-item">
-                    <label>1. Buddy / Mate</label>
-                    <select class="custom-select" id="match1" onchange="checkMatch('match1', 'friend')">
-                        <option value="">-- Choose correct synonym --</option>
-                        <option value="enemy">A person you dislike</option>
-                        <option value="friend">A close friend</option>
-                        <option value="stranger">Someone you don't know</option>
-                    </select>
-                </div>
-
-                <div class="quiz-item">
-                    <label>2. Count on</label>
-                    <select class="custom-select" id="match2" onchange="checkMatch('match2', 'rely')">
-                        <option value="">-- Choose correct definition --</option>
-                        <option value="rely">To trust someone and depend on them</option>
-                        <option value="forget">To lose memory of something</option>
-                        <option value="invite">To ask someone to an event</option>
-                    </select>
-                </div>
-
-                <div class="quiz-item">
-                    <label>3. Loyal</label>
-                    <select class="custom-select" id="match3" onchange="checkMatch('match3', 'faithful')">
-                        <option value="">-- Choose correct definition --</option>
-                        <option value="rude">Behaving disrespectfully</option>
-                        <option value="faithful">Always staying true and supportive</option>
-                        <option value="selfish">Only caring about oneself</option>
-                    </select>
+            <div class="instruction-box">
+                👉 <strong>Guideline:</strong> Select a definition below, then click the word it matches. There are 3 extra definitions! (Click a placed definition to take it back.)
+            </div>
+            <div class="pool-box" id="sec2Bank"></div>
+            <div class="match-list" id="sec2List"></div>
+            <div class="btn-group">
+                <button type="button" class="btn-action btn-primary" id="check2">✓ Check Answers</button>
+                <button type="button" class="btn-action btn-secondary" id="reset2">↺ Reset</button>
+                <button type="button" class="btn-action btn-secondary" id="trBtn2" style="font-size:16px;">🇹🇷 Türkçe Anlamları Göster</button>
+            </div>
+            <div class="tr-box" id="tr2">
+                <div class="tr-list">
+                    <div><b>Buddy / Mate</b> = yakın arkadaş, dost</div>
+                    <div><b>Count on</b> = güvenmek, bel bağlamak</div>
+                    <div><b>Loyal</b> = sadık, vefalı</div>
                 </div>
             </div>
+            <div class="feedback-banner" id="fb2"></div>
         </section>
 
-        <!-- PART 3: Interactive Word Ordering (Unscramble) -->
-        <section class="activity-card">
+        <!-- PART 3: SENTENCE BUILDER -->
+        <section class="activity-card" id="section-3">
             <div class="card-header">
-                <div class="card-icon">🧩</div>
+                <div class="card-icon" style="background: var(--blue-soft); color: var(--blue);">🧩</div>
                 <div class="card-title">
                     <h2>Part 3: Sentence Builder (Unscramble)</h2>
-                    <p>Click words in order to construct correct invitation and response sentences.</p>
+                    <p>Build correct invitation and response sentences</p>
                 </div>
             </div>
-
-            <div class="space-y">
-                <!-- Sentence 1 -->
-                <div class="quiz-item">
-                    <label>1. Make an invitation sentence:</label>
-                    <div class="unscramble-zone" id="zone1"></div>
-                    <div class="unscramble-pool" id="pool1">
-                        <span class="item-chip" onclick="moveChip(this, 'zone1', 'pool1')">about</span>
-                        <span class="item-chip" onclick="moveChip(this, 'zone1', 'pool1')">going</span>
-                        <span class="item-chip" onclick="moveChip(this, 'zone1', 'pool1')">to</span>
-                        <span class="item-chip" onclick="moveChip(this, 'zone1', 'pool1')">How</span>
-                        <span class="item-chip" onclick="moveChip(this, 'zone1', 'pool1')">the</span>
-                        <span class="item-chip" onclick="moveChip(this, 'zone1', 'pool1')">cinema?</span>
-                    </div>
-                    <button class="action-btn" onclick="checkUnscramble('zone1', 'How about going to the cinema?', this)">Check Sentence</button>
-                </div>
-
-                <!-- Sentence 2 -->
-                <div class="quiz-item">
-                    <label>2. Make a refusal sentence with an excuse:</label>
-                    <div class="unscramble-zone" id="zone2"></div>
-                    <div class="unscramble-pool" id="pool2">
-                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">sorry,</span>
-                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">must</span>
-                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">I'm</span>
-                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">help</span>
-                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">my</span>
-                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">parents.</span>
-                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">but</span>
-                        <span class="item-chip" onclick="moveChip(this, 'zone2', 'pool2')">I</span>
-                    </div>
-                    <button class="action-btn" onclick="checkUnscramble('zone2', 'I\'m sorry, but I must help my parents.', this)">Check Sentence</button>
+            <div class="instruction-box">
+                👉 <strong>Guideline:</strong> Click the words to move them into the box in the correct order. (Click a word in the box to take it back.)
+            </div>
+            <div class="quiz-list" id="usContainer"></div>
+            <div class="btn-group" style="margin-top:0;">
+                <button type="button" class="btn-action btn-secondary" id="trBtn3" style="font-size:16px;">🇹🇷 Türkçe Anlamları Göster</button>
+            </div>
+            <div class="tr-box" id="tr3">
+                <div class="tr-list">
+                    <div><b>How about going to the cinema?</b> = Sinemaya gitmeye ne dersin?</div>
+                    <div><b>I'm sorry, but I must help my parents.</b> = Üzgünüm ama anne babama yardım etmeliyim.</div>
                 </div>
             </div>
+            <div class="feedback-banner" id="usFeedback"></div>
         </section>
 
-        <!-- PART 4: Short Answer & Fill in the Blanks -->
-        <section class="activity-card">
+        <!-- PART 4: SHORT ANSWER -->
+        <section class="activity-card" id="section-4">
             <div class="card-header">
-                <div class="card-icon">✍️</div>
+                <div class="card-icon" style="background: var(--green-soft); color: var(--green);">✍️</div>
                 <div class="card-title">
                     <h2>Part 4: Short Answer Completion</h2>
-                    <p>Type the appropriate missing words to complete the dialogue.</p>
+                    <p>Type the missing word to complete each sentence</p>
                 </div>
             </div>
-
-            <div class="space-y">
-                <div class="quiz-item">
-                    <label>1. Complete the invitation phrase: "______ you like to join our picnic on Saturday?"</label>
-                    <input type="text" class="text-input" id="sa1" placeholder="Type your answer here..." oninput="this.classList.remove('correct', 'wrong')">
-                </div>
-
-                <div class="quiz-item">
-                    <label>2. Complete the accepting response: "Sounds ______! I have nothing better to do!" (Awesome / Great)</label>
-                    <input type="text" class="text-input" id="sa2" placeholder="Type your answer here..." oninput="this.classList.remove('correct', 'wrong')">
-                </div>
-
-                <div class="quiz-item">
-                    <label>3. Complete the statement: "True friends never tell your secrets to anyone because they are ______."</label>
-                    <input type="text" class="text-input" id="sa3" placeholder="Type your answer here..." oninput="this.classList.remove('correct', 'wrong')">
-                </div>
-
-                <button class="action-btn" onclick="checkShortAnswers()">Submit Answers</button>
+            <div class="fill-list" id="fillContainer"></div>
+            <div class="btn-group">
+                <button type="button" class="btn-action btn-primary" id="check4">✓ Check Answers</button>
+                <button type="button" class="btn-action btn-secondary" id="reset4">↺ Clear</button>
             </div>
+            <div class="feedback-banner" id="fb4"></div>
         </section>
+
+        <!-- FINAL -->
+        <section class="activity-card final-card hidden" id="finalCard">
+            <div class="big-emoji">🎉</div>
+            <h2>Congratulations!</h2>
+            <p>You have completed all the activities in Unit 1: Friendship.</p>
+            <button type="button" class="btn-action btn-primary" id="restartBtn">↺ Start Again</button>
+        </section>
+
     </div>
 
     <script>
-        // Part 1: Multiple Choice Logic
-        function checkMCQ(btn, isCorrect, questionId) {
-            const parentContainer = btn.closest('.quiz-item');
-            const buttons = parentContainer.querySelectorAll('.opt-btn');
-            
-            buttons.forEach(b => {
-                b.disabled = true;
-                b.classList.remove('correct', 'wrong');
-            });
+        // ---------- HELPERS ----------
+        function shuffleArr(a) {
+            const arr = [...a];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
 
-            if (isCorrect) {
-                btn.classList.add('correct');
-            } else {
-                btn.classList.add('wrong');
-                buttons.forEach(b => {
-                    if (b.getAttribute('onclick').includes('true')) {
-                        b.classList.add('correct');
-                    }
+        const completedSections = new Set();
+        const totalSections = 4;
+
+        function markSectionComplete(n) {
+            completedSections.add(n);
+            if (completedSections.size === totalSections) {
+                setTimeout(() => {
+                    const fc = document.getElementById('finalCard');
+                    fc.classList.remove('hidden');
+                    fc.scrollIntoView({ behavior: 'smooth' });
+                }, 500);
+            }
+        }
+
+        function showBanner(id, kind, text) {
+            const fb = document.getElementById(id);
+            fb.className = 'feedback-banner show ' + kind;
+            fb.textContent = text;
+        }
+
+        // ---------- PART 1: MULTIPLE CHOICE ----------
+        const mcqData = [
+            {
+                html: "A true friend always backs you up when you need help. What does <b>\"back up\"</b> mean?",
+                options: ["Support and help someone.", "Argue with someone.", "Refuse an offer.", "Break a promise."],
+                correct: 0
+            },
+            {
+                html: "Tim: \"Would you like to come to my birthday party on Sunday?\"\nLeo: \"______ I can't miss it!\"",
+                options: ["I'd love to! That sounds awesome.", "I'm sorry, I'm busy.", "No, thanks. I'm full.", "I have to stay at home."],
+                correct: 0
+            },
+            {
+                html: "Which of the following is an <b>excuse</b> for refusing an invitation?",
+                options: ["I'd love to, but I must study for an exam.", "Great! What time does it start?", "Sure, why not?", "Yeah, that sounds wonderful!"],
+                correct: 0
+            }
+        ];
+
+        function initMcq() {
+            const container = document.getElementById('mcqContainer');
+            let answered = 0, right = 0;
+
+            mcqData.forEach((item, qi) => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card';
+
+                const qEl = document.createElement('div');
+                qEl.className = 'quiz-q';
+                qEl.innerHTML = '<span class="q-num">' + (qi + 1) + '</span><span>' + item.html + '</span>';
+                card.appendChild(qEl);
+
+                const grid = document.createElement('div');
+                grid.className = 'options-grid';
+                const opts = shuffleArr(item.options.map((t, i) => ({ t, ok: i === item.correct })));
+
+                opts.forEach(o => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'opt-btn';
+                    const label = document.createElement('span');
+                    label.textContent = o.t;
+                    btn.appendChild(label);
+                    btn._ok = o.ok;
+
+                    btn.addEventListener('click', () => {
+                        grid.querySelectorAll('.opt-btn').forEach(b => { b.disabled = true; if (b._ok) b.classList.add('correct'); });
+                        if (o.ok) {
+                            right++;
+                            btn.classList.add('pop');
+                        } else {
+                            btn.classList.add('wrong', 'shake');
+                        }
+                        answered++;
+                        if (answered === mcqData.length) {
+                            showBanner('mcqFeedback', right === mcqData.length ? 'ok' : 'mid',
+                                'Part 1 completed! ' + right + '/' + mcqData.length + ' correct. ' + (right === mcqData.length ? 'Great job! 🌟' : 'Good effort! 👍'));
+                            markSectionComplete(1);
+                        }
+                    });
+                    grid.appendChild(btn);
                 });
-            }
+
+                card.appendChild(grid);
+                container.appendChild(card);
+            });
         }
 
-        // Part 2: Matching Dropdown Logic
-        function checkMatch(selectId, targetValue) {
-            const el = document.getElementById(selectId);
-            el.classList.remove('correct', 'wrong');
-            if (el.value === '') return;
+        // ---------- PART 2: WORD MATCHING ----------
+        // First 3 definitions belong to the 3 words (same index); the last 3 are distractors.
+        const sec2Data = [
+            { q: "1. Buddy / Mate", answer: "A close friend" },
+            { q: "2. Count on", answer: "To trust someone and depend on them" },
+            { q: "3. Loyal", answer: "Always staying true and supportive" }
+        ];
+        const sec2Distractors = ["Someone you don't know", "To ask someone to an event", "Only caring about oneself"];
+        const sec2Meanings = [...sec2Data.map(d => d.answer), ...sec2Distractors];
+        const sec2Order = shuffleArr(sec2Meanings.map((m, i) => i));
+        let sec2State = { selected: null, placements: {}, results: {} };
 
-            if (el.value === targetValue) {
-                el.classList.add('correct');
+        function renderSec2() {
+            const bank = document.getElementById('sec2Bank');
+            const used = new Set(Object.values(sec2State.placements));
+            bank.innerHTML = '';
+
+            const remaining = sec2Order.filter(i => !used.has(i));
+            remaining.forEach(i => {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'item-chip chip-long' + (sec2State.selected === i ? ' active-select' : '');
+                b.textContent = sec2Meanings[i];
+                b.addEventListener('click', () => {
+                    sec2State.selected = (sec2State.selected === i) ? null : i;
+                    renderSec2();
+                });
+                bank.appendChild(b);
+            });
+            if (remaining.length === 0) {
+                const done = document.createElement('span');
+                done.className = 'bank-empty';
+                done.textContent = 'All definitions are placed. Press the check button!';
+                bank.appendChild(done);
+            }
+
+            const list = document.getElementById('sec2List');
+            list.innerHTML = '';
+            sec2Data.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'match-row';
+
+                const qText = document.createElement('div');
+                qText.className = 'match-q';
+                qText.textContent = item.q;
+
+                const slot = document.createElement('button');
+                slot.type = 'button';
+                slot.className = 'slot';
+                const placed = sec2State.placements[idx];
+                if (placed !== undefined) {
+                    slot.classList.add('filled');
+                    slot.textContent = sec2Meanings[placed];
+                } else {
+                    slot.textContent = 'Tap to answer';
+                }
+                if (sec2State.results[idx] === true) {
+                    slot.classList.add('correct');
+                    slot.textContent = '✓  ' + slot.textContent;
+                } else if (sec2State.results[idx] === false) {
+                    slot.classList.add('wrong');
+                    if (placed !== undefined) slot.textContent = '✕  ' + slot.textContent;
+                }
+
+                slot.addEventListener('click', () => {
+                    if (sec2State.selected !== null) {
+                        sec2State.placements[idx] = sec2State.selected;
+                        sec2State.selected = null;
+                    } else if (sec2State.placements[idx] !== undefined) {
+                        delete sec2State.placements[idx];
+                    } else {
+                        slot.classList.add('shake');
+                        setTimeout(() => slot.classList.remove('shake'), 300);
+                        return;
+                    }
+                    delete sec2State.results[idx];
+                    document.getElementById('fb2').classList.remove('show');
+                    renderSec2();
+                });
+
+                row.appendChild(qText);
+                row.appendChild(slot);
+                list.appendChild(row);
+            });
+        }
+
+        function checkSec2() {
+            const placedCount = Object.keys(sec2State.placements).length;
+            if (placedCount < sec2Data.length) {
+                showBanner('fb2', 'mid', 'Place a definition for every word first. (' + placedCount + '/' + sec2Data.length + ' placed)');
+                return;
+            }
+            let correct = 0;
+            sec2Data.forEach((item, idx) => {
+                const ok = sec2State.placements[idx] === idx;
+                sec2State.results[idx] = ok;
+                if (ok) correct++;
+            });
+            renderSec2();
+            if (correct === sec2Data.length) {
+                showBanner('fb2', 'ok', 'Part 2 completed! ' + correct + '/' + sec2Data.length + ' correct. Excellent! 🏆');
+                markSectionComplete(2);
             } else {
-                el.classList.add('wrong');
+                showBanner('fb2', 'mid', correct + '/' + sec2Data.length + ' correct. Click the red ones to take them back and try again!');
             }
         }
 
-        // Part 3: Unscramble Interactive Logic
-        function moveChip(chip, zoneId, poolId) {
-            const zone = document.getElementById(zoneId);
-            const pool = document.getElementById(poolId);
+        function resetSec2() {
+            sec2State = { selected: null, placements: {}, results: {} };
+            document.getElementById('fb2').classList.remove('show');
+            renderSec2();
+        }
 
-            if (chip.parentElement.id === poolId) {
-                zone.appendChild(chip);
+        // ---------- PART 3: SENTENCE BUILDER ----------
+        // Chips are shown without capital letters / punctuation so the first and last word are not given away.
+        const usData = [
+            {
+                label: "1. Make an invitation sentence:",
+                chips: ["about", "going", "to", "how", "the", "cinema"],
+                answers: ["how about going to the cinema"],
+                full: "How about going to the cinema?"
+            },
+            {
+                label: "2. Make a refusal sentence with an excuse:",
+                chips: ["sorry", "must", "I'm", "help", "my", "parents", "but", "I"],
+                answers: ["i'm sorry but i must help my parents"],
+                full: "I'm sorry, but I must help my parents."
+            }
+        ];
+        const usState = usData.map(d => ({ order: shuffleArr(d.chips.map((c, i) => i)), zone: [], solved: false, wrong: false }));
+
+        function normalize(s) {
+            return s.toLowerCase().replace(/[.,?!]/g, '').replace(/\s+/g, ' ').trim();
+        }
+
+        function renderUs() {
+            const container = document.getElementById('usContainer');
+            container.innerHTML = '';
+
+            usData.forEach((item, si) => {
+                const st = usState[si];
+                const card = document.createElement('div');
+                card.className = 'quiz-card';
+
+                const lab = document.createElement('div');
+                lab.className = 'quiz-q';
+                lab.textContent = item.label;
+                card.appendChild(lab);
+
+                const zone = document.createElement('div');
+                zone.className = 'unscramble-zone' + (st.solved ? ' correct' : '') + (st.wrong ? ' wrong' : '');
+                st.zone.forEach(ci => {
+                    const c = document.createElement('button');
+                    c.type = 'button';
+                    c.className = 'item-chip';
+                    c.textContent = item.chips[ci];
+                    c.disabled = st.solved;
+                    c.addEventListener('click', () => {
+                        st.zone = st.zone.filter(x => x !== ci);
+                        st.wrong = false;
+                        renderUs();
+                    });
+                    zone.appendChild(c);
+                });
+                card.appendChild(zone);
+
+                const pool = document.createElement('div');
+                pool.className = 'unscramble-pool';
+                st.order.filter(ci => !st.zone.includes(ci)).forEach(ci => {
+                    const c = document.createElement('button');
+                    c.type = 'button';
+                    c.className = 'item-chip';
+                    c.textContent = item.chips[ci];
+                    c.addEventListener('click', () => {
+                        if (st.solved) return;
+                        st.zone.push(ci);
+                        st.wrong = false;
+                        renderUs();
+                    });
+                    pool.appendChild(c);
+                });
+                card.appendChild(pool);
+
+                const res = document.createElement('div');
+                res.className = 'us-result' + (st.solved ? ' show' : '');
+                res.textContent = '✓ ' + item.full;
+                card.appendChild(res);
+
+                if (!st.solved) {
+                    const actions = document.createElement('div');
+                    actions.className = 'btn-group';
+                    actions.style.marginTop = '0';
+
+                    const check = document.createElement('button');
+                    check.type = 'button';
+                    check.className = 'btn-action btn-primary';
+                    check.style.fontSize = '16px';
+                    check.textContent = '✓ Check Sentence';
+                    check.addEventListener('click', () => {
+                        const sentence = normalize(st.zone.map(ci => item.chips[ci]).join(' '));
+                        if (item.answers.includes(sentence)) {
+                            st.solved = true;
+                            st.wrong = false;
+                            if (usState.every(s => s.solved)) {
+                                showBanner('usFeedback', 'ok', 'Part 3 completed! All sentences are correct. 🏆');
+                                markSectionComplete(3);
+                            }
+                        } else {
+                            st.wrong = true;
+                        }
+                        renderUs();
+                    });
+
+                    const reset = document.createElement('button');
+                    reset.type = 'button';
+                    reset.className = 'btn-action btn-secondary';
+                    reset.style.fontSize = '16px';
+                    reset.textContent = '↺ Reset';
+                    reset.addEventListener('click', () => {
+                        st.zone = [];
+                        st.wrong = false;
+                        renderUs();
+                    });
+
+                    actions.appendChild(check);
+                    actions.appendChild(reset);
+                    card.appendChild(actions);
+                }
+                container.appendChild(card);
+            });
+            if (zoomedCard) fitZoom(zoomedCard);
+        }
+
+        // ---------- PART 4: SHORT ANSWER ----------
+        const fillData = [
+            {
+                before: "Complete the invitation phrase: \"",
+                after: " you like to join our picnic on Saturday?\"",
+                valid: ["would"]
+            },
+            {
+                before: "Complete the accepting response: \"Sounds ",
+                after: "! I have nothing better to do!\"",
+                valid: ["great", "awesome", "good", "cool", "amazing", "wonderful", "fantastic", "perfect", "fun", "nice", "brilliant", "lovely", "super"]
+            },
+            {
+                before: "Complete the statement: \"True friends never tell your secrets to anyone because they are ",
+                after: ".\"",
+                valid: ["trustworthy", "reliable", "honest", "loyal", "trusty", "dependable", "faithful", "discreet"]
+            }
+        ];
+        const fillDone = new Set();
+
+        function renderFill() {
+            const container = document.getElementById('fillContainer');
+            container.innerHTML = '';
+            fillData.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'fill-item';
+
+                const num = document.createElement('span');
+                num.className = 'row-num';
+                num.textContent = idx + 1;
+                row.appendChild(num);
+
+                const b = document.createElement('span');
+                b.textContent = item.before;
+                row.appendChild(b);
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'blank-input';
+                input.id = 'fill_' + idx;
+                input.placeholder = 'type here...';
+                input.autocomplete = 'off';
+                input.autocapitalize = 'off';
+                input.spellcheck = false;
+                input.addEventListener('input', () => {
+                    input.classList.remove('correct', 'wrong');
+                    document.getElementById('fillfb_' + idx).textContent = '';
+                });
+                input.addEventListener('keydown', e => { if (e.key === 'Enter') checkFill(); });
+                row.appendChild(input);
+
+                const a = document.createElement('span');
+                a.textContent = item.after;
+                row.appendChild(a);
+
+                const fb = document.createElement('span');
+                fb.className = 'fill-fb';
+                fb.id = 'fillfb_' + idx;
+                row.appendChild(fb);
+
+                container.appendChild(row);
+            });
+        }
+
+        function checkFill() {
+            let correct = 0;
+            fillData.forEach((item, idx) => {
+                const input = document.getElementById('fill_' + idx);
+                const fb = document.getElementById('fillfb_' + idx);
+                const val = input.value.trim().toLowerCase();
+                input.classList.remove('correct', 'wrong');
+                if (val !== '' && item.valid.includes(val)) {
+                    input.classList.add('correct');
+                    input.readOnly = true;
+                    fb.className = 'fill-fb correct';
+                    fb.textContent = '✓';
+                    correct++;
+                } else {
+                    input.classList.add('wrong');
+                    fb.className = 'fill-fb wrong';
+                    fb.textContent = val === '' ? '✕ Type a word' : '✕ Try again';
+                }
+            });
+            if (correct === fillData.length) {
+                showBanner('fb4', 'ok', 'Part 4 completed! ' + correct + '/' + fillData.length + ' correct. Excellent! 🏆');
+                markSectionComplete(4);
             } else {
-                pool.appendChild(chip);
-            }
-
-            // Kartlar taşındığında stil bildirimlerini temizle
-            zone.classList.remove('correct', 'wrong', 'shake');
-        }
-
-        function checkUnscramble(zoneId, targetSentence, btn) {
-            const zone = document.getElementById(zoneId);
-            const words = Array.from(zone.children).map(c => c.textContent.trim());
-            const userSentence = words.join(' ');
-
-            zone.classList.remove('correct', 'wrong', 'shake');
-
-            if (userSentence.toLowerCase() === targetSentence.toLowerCase()) {
-                zone.classList.add('correct');
-            } else {
-                zone.classList.add('wrong', 'shake');
-                setTimeout(() => zone.classList.remove('shake'), 400);
+                showBanner('fb4', 'mid', correct + '/' + fillData.length + ' correct. Fix the red ones and check again!');
             }
         }
 
-        // Part 4: Short Answer Logic
-        function checkShortAnswers() {
-            const ans1 = document.getElementById('sa1');
-            const ans2 = document.getElementById('sa2');
-            const ans3 = document.getElementById('sa3');
-
-            // Q1: Would
-            validateInput(ans1, ['would']);
-
-            // Q2: Great / Awesome / Good / Cool / Amazing / Wonderful
-            validateInput(ans2, ['great', 'awesome', 'good', 'cool', 'amazing', 'wonderful']);
-
-            // Q3: Trustworthy / Reliable / Honest / Loyal
-            validateInput(ans3, ['trustworthy', 'reliable', 'honest', 'loyal']);
+        function resetFill() {
+            document.getElementById('fb4').classList.remove('show');
+            renderFill();
         }
 
-        function validateInput(inputEl, validList) {
-            const val = inputEl.value.trim().toLowerCase();
-            inputEl.classList.remove('correct', 'wrong');
+        // ---------- ENLARGE A SECTION TO FILL THE SCREEN ----------
+        let zoomedCard = null;
 
-            if (val !== "" && validList.includes(val)) {
-                inputEl.classList.add('correct');
-            } else {
-                inputEl.classList.add('wrong');
+        function fitZoom(card) {
+            // Try several layout widths and keep the one that gives the biggest zoom that still fits.
+            let best = { z: 0, w: 900 };
+            card.style.zoom = 1;
+            card.style.height = 'auto';
+            [600, 700, 800, 900, 1050, 1200, 1400, 1600].forEach(w => {
+                card.style.width = w + 'px';
+                const h = card.offsetHeight;
+                const z = Math.min(window.innerWidth / w, window.innerHeight / h);
+                if (z > best.z) best = { z, w };
+            });
+            let z = Math.min(4, Math.max(0.8, best.z * 0.98));
+            for (let i = 0; i < 12; i++) {
+                card.style.zoom = z;
+                card.style.width = (window.innerWidth / z) + 'px';
+                card.style.height = (window.innerHeight / z) + 'px';
+                if (z <= 0.8 || card.scrollHeight <= card.clientHeight + 1) break;
+                z = Math.max(0.8, z * 0.96);
             }
         }
+
+        function openZoom(card) {
+            closeZoom();
+            zoomedCard = card;
+            card.classList.add('expanded');
+            card.querySelector('.zoom-btn').textContent = '✕ Close';
+            document.body.style.overflow = 'hidden';
+            fitZoom(card);
+        }
+
+        function closeZoom() {
+            if (!zoomedCard) return;
+            const card = zoomedCard;
+            zoomedCard = null;
+            card.classList.remove('expanded');
+            card.style.zoom = '';
+            card.style.width = '';
+            card.style.height = '';
+            card.querySelector('.zoom-btn').textContent = '🔍 Enlarge';
+            document.body.style.overflow = '';
+        }
+
+        function initZoom() {
+            document.querySelectorAll('.activity-card:not(.final-card)').forEach(card => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'zoom-btn';
+                btn.textContent = '🔍 Enlarge';
+                btn.addEventListener('click', () => {
+                    card === zoomedCard ? closeZoom() : openZoom(card);
+                });
+                card.querySelector('.card-header').appendChild(btn);
+            });
+            window.addEventListener('keydown', e => { if (e.key === 'Escape') closeZoom(); });
+            window.addEventListener('resize', () => { if (zoomedCard) fitZoom(zoomedCard); });
+        }
+
+        function wireTranslation(btnId, boxId, showText) {
+            document.getElementById(btnId).addEventListener('click', () => {
+                const box = document.getElementById(boxId);
+                const show = !box.classList.contains('show');
+                box.classList.toggle('show', show);
+                document.getElementById(btnId).textContent = show ? '🇬🇧 Türkçeyi Gizle' : showText;
+                if (zoomedCard) fitZoom(zoomedCard);
+            });
+        }
+
+        // ---------- INIT ----------
+        window.onload = () => {
+            document.getElementById('check2').addEventListener('click', checkSec2);
+            document.getElementById('reset2').addEventListener('click', resetSec2);
+            document.getElementById('check4').addEventListener('click', checkFill);
+            document.getElementById('reset4').addEventListener('click', resetFill);
+            document.getElementById('restartBtn').addEventListener('click', () => location.reload());
+            wireTranslation('trBtn2', 'tr2', '🇹🇷 Türkçe Anlamları Göster');
+            wireTranslation('trBtn3', 'tr3', '🇹🇷 Türkçe Anlamları Göster');
+
+            initMcq();
+            renderSec2();
+            renderUs();
+            renderFill();
+            initZoom();
+        };
     </script>
 </body>
 </html>

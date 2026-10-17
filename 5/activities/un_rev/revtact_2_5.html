@@ -317,6 +317,9 @@
         }
         .pop { animation: pop 0.25s ease; }
 
+        /* Never let a section's children shrink inside the enlarged (fixed-height) card; the card scrolls instead. */
+        .activity-card > * { flex-shrink: 0; }
+
         .zoom-btn {
             margin-left: auto;
             flex-shrink: 0;
