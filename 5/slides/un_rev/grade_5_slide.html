@@ -1,222 +1,161 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grade 5 Revs Slides</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-            background: radial-gradient(circle at top, #f0f9ff 0%, #d4eefe 40%, #b8e4fc 100%);
-            padding: 20px 20px;
+            margin: 0;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 5px;
+            font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif;
+            color: #1A1F23;
         }
 
-        #navbar-placeholder {
-            margin-bottom: 8px;
-        }
         .container {
-            max-width: 1200px;
-            width: 100%;
-            padding-top: 4px;
-            margin-top: -8px;
-        }
-        h1 {
-            color: #2c3e50;
-            font-weight: 300;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 10px;
-            display: inline-block;
-            margin-bottom: 15px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px 20px 56px;
         }
 
-        /* KART GRID - Küçültülmüş */
+        h1 {
+            margin: 0 0 24px;
+            text-align: center;
+            font-size: 2.25rem;
+            font-weight: 800;
+        }
+
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+            gap: 18px;
         }
+
         .card {
-            background: #f6fbb2;
-            border-radius: 18px;
-            border: 2px solid black;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            background: #FFFFFF;
+            border: 3px solid #334155;
+            border-radius: 16px;
+            box-shadow: 0 5px 0 #94A3B8;
             overflow: hidden;
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
+            display: flex;
+            flex-direction: column;
         }
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 28px rgba(0,0,0,0.12);
-        }
+
         .card-thumbnail {
             display: block;
             width: 100%;
-            height: 170px;
+            height: auto;
+            aspect-ratio: 4 / 3;    /* taller image area; change to 16 / 9 for a flatter card */
             object-fit: cover;
             object-position: center;
-            background: #ecf0f1;
-        }
-        .card-body {
-            padding: 12px 14px 14px;
-        }
-        .card-body h3 {
-            margin-bottom: 4px;
-            font-size: 0.95rem;
-            color: #2c3e50;
-        }
-        .card-body p {
-            margin-bottom: 12px;
-            color: black;
-            font-size: 0.78rem;
-            line-height: 1.3;
-        }
-        .btn {
-            display: inline-block;
-            background: #3498db;
-            color: white;
-            border: 2px solid #1f618d;
-            padding: 7px 14px;
-            border-radius: 25px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-            text-align: center;
-            width: 100%;
-            text-decoration: none;
-            transition: background 0.2s;
-        }
-        .btn:hover {
-            background: #2980b9;
-            border-color: #154360;
+            background: #E2E8F0;
+            border-bottom: 3px solid #334155;
         }
 
-        /* MODAL (İlk Sayfadaki Tasarım) */
+        .card-body { padding: 10px 12px 14px; display: flex; flex-direction: column; flex: 1; }
+        .card-body h3 { margin: 0 0 4px; font-size: 1.15rem; font-weight: 800; color: #0B4F4A; }
+        .card-body p { margin: 0 0 10px; font-size: 0.85rem; font-weight: 700; color: #3D4852; line-height: 1.3; }
+
+        .btn {
+            font-family: inherit;
+            display: block;
+            width: 100%;
+            margin-top: auto;
+            padding: 7px 12px;
+            background: #C2410C;
+            color: #FFFFFF;
+            border: 3px solid #7C2D12;
+            border-radius: 12px;
+            box-shadow: 0 3px 0 #7C2D12;
+            font-size: 1rem;
+            font-weight: 800;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #7C2D12; }
+        .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #7C2D12; }
+        .btn:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
+
+        /* MODAL */
         .modal-overlay {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 999;
-            justify-content: center;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.8);
+            z-index: 100000;
             align-items: center;
+            justify-content: center;
         }
-        .modal-overlay.active {
-            display: flex;
-        }
+
+        .modal-overlay.active { display: flex; }
+
         .modal-box {
-            background: white;
+            width: 94%;
+            max-width: 1100px;
+            height: 90vh;
+            background: #FFFFFF;
+            border: 4px solid #334155;
             border-radius: 20px;
-            width: 100%;
-            max-width: 1000px;
-            max-height: 85vh;
-            padding: 20px 24px 24px;
+            box-shadow: 0 6px 0 #94A3B8;
             display: flex;
             flex-direction: column;
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-        }
-        .modal-header h2 {
-            font-size: 1.5rem;
-            color: #2c3e50;
-        }
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        /* Narin, ikon şeklinde kapatma butonu */
-        .modal-actions .btn-close {
-            width: 34px;
-            height: 34px;
-            padding: 0;
-            border: none;
-            border-radius: 50%;
-            background: #f1f1f1;
-            color: #666;
-            font-size: 1rem;
-            font-weight: 400;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: none;
-        }
-        .modal-actions .btn-close:hover {
-            background: #e74c3c;
-            color: white;
-        }
-
-        .modal-iframe-wrapper {
-            flex: 1;
-            background: #f8f9fa;
-            border-radius: 12px;
             overflow: hidden;
         }
-        .modal-iframe-wrapper iframe {
-            width: 100%;
-            height: 100%;
-            min-height: 550px;
-            border: none;
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px;
+            background: #CCFBF1;
+            border-bottom: 4px solid #334155;
         }
 
+        .modal-header h2 { margin: 0; font-size: 1.5rem; font-weight: 800; color: #064E48; }
+
+        .btn-close { width: auto; margin: 0; padding: 8px 20px; font-size: 1.1rem; flex-shrink: 0; }
+
+        .modal-iframe-wrapper { flex: 1; background: #F8F9FA; }
+        .modal-iframe-wrapper iframe { width: 100%; height: 100%; border: none; }
+
         @media (max-width: 700px) {
-            .modal-box { padding: 16px; width: 95%; }
-            .modal-header { flex-direction: column; align-items: stretch; gap: 12px; }
-            .modal-iframe-wrapper iframe { min-height: 300px; }
-            .card-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
-            .card-thumbnail { height: 150px; }
+            h1 { font-size: 1.6rem; }
+            .card-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+            .card-body h3 { font-size: 1.15rem; }
+            .card-body p { font-size: 0.9rem; }
         }
     </style>
     <link rel="stylesheet" href="../../../theme.css">
-    <!-- FIX: thumbnail görselleri aynı origin'den değilse (CDN kullanıyorsanız)
-         o domain için preconnect ekleyin, ör:
-         <link rel="preconnect" href="https://cdn.teachermurat.com"> -->
 </head>
 <body>
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
-    <!-- FIX: defer eklendi. Önceden bu script senkron çalıştığı için tarayıcı
-         navbar.js'i indirip çalıştırana kadar aşağıdaki kart görsellerinin
-         HTML ayrıştırması / indirmeye başlaması gecikiyordu. -->
-    <script src="../../../navbar.js" defer></script>
+    <script src="../../../navbar.js"></script>
 
     <div class="container">
-        <h1>📚 REVS SLIDES</h1>
+        <h1>REVS SLIDES</h1>
 
         <div class="card-grid">
-            <!-- KART 1 -->
-            <!-- FIX: loading="lazy" kaldırıldı — bu kart ilk ekranda (above the fold)
-                 görünüyor, lazy-load tarayıcının onu görünürlük hesaplanana kadar
-                 ertelemesine sebep oluyordu. fetchpriority="high" eklendi çünkü bu
-                 muhtemelen sayfanın LCP (en büyük içerik boyama) elemanı. -->
-            <div class="card" 
+            <div class="card"
                  data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_slides/04-Grade5_Pre.pdf?v=2"
                  data-download="https://cdn.teachermurat.com/5/rev_slides/04-Grade5_Pre.pdf?v=2"
                  data-title="Slide 1">
-                <img class="card-thumbnail" src="../un_rev/thumbnails/grade_5_rev_pre1.webp" alt="Slide 1" fetchpriority="high" decoding="async">
+                <img class="card-thumbnail" src="../un_rev/thumbnails/grade_5_rev_pre1.webp" alt="Slide 1" decoding="async">
                 <div class="card-body">
                     <h3>Slide 1</h3>
                     <p>REVISIONS SUMMARY</p>
                     <button class="btn open-modal">OPEN</button>
                 </div>
             </div>
-            <!-- KART 2 -->
-            <div class="card" 
+
+            <div class="card"
                  data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_slides/01-Grade5_Pre.pdf?v=1"
                  data-download="https://cdn.teachermurat.com/5/rev_slides/01-Grade5_Pre.pdf?v=1"
-                 data-title="Slide 1">
-                <img class="card-thumbnail" src="../un_rev/thumbnails/grade_5_rev_pre2.webp" alt="Slide 1" fetchpriority="high" decoding="async">
+                 data-title="Slide 2">
+                <img class="card-thumbnail" src="../un_rev/thumbnails/grade_5_rev_pre2.webp" alt="Slide 2" decoding="async">
                 <div class="card-body">
                     <h3>Slide 2</h3>
                     <p>REVISIONS SUMMARY</p>
@@ -224,14 +163,11 @@
                 </div>
             </div>
 
-            <!-- KART 3 -->
-            <!-- FIX: data-download düzeltildi — önceki kodda yanlışlıkla 1. slide'ın
-                 pdf'ine işaret ediyordu (01-...pdf), şimdi 02-...pdf. -->
-            <div class="card" 
+            <div class="card"
                  data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_slides/02-Grade5_Pre.pdf?v=3"
                  data-download="https://cdn.teachermurat.com/5/rev_slides/02-Grade5_Pre.pdf?v=3"
-                 data-title="Slide 2">
-                <img class="card-thumbnail" src="../un_rev/thumbnails/grade_5_rev_pre3.webp" alt="Slide 2" decoding="async">
+                 data-title="Slide 3">
+                <img class="card-thumbnail" src="../un_rev/thumbnails/grade_5_rev_pre3.webp" alt="Slide 3" decoding="async">
                 <div class="card-body">
                     <h3>Slide 3</h3>
                     <p>REVISIONS SUMMARY</p>
@@ -239,15 +175,11 @@
                 </div>
             </div>
 
-            <!-- KART 4 -->
-            <!-- FIX: data-embed özelliğinin kapanış tırnağı eksikti (v=1'den sonra
-                 " yoktu), bu yüzden string bir sonraki satıra taşıp data-download
-                 ile karışıyordu. Kapanış tırnağı eklendi. -->
-            <div class="card" 
+            <div class="card"
                  data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_slides/03-Grade5_Pre.pdf?v=3"
                  data-download="https://cdn.teachermurat.com/5/rev_slides/03-Grade5_Pre.pdf?v=3"
-                 data-title="Slide 3">
-                <img class="card-thumbnail" src="../un_rev/thumbnails/grade_5_rev_pre4.webp" alt="Slide 3" decoding="async">
+                 data-title="Slide 4">
+                <img class="card-thumbnail" src="../un_rev/thumbnails/grade_5_rev_pre4.webp" alt="Slide 4" decoding="async">
                 <div class="card-body">
                     <h3>Slide 4</h3>
                     <p>REVISIONS JOBS</p>
@@ -255,55 +187,27 @@
                 </div>
             </div>
 
-            <!-- BURAYA YENİ KART EKLENEBİLİR -->
-            <!-- NOT: Buradan sonra eklenecek kartlar (4. karttan itibaren), sayfa
-                 yüklendiğinde ekran dışında kalacaksa loading="lazy" ile bırakılabilir.
-                 Yalnızca İLK EKRANDA görünen kartlarda lazy-load kaldırılmalı. -->
-        </div> <!-- ✅ GRID KAPATILDI -->
-        
-        <!-- MODAL (İlk Sayfadaki Yapı) -->
-        <div id="modalOverlay" class="modal-overlay">
-            <div class="modal-box">
-                <div class="modal-header">
-                    <h2 id="modalTitle">Sunum Başlığı</h2>
-                    <div class="modal-actions">
-                        <button id="closeModalBtn" class="btn btn-close" aria-label="Kapat">✕</button>
-                    </div>
-                </div>
-                <div class="modal-iframe-wrapper">
-                    <iframe id="modalIframe" src="" allowfullscreen></iframe>
-                </div>
+            <!-- ADD NEW CARDS HERE -->
+        </div>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="modal-header">
+                <h2 id="modalTitle">Slide</h2>
+                <button id="closeModalBtn" class="btn btn-close">Close ✕</button>
+            </div>
+            <div class="modal-iframe-wrapper">
+                <iframe id="modalIframe" src="" title="Slide preview" allowfullscreen></iframe>
             </div>
         </div>
     </div>
 
-    <!-- İlk Sayfadaki JavaScript Yapısı -->
     <script>
-        (function() {
-            const overlay = document.getElementById('modalOverlay');
-            const iframe = document.getElementById('modalIframe');
-            const titleEl = document.getElementById('modalTitle');
-            const closeBtn = document.getElementById('closeModalBtn');
-
-            document.querySelectorAll('.open-modal').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const card = this.closest('.card');
-                    const embedUrl = card.getAttribute('data-embed');
-                    const title = card.getAttribute('data-title') || 'Sunum';
-
-                    if (!embedUrl) {
-                        alert('Bu sunumun embed linki eksik.');
-                        return;
-                    }
-
-                    iframe.src = embedUrl;
-                    titleEl.textContent = title;
-
-                    overlay.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                });
-            });
+        (function () {
+            var overlay = document.getElementById('modalOverlay');
+            var iframe = document.getElementById('modalIframe');
+            var titleEl = document.getElementById('modalTitle');
 
             function closeModal() {
                 iframe.src = '';
@@ -311,20 +215,24 @@
                 document.body.style.overflow = '';
             }
 
-            closeBtn.addEventListener('click', closeModal);
-            
-            overlay.addEventListener('click', function(e) {
-                if (e.target === overlay) closeModal();
+            document.querySelectorAll('.open-modal').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var card = btn.closest('.card');
+                    var embedUrl = (card.getAttribute('data-embed') || '').trim();
+                    if (!embedUrl) return;
+                    iframe.src = embedUrl;
+                    titleEl.textContent = card.getAttribute('data-title') || 'Slide';
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
             });
-            
-            document.addEventListener('keydown', function(e) {
+
+            document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+            overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+            document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape' && overlay.classList.contains('active')) closeModal();
             });
         })();
     </script>
-    <!-- FIX: Aynı Cloudflare beacon script'i önceden iki kez ekliydi (kopya-yapıştır
-         hatası). Aynı script'i iki kere çalıştırmak gereksiz JS yükü demek;
-         tek kopya yeterli. -->
-    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
