@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grade 8 - Learning Hub</title>
+    <link rel="stylesheet" href="../theme.css">
     <style>
-        /* ----- GENEL AYARLAR ----- */
         html, body {
             margin: 0;
             padding: 0;
             width: 100%;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: radial-gradient(circle at top, #f0f9ff 0%, #d4eefe 40%, #b8e4fc 100%);
             min-height: 100vh;
         }
 
@@ -21,349 +19,353 @@
             box-sizing: border-box;
         }
 
-        /* DİKEY MERKEZLEME SAĞLAYAN KAPSAYICI */
+        /* Vertically centred content area */
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px 15px;
+            padding: 20px 15px 56px;
             width: 100%;
             box-sizing: border-box;
-            transform: translateY(-80px);
         }
 
-        /* BAŞLIK */
         .page-title {
             text-align: center;
-            margin-bottom: 25px;
-        }
-        .page-title h1 {
-            font-size: 2.375rem; /* 38px */
-            margin: 0;
-            font-weight: 800;
-            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #FFC371 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
-            letter-spacing: -1px;
-        }
-        .page-title .sub-desc {
-            font-size: 1.125rem; /* 18px */
-            color: #5d6d7e;
-            margin-top: 5px;
-            font-weight: 500;
+            margin-bottom: 36px;
+            padding: 0 10px;
         }
 
-        /* ANA MENÜ (4 BUTON) */
+        .page-title h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+            margin: 0;
+            color: #1A1F23;
+        }
+
+        .page-title h1 span { color: #0F766E; }
+
+        .page-title .sub-desc {
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: #3D4852;
+            margin: 8px 0 0 0;
+        }
+
+        /* ----- Step 1: main menu (4 cards) ----- */
         .menu-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             align-items: stretch;
-            gap: 20px;
+            gap: 24px;
             width: 100%;
             max-width: 900px;
+            padding: 8px;
+            box-sizing: border-box;
         }
 
-        /* Buton Kartları (Ortak) */
         .card {
-            text-decoration: none;
-            border-radius: 24px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            color: #1E3C32;
             box-sizing: border-box;
-            cursor: pointer;
-            border: none;
+            background: #FFFFFF;
+            color: #1A1F23;
+            text-decoration: none;
             font-family: inherit;
             text-align: center;
-            padding: 15px;
+            cursor: pointer;
+            border: 4px solid #334155;
+            border-radius: 20px;
+            box-shadow: 0 6px 0 #94A3B8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             position: relative;
-            overflow: hidden;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
+
         .card:hover {
-            transform: scale(1.05) translateY(-6px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 0 #94A3B8;
         }
+
         .card:active {
-            transform: scale(0.98) translateY(-3px);
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #94A3B8;
         }
 
-        /* --- 4 ANA MENÜ BUTON STİLLERİ --- */
+        .card:focus-visible {
+            outline: 4px solid #F0A500;
+            outline-offset: 4px;
+        }
+
         .menu-card {
-            width: 185px;
-            height: 165px;
+            width: 200px;
+            padding: 26px 12px 22px;
         }
-        .menu-card .icon { font-size: 2.875rem; margin-bottom: 8px; } /* 46px */
-        .menu-card .label { font-size: 1.1875rem; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); } /* 19px */
 
-        .card-tests { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-        .card-activities { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1a3c2a; }
-        .card-activities .label { text-shadow: 1px 1px 2px rgba(255,255,255,0.4); }
-        .card-slides { background: linear-gradient(135deg, #f093fb, #f5576c); }
-        .card-worksheets { background: linear-gradient(135deg, #ff9a56, #ff6a88); }
+        .badge {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: #CCFBF1;
+            border: 3px solid #0F766E;
+            font-size: 2.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
 
-        /* --- ÜNİTE KONTEYNERİ (Başlangıçta Gizli) --- */
+        .menu-card {
+            justify-content: flex-start;
+        }
+
+        /* Two-line height for every label so the circles line up across cards */
+        .menu-card .label {
+            font-size: 1.375rem;
+            font-weight: 800;
+            line-height: 1.25;
+            min-height: 2.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ----- Step 2: unit list ----- */
         .unit-container {
             display: none;
-            flex-wrap: wrap;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            gap: 10px;
             width: 100%;
-            max-width: 750px;
-            margin-top: 10px;
-            animation: fadeIn 0.4s ease;
+            max-width: 740px;
+            animation: fadeIn 0.3s ease;
         }
 
-        /* --- ÜNİTE BUTON STİLLERİ --- */
-        .unit-card {
-            width: 110px;
-            height: 95px;
-            background: white;
-            color: #2c3e50;
-            border: 2px solid #d0dbe8;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.12);
-            border-radius: 20px;
-            padding: 8px 4px;
-        }
-        .unit-card:hover {
-            border-color: #4ca1af;
-            background: #f8f9fa;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.18);
-        }
-        .unit-card .icon { font-size: 1.625rem; margin-bottom: 4px; } /* 26px */
-        .unit-card .label { font-size: 0.875rem; font-weight: 600; color: #2c3e50; text-shadow: none; } /* 14px */
+        .back-btn { margin-bottom: 18px; }
 
-        /* --- YAPIM AŞAMASINDAKİ ÜNİTELER (görsel ayrım) --- */
-        .unit-card.locked {
-            background: #f1f3f5;
-            border-color: #e0e4e8;
-            color: #9aa5b1;
-        }
-        .unit-card.locked .label { color: #9aa5b1; }
-        .unit-card.locked:hover {
-            border-color: #c3cbd4;
-            background: #f1f3f5;
-            transform: scale(1.03) translateY(-3px);
-        }
-        .unit-card.locked .lock-badge {
-            position: absolute;
-            top: 4px;
-            right: 6px;
-            font-size: 0.75rem;
-        }
-
-        /* Back Button */
-        .back-btn {
-            width: 100%;
-            text-align: center;
-            margin-bottom: 10px;
-        }
         .back-btn button {
-            background: rgba(44, 62, 80, 0.1);
-            border: 2px solid #2c3e50;
-            color: #2c3e50;
-            padding: 8px 30px;
-            border-radius: 50px;
-            font-size: 0.9375rem; /* 15px */
-            font-weight: 600;
+            background: #FFFFFF;
+            color: #1A1F23;
+            border: 3px solid #334155;
+            border-radius: 12px;
+            box-shadow: 0 4px 0 #334155;
+            padding: 9px 24px;
+            font-family: inherit;
+            font-size: 1.0625rem;
+            font-weight: 800;
             cursor: pointer;
-            transition: 0.3s;
-            backdrop-filter: blur(4px);
-        }
-        .back-btn button:hover {
-            background: #2c3e50;
-            color: white;
-            transform: scale(1.02);
+            transition: transform 0.15s ease;
         }
 
-        /* Geçiş Animasyonu */
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
+        .back-btn button:hover { transform: translateY(-2px); }
+        .back-btn button:active { transform: translateY(2px); box-shadow: none; }
+        .back-btn button:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
 
-        /* Grid aralığı - tam 5 buton genişliğinde, eksik son satır otomatik ortalanır */
         #unitGrid {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px;
+            gap: 16px;
             width: 100%;
-            max-width: 590px; /* 5 x 110px + 4 x 10px boşluk */
-            margin: 0 auto;
         }
 
-        /* Kategori başlığı */
         .category-title {
             width: 100%;
             text-align: center;
             margin-bottom: 6px;
-            font-size: 1.25rem; /* 20px */
-            font-weight: bold;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #0B4F4A;
         }
 
-        /* --- MOBİL UYUMLULUK --- */
-        @media (max-width: 768px) {
-            .page-title h1 { font-size: 1.75rem; } /* 28px */
-            .menu-card { width: 160px; height: 140px; }
-            .menu-card .icon { font-size: 2.25rem; } /* 36px */
-            .menu-card .label { font-size: 1rem; } /* 16px */
+        .unit-card {
+            width: 128px;
+            height: 84px;
+            padding: 8px 6px;
+            border-width: 3px;
+            border-radius: 16px;
+            box-shadow: 0 5px 0 #94A3B8;
+        }
 
-            .unit-card {
-                width: calc(50% - 15px);
-                max-width: 110px;
-                height: 85px;
-            }
-            .unit-card .icon { font-size: 1.375rem; } /* 22px */
-            .unit-card .label { font-size: 0.8125rem; } /* 13px */
+        .unit-card .label {
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        /* Units that are not ready yet */
+        .unit-card.locked {
+            background: #EEF2F6;
+            border-style: dashed;
+            border-color: #64748B;
+            box-shadow: none;
+            color: #3D4852;
+        }
+
+        .unit-card.locked:hover { transform: none; box-shadow: none; }
+
+        .unit-card.locked .lock-badge {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            font-size: 0.875rem;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .page-title h1 { font-size: 2rem; }
+            .page-title .sub-desc { font-size: 1.125rem; }
+            .main-content { padding-bottom: 32px; }
+            .menu-container { gap: 14px; padding: 0; }
+            .menu-card { width: calc(50% - 7px); padding: 20px 8px 16px; }
+            .badge { width: 60px; height: 60px; font-size: 1.7rem; }
+            .menu-card .label { font-size: 1.0625rem; }
+            #unitGrid { gap: 12px; }
+            .unit-card { width: calc(33.33% - 8px); max-width: 128px; }
         }
 
         @media (max-width: 400px) {
-            .menu-card {
-                width: 130px;
-                height: 120px;
-            }
-            .menu-card .icon { font-size: 1.875rem; } /* 30px */
-            .menu-card .label { font-size: 0.875rem; } /* 14px */
-
-            .unit-card {
-                width: calc(50% - 12px);
-                height: 80px;
-            }
-            .unit-card .icon { font-size: 1.25rem; } /* 20px */
-            .unit-card .label { font-size: 0.75rem; } /* 12px */
+            .unit-card { width: calc(50% - 6px); max-width: none; }
         }
 
-        /* --- POPUP (YAPIM AŞAMASINDA) --- */
+        /* ----- "Under construction" popup ----- */
         .cs-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(20, 30, 40, 0.55);
-            backdrop-filter: blur(3px);
+            background: rgba(20, 30, 40, 0.6);
             z-index: 1000;
             justify-content: center;
             align-items: center;
             padding: 20px;
             box-sizing: border-box;
         }
+
         .cs-box {
-            background: white;
-            border-radius: 22px;
-            max-width: 340px;
+            background: #FFFFFF;
+            border: 4px solid #334155;
+            border-radius: 20px;
+            box-shadow: 0 6px 0 #94A3B8;
+            max-width: 380px;
             width: 100%;
-            padding: 30px 24px 24px;
+            padding: 28px 24px 24px;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             animation: fadeIn 0.25s ease;
             position: relative;
         }
-        .cs-icon { font-size: 3rem; margin-bottom: 10px; }
+
+        .cs-icon { font-size: 3rem; margin-bottom: 8px; }
+
         .cs-title {
-            font-size: 1.25rem;
+            font-size: 1.375rem;
             font-weight: 800;
-            color: #1E3C32;
+            color: #1A1F23;
             margin: 0 0 8px;
         }
+
         .cs-text {
-            font-size: 0.95rem;
-            color: #5d6d7e;
+            font-size: 1.0625rem;
+            font-weight: 600;
+            color: #3D4852;
             margin: 0 0 20px;
-            line-height: 1.4;
+            line-height: 1.5;
         }
+
         .cs-close-btn {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            border: none;
-            color: white;
-            font-weight: 700;
-            font-size: 0.95rem;
-            padding: 10px 32px;
-            border-radius: 50px;
+            background: #C2410C;
+            color: #FFFFFF;
+            border: 3px solid #7C2D12;
+            box-shadow: 0 4px 0 #7C2D12;
+            border-radius: 12px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 1.0625rem;
+            padding: 9px 34px;
             cursor: pointer;
-            transition: 0.2s;
         }
-        .cs-close-btn:hover { transform: scale(1.05); }
+
+        .cs-close-btn:active { transform: translateY(2px); box-shadow: none; }
+
         .cs-x {
             position: absolute;
-            top: 10px;
-            right: 14px;
+            top: 8px;
+            right: 12px;
             background: none;
             border: none;
-            font-size: 1.3rem;
-            color: #aab4bf;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #3D4852;
             cursor: pointer;
             line-height: 1;
-            padding: 4px;
+            padding: 6px;
         }
-        .cs-x:hover { color: #5d6d7e; }
+
+        .cs-x:hover { color: #1A1F23; }
+        .cs-close-btn:focus-visible, .cs-x:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
     </style>
-    <link rel="stylesheet" href="../theme.css">
 </head>
 <body>
 
+    <!-- NAVBAR -->
     <div id="navbar-placeholder" style="min-height: 64px;"></div>
     <script src="../navbar.js"></script>
-    
-    <!-- DİKEY MERKEZLEME SAĞLAYAN ANA İÇERİK KAPSAYICISI -->
+
     <main class="main-content">
-        <!-- BAŞLIK -->
         <div class="page-title">
-            <h1>📘 GRADE 8</h1>
+            <h1>GRADE <span>8</span></h1>
             <p class="sub-desc">Choose your activity below</p>
         </div>
 
-        <!-- 1. AŞAMA: ANA MENÜ (4 BUTON) -->
+        <!-- STEP 1: MAIN MENU -->
         <div id="menuContainer" class="menu-container">
-            <button onclick="showUnits('tests')" class="card menu-card card-tests">
-                <div class="icon">📝</div>
+            <button type="button" onclick="showUnits('tests')" class="card menu-card">
+                <div class="badge">📝</div>
                 <div class="label">Tests</div>
             </button>
-            <button onclick="showUnits('activities')" class="card menu-card card-activities">
-                <div class="icon">🎯</div>
-                <div class="label">Worksheets<br>& Activities</div>
+            <button type="button" onclick="showUnits('activities')" class="card menu-card">
+                <div class="badge">🎯</div>
+                <div class="label">Worksheets<br>&amp; Activities</div>
             </button>
-            <button onclick="showUnits('slides')" class="card menu-card card-slides">
-                <div class="icon">📊</div>
+            <button type="button" onclick="showUnits('slides')" class="card menu-card">
+                <div class="badge">📊</div>
                 <div class="label">Slides</div>
             </button>
-            <button onclick="showUnits('games')" class="card menu-card card-worksheets">
-                <div class="icon">🎲</div>
+            <button type="button" onclick="showUnits('games')" class="card menu-card">
+                <div class="badge">🎲</div>
                 <div class="label">Games</div>
             </button>
         </div>
 
-        <!-- 2. AŞAMA: ÜNİTE LİSTESİ (Başlangıçta Gizli) -->
+        <!-- STEP 2: UNIT LIST (hidden at start) -->
         <div id="unitContainer" class="unit-container">
             <div class="back-btn">
-                <button onclick="goBack()">⬅ Back</button>
+                <button type="button" onclick="goBack()">⬅ Back</button>
             </div>
             <div id="unitGrid"></div>
         </div>
     </main>
 
-    <!-- YAPIM AŞAMASINDA POPUP -->
+    <!-- UNDER CONSTRUCTION POPUP -->
     <div id="comingSoonOverlay" class="cs-overlay" onclick="if(event.target===this) closeComingSoon()">
         <div class="cs-box">
-            <button class="cs-x" onclick="closeComingSoon()">✕</button>
+            <button type="button" class="cs-x" onclick="closeComingSoon()" aria-label="Close">✕</button>
             <div class="cs-icon">🚧</div>
             <p class="cs-title" id="comingSoonTitle">Yapım Aşamasında</p>
             <p class="cs-text" id="comingSoonText">Bu içerik henüz hazır değil. Çok yakında burada olacak!</p>
-            <button class="cs-close-btn" onclick="closeComingSoon()">Tamam</button>
+            <button type="button" class="cs-close-btn" onclick="closeComingSoon()">Tamam</button>
         </div>
     </div>
 
     <script>
         // ============================================================
-        // VERİ LİSTELERİ
+        // DATA LISTS (unchanged: a url starting with "******" means "not ready yet")
         // ============================================================
         const testsUnits = [
             { name: 'Unit 1', icon: '📝', url: 'multestpage/multop_buton_8.html' },
@@ -418,17 +420,15 @@
         ];
 
         const categoryConfig = {
-            tests: { title: '📝 Tests', color: '#4facfe' },
-            activities: { title: '🎯 Worksheets & Activities', color: '#38d9a9' },
-            slides: { title: '📊 Slides', color: '#f5576c' },
-            games: { title: '🎲 Games', color: '#ff7a45' }
+            tests: { title: 'Tests' },
+            activities: { title: 'Worksheets & Activities' },
+            slides: { title: 'Slides' },
+            games: { title: 'Games' }
         };
 
         // ============================================================
-        // YAPIM AŞAMASI TESPİTİ + POPUP
+        // PLACEHOLDER DETECTION + POPUP
         // ============================================================
-        // Bir linkin gerçek içeriği olup olmadığını buradan anlıyoruz:
-        // url "******" ile başlıyorsa henüz hazır değildir.
         function isPlaceholder(url) {
             return typeof url === 'string' && url.trim().startsWith('******');
         }
@@ -465,17 +465,16 @@
 
             const titleDiv = document.createElement('div');
             titleDiv.className = 'category-title';
-            titleDiv.style.color = config.color;
             titleDiv.innerText = config.title;
             grid.appendChild(titleDiv);
 
             data.forEach(unit => {
                 const placeholder = isPlaceholder(unit.url);
 
-                // Hazır içerik varsa <a>, yoksa tıklanabilir <button> oluşturuluyor.
+                // Ready content is a link; not-ready content is a button that opens the popup.
                 const link = document.createElement(placeholder ? 'button' : 'a');
                 link.className = 'card unit-card' + (placeholder ? ' locked' : '');
-                link.innerHTML = `<div class="icon">${unit.icon}</div><div class="label">${unit.name}</div>` +
+                link.innerHTML = `<div class="label">${unit.name}</div>` +
                                   (placeholder ? '<div class="lock-badge">🔒</div>' : '');
 
                 if (placeholder) {
@@ -491,8 +490,7 @@
 
         function showUnits(type) {
             document.getElementById('menuContainer').style.display = 'none';
-            const unitContainer = document.getElementById('unitContainer');
-            unitContainer.style.display = 'flex';
+            document.getElementById('unitContainer').style.display = 'flex';
             renderUnits(type);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -507,6 +505,5 @@
             document.getElementById('unitContainer').style.display = 'none';
         });
     </script>
-    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
