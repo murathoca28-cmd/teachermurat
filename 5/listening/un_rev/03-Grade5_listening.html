@@ -1,445 +1,755 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>5th Grade Listening Activity — Jobs Around Us</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.css" />
-  <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 5 Listening Activity</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css">
+    <style>
     :root {
-      --bg: #f6f4ef;
-      --card-bg: #ffffff;
-      --ink: #1f2321;
-      --muted: #6b6f6c;
-      --accent: #2f5d50;
-      --accent-soft: #e4ede9;
-      --border: #e3ded3;
-      --bad: #b3452f;
-      --bad-soft: #fbe9e4;
-      --good: #2f5d50;
-      --good-soft: #e4ede9;
+        --primary: #0F766E;
+        --primary-dark: #064E48;
+        --primary-soft: #CCFBF1;
+        --orange: #C2410C;
+        --orange-dark: #7C2D12;
+        --orange-soft: #FFEDD5;
+        --green: #00875F;
+        --green-soft: #D5F5E8;
+        --red: #D32F2F;
+        --red-soft: #FFDAD8;
+        --bg: #F4F7FE;
+        --card-bg: #FFFFFF;
+        --text-dark: #1A1F23;
+        --text-muted: #3D4852;
+        --border-color: #64748B;
+        --border-strong: #334155;
+        --radius-lg: 24px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
     }
 
-    * { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; }
+
+    .app-container, .app-container * ,
+    #floatingPlayBtn {
+        font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif;
+    }
 
     body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      color: var(--ink);
-      padding: 40px 16px 80px;
-      display: flex;
-      justify-content: center;
+        background-color: var(--bg);
+        color: var(--text-dark);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
     }
 
-    .card {
-      width: 100%;
-      max-width: 560px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 36px 32px 40px;
-      box-shadow: 0 24px 48px -32px rgba(31, 35, 33, 0.35);
+    input[type="text"] { user-select: text; }
+
+    .app-container {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px 16px 110px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
     }
 
-    .eyebrow {
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 700;
-      margin: 0 0 10px;
+    .hero-banner {
+        background: linear-gradient(135deg, #115E59 0%, #0D9488 100%);
+        color: #FFFFFF;
+        padding: 28px 24px;
+        border-radius: var(--radius-lg);
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(15, 118, 110, 0.3);
     }
 
-    h1 {
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 24px;
-      line-height: 1.3;
-      margin: 0 0 8px;
-      font-weight: 600;
+    .hero-banner h1 {
+        font-size: 32px;
+        font-weight: 800;
+        margin: 0 0 6px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
 
-    p.lead {
-      font-size: 14px;
-      color: var(--muted);
-      margin: 0 0 22px;
-      line-height: 1.55;
+    .hero-banner p {
+        font-size: 19px;
+        font-weight: 700;
+        margin: 0;
     }
 
-    /* --- Transkript kutusu --- */
-    #transcriptBox {
-      display: none;
-      margin-bottom: 18px;
-      padding: 16px 18px;
-      border-radius: 12px;
-      background: var(--accent-soft);
-      border: 1px solid var(--border);
-    }
-    #transcriptBox.visible { display: block; }
-    #transcriptBox h3 {
-      margin: 0 0 8px;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent);
-    }
-    #transcriptBox p {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 14.5px;
-      line-height: 1.7;
-      color: var(--ink);
+    .space-y { display: flex; flex-direction: column; gap: 22px; }
+
+    .activity-card {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        border: 4px solid var(--border-strong);
+        box-shadow: 0 6px 0 #94A3B8, 0 12px 24px rgba(0, 0, 0, 0.12);
     }
 
-    /* --- Listen butonu --- */
-    #listenBtn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 16px 20px;
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-      cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-    #listenBtn:hover { transform: translateY(-1px); box-shadow: 0 10px 20px -12px rgba(47, 93, 80, 0.6); }
-    #listenBtn:active { transform: translateY(0); }
-    #listenBtn svg { flex-shrink: 0; }
+    .activity-card > * { flex-shrink: 0; }
 
-    /* --- Oynatıcı alanı --- */
-    #playerWrap {
-      display: none;
-      margin-top: 14px;
-      opacity: 0;
-      transform: translateY(-6px);
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      position: sticky;
-      top: 76px;
-      z-index: 1001;
-      background: var(--card-bg);
-      padding: 10px 0;
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 18px;
+        padding-bottom: 14px;
+        border-bottom: 3px dashed #94A3B8;
     }
-    .plyr__menu__container { top: 100% !important; bottom: auto !important; margin-top: 10px; margin-bottom: 0; }
+
+    .card-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: var(--radius-md);
+        border: 3px solid currentColor;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        flex-shrink: 0;
+    }
+
+    .card-title h2 {
+        font-size: 24px;
+        color: var(--text-dark);
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .card-title p {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text-muted);
+        margin: 3px 0 0;
+    }
+
+    /* Hint bar */
+    .hint-bar {
+        background: var(--orange-soft);
+        border: 3px solid var(--orange);
+        border-radius: var(--radius-sm);
+        color: #7C2D12;
+        font-size: 18px;
+        font-weight: 800;
+        padding: 10px 14px;
+        margin-bottom: 18px;
+        text-align: center;
+    }
+
+    /* Reading text */
+    .reading-section {
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 1.65;
+        color: var(--text-dark);
+        text-align: left;
+    }
+
+    .reading-section p { margin: 0 0 1em; }
+    .reading-section p:last-child { margin-bottom: 0; }
+
+    /* Questions */
+    .question-card {
+        background: #EEF2FF;
+        border: 3px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+
+    .question-card:last-of-type { margin-bottom: 0; }
+
+    .question-card.is-correct { border-color: var(--green); background: var(--green-soft); }
+    .question-card.is-wrong { border-color: var(--red); background: var(--red-soft); }
+
+    .question-text {
+        display: block;
+        font-weight: 800;
+        font-size: 22px;
+        color: #0B4F4A;
+        margin-bottom: 12px;
+    }
+
+    .options { display: flex; flex-direction: column; gap: 10px; }
+
+    .options label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #FFFFFF;
+        border: 3px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        padding: 12px 14px;
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--text-dark);
+        cursor: pointer;
+        box-shadow: 0 4px 0 var(--border-strong);
+        transition: all 0.15s ease;
+    }
+
+    .options label:hover {
+        border-color: var(--primary);
+        background: var(--primary-soft);
+        box-shadow: 0 4px 0 var(--primary);
+    }
+
+    .options label:has(input:checked) {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: #FFFFFF;
+        box-shadow: 0 4px 0 var(--primary-dark);
+    }
+
+    .options input[type="radio"] {
+        width: 26px;
+        height: 26px;
+        margin: 0;
+        flex-shrink: 0;
+        accent-color: var(--orange);
+    }
+
+    .short-answer-input {
+        width: 100%;
+        padding: 13px 14px;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-dark);
+        background: #FFFFFF;
+        border: 3px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        outline: none;
+    }
+
+    .short-answer-input::placeholder { color: #5B6671; font-weight: 600; }
+
+    .short-answer-input:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 4px rgba(194, 65, 12, 0.25);
+    }
+
+    .feedback-detail {
+        display: block;
+        font-size: 19px;
+        font-weight: 800;
+        margin-top: 10px;
+        min-height: 0;
+    }
+
+    .feedback-detail:empty { display: none; }
+    .correct-msg { color: #004D36; }
+    .wrong-msg { color: #8E1B1B; }
+
+    /* Buttons */
+    .action-btn {
+        display: block;
+        width: 100%;
+        background: var(--orange);
+        color: #FFFFFF;
+        border: 3px solid var(--orange-dark);
+        padding: 14px 20px;
+        border-radius: var(--radius-sm);
+        font-family: inherit;
+        font-weight: 800;
+        font-size: 22px;
+        cursor: pointer;
+        box-shadow: 0 4px 0 var(--orange-dark);
+        transition: all 0.15s ease;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .action-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+    .action-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--orange-dark); }
+
+    .download-btn {
+        width: fit-content;
+        margin: 0 auto;
+        padding: 12px 32px;
+        font-size: 19px;
+        line-height: 1.4;
+    }
+
+    :focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
+
+    /* Result */
+    #result {
+        display: none;
+        background: #FFFFFF;
+        border: 4px solid var(--border-strong);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 6px 0 #94A3B8;
+        padding: 20px 24px;
+        text-align: center;
+    }
+
+    #result h2 { font-size: 30px; font-weight: 800; margin: 0 0 6px; color: var(--text-dark); }
+    #result p { font-size: 22px; font-weight: 800; margin: 0; color: var(--text-muted); }
+    #result.perfect { border-color: var(--green); background: var(--green-soft); }
+    #result.good { border-color: var(--orange); background: var(--orange-soft); }
+    #result.retry { border-color: var(--red); background: var(--red-soft); }
+
+    /* Zoom */
+    .zoom-btn {
+        margin-left: auto;
+        flex-shrink: 0;
+        background: #FFFFFF;
+        color: #0B4F4A;
+        border: 3px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        font-family: inherit;
+        font-weight: 800;
+        font-size: 16px;
+        padding: 8px 14px;
+        cursor: pointer;
+        box-shadow: 0 3px 0 var(--border-strong);
+    }
+
+    .zoom-btn:hover { background: var(--primary-soft); }
+    .zoom-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--border-strong); }
+
+    .activity-card.expanded {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100000;
+        border-radius: 0;
+        border-width: 0;
+        box-shadow: none;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: safe center;
+    }
+
+    @media (max-width: 700px) {
+        .zoom-btn { display: none; }
+        #floatingPlayBtn { display: none !important; }
+        .hero-banner h1 { font-size: 24px; }
+        .reading-section { font-size: 20px; }
+        .question-text { font-size: 19px; }
+        .options label { font-size: 18px; }
+    }
     
+    /* ---------- Listening ---------- */
+    .listen-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        font-size: 26px;
+        padding: 18px 20px;
+    }
+
+    #playerWrap {
+        display: none;
+        position: sticky;
+        top: 76px;          /* sits just below the site navbar */
+        z-index: 1001;
+        background: var(--card-bg);
+        border: 4px solid var(--border-strong);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 6px 0 #94A3B8, 0 12px 24px rgba(0, 0, 0, 0.12);
+        padding: 10px;
+    }
+
     #playerWrap.visible { display: block; }
-    #playerWrap.show { opacity: 1; transform: translateY(0); }
 
     .plyr {
-      --plyr-color-main: var(--accent);
-      --plyr-audio-controls-background: #fbfaf7;
-      --plyr-audio-control-color: var(--ink);
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      box-shadow: 0 8px 16px -12px rgba(31, 35, 33, 0.25);
+        --plyr-color-main: var(--orange);
+        --plyr-audio-controls-background: #FFFFFF;
+        --plyr-audio-control-color: var(--text-dark);
+        --plyr-control-icon-size: 26px;
+        --plyr-control-spacing: 14px;
+        --plyr-control-radius: 12px;
+        --plyr-range-track-height: 12px;
+        --plyr-range-thumb-height: 22px;
+        --plyr-range-thumb-background: var(--orange);
+        --plyr-font-size-base: 18px;
+        --plyr-font-size-small: 18px;
+        --plyr-font-size-time: 20px;
+        --plyr-font-weight-bold: 800;
+        --plyr-menu-radius: 12px;
+        --plyr-tooltip-radius: 8px;
+        --plyr-tooltip-background: #1A1F23;
+        --plyr-tooltip-color: #FFFFFF;
+        border-radius: var(--radius-sm);
+        font-weight: 800;
     }
 
-    /* --- Sorular --- */
-    .quiz { margin-top: 30px; }
+    .plyr--audio .plyr__control.plyr__tab-focus,
+    .plyr--audio .plyr__control:hover,
+    .plyr--audio .plyr__control[aria-expanded=true] { background: var(--orange); color: #FFFFFF; }
 
-    .quiz h2 {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 8px;
-      margin: 30px 0 18px;
-    }
-
-    .question {
-      padding: 16px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      margin-bottom: 14px;
-      transition: border-color 0.2s ease, background 0.2s ease;
-    }
-    .question.correct { border-color: var(--good); background: var(--good-soft); }
-    .question.incorrect { border-color: var(--bad); background: var(--bad-soft); }
-
-    .q-text {
-      font-size: 14.5px;
-      font-weight: 600;
-      margin: 0 0 10px;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .q-mark { font-size: 14px; font-weight: 700; }
-    .question.correct .q-mark { color: var(--good); }
-    .question.incorrect .q-mark { color: var(--bad); }
-
-    .options { display: flex; flex-direction: column; gap: 8px; }
-    .options label {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      font-size: 13.5px;
-      color: var(--ink);
-      cursor: pointer;
-    }
-    .options input[type="radio"] { accent-color: var(--accent); width: 15px; height: 15px; }
-
-    .short-answer input[type="text"] {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      font-size: 13.5px;
-      font-family: inherit;
-      background: #fff;
-    }
-    .short-answer input[type="text"]:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-
-    .correct-hint {
-      margin-top: 8px;
-      font-size: 12.5px;
-      display: none;
-    }
-    .question.correct .correct-hint, .question.incorrect .correct-hint { display: block; }
-    .question.correct .correct-hint { color: var(--good); }
-    .question.incorrect .correct-hint { color: var(--bad); }
-
-    #checkBtn {
-      width: 100%;
-      margin-top: 8px;
-      background: var(--ink);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 14px 20px;
-      font-size: 14.5px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    #checkBtn:hover { opacity: 0.9; }
+    .plyr__menu__container { top: 100% !important; bottom: auto !important; margin-top: 10px; margin-bottom: 0; }
 
     #warning {
-      display: none;
-      margin-top: 10px;
-      font-size: 13px;
-      color: var(--bad);
-      text-align: center;
-    }
-
-    #scoreBanner {
-      display: none;
-      margin-top: 16px;
-      padding: 14px 16px;
-      border-radius: 10px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 700;
-      font-size: 14.5px;
-      text-align: center;
+        display: none;
+        background: var(--red-soft);
+        border: 3px solid var(--red);
+        border-radius: var(--radius-sm);
+        color: #8E1B1B;
+        font-size: 20px;
+        font-weight: 800;
+        padding: 10px 14px;
+        text-align: center;
     }
 
     #transcriptBtn {
-      display: none;
-      width: 100%;
-      margin-top: 10px;
-      background: #fff;
-      color: var(--accent);
-      border: 1.5px solid var(--accent);
-      border-radius: 12px;
-      padding: 12px 20px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
+        display: none;
+        background: #FFFFFF;
+        color: var(--orange-dark);
     }
-    #transcriptBtn:hover { background: var(--accent-soft); }
-  </style>
-  <link rel="stylesheet" href="../../../theme.css">
+
+    #transcriptBtn:hover { background: var(--orange-soft); }
+
+    #transcriptCard { display: none; }
+    #transcriptCard.visible { display: block; }
+
+    /* Floating play / pause (shown only while a card is enlarged) */
+    #floatingPlayBtn {
+        display: none;
+        position: fixed;
+        bottom: 22px;
+        right: 22px;
+        background: var(--orange);
+        color: #FFFFFF;
+        border: 3px solid var(--orange-dark);
+        border-radius: 30px;
+        padding: 14px 24px;
+        font-size: 19px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 5px 0 var(--orange-dark), 0 8px 20px rgba(0,0,0,0.25);
+        z-index: 140000; /* above an enlarged card (100000) */
+        align-items: center;
+        gap: 8px;
+    }
+
+    #floatingPlayBtn.visible { display: flex; }
+    #floatingPlayBtn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--orange-dark); }
+    </style>
+    <link rel="stylesheet" href="../../../theme.css">
 </head>
 <body>
-  <div id="navbar-placeholder" style="min-height: 64px;"></div>
-  <script src="../../../navbar.js" defer></script>
 
-  <div class="card">
-    <p class="eyebrow">GRADE 5 LISTENING ACTIVITY 3</p>
-    <h1>Jobs Around Us</h1>
-    
-    <!-- TRANSKRİPT -->
-    <div id="transcriptBox">
-      <p>Hello! My name is Mia. I love talking about jobs!<br><br>
-      My mother is a teacher. She works at a school and loves her students. My father is a doctor. He helps sick people at the hospital.<br><br>
-      My uncle is a farmer, and he grows fresh food on his farm. My aunt is a police officer; she helps people and keeps our town safe.<br><br>
-      My big brother loves music, and he is a great singer. What about you? What is your dream job?</p>
+    <div id="navbar-placeholder" style="min-height: 0px;"></div>
+    <script src="../../../navbar.js"></script>
+
+    <button id="floatingPlayBtn" type="button" onclick="togglePlay()">▶ Play / Pause</button>
+
+    <div class="app-container">
+        <header class="hero-banner">
+            <h1>🎧 5th Grade Listening Activity</h1>
+            <p>Jobs Around Us</p>
+        </header>
+
+        <main class="space-y">
+
+            <!-- LISTEN -->
+            <section class="activity-card no-zoom">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--orange-soft); color: var(--orange);">🎧</div>
+                    <div class="card-title">
+                        <h2>Listen</h2>
+                        <p>Listen to Mia talk about the jobs in her family.</p>
+                    </div>
+                </div>
+
+                <div class="hint-bar" lang="tr">👂 Düğmeye bas ve dinle. İstediğin kadar tekrar dinleyebilirsin.</div>
+
+                <button type="button" id="listenBtn" class="action-btn listen-btn" onclick="startListening()">🔊 Listen to the Text</button>
+            </section>
+
+            <div id="playerWrap">
+                <audio id="player" controls preload="metadata">
+                    <source src="https://cdn.teachermurat.com/5/rev_listens/03-Grade5_listening.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+
+            <form id="quizForm" class="space-y" onsubmit="return false;">
+
+                <!-- PART 1 -->
+                <section class="activity-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--orange-soft); color: var(--orange);">✅</div>
+                        <div class="card-title">
+                            <h2>Part 1: Multiple Choice</h2>
+                            <p>Choose the correct answer.</p>
+                        </div>
+                    </div>
+
+                <div class="question-card" data-type="mc" data-answer="b">
+                    <span class="question-text">1. What is Mia's mother's job?</span>
+                    <div class="options">
+                        <label><input type="radio" name="q1" value="a"> a) She is a doctor.</label>
+                        <label><input type="radio" name="q1" value="b"> b) She is a teacher.</label>
+                        <label><input type="radio" name="q1" value="c"> c) She is a singer.</label>
+                        <label><input type="radio" name="q1" value="d"> d) She is a police officer.</label>
+                    </div>
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <div class="question-card" data-type="mc" data-answer="c">
+                    <span class="question-text">2. Where does Mia's father work?</span>
+                    <div class="options">
+                        <label><input type="radio" name="q2" value="a"> a) At a school</label>
+                        <label><input type="radio" name="q2" value="b"> b) On a farm</label>
+                        <label><input type="radio" name="q2" value="c"> c) At the hospital</label>
+                        <label><input type="radio" name="q2" value="d"> d) At the police station</label>
+                    </div>
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <div class="question-card" data-type="mc" data-answer="a">
+                    <span class="question-text">3. Who grows fresh food on his farm?</span>
+                    <div class="options">
+                        <label><input type="radio" name="q3" value="a"> a) Mia's uncle</label>
+                        <label><input type="radio" name="q3" value="b"> b) Mia's brother</label>
+                        <label><input type="radio" name="q3" value="c"> c) Mia's mother</label>
+                        <label><input type="radio" name="q3" value="d"> d) Mia's father</label>
+                    </div>
+                    <div class="feedback-detail"></div>
+                </div>
+                </section>
+
+                <!-- PART 2 -->
+                <section class="activity-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">✏️</div>
+                        <div class="card-title">
+                            <h2>Part 2: Short Answers</h2>
+                            <p>Type a short answer.</p>
+                        </div>
+                    </div>
+
+                <div class="question-card" data-type="sa" data-answers='["mia"]'>
+                    <span class="question-text">4. What is the name of the speaker?</span>
+                    <input type="text" class="short-answer-input" name="q4" placeholder="Type your answer here..." autocomplete="off">
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <div class="question-card" data-type="sa" data-answers='["police officer", "police", "a police officer", "policewoman", "police woman", "she is a police officer"]'>
+                    <span class="question-text">5. What is Mia's aunt's job?</span>
+                    <input type="text" class="short-answer-input" name="q5" placeholder="Type your answer here..." autocomplete="off">
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <div class="question-card" data-type="sa" data-answers='["singer", "a singer", "great singer", "a great singer"]'>
+                    <span class="question-text">6. What is Mia's big brother's job?</span>
+                    <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..." autocomplete="off">
+                    <div class="feedback-detail"></div>
+                </div>
+                </section>
+
+                <div id="warning">⚠️ Please answer all the questions before continuing.</div>
+
+                <button type="button" class="action-btn" onclick="checkQuiz()">Check Answers</button>
+
+                <div id="result"></div>
+
+                <button type="button" id="transcriptBtn" class="action-btn" onclick="showTranscript()">📝 See the Text</button>
+            </form>
+
+            <!-- TRANSCRIPT (revealed after checking) -->
+            <section class="activity-card" id="transcriptCard">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">📝</div>
+                    <div class="card-title">
+                        <h2>The Text</h2>
+                        <p>Read what you heard.</p>
+                    </div>
+                </div>
+                <div class="reading-section">
+                    <p>Hello! My name is Mia. I love talking about jobs!</p>
+                    <p>My mother is a teacher. She works at a school and loves her students. My father is a doctor. He helps sick people at the hospital.</p>
+                    <p>My uncle is a farmer, and he grows fresh food on his farm. My aunt is a police officer; she helps people and keeps our town safe.</p>
+                    <p>My big brother loves music, and he is a great singer. What about you? What is your dream job?</p>
+                </div>
+            </section>
+        </main>
     </div>
 
-    <button id="listenBtn">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor"/><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
-      Listen to the Text
-    </button>
-
-    <!-- OYNATICI ALANI -->
-    <div id="playerWrap">
-      <audio id="player" controls preload="metadata">
-        <source src="https://cdn.teachermurat.com/5/rev_listens/03-Grade5_listening.mp3" type="audio/mp3" />
-      </audio>
-    </div>
-
-    <!-- SORULAR -->
-    <div class="quiz">
-      <h2>MULTIPLE CHOICE</h2>
-      <div class="question" data-type="mc" data-key="b">
-        <p class="q-text"><span>1. What is Mia's mother's job?</span><span class="q-mark"></span></p>
-        <div class="options">
-          <label><input type="radio" name="mc1" value="a"> A) She is a doctor.</label>
-          <label><input type="radio" name="mc1" value="b"> B) She is a teacher.</label>
-          <label><input type="radio" name="mc1" value="c"> C) She is a singer.</label>
-          <label><input type="radio" name="mc1" value="d"> D) She is a police officer.</label>
-        </div>
-        <p class="correct-hint"></p>
-      </div>
-
-      <div class="question" data-type="mc" data-key="c">
-        <p class="q-text"><span>2. Where does Mia's father work?</span><span class="q-mark"></span></p>
-        <div class="options">
-          <label><input type="radio" name="mc2" value="a"> A) At a school</label>
-          <label><input type="radio" name="mc2" value="b"> B) On a farm</label>
-          <label><input type="radio" name="mc2" value="c"> C) At the hospital</label>
-          <label><input type="radio" name="mc2" value="d"> D) At the police station</label>
-        </div>
-        <p class="correct-hint"></p>
-      </div>
-
-      <div class="question" data-type="mc" data-key="a">
-        <p class="q-text"><span>3. Who grows fresh food on his farm?</span><span class="q-mark"></span></p>
-        <div class="options">
-          <label><input type="radio" name="mc3" value="a"> A) Mia's uncle</label>
-          <label><input type="radio" name="mc3" value="b"> B) Mia's brother</label>
-          <label><input type="radio" name="mc3" value="c"> C) Mia's mother</label>
-          <label><input type="radio" name="mc3" value="d"> D) Mia's father</label>
-        </div>
-        <p class="correct-hint"></p>
-      </div>
-
-      <h2>SHORT ANSWER</h2>
-      <div class="question" data-type="sa" data-key="mia">
-        <p class="q-text"><span>4. What is the name of the speaker?</span><span class="q-mark"></span></p>
-        <div class="short-answer"><input type="text" name="sa1" placeholder="Type your answer here..."></div>
-        <p class="correct-hint"></p>
-      </div>
-
-      <div class="question" data-type="sa" data-key="police officer|police|a police officer">
-        <p class="q-text"><span>5. What is Mia's aunt's job?</span><span class="q-mark"></span></p>
-        <div class="short-answer"><input type="text" name="sa2" placeholder="Type your answer here..."></div>
-        <p class="correct-hint"></p>
-      </div>
-
-      <div class="question" data-type="sa" data-key="singer|a singer">
-        <p class="q-text"><span>6. What is Mia's big brother's job?</span><span class="q-mark"></span></p>
-        <div class="short-answer"><input type="text" name="sa3" placeholder="Type your answer here..."></div>
-        <p class="correct-hint"></p>
-      </div>
-
-      <button id="checkBtn">Check Answers</button>
-      <p id="warning">Please answer all the questions before continuing.</p>
-      <div id="scoreBanner"></div>
-      <button id="transcriptBtn">See the Text</button>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.min.js"></script>
-  <script>
+<script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
+<script>
+    // ---------- Audio ----------
     const player = new Plyr('#player', {
-      controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'settings'],
-      settings: ['speed'],
+        controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'settings'],
+        settings: ['speed'],
     });
-
-    const listenBtn = document.getElementById('listenBtn');
     const playerWrap = document.getElementById('playerWrap');
-    let started = false;
+    const floatingPlayBtn = document.getElementById('floatingPlayBtn');
 
-    listenBtn.addEventListener('click', () => {
-      if (!started) {
+    function startListening() {
         playerWrap.classList.add('visible');
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => playerWrap.classList.add('show'));
-        });
-        started = true;
-      }
-      player.play();
-    });
-
-    function allAnswered() {
-      const questions = document.querySelectorAll('.question');
-      return Array.from(questions).every(q => {
-        if (q.dataset.type === 'mc') {
-          return q.querySelector('input[type="radio"]:checked') !== null;
-        }
-        return q.querySelector('input[type="text"]').value.trim() !== '';
-      });
+        player.play();
     }
 
-    document.getElementById('checkBtn').addEventListener('click', () => {
-      const warning = document.getElementById('warning');
+    function togglePlay() {
+        playerWrap.classList.add('visible');
+        player.togglePlay();
+    }
 
-      if (!allAnswered()) {
-        warning.style.display = 'block';
-        return;
-      }
-      warning.style.display = 'none';
+    function syncFloatingBtn() {
+        floatingPlayBtn.textContent = player.playing ? '⏸ Pause' : '▶ Play';
+    }
+    player.on('play', syncFloatingBtn);
+    player.on('pause', syncFloatingBtn);
+    player.on('ended', syncFloatingBtn);
+    syncFloatingBtn();
 
-      const questions = document.querySelectorAll('.question');
-      let correctCount = 0;
+    // ---------- Quiz ----------
+    function normalizeText(text) {
+        return text.toLowerCase().trim().replace(/\s+/g, ' ').replace(/[.,!?'\u2019]/g, '');
+    }
 
-      questions.forEach(q => {
-        const type = q.dataset.type;
-        const key = q.dataset.key.toLowerCase().split('|');
-        let studentAnswer = '';
-        let isCorrect = false;
-
-        if (type === 'mc') {
-          const checked = q.querySelector('input[type="radio"]:checked');
-          studentAnswer = checked ? checked.value : '';
-          isCorrect = key.includes(studentAnswer);
-        } else {
-          const input = q.querySelector('input[type="text"]');
-          studentAnswer = input.value.trim().toLowerCase();
-          isCorrect = key.includes(studentAnswer);
+    function getOptionText(questionElement, value) {
+        for (const label of questionElement.querySelectorAll('label')) {
+            const input = label.querySelector('input');
+            if (input && input.value === value) {
+                return label.textContent.trim().replace(/^[a-d]\)\s*/, '').replace(/\.$/, '');
+            }
         }
+        return '';
+    }
 
-        q.classList.remove('correct', 'incorrect');
-        const mark = q.querySelector('.q-mark');
-        const hint = q.querySelector('.correct-hint');
+    function allAnswered(questions) {
+        return Array.from(questions).every(q => {
+            if (q.dataset.type === 'mc') return q.querySelector('input[type="radio"]:checked') !== null;
+            return q.querySelector('input[type="text"]').value.trim() !== '';
+        });
+    }
 
-        if (isCorrect) {
-          q.classList.add('correct');
-          mark.textContent = '✓';
-          hint.textContent = '';
-          correctCount++;
-        } else {
-          q.classList.add('incorrect');
-          mark.textContent = '✗';
-          hint.textContent = 'Correct answer: ' + q.dataset.key.split('|')[0];
+    function checkQuiz() {
+        const form = document.getElementById('quizForm');
+        const questions = form.querySelectorAll('.question-card');
+        const warning = document.getElementById('warning');
+
+        if (!allAnswered(questions)) {
+            warning.style.display = 'block';
+            warning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
         }
-      });
+        warning.style.display = 'none';
 
-      const banner = document.getElementById('scoreBanner');
-      banner.style.display = 'block';
-      banner.textContent = correctCount + ' / ' + questions.length + ' correct';
+        let score = 0;
+        const total = questions.length;
 
-      document.getElementById('transcriptBtn').style.display = 'block';
-    });
+        questions.forEach((q, index) => {
+            const feedback = q.querySelector('.feedback-detail');
+            let ok = false;
 
-    document.getElementById('transcriptBtn').addEventListener('click', () => {
-      const box = document.getElementById('transcriptBox');
-      box.classList.add('visible');
-      document.getElementById('transcriptBtn').style.display = 'none';
-      box.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  </script>
-  
-  <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1}' crossorigin="anonymous"></script>
+            if (q.dataset.type === 'mc') {
+                const correctAnswer = q.dataset.answer;
+                const userAnswer = form.querySelector(`input[name="q${index + 1}"]:checked`);
+                if (userAnswer.value === correctAnswer) {
+                    ok = true;
+                    feedback.innerHTML = "<span class='correct-msg'>✓ Correct! Well done!</span>";
+                } else {
+                    feedback.innerHTML = `<span class='wrong-msg'>✕ Wrong. The correct answer was "${getOptionText(q, correctAnswer)}".</span>`;
+                }
+            } else {
+                const validAnswers = JSON.parse(q.dataset.answers);
+                const value = normalizeText(q.querySelector('input[type="text"]').value);
+                if (validAnswers.some(a => normalizeText(a) === value)) {
+                    ok = true;
+                    feedback.innerHTML = "<span class='correct-msg'>✓ Correct! Well done!</span>";
+                } else {
+                    feedback.innerHTML = `<span class='wrong-msg'>✕ Wrong. Acceptable answer: "${validAnswers[0]}".</span>`;
+                }
+            }
+
+            if (ok) score++;
+            q.classList.toggle('is-correct', ok);
+            q.classList.toggle('is-wrong', !ok);
+        });
+
+        const resultDiv = document.getElementById('result');
+        resultDiv.className = '';
+        resultDiv.style.display = 'block';
+        let msg, cls;
+        if (score === total) { msg = '🌟 Perfect! You are a superstar! 🌟'; cls = 'perfect'; }
+        else if (score >= total / 2) { msg = '👍 Good job! Keep practicing!'; cls = 'good'; }
+        else { msg = "📚 Don't give up! Listen again and try one more time!"; cls = 'retry'; }
+        resultDiv.classList.add(cls);
+        resultDiv.innerHTML = `<h2>Your Score: ${score} / ${total}</h2><p>${msg}</p>`;
+        document.getElementById('transcriptBtn').style.display = 'block';
+        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function showTranscript() {
+        const card = document.getElementById('transcriptCard');
+        card.classList.add('visible');
+        document.getElementById('transcriptBtn').style.display = 'none';
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ---------- Enlarge a section to fill the screen ----------
+    let zoomedCard = null;
+
+    function fitZoom(card) {
+        let best = { z: 0, w: 900 };
+        card.style.zoom = 1;
+        card.style.height = 'auto';
+        [600, 700, 800, 900, 1050, 1200, 1400, 1600].forEach(w => {
+            card.style.width = w + 'px';
+            const h = card.offsetHeight;
+            const z = Math.min(window.innerWidth / w, window.innerHeight / h);
+            if (z > best.z) best = { z, w };
+        });
+        let z = Math.min(4, Math.max(1, best.z * 0.98));
+        for (let i = 0; i < 12; i++) {
+            card.style.zoom = z;
+            card.style.width = (window.innerWidth / z) + 'px';
+            card.style.height = (window.innerHeight / z) + 'px';
+            if (z <= 1 || card.scrollHeight <= card.clientHeight + 1) break;
+            z = Math.max(1, z * 0.96);
+        }
+    }
+
+    function openZoom(card) {
+        closeZoom();
+        zoomedCard = card;
+        card.classList.add('expanded');
+        card.querySelector('.zoom-btn').textContent = '✕ Close';
+        document.body.style.overflow = 'hidden';
+        // The sticky player sits under an enlarged card, so offer a floating play/pause instead
+        floatingPlayBtn.classList.add('visible');
+        fitZoom(card);
+    }
+
+    function closeZoom() {
+        if (!zoomedCard) return;
+        const card = zoomedCard;
+        zoomedCard = null;
+        card.classList.remove('expanded');
+        card.style.zoom = '';
+        card.style.width = '';
+        card.style.height = '';
+        card.querySelector('.zoom-btn').textContent = '🔍 Enlarge';
+        document.body.style.overflow = '';
+        floatingPlayBtn.classList.remove('visible');
+    }
+
+    function initZoom() {
+        document.querySelectorAll('.activity-card:not(.no-zoom)').forEach(card => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'zoom-btn';
+            btn.textContent = '🔍 Enlarge';
+            btn.addEventListener('click', () => {
+                card === zoomedCard ? closeZoom() : openZoom(card);
+            });
+            card.querySelector('.card-header').appendChild(btn);
+        });
+        window.addEventListener('keydown', e => { if (e.key === 'Escape') closeZoom(); });
+        window.addEventListener('resize', () => { if (zoomedCard) fitZoom(zoomedCard); });
+    }
+
+    window.onload = initZoom;
+</script>
 </body>
 </html>
