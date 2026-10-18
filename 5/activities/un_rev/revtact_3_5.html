@@ -319,6 +319,21 @@
             pointer-events: auto;
         }
 
+        .result-msg {
+            display: none;
+            margin-top: 16px;
+            padding: 14px 18px;
+            background: var(--green-soft);
+            border: 4px solid var(--green);
+            border-radius: var(--radius-md);
+            font-size: 20px;
+            font-weight: 800;
+            color: #004D36;
+            text-align: center;
+        }
+
+        .result-msg.show { display: block; }
+
         .correct {
             background: var(--green-soft) !important;
             border-color: var(--green) !important;
@@ -417,7 +432,7 @@
     <div class="app-container">
         <header class="hero-banner">
             <h1>🎓 5th Grade English - Weather & Looks</h1>
-            <p>Sarah's Show and Tell + Season & Clothing Sorting</p>
+            <p>Sarah's Show and Tell + Clothing Sorting + Weather & Clothes</p>
         </header>
 
         <main class="space-y" style="gap:22px;">
@@ -464,6 +479,19 @@
                         <div class="bucket-items" id="winterItems"></div>
                     </div>
                 </div>
+                <div id="clothesResult" class="result-msg" role="status"></div>
+            </section>
+
+            <!-- WEATHER & CLOTHES -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--blue-soft); color: var(--blue);">🌦️</div>
+                    <div class="card-title">
+                        <h2>Part C: Weather & Clothes</h2>
+                        <p>Choose the best word or phrase to complete each sentence.</p>
+                    </div>
+                </div>
+                <div id="weatherQuizContainer" class="grid-2"></div>
             </section>
         </main>
     </div>
@@ -474,12 +502,25 @@
             { q: "1. What does Sarah look like?", opts: ["Tall and plump", "Short and thin", "Tall and blonde"], ans: "Short and thin", id: "sq1" },
             { q: "2. What is Sarah like?", opts: ["Kind and friendly", "Funny and rude", "Shy and quiet"], ans: "Kind and friendly", id: "sq2" },
             { q: "3. What could Sarah do in winter?", opts: ["Build a tree house", "Make a snowman", "Fly a kite"], ans: "Make a snowman", id: "sq3" },
-            { q: "4. What did Sarah wear in summer?", opts: ["A coat and boots", "A pink dress, sandals, and sunglasses", "A raincoat"], ans: "A pink dress, sandals, and sunglasses", id: "sq4" }
+            { q: "4. What did Sarah wear in summer?", opts: ["A coat and boots", "A pink dress, sandals, and sunglasses", "A raincoat"], ans: "A pink dress, sandals, and sunglasses", id: "sq4" },
+            { q: "5. How old was Sarah in the winter photo?", opts: ["Four years old", "Six years old", "Ten years old"], ans: "Four years old", id: "sq5" },
+            { q: "6. What was the weather like in the winter photo?", opts: ["Cold and snowy", "Hot and sunny", "Warm and windy"], ans: "Cold and snowy", id: "sq6" },
+            { q: "7. What kind of hair does Sarah have?", opts: ["Short and straight", "Long and wavy", "Long and curly"], ans: "Long and wavy", id: "sq7" },
+            { q: "8. Which season does Sarah like?", opts: ["Summer", "Winter", "Autumn"], ans: "Summer", id: "sq8" }
         ];
 
-        function renderSarahQuiz() {
-            const container = document.getElementById('sarahQuizContainer');
-            container.innerHTML = sarahQuestions.map(sq => {
+        const weatherQuestions = [
+            { q: "1. It is hot and sunny. I wear ______.", opts: ["shorts and sunglasses", "a coat and gloves", "a scarf and boots"], ans: "shorts and sunglasses", id: "wq1" },
+            { q: "2. It is cold and snowy. I wear ______.", opts: ["a swimsuit", "a coat and gloves", "flip-flops"], ans: "a coat and gloves", id: "wq2" },
+            { q: "3. It is rainy. I take my ______.", opts: ["sunglasses", "sandals", "umbrella"], ans: "umbrella", id: "wq3" },
+            { q: "4. It is windy. We can fly a ______.", opts: ["kite", "snowman", "boat"], ans: "kite", id: "wq4" },
+            { q: "5. It is snowy. We can make a ______.", opts: ["sandcastle", "snowman", "kite"], ans: "snowman", id: "wq5" },
+            { q: "6. In summer, the weather is ______.", opts: ["cold and snowy", "hot and sunny", "freezing"], ans: "hot and sunny", id: "wq6" }
+        ];
+
+        function renderQuiz(containerId, questions) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = questions.map(sq => {
                 const shuffledOpts = [...sq.opts].sort(() => Math.random() - 0.5);
                 return `
                 <div class="quiz-item">
@@ -490,12 +531,12 @@
                 </div>`;
             }).join('');
             container.querySelectorAll('.opt-btn').forEach(btn => {
-                btn.addEventListener('click', () => checkSarahAns(btn.dataset.q, btn));
+                btn.addEventListener('click', () => checkAnswer(btn.dataset.q, btn));
             });
         }
 
-        function checkSarahAns(id, btn) {
-            const correct = sarahQuestions.find(q => q.id === id).ans;
+        function checkAnswer(id, btn) {
+            const correct = [...sarahQuestions, ...weatherQuestions].find(q => q.id === id).ans;
             if (btn.innerText.trim() === correct) {
                 const parent = document.getElementById(`sqOpts-${id}`);
                 parent.querySelectorAll('button').forEach(b => b.disabled = true);
@@ -524,7 +565,13 @@
             { name: "Shorts", category: "summer" },
             { name: "Gloves", category: "winter" },
             { name: "Sunglasses", category: "summer" },
-            { name: "Coat", category: "winter" }
+            { name: "Coat", category: "winter" },
+            { name: "Sandals", category: "summer" },
+            { name: "Boots", category: "winter" },
+            { name: "T-shirt", category: "summer" },
+            { name: "Jumper", category: "winter" },
+            { name: "Swimsuit", category: "summer" },
+            { name: "Beanie", category: "winter" }
         ];
         let activeClothIdx = null;
 
@@ -564,6 +611,13 @@
                 el.onclick = () => returnClothToPool(index);
             }
             activeClothIdx = null;
+            const done = document.querySelectorAll('#summerItems .correct, #winterItems .correct').length;
+            const msg = document.getElementById('clothesResult');
+            if (done === clothesData.length) {
+                msg.textContent = '🎉 Great job! All the clothes are in the right wardrobe.';
+                msg.classList.add('show');
+                if (zoomedCard) fitZoom(zoomedCard);
+            }
         }
 
         function returnClothToPool(index) {
@@ -635,7 +689,8 @@
 
         // --- INITIALIZE ---
         window.onload = () => {
-            renderSarahQuiz();
+            renderQuiz('sarahQuizContainer', sarahQuestions);
+            renderQuiz('weatherQuizContainer', weatherQuestions);
             renderClothes();
             initTranslation();
             initZoom();
