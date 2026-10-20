@@ -126,16 +126,22 @@
                     Test 1
                     <span class="sub-text">(New Generation)</span>
                 </a>
-                <a href="../multest/un_rev/multiptest_02_5.html" class="test-btn">
+                <a href="#" onclick="document.getElementById('yapimda').showModal(); return false;" class="test-btn">
                     Test 2
                     <span class="sub-text">(New Generation)</span>
                 </a>
-                <a href="../multest/un_rev/multiptest_03_5.html" class="test-btn">
+                <a href="#" onclick="document.getElementById('yapimda').showModal(); return false;" class="test-btn">
                     Test 3
                     <span class="sub-text">(New Generation)</span>
                 </a>
             </div>
         </div>
     </main>
+<dialog id="yapimda"
+    style="margin:auto; border:4px solid #1a2a3a; border-radius:20px; padding:30px 50px; font-size:28px; font-weight:bold; text-align:center;">
+    🚧 Bu etkinlik yapım aşamasında!<br><br>
+    <button onclick="this.closest('dialog').close()"
+        style="font-size:22px; padding:8px 30px; border-radius:12px; border:3px solid #1a2a3a; background:#fff; cursor:pointer;">Tamam</button>
+</dialog>
 </body>
 </html>
