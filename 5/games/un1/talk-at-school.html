@@ -244,6 +244,15 @@ button{font-family:inherit;color:inherit}
 #fsBtn{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));right:8px;z-index:200;width:42px;height:42px;border-radius:50%;border:3px solid var(--line);background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3);transition:transform .15s}
 #fsBtn:hover{transform:scale(1.08)}
 #fsBtn svg{width:22px;height:22px}
+/* Türkçe açıkken diyalog kartları */
+.owrap.tr .oc{font-size:calc(var(--u)*.95);line-height:1.08}
+.owrap.tr .otx small{font-size:.8em;line-height:1.08;margin-top:0}
+.owrap.tr .oc .av{--av:calc(var(--u)*2.5)}
+.owrap.tr .otx{font-size:1em!important}
+/* uzun geri bildirim satırları sığsın */
+.fb{font-size:calc(var(--u)*1.1)}
+.fb small{font-size:.76em;line-height:1.12;margin-top:0}
+.fbrow{flex:none}
 </style>
 </head>
 <body>
@@ -488,7 +497,7 @@ button{font-family:inherit;color:inherit}
     var it=p.items[p.i],d=it.d,n=d.l.length,ans=p.ans!==null,k;
     var h=head(sec,p,"Diyalog");
     h+='<div class="tagrow"><span class="tag">'+esc(d.title)+'</span><span class="instr">Kartlara dokun ve diyaloğu doğru sıraya diz.</span></div>';
-    h+='<div class="owrap'+(ans?' done':'')+'"><div class="ocol"><h3>Senin sıran</h3><div class="olist">';
+    h+='<div class="owrap'+(ans?' done':'')+(showTr?' tr':'')+'"><div class="ocol"><h3>Senin sıran</h3><div class="olist">';
     for(k=0;k<n;k++){
       h+='<div class="orow"><span class="onum">'+(k+1)+'</span>'+(it.slot[k]<0?'<div class="slot"></div>':cardHtml(it,it.slot[k],"slot",k,ans))+'</div>';
     }
@@ -541,10 +550,21 @@ button{font-family:inherit;color:inherit}
     else if(sec.id==="rules")h=viewRules(sec,p);
     else h=viewOrder(sec,p);
     $("play").innerHTML=h;
+    fitCards();
     renderTabs();
     var nb=$("nextBtn");
     if(nb){try{nb.focus({preventScroll:true})}catch(e){}}
   }
+  function fitCards(){
+    var cs=document.querySelectorAll("#play .oc"),i,c,t,fs,n;
+    for(i=0;i<cs.length;i++){
+      c=cs[i];c.style.fontSize="";
+      t=c.querySelector(".otx");if(!t)continue;
+      fs=parseFloat(getComputedStyle(c).fontSize);n=0;
+      while(t.offsetHeight>c.clientHeight-4&&fs>11&&n<30){fs*=0.94;c.style.fontSize=fs+"px";n++}
+    }
+  }
+  window.addEventListener("resize",fitCards);
   function renderTabs(){
     $("tabs").innerHTML=SECS.map(function(s,i){
       return '<button type="button" class="tab'+(i===cur?' on':'')+(P[s.id].fin?' fin':'')+'" data-sec="'+i+'"><b><span>'+(i+1)+'</span></b><span>'+esc(s.en)+'<small>'+esc(s.tr)+'</small></span></button>';
