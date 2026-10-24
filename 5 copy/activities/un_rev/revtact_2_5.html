@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5th Grade Activity 2</title>
+    <style>
+        :root {
+            --primary: #0F766E;
+            --primary-soft: #CCFBF1;
+            --pink: #C2410C;
+            --pink-soft: #FFEDD5;
+            --green: #00875F;
+            --green-soft: #D5F5E8;
+            --yellow: #F0A500;
+            --yellow-soft: #FEF9E7;
+            --red: #D32F2F;
+            --red-soft: #FFDAD8;
+            --blue: #1D4ED8;
+            --blue-soft: #DBEAFE;
+            --bg: #F4F7FE;
+            --card-bg: #FFFFFF;
+            --text-dark: #1A1F23;
+            --text-muted: #3D4852;
+            --q-color: #0B4F4A;
+            --border-color: #64748B;
+            --border-strong: #334155;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        .app-container, .app-container * {
+            font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #115E59 0%, #0D9488 100%);
+            color: #FFFFFF;
+            padding: 28px 24px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(15, 118, 110, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner h1 {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-banner p {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 4px solid var(--border-strong);
+            box-shadow: 0 6px 0 #94A3B8, 0 12px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 3px dashed #94A3B8;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-md);
+            border: 3px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .card-title h2 {
+            font-size: 23px;
+            color: var(--text-dark);
+            font-weight: 800;
+        }
+
+        .card-title p {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 16px;
+        }
+
+        .space-y {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .quiz-item {
+            background: #EEF2FF;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 3px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .q-text {
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--q-color);
+        }
+
+        .q-text.small {
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+
+        .opt-btn {
+            width: 100%;
+            padding: 13px 14px;
+            background: #FFFFFF;
+            border: 3px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: left;
+            box-shadow: 0 4px 0 var(--border-strong);
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+            box-shadow: 0 4px 0 var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .opt-btn:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 var(--border-strong);
+        }
+
+        .opt-btn.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: #FFFFFF;
+            box-shadow: 0 4px 0 #064E48;
+        }
+
+        .slot {
+            width: 100%;
+            min-height: 56px;
+            padding: 12px 14px;
+            background: #FFFFFF;
+            border: 3px dashed var(--border-color);
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--text-muted);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .slot:hover:not(:disabled) {
+            border-color: var(--pink);
+            background: var(--pink-soft);
+            color: #7C2D12;
+        }
+
+        .slot.correct, .slot.wrong { border-style: solid; }
+
+        .pool-box {
+            background: #EEF2FF;
+            border: 3px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+
+        .unscramble-zone {
+            min-height: 64px;
+            padding: 10px 14px;
+            background: #FFFFFF;
+            border: 3px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .unscramble-zone:empty::before {
+            content: "Your sentence appears here";
+            color: #5B6671;
+            font-weight: 700;
+            font-size: 17px;
+        }
+
+        .unscramble-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .item-chip {
+            background: #FFFFFF;
+            color: var(--text-dark);
+            border: 3px solid var(--border-strong);
+            padding: 10px 18px;
+            border-radius: 22px;
+            font-weight: 800;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 3px 0 var(--border-strong);
+            user-select: none;
+        }
+
+        .item-chip:hover {
+            border-color: var(--yellow);
+            box-shadow: 0 3px 0 var(--yellow);
+            transform: translateY(-2px);
+        }
+
+        .item-chip.active-select {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: #FFFFFF;
+            box-shadow: 0 3px 0 #064E48;
+            transform: scale(1.06);
+        }
+
+        .correct {
+            background: var(--green-soft) !important;
+            border-color: var(--green) !important;
+            color: #004D36 !important;
+            font-weight: 800;
+        }
+
+        .wrong {
+            background: var(--red-soft) !important;
+            border-color: var(--red) !important;
+            color: #8E1B1B !important;
+            font-weight: 800;
+        }
+
+        .opt-btn.correct::after { content: "  ✓"; }
+        .opt-btn.wrong::after { content: "  ✕"; }
+
+        :focus-visible {
+            outline: 4px solid #F0A500;
+            outline-offset: 3px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .shake { animation: shake 0.3s ease; }
+
+        @keyframes pop {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.04); }
+            100% { transform: scale(1); }
+        }
+        .pop { animation: pop 0.25s ease; }
+
+        /* Never let a section's children shrink inside the enlarged (fixed-height) card; the card scrolls instead. */
+        .activity-card > * { flex-shrink: 0; }
+
+        .zoom-btn {
+            margin-left: auto;
+            flex-shrink: 0;
+            background: #FFFFFF;
+            color: #0B4F4A;
+            border: 3px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 16px;
+            padding: 8px 14px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 var(--border-strong);
+        }
+
+        .zoom-btn:hover { background: var(--primary-soft); }
+
+        .zoom-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 var(--border-strong);
+        }
+
+        .activity-card.expanded {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100000;
+            border-radius: 0;
+            border-width: 0;
+            box-shadow: none;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: safe center;
+        }
+
+        .activity-card.expanded #idiomsContainer {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .activity-card.expanded #unscrambleContainer {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @media (max-width: 700px) {
+            .zoom-btn { display: none; }
+        }
+
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: var(--text-muted);
+            font-size: 15px;
+            border-top: 1px solid var(--border-color);
+            background: #FFFFFF;
+            margin-top: auto;
+        }
+    </style>
+    <link rel="stylesheet" href="../../../theme.css">
+</head>
+<body>
+    <div id="navbar-placeholder" style="min-height: 0px;"></div>
+    <script src="../../../navbar.js"></script>
+
+    <div class="app-container">
+        <header class="hero-banner">
+            <h1>🎓 5th GRADE REVISIONS</h1>
+            <p>ACTIVITY 2</p>
+        </header>
+
+        <main class="space-y" style="gap:22px;">
+            <!-- PART A: EXPRESSIONS & IDIOMS MATCHING -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--pink-soft); color: var(--pink);">✨</div>
+                    <div class="card-title">
+                        <h2>Part A: Expressions & Idioms Matching</h2>
+                        <p>1. Tap an expression. 2. Tap the situation it matches!</p>
+                    </div>
+                </div>
+                <div id="idiomBank" class="pool-box"></div>
+                <div id="idiomsContainer" class="grid-2"></div>
+            </section>
+
+            <!-- PART B: CLASSROOM & TECH OBJECTS MATCHER -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">📎</div>
+                    <div class="card-title">
+                        <h2>Part B: Classroom & Tech Objects Matcher</h2>
+                        <p>Click an item on the left, then click its matching function on the right!</p>
+                    </div>
+                </div>
+                <div class="grid-2" id="matchingApp">
+                    <div class="space-y" id="matchItemsCol"></div>
+                    <div class="space-y" id="matchTargetCol"></div>
+                </div>
+            </section>
+
+            <!-- PART C: UNSCRAMBLE CLASSROOM RULES -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--blue-soft); color: var(--blue);">📝</div>
+                    <div class="card-title">
+                        <h2>Part C: Unscramble the Classroom Rules</h2>
+                        <p>Click the words in the correct order. <b>Click a word in the box to undo it!</b></p>
+                    </div>
+                </div>
+                <div id="unscrambleContainer" class="space-y"></div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- PART A: IDIOMS DATA & LOGIC ---
+        const idiomsData = [
+            { q: "1. Should I take an umbrella?", ans: "Yes, it's raining cats and dogs.", id: "i1" },
+            { q: "2. I really like this jacket.", ans: "Yes, it fits like a glove.", id: "i2" },
+            { q: "3. My cat ran away.", ans: "I'm sorry to hear that.", id: "i3" },
+            { q: "4. Oh, I don't have a highlighter.", ans: "Feel free to use this!", id: "i4" },
+            { q: "5. Look! She is our new classmate. We can go and meet her.", ans: "Sure, let's break the ice.", id: "i5" },
+            { q: "6. I passed my English test with a high score!", ans: "I'm glad to hear that.", id: "i6" }
+        ];
+        const idiomOptions = [
+            "Feel free to use this!",
+            "Yes, it's raining cats and dogs.",
+            "Yes, it fits like a glove.",
+            "I'm glad to hear that.",
+            "Sure, let's break the ice.",
+            "I'm sorry to hear that."
+        ];
+        const SLOT_HINT = "Tap to answer";
+        let selectedIdiom = null;
+
+        function renderIdioms() {
+            const bank = document.getElementById('idiomBank');
+            const order = idiomOptions.map((text, i) => ({ text, i })).sort(() => Math.random() - 0.5);
+            bank.innerHTML = order.map(o =>
+                `<button type="button" class="item-chip" data-opt="${o.i}">${o.text}</button>`
+            ).join('');
+            bank.querySelectorAll('.item-chip').forEach(btn => {
+                btn.addEventListener('click', () => selectIdiom(Number(btn.dataset.opt)));
+            });
+
+            const container = document.getElementById('idiomsContainer');
+            container.innerHTML = idiomsData.map(item => `
+                <div class="quiz-item">
+                    <p class="q-text">${item.q}</p>
+                    <button type="button" class="slot" id="slot-${item.id}" data-id="${item.id}">${SLOT_HINT}</button>
+                </div>
+            `).join('');
+            container.querySelectorAll('.slot').forEach(btn => {
+                btn.addEventListener('click', () => placeIdiom(btn.dataset.id));
+            });
+        }
+
+        function selectIdiom(optIndex) {
+            selectedIdiom = (selectedIdiom === optIndex) ? null : optIndex;
+            document.querySelectorAll('#idiomBank .item-chip').forEach(chip => {
+                chip.classList.toggle('active-select', Number(chip.dataset.opt) === selectedIdiom);
+            });
+        }
+
+        function placeIdiom(id) {
+            const slot = document.getElementById(`slot-${id}`);
+            if (slot.dataset.locked === "true") return;
+
+            if (selectedIdiom === null) {
+                slot.classList.add('shake');
+                setTimeout(() => slot.classList.remove('shake'), 300);
+                return;
+            }
+
+            const chosen = idiomOptions[selectedIdiom];
+            const correctAns = idiomsData.find(i => i.id === id).ans;
+            selectIdiom(selectedIdiom);
+
+            if (chosen === correctAns) {
+                slot.textContent = "✓  " + chosen;
+                slot.classList.add('correct', 'pop');
+                slot.dataset.locked = "true";
+            } else {
+                slot.textContent = "✕  " + chosen;
+                slot.classList.add('wrong', 'shake');
+                setTimeout(() => slot.classList.remove('shake'), 300);
+                setTimeout(() => {
+                    if (slot.dataset.locked === "true") return;
+                    slot.classList.remove('wrong');
+                    slot.textContent = SLOT_HINT;
+                }, 1400);
+            }
+        }
+
+        // --- PART B: CLASSROOM & TECH OBJECTS MATCHER ---
+        const matchData = [
+            { item: "Headphones", desc: "Used to listen to audio privately.", id: "m1" },
+            { item: "Stapler", desc: "Used to attach paper sheets together.", id: "m2" },
+            { item: "Printer", desc: "Used to print documents on paper.", id: "m3" },
+            { item: "Calculator", desc: "Used to solve math problems quickly.", id: "m4" },
+            { item: "Highlighter", desc: "Used to mark important textbook words.", id: "m5" }
+        ];
+        let selectedMatchItem = null;
+
+        function renderMatching() {
+            const shuffledTargets = [...matchData].sort(() => Math.random() - 0.5);
+            document.getElementById('matchItemsCol').innerHTML = matchData.map(m => `
+                <button type="button" id="src-${m.id}" data-id="${m.id}" class="opt-btn">📦 ${m.item}</button>
+            `).join('');
+            document.getElementById('matchTargetCol').innerHTML = shuffledTargets.map(t => `
+                <button type="button" id="tgt-${t.id}" data-id="${t.id}" class="opt-btn">🎯 ${t.desc}</button>
+            `).join('');
+            document.querySelectorAll('#matchItemsCol .opt-btn').forEach(b => {
+                b.addEventListener('click', () => selectMatchSource(b.dataset.id));
+            });
+            document.querySelectorAll('#matchTargetCol .opt-btn').forEach(b => {
+                b.addEventListener('click', () => selectMatchTarget(b.dataset.id));
+            });
+        }
+
+        function selectMatchSource(id) {
+            if (document.getElementById(`src-${id}`).classList.contains('correct')) return;
+            selectedMatchItem = id;
+            matchData.forEach(m => {
+                document.getElementById(`src-${m.id}`).classList.remove('selected');
+            });
+            document.getElementById(`src-${id}`).classList.add('selected');
+        }
+
+        function selectMatchTarget(targetId) {
+            if (!selectedMatchItem) return;
+
+            const sourceBtn = document.getElementById(`src-${selectedMatchItem}`);
+            const targetBtn = document.getElementById(`tgt-${targetId}`);
+
+            if (targetBtn.classList.contains('correct')) return;
+
+            if (selectedMatchItem === targetId) {
+                sourceBtn.classList.remove('selected');
+                sourceBtn.classList.add('correct', 'pop');
+                targetBtn.classList.add('correct', 'pop');
+                sourceBtn.disabled = true;
+                targetBtn.disabled = true;
+                selectedMatchItem = null;
+            } else {
+                targetBtn.classList.add('wrong', 'shake');
+                setTimeout(() => {
+                    targetBtn.classList.remove('shake', 'wrong');
+                }, 800);
+            }
+        }
+
+        // --- PART C: UNSCRAMBLE CLASSROOM RULES ---
+        const unscrambleData = [
+            { words: ["Look", "at", "the", "board,", "please."], id: "u1" },
+            { words: ["Listen", "carefully", "to", "your", "teacher."], id: "u2" },
+            { words: ["Talk", "with", "your", "peers,", "please."], id: "u3" },
+            { words: ["Write", "down", "these", "notes,", "please."], id: "u4" }
+        ];
+        const userUnscrambleState = {};
+
+        function renderUnscramble() {
+            const container = document.getElementById('unscrambleContainer');
+            container.innerHTML = unscrambleData.map((item, idx) => {
+                userUnscrambleState[item.id] = [];
+                const shuffled = item.words.map((w, i) => ({ w, i })).sort(() => Math.random() - 0.5);
+                return `
+                    <div class="quiz-item">
+                        <p class="q-text small">Instruction ${idx + 1}</p>
+                        <div id="zone-${item.id}" class="unscramble-zone"></div>
+                        <div class="unscramble-pool" id="pool-${item.id}">
+                            ${shuffled.map(o => `<button type="button" id="btn-${item.id}-${o.i}" data-id="${item.id}" data-widx="${o.i}" class="item-chip">${o.w}</button>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            container.querySelectorAll('.unscramble-pool .item-chip').forEach(b => {
+                b.addEventListener('click', () => clickUnscrambleWord(b.dataset.id, Number(b.dataset.widx)));
+            });
+        }
+
+        function clickUnscrambleWord(id, wIdx) {
+            const zone = document.getElementById(`zone-${id}`);
+            if (zone.dataset.locked === "true") return;
+            const word = unscrambleData.find(u => u.id === id).words[wIdx];
+
+            document.getElementById(`btn-${id}-${wIdx}`).style.display = 'none';
+            userUnscrambleState[id].push({ word, wIdx });
+
+            const tag = document.createElement('span');
+            tag.id = `tag-${id}-${wIdx}`;
+            tag.className = "item-chip active-select";
+            tag.style.cssText = "font-size:18px; padding:7px 16px; margin:0;";
+            tag.innerText = word;
+            tag.title = "Click to return";
+            tag.onclick = () => undoUnscrambleWord(id, wIdx);
+            zone.appendChild(tag);
+
+            checkUnscramble(id);
+        }
+
+        function undoUnscrambleWord(id, wIdx) {
+            const zone = document.getElementById(`zone-${id}`);
+            if (zone.dataset.locked === "true") return;
+
+            userUnscrambleState[id] = userUnscrambleState[id].filter(x => x.wIdx !== wIdx);
+
+            document.getElementById(`tag-${id}-${wIdx}`).remove();
+            document.getElementById(`btn-${id}-${wIdx}`).style.display = 'inline-block';
+            zone.style.background = "#FFFFFF";
+            zone.style.borderColor = "#64748B";
+        }
+
+        function checkUnscramble(id) {
+            const item = unscrambleData.find(u => u.id === id);
+            const zone = document.getElementById(`zone-${id}`);
+
+            if (userUnscrambleState[id].length === item.words.length) {
+                const result = userUnscrambleState[id].map(x => x.word).join(" ");
+                const target = item.words.join(" ");
+
+                if (result === target) {
+                    zone.style.background = "var(--green-soft)";
+                    zone.style.borderColor = "var(--green)";
+                    zone.style.borderStyle = "solid";
+                    zone.dataset.locked = "true";
+                    Array.from(zone.children).forEach(c => {
+                        c.style.cursor = "default";
+                        c.classList.remove('active-select');
+                        c.classList.add('correct');
+                    });
+                } else {
+                    zone.style.background = "var(--red-soft)";
+                    zone.style.borderColor = "var(--red)";
+                    zone.classList.add('shake');
+                    setTimeout(() => zone.classList.remove('shake'), 300);
+                }
+            } else {
+                zone.style.background = "#FFFFFF";
+                zone.style.borderColor = "#64748B";
+            }
+        }
+
+        // --- ENLARGE A SECTION TO FILL THE SCREEN ---
+        let zoomedCard = null;
+
+        function fitZoom(card) {
+            // Try several layout widths and keep the one that gives the biggest zoom that still fits.
+            let best = { z: 0, w: 900 };
+            card.style.zoom = 1;
+            card.style.height = 'auto';
+            [600, 700, 800, 900, 1050, 1200, 1400, 1600].forEach(w => {
+                card.style.width = w + 'px';
+                const h = card.offsetHeight;
+                const z = Math.min(window.innerWidth / w, window.innerHeight / h);
+                if (z > best.z) best = { z, w };
+            });
+            let z = Math.min(4, Math.max(1, best.z * 0.98));
+            for (let i = 0; i < 12; i++) {
+                card.style.zoom = z;
+                card.style.width = (window.innerWidth / z) + 'px';
+                card.style.height = (window.innerHeight / z) + 'px';
+                if (z <= 1 || card.scrollHeight <= card.clientHeight + 1) break;
+                z = Math.max(1, z * 0.96);
+            }
+        }
+
+        function openZoom(card) {
+            closeZoom();
+            zoomedCard = card;
+            card.classList.add('expanded');
+            card.querySelector('.zoom-btn').textContent = '✕ Close';
+            document.body.style.overflow = 'hidden';
+            fitZoom(card);
+        }
+
+        function closeZoom() {
+            if (!zoomedCard) return;
+            const card = zoomedCard;
+            zoomedCard = null;
+            card.classList.remove('expanded');
+            card.style.zoom = '';
+            card.style.width = '';
+            card.style.height = '';
+            card.querySelector('.zoom-btn').textContent = '🔍 Enlarge';
+            document.body.style.overflow = '';
+        }
+
+        function initZoom() {
+            document.querySelectorAll('.activity-card').forEach(card => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'zoom-btn';
+                btn.textContent = '🔍 Enlarge';
+                btn.addEventListener('click', () => {
+                    card === zoomedCard ? closeZoom() : openZoom(card);
+                });
+                card.querySelector('.card-header').appendChild(btn);
+            });
+            window.addEventListener('keydown', e => { if (e.key === 'Escape') closeZoom(); });
+            window.addEventListener('resize', () => { if (zoomedCard) fitZoom(zoomedCard); });
+        }
+
+        // --- INITIALIZE ---
+        window.onload = () => {
+            renderIdioms();
+            renderMatching();
+            renderUnscramble();
+            initZoom();
+        };
+    </script>
+</body>
+</html>

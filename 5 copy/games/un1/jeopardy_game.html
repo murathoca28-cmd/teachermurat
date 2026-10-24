@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 5 - Unit 1 Jeopardy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+            min-height: 100vh;
+        }
+        
+        .game-btn {
+            background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%);
+            border-bottom: 4px solid #0284c7;
+            border-radius: 1rem;
+            transition: all 0.2s ease-in-out;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        @media (min-width: 640px) {
+            .game-btn {
+                border-bottom-width: 6px;
+                border-radius: 1.5rem;
+            }
+        }
+        
+        .game-btn:hover:not(:disabled) {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 8px 12px -3px rgba(0, 0, 0, 0.25);
+        }
+        
+        .game-btn:active:not(:disabled) {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+        
+        .game-btn:disabled {
+            background: #cbd5e1;
+            border-bottom: 4px solid #94a3b8;
+            color: #f1f5f9;
+            cursor: not-allowed;
+            text-shadow: none;
+            transform: none;
+        }
+        
+        .active-group {
+            background: #fde047 !important;
+            border: 3px solid #f59e0b !important;
+            transform: scale(1.03);
+            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.4);
+        }
+
+        .modal-pop {
+            animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-2 sm:p-4 relative min-h-screen flex flex-col justify-start items-center">
+
+    <!-- Karşılama Ekranı -->
+    <div id="splash" class="fixed inset-0 z-40 flex flex-col items-center justify-center gap-4 sm:gap-6 p-6 text-center text-white bg-gradient-to-br from-indigo-700 via-purple-700 to-pink-600">
+        <p class="text-lg sm:text-2xl font-bold opacity-90">Kelime Yarışması</p>
+        <h1 class="text-3xl sm:text-6xl font-black drop-shadow-lg">Grade 5 - Unit 1 Jeopardy</h1>
+
+        <button onclick="closeSplash()" class="mt-2 sm:mt-4 bg-sky-400 hover:bg-sky-500 border-b-8 border-sky-600 rounded-3xl w-32 h-32 sm:w-40 sm:h-40 flex flex-col items-center justify-center shadow-2xl transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+            <span class="text-5xl sm:text-6xl leading-none">▶</span>
+            <span class="text-lg sm:text-2xl font-extrabold mt-1">BAŞLAT</span>
+        </button>
+
+        <p class="max-w-md text-sm sm:text-xl font-bold opacity-90">
+            Puan kutularını aç, kelimenin anlamını bul. <br class="hidden sm:block">Doğru bilirsen puan kazanırsın!
+        </p>
+    </div>
+
+    <!-- Tam Ekran Butonu (sağ alt) -->
+    <button onclick="toggleFullScreen()" class="fixed bottom-2 right-2 sm:bottom-4 sm:right-4 z-50 bg-white/90 text-blue-900 p-2 sm:p-3 rounded-full shadow-lg hover:bg-white hover:scale-105 transition-all border-2 border-blue-200 flex items-center justify-center cursor-pointer" title="Tam Ekran / Çıkış">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+
+    <!-- Menü Butonu (oyun başlayınca görünür) -->
+    <button id="menu-btn" onclick="openMenu()" title="Menü" class="hidden fixed bottom-2 left-2 sm:bottom-4 sm:left-4 z-[60] bg-neutral-900/90 text-white w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-lg border-2 border-neutral-600 hover:bg-neutral-800 hover:scale-105 transition-all text-xl cursor-pointer">
+        ☰
+    </button>
+
+    <!-- Menü Paneli -->
+    <div id="game-menu" class="hidden fixed inset-0 z-[60]" onclick="closeMenu()">
+        <div onclick="event.stopPropagation()" class="absolute bottom-14 left-2 sm:bottom-20 sm:left-4 w-56 sm:w-64 bg-neutral-900 text-white rounded-xl border-2 border-neutral-600 shadow-2xl p-3">
+            <p class="text-xs sm:text-sm font-bold tracking-widest text-neutral-400 pb-2 mb-2 border-b-2 border-black">JEOPARDY</p>
+            <button onclick="restartGame()" class="w-full text-left text-base sm:text-xl font-extrabold px-3 py-2 rounded-lg hover:bg-neutral-700 cursor-pointer">Yeniden başlat</button>
+            <button onclick="closeMenu()" class="w-full text-left text-base sm:text-xl font-extrabold px-3 py-2 rounded-lg hover:bg-neutral-700 cursor-pointer">Sürdür</button>
+        </div>
+    </div>
+
+    <!-- Kurulum Üst Bar -->
+    <div id="setup-bar" class="w-full max-w-5xl bg-white/90 backdrop-blur-md shadow-xl p-4 sm:p-6 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-5 rounded-2xl sm:rounded-3xl border-2 sm:border-4 border-white mt-8 sm:mt-2">
+        <h1 class="text-xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 text-center drop-shadow-sm">🎮 Grade 5 - Unit 1 Jeopardy</h1>
+        
+        <!-- Kategori / Set Seçimi -->
+        <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 bg-purple-50 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-2xl border-2 border-purple-200 w-full sm:w-auto">
+            <label for="category-select" class="font-bold text-xs sm:text-sm text-purple-800">Kelime Seti:</label>
+            <select id="category-select" class="w-full sm:w-auto bg-white border-2 border-purple-300 rounded-lg sm:rounded-xl p-1 text-xs sm:text-sm font-bold text-purple-900 focus:outline-none focus:border-purple-500">
+                <option value="set1">Ülkeler & Bayramlar</option>
+                <option value="set2">Okul: Kulüpler, Kişiler & Yerler</option>
+                <option value="set3">Okul Kuralları</option>
+                <option value="set4">Etkinlikler, Hobiler & Cümle Kalıpları</option>
+                <option value="set5">Faydalı Kalıplar & Dil Bilgisi</option>
+                <option value="all" selected>TÜMÜ</option>
+            </select>
+        </div>
+
+        <!-- Grup Sayısı & Süre Ayarı Yan Yana (Mobilde Taşmayı Önler) -->
+        <div class="flex items-center justify-between sm:justify-start gap-2 w-full sm:w-auto">
+            <!-- Grup Sayısı -->
+            <div class="flex items-center gap-1.5 bg-blue-50 px-3 py-1.5 rounded-xl border-2 border-blue-200 flex-1 sm:flex-none justify-center">
+                <label for="group-count" class="font-bold text-xs sm:text-sm text-blue-800">Grup:</label>
+                <select id="group-count" class="bg-white border-2 border-blue-300 rounded-lg p-1 text-xs sm:text-sm font-bold text-blue-900 focus:outline-none text-center">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                    <option value="4">4</option>
+                </select>
+            </div>
+
+            <!-- Süre Ayarı -->
+            <div class="flex items-center gap-1.5 bg-orange-50 px-3 py-1.5 rounded-xl border-2 border-orange-200 flex-1 sm:flex-none justify-center">
+                <label for="timer-setting" class="font-bold text-xs sm:text-sm text-orange-800">Süre (sn):</label>
+                <input type="number" id="timer-setting" value="10" min="5" max="60" class="bg-white border-2 border-orange-300 rounded-lg p-1 w-12 sm:w-16 text-xs sm:text-sm font-bold text-orange-900 focus:outline-none text-center">
+            </div>
+        </div>
+
+        <button id="start-btn" onclick="startGame()" class="w-full sm:w-auto bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-extrabold py-2.5 sm:py-3 px-6 sm:px-8 rounded-xl sm:rounded-full shadow-lg border-b-4 border-green-800 transition-all text-base sm:text-xl cursor-pointer">
+            🚀 Başla!
+        </button>
+    </div>
+
+    <!-- Oyun Alanı -->
+    <div id="game-area" class="hidden flex-col items-center mt-3 sm:mt-6 w-full max-w-5xl px-1 sm:px-4">
+        
+        <!-- Puan Tablosu -->
+        <div id="scoreboard" class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-3 sm:mb-6 w-full">
+            <!-- Gruplar dinamik eklenecek -->
+        </div>
+
+        <!-- Jeopardy Grid Tablosu -->
+        <div class="w-full bg-white/40 p-2 sm:p-5 rounded-2xl sm:rounded-[2rem] shadow-xl backdrop-blur-md border-2 sm:border-4 border-white/50">
+            <div id="jeopardy-grid" class="grid grid-cols-5 gap-1.5 sm:gap-3 md:gap-4 w-full">
+                <!-- Butonlar dinamik eklenecek -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Soru Modalı -->
+    <div id="question-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-xl sm:max-w-2xl rounded-2xl sm:rounded-[2rem] shadow-2xl flex flex-col border-4 sm:border-8 border-blue-400 modal-pop max-h-[92vh] overflow-y-auto my-auto">
+            
+            <!-- Modal Header -->
+            <div class="p-3 sm:p-5 border-b-2 sm:border-b-4 border-gray-100 flex justify-between items-center bg-blue-50 rounded-t-xl sm:rounded-t-[1.5rem]">
+                <h2 id="modal-title" class="text-sm sm:text-xl font-extrabold text-blue-800">1. Grup • 100 Puan</h2>
+                <div class="text-xs sm:text-base font-extrabold bg-white px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full shadow-inner border border-gray-200">
+                    ⏳ Süre: <span id="timer" class="text-blue-600 text-base sm:text-2xl">10</span>
+                </div>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="p-4 sm:p-8 flex flex-col items-center justify-center relative bg-gradient-to-b from-white to-blue-50 rounded-b-xl sm:rounded-b-[1.5rem] min-h-[260px]">
+                
+                <!-- Kelime Gösterimi -->
+                <h1 id="english-word" class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-purple-600 mb-6 sm:mb-8 text-center drop-shadow-sm px-2 break-words max-w-full">
+                    word
+                </h1>
+                
+                <!-- Süre Doldu Uyarı Rozeti -->
+                <div id="timeout-notice" class="hidden bg-red-500 text-white font-extrabold px-3 py-1.5 sm:px-5 sm:py-2 rounded-xl sm:rounded-full mb-4 text-xs sm:text-sm animate-bounce text-center shadow-md">
+                    ⏰ Süre Doldu! Lütfen YANLIŞ butonuna basarak devam edin.
+                </div>
+
+                <!-- Cevabı Göster Butonu -->
+                <button id="show-answer-btn" onclick="showAnswer()" class="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-white font-extrabold py-3 px-6 sm:py-4 sm:px-10 rounded-xl sm:rounded-full shadow-lg border-b-4 border-orange-600 text-lg sm:text-2xl transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+                    Cevabı Göster 🎯
+                </button>
+
+                <!-- Cevap Alanı -->
+                <div id="answer-area" class="hidden flex-col items-center w-full">
+                    <div id="turkish-word" class="bg-blue-800 text-white text-lg sm:text-3xl font-extrabold py-3 px-4 sm:py-4 sm:px-8 rounded-xl sm:rounded-2xl mb-5 sm:mb-8 shadow-inner border-2 sm:border-4 border-blue-900 text-center max-w-full break-words">
+                        cevap
+                    </div>
+                    <div class="flex gap-3 sm:gap-6 w-full justify-center">
+                        <button id="correct-btn" onclick="handleResult(true)" class="bg-gradient-to-r from-green-400 to-green-600 border-b-4 border-green-800 hover:from-green-500 hover:to-green-700 text-white font-extrabold py-3 px-4 sm:py-4 sm:px-8 rounded-xl sm:rounded-2xl flex-1 shadow-lg transition-transform text-base sm:text-2xl cursor-pointer">
+                            ✅ DOĞRU
+                        </button>
+                        <button id="wrong-btn" onclick="handleResult(false)" class="bg-gradient-to-r from-red-400 to-red-600 border-b-4 border-red-800 hover:from-red-500 hover:to-red-700 text-white font-extrabold py-3 px-4 sm:py-4 sm:px-8 rounded-xl sm:rounded-2xl flex-1 shadow-lg transition-transform text-base sm:text-2xl cursor-pointer">
+                            ❌ YANLIŞ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Oyun Sonu Modalı -->
+    <div id="end-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl sm:rounded-[3rem] p-6 sm:p-12 text-center shadow-2xl border-4 sm:border-8 border-yellow-400 modal-pop max-w-2xl w-full relative overflow-hidden">
+            <div class="relative z-10">
+                <h1 class="text-3xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 mb-4 sm:mb-6 drop-shadow-md">🏆 OYUN BİTTİ! 🏆</h1>
+                <p id="winner-text" class="text-lg sm:text-3xl font-bold text-blue-900 mb-6 sm:mb-8 bg-blue-50 py-3 px-4 sm:py-4 sm:px-8 rounded-2xl border-2 border-blue-200 inline-block shadow-sm">
+                    Kazanan: 1. Grup
+                </p>
+                <br>
+                <button onclick="restartGame()" class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-extrabold py-3 px-8 sm:py-4 sm:px-12 rounded-full shadow-xl border-b-4 border-purple-900 text-lg sm:text-2xl transition-transform hover:scale-105 cursor-pointer">
+                    🔄 Yeniden Oyna
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const wordSets = {
+            // Ülkeler & Bayramlar
+            set1: [
+                {"en": "the Turkish Republic of Northern Cyprus", "tr": "Kuzey Kıbrıs Türk Cumhuriyeti"},
+                {"en": "Azerbaijan", "tr": "Azerbaycan"},
+                {"en": "the UK (the United Kingdom)", "tr": "Birleşik Krallık"},
+                {"en": "England", "tr": "İngiltere"},
+                {"en": "Scotland", "tr": "İskoçya"},
+                {"en": "the USA", "tr": "ABD (Amerika Birleşik Devletleri)"},
+                {"en": "Canada", "tr": "Kanada"},
+                {"en": "Mexico", "tr": "Meksika"},
+                {"en": "Brazil", "tr": "Brezilya"},
+                {"en": "Argentina", "tr": "Arjantin"},
+                {"en": "Spain", "tr": "İspanya"},
+                {"en": "France", "tr": "Fransa"},
+                {"en": "Italy", "tr": "İtalya"},
+                {"en": "Germany", "tr": "Almanya"},
+                {"en": "Greece", "tr": "Yunanistan"},
+                {"en": "Russia", "tr": "Rusya"},
+                {"en": "Kazakhstan", "tr": "Kazakistan"},
+                {"en": "Turkmenistan", "tr": "Türkmenistan"},
+                {"en": "Uzbekistan", "tr": "Özbekistan"},
+                {"en": "Kyrgyzstan", "tr": "Kırgızistan"},
+                {"en": "China", "tr": "Çin"},
+                {"en": "Japan", "tr": "Japonya"},
+                {"en": "South Korea", "tr": "Güney Kore"},
+                {"en": "Singapore", "tr": "Singapur"},
+                {"en": "23 April", "tr": "Ulusal Egemenlik ve Çocuk Bayramı"},
+                {"en": "19 May", "tr": "Atatürk'ü Anma, Gençlik ve Spor Bayramı"},
+                {"en": "30 August", "tr": "Zafer Bayramı"},
+                {"en": "29 October", "tr": "Cumhuriyet Bayramı"},
+                {"en": "Eid-al-Fitr", "tr": "Ramazan Bayramı"},
+                {"en": "Eid-al-Adha", "tr": "Kurban Bayramı"},
+                {"en": "national day", "tr": "ulusal bayram (gün)"},
+                {"en": "religious day", "tr": "dinî bayram (gün)"}
+            ],
+            // Okul: Kulüpler, Kişiler & Yerler
+            set2: [
+                {"en": "music club", "tr": "müzik kulübü"},
+                {"en": "technology club", "tr": "teknoloji kulübü"},
+                {"en": "maths club", "tr": "matematik kulübü"},
+                {"en": "drama club", "tr": "drama kulübü"},
+                {"en": "art club", "tr": "resim (sanat) kulübü"},
+                {"en": "folk dance club", "tr": "halk oyunları kulübü"},
+                {"en": "environment club", "tr": "çevre kulübü"},
+                {"en": "science club", "tr": "bilim (fen) kulübü"},
+                {"en": "film club", "tr": "film kulübü"},
+                {"en": "chess club", "tr": "satranç kulübü"},
+                {"en": "sports club", "tr": "spor kulübü"},
+                {"en": "surfing team", "tr": "sörf takımı"},
+                {"en": "headmaster", "tr": "okul müdürü"},
+                {"en": "assistant to the headmaster", "tr": "müdür yardımcısı"},
+                {"en": "coach", "tr": "antrenör"},
+                {"en": "secretary", "tr": "sekreter"},
+                {"en": "cook", "tr": "aşçı"},
+                {"en": "doctor", "tr": "doktor"},
+                {"en": "English teacher", "tr": "İngilizce öğretmeni"},
+                {"en": "science teacher", "tr": "fen bilimleri öğretmeni"},
+                {"en": "student", "tr": "öğrenci"},
+                {"en": "best friend", "tr": "en yakın arkadaş"},
+                {"en": "new at school", "tr": "okulda yeni"},
+                {"en": "canteen", "tr": "kantin"},
+                {"en": "science lab", "tr": "fen laboratuvarı"},
+                {"en": "library", "tr": "kütüphane"},
+                {"en": "sports field", "tr": "spor sahası"},
+                {"en": "sports hall", "tr": "spor salonu"},
+                {"en": "administration department", "tr": "idari birim (idare)"},
+                {"en": "conference hall", "tr": "konferans salonu"},
+                {"en": "classroom", "tr": "sınıf"},
+                {"en": "downstairs", "tr": "alt katta, aşağıda"},
+                {"en": "language camp", "tr": "dil kampı"}
+            ],
+            // Okul Kuralları & Kural Kelimeleri
+            set3: [
+                {"en": "rule", "tr": "kural"},
+                {"en": "follow the rules", "tr": "kurallara uymak"},
+                {"en": "obey", "tr": "(kurallara) uymak"},
+                {"en": "run", "tr": "koşmak"},
+                {"en": "shout", "tr": "bağırmak"},
+                {"en": "fight", "tr": "kavga etmek"},
+                {"en": "noise", "tr": "gürültü"},
+                {"en": "line up", "tr": "sıraya girmek"},
+                {"en": "lab coat", "tr": "laboratuvar önlüğü"},
+                {"en": "gloves", "tr": "eldiven"},
+                {"en": "goggles", "tr": "koruyucu gözlük"},
+                {"en": "play safe", "tr": "güvenli davranmak"},
+                {"en": "rude", "tr": "kaba, saygısız"},
+                {"en": "password", "tr": "şifre"},
+                {"en": "false information", "tr": "yanlış bilgi"},
+                {"en": "chew gum", "tr": "sakız çiğnemek"},
+                {"en": "in public", "tr": "toplum içinde"},
+                {"en": "high heels", "tr": "yüksek topuklu ayakkabılar"},
+                {"en": "ancient city", "tr": "antik şehir"},
+                {"en": "historical fountain", "tr": "tarihi çeşme"},
+                {"en": "feed pigeons", "tr": "güvercin beslemek"},
+                {"en": "dangerous dog species", "tr": "tehlikeli köpek türleri"},
+                {"en": "own, buy, sell", "tr": "sahip olmak, satın almak, satmak"},
+                {"en": "dirty car", "tr": "kirli araba"},
+                {"en": "protect", "tr": "korumak"},
+                {"en": "keep clean", "tr": "temiz tutmak"},
+                {"en": "public order", "tr": "kamu düzeni"},
+                {"en": "local laws", "tr": "yerel yasalar"},
+                {"en": "respect", "tr": "saygı göstermek; saygı"},
+                {"en": "Don't shout in the library!", "tr": "Kütüphanede bağırma!"},
+                {"en": "You mustn't run in the lab.", "tr": "Laboratuvarda koşmamalısın."},
+                {"en": "You can't chew gum in public.", "tr": "Toplum içinde sakız çiğneyemezsin."}
+            ],
+            // Etkinlikler, Hobiler & Cümle Kalıpları
+            set4: [
+                {"en": "play the piano", "tr": "piyano çalmak"},
+                {"en": "play the guitar", "tr": "gitar çalmak"},
+                {"en": "sing songs", "tr": "şarkı söylemek"},
+                {"en": "draw pictures", "tr": "resim çizmek"},
+                {"en": "listen to music", "tr": "müzik dinlemek"},
+                {"en": "dance", "tr": "dans etmek"},
+                {"en": "do experiments", "tr": "deney yapmak"},
+                {"en": "learn new things", "tr": "yeni şeyler öğrenmek"},
+                {"en": "read books", "tr": "kitap okumak"},
+                {"en": "solve problems", "tr": "problem çözmek"},
+                {"en": "surf", "tr": "sörf yapmak"},
+                {"en": "water sports", "tr": "su sporları"},
+                {"en": "take nature photos", "tr": "doğa fotoğrafı çekmek"},
+                {"en": "colour and fold paper", "tr": "boyamak ve kâğıt katlamak"},
+                {"en": "perform a dance show", "tr": "dans gösterisi yapmak"},
+                {"en": "organise a tournament", "tr": "turnuva düzenlemek"},
+                {"en": "arrange an exhibition", "tr": "sergi düzenlemek"},
+                {"en": "join a team / club", "tr": "takıma / kulübe katılmak"},
+                {"en": "take part in", "tr": "-e katılmak"},
+                {"en": "contact", "tr": "iletişime geçmek"},
+                {"en": "favourite", "tr": "en sevilen, favori"},
+                {"en": "Do you like playing the guitar?", "tr": "Gitar çalmaktan hoşlanır mısın?"},
+                {"en": "I like playing the guitar.", "tr": "Gitar çalmayı severim."},
+                {"en": "Do you enjoy solving problems?", "tr": "Problem çözmekten hoşlanır mısın?"},
+                {"en": "like / love / enjoy", "tr": "sevmek / hoşlanmak / keyif almak (fiil + -ing)"},
+                {"en": "can / can't", "tr": "yapabilmek / yapamamak"},
+                {"en": "I can play the guitar.", "tr": "Gitar çalabilirim."},
+                {"en": "I can't play the piano.", "tr": "Piyano çalamam."},
+                {"en": "What is your favourite school club?", "tr": "En sevdiğin okul kulübü hangisi?"},
+                {"en": "My favourite school club is music club.", "tr": "En sevdiğim okul kulübü müzik kulübü."}
+            ],
+            // Faydalı Kalıplar & Dil Bilgisi
+            set5: [
+                {"en": "Welcome to our school!", "tr": "Okulumuza hoş geldin!"},
+                {"en": "Nice to meet you.", "tr": "Tanıştığımıza memnun oldum."},
+                {"en": "Excuse me!", "tr": "Affedersiniz!"},
+                {"en": "What's up?", "tr": "Ne haber? / Ne var ne yok?"},
+                {"en": "Cheers!", "tr": "Sağ ol! (Teşekkürler!)"},
+                {"en": "Are you new at school?", "tr": "Okulda yeni misin?"},
+                {"en": "Would you like to join our team?", "tr": "Takımımıza katılmak ister misin?"},
+                {"en": "I'm looking for the science club.", "tr": "Fen kulübünü arıyorum."},
+                {"en": "Come in. / Let's get started!", "tr": "İçeri gel. / Haydi başlayalım!"},
+                {"en": "By the way", "tr": "Bu arada"},
+                {"en": "Where is he/she from?", "tr": "O nereli? (O nereden geliyor?)"},
+                {"en": "Who is your English teacher?", "tr": "İngilizce öğretmenin kim?"},
+                {"en": "Where is the coach?", "tr": "Antrenör nerede?"},
+                {"en": "What can't you do in Singapore?", "tr": "Singapur'da ne yapamazsın?"},
+                {"en": "Where", "tr": "nerede"},
+                {"en": "Who", "tr": "kim"},
+                {"en": "What", "tr": "ne"},
+                {"en": "How many", "tr": "kaç tane"},
+                {"en": "He/She is from Spain.", "tr": "O İspanyalı. (O İspanya'dan geliyor.)"},
+                {"en": "Ms Wilson is my English teacher.", "tr": "İngilizce öğretmenim Ms Wilson."},
+                {"en": "He is in the sports field.", "tr": "O spor sahasında."},
+                {"en": "I am Alex.", "tr": "Ben Alex'im."},
+                {"en": "He is from Scotland.", "tr": "O İskoçyalı."},
+                {"en": "We are in the music club.", "tr": "Biz müzik kulübündeyiz."},
+                {"en": "I'm from Brazil.", "tr": "Brezilyalıyım."},
+                {"en": "falling intonation", "tr": "düşen tonlama (cümle sonunda ses düşer)"},
+                {"en": "Yes, I do. / No, I don't.", "tr": "Evet, severim/hoşlanırım. / Hayır, hoşlanmam."},
+                {"en": "be (am / is / are)", "tr": "olmak fiili (am / is / are)"},
+                {"en": "Don't", "tr": "olumsuz emir: yapma! (Don't shout!)"},
+                {"en": "mustn't / can't", "tr": "yapmamalısın / yapamazsın (yasak)"}
+            ]
+        };
+
+        let activeWordList = [];
+        let numGroups = 1;
+        let scores = [];
+        let currentGroup = 0;
+        let gameDuration = 10;
+        let answeredQuestionsCount = 0;
+        
+        let currentPoints = 0;
+        let currentCellBtn = null;
+        let timerInterval;
+        let timeLeft = 0;
+        let isAnswerShown = false;
+        let menuPausedTimer = false;
+        
+        const pointValues = [50, 100, 150, 200, 250, 300]; 
+
+        // ---------- Karşılama ekranı ----------
+        function closeSplash() {
+            document.getElementById('splash').style.display = 'none';
+        }
+
+        // ---------- Menü (Yeniden başlat / Sürdür) ----------
+        function openMenu() {
+            menuPausedTimer = false;
+            const questionOpen = !document.getElementById('question-modal').classList.contains('hidden');
+            // Soru açıkken ve cevap henüz gösterilmediyse süreyi duraklat
+            if (questionOpen && !isAnswerShown && timeLeft > 0) {
+                clearInterval(timerInterval);
+                menuPausedTimer = true;
+            }
+            document.getElementById('game-menu').classList.remove('hidden');
+        }
+
+        function closeMenu() {
+            document.getElementById('game-menu').classList.add('hidden');
+            if (menuPausedTimer) {
+                menuPausedTimer = false;
+                resumeTimer();
+            }
+        }
+
+        function resumeTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeOut();
+                }
+            }, 1000);
+        }
+
+        function restartGame() {
+            menuPausedTimer = false;
+            clearInterval(timerInterval);
+            document.getElementById('game-menu').classList.add('hidden');
+            document.getElementById('question-modal').classList.add('hidden');
+            document.getElementById('end-modal').classList.add('hidden');
+            document.getElementById('end-modal').classList.remove('flex');
+            document.getElementById('game-area').classList.add('hidden');
+            document.getElementById('game-area').classList.remove('flex');
+            document.getElementById('menu-btn').classList.add('hidden');
+            document.getElementById('setup-bar').classList.remove('hidden');   // ayar ekranına dön
+        }
+
+        // ---------- Tam ekran ----------
+        function toggleFullScreen() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startGame() {
+            const selectedSetKey = document.getElementById('category-select').value;
+            numGroups = parseInt(document.getElementById('group-count').value);
+            gameDuration = parseInt(document.getElementById('timer-setting').value);
+            
+            if(isNaN(gameDuration) || gameDuration < 5) gameDuration = 10;
+
+            let pool = [];
+            if (selectedSetKey === 'all') {
+                pool = Object.values(wordSets).flat();
+            } else {
+                pool = [...wordSets[selectedSetKey]];
+            }
+
+            if (pool.length < 30) {
+                const extraPool = Object.values(wordSets).flat().filter(item => !pool.includes(item));
+                shuffle(extraPool);
+                while (pool.length < 30 && extraPool.length > 0) {
+                    pool.push(extraPool.pop());
+                }
+            }
+
+            shuffle(pool);
+            activeWordList = pool.slice(0, 30);
+
+            document.getElementById('setup-bar').classList.add('hidden');
+            document.getElementById('menu-btn').classList.remove('hidden');
+            document.getElementById('game-area').classList.remove('hidden');
+            document.getElementById('game-area').classList.add('flex');
+            
+            scores = Array(numGroups).fill(0);
+            currentGroup = 0;
+            answeredQuestionsCount = 0;
+            
+            renderScoreboard();
+            renderGrid();
+        }
+
+        function renderScoreboard() {
+            const board = document.getElementById('scoreboard');
+            board.innerHTML = '';
+            for (let i = 0; i < numGroups; i++) {
+                const groupDiv = document.createElement('div');
+                groupDiv.id = `group-score-${i}`;
+                groupDiv.className = `px-2 py-1.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-2xl border-2 sm:border-4 border-white bg-white/80 font-extrabold text-xs sm:text-xl shadow-md transition-all duration-300 text-blue-900 text-center flex-1 min-w-[70px] ${i === currentGroup ? 'active-group' : ''}`;
+                groupDiv.innerHTML = `<span class="opacity-80 block sm:inline">${i + 1}. Grup</span> <span id="score-val-${i}" class="text-sm sm:text-2xl text-purple-700 block sm:inline sm:ml-2">${scores[i]}</span>`;
+                board.appendChild(groupDiv);
+            }
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('jeopardy-grid');
+            grid.innerHTML = '';
+            let wordIndex = 0;
+
+            pointValues.forEach(points => {
+                for (let col = 0; col < 5; col++) {
+                    const btn = document.createElement('button');
+                    const wordData = activeWordList[wordIndex];
+                    
+                    btn.className = "game-btn text-white font-extrabold py-3 sm:py-5 md:py-4 px-1 sm:px-4 shadow-md text-base sm:text-2xl md:text-3xl tracking-wider cursor-pointer";
+                    btn.innerText = points;
+                    btn.onclick = () => openQuestion(btn, points, wordData);
+                    
+                    grid.appendChild(btn);
+                    wordIndex++;
+                }
+            });
+        }
+
+        function openQuestion(btn, points, wordData) {
+            currentCellBtn = btn;
+            currentPoints = points;
+            isAnswerShown = false;
+            
+            // Modal elemanlarının durumunu sıfırla
+            document.getElementById('modal-title').innerText = `${currentGroup + 1}. Grup • ${points} Puan`;
+            document.getElementById('english-word').innerText = wordData.en;
+            document.getElementById('turkish-word').innerText = wordData.tr;
+            
+            document.getElementById('timeout-notice').classList.add('hidden');
+            
+            const correctBtn = document.getElementById('correct-btn');
+            correctBtn.disabled = false;
+            correctBtn.classList.remove('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+
+            document.getElementById('show-answer-btn').classList.remove('hidden');
+            document.getElementById('answer-area').classList.add('hidden');
+            document.getElementById('answer-area').classList.remove('flex');
+            document.getElementById('question-modal').classList.remove('hidden');
+            
+            startTimer();
+        }
+
+        function startTimer() {
+            timeLeft = gameDuration;
+            updateTimerUI();
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeOut();
+                }
+            }, 1000);
+        }
+
+        function handleTimeOut() {
+            // Otomatik cevabı göster
+            showAnswer();
+            
+            // Süre doldu uyarısını göster
+            document.getElementById('timeout-notice').classList.remove('hidden');
+            
+            // "DOĞRU" butonunu pasifleştir (sadece YANLIŞ butonuna basılabilsin)
+            const correctBtn = document.getElementById('correct-btn');
+            correctBtn.disabled = true;
+            correctBtn.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+        }
+
+        function updateTimerUI() {
+            const timerEl = document.getElementById('timer');
+            timerEl.innerText = Math.max(0, timeLeft);
+            
+            if (timeLeft <= 3) {
+                timerEl.classList.remove('text-blue-600');
+                timerEl.classList.add('text-red-600', 'animate-pulse');
+            } else {
+                timerEl.classList.add('text-blue-600');
+                timerEl.classList.remove('text-red-600', 'animate-pulse');
+            }
+        }
+
+        function showAnswer() {
+            isAnswerShown = true;
+            clearInterval(timerInterval);
+            document.getElementById('show-answer-btn').classList.add('hidden');
+            document.getElementById('answer-area').classList.remove('hidden');
+            document.getElementById('answer-area').classList.add('flex');
+        }
+
+        function handleResult(isCorrect) {
+            clearInterval(timerInterval);
+            
+            if (isCorrect) {
+                scores[currentGroup] += currentPoints;
+            } else {
+                scores[currentGroup] -= currentPoints;
+            }
+            
+            document.getElementById(`score-val-${currentGroup}`).innerText = scores[currentGroup];
+            
+            currentCellBtn.disabled = true;
+            currentCellBtn.innerText = '✔';
+            currentCellBtn.classList.add('text-xl', 'sm:text-3xl', 'opacity-50');
+            
+            currentGroup = (currentGroup + 1) % numGroups;
+            document.getElementById('question-modal').classList.add('hidden');
+            updateScoreboardUI();
+            
+            answeredQuestionsCount++;
+            if(answeredQuestionsCount === 30) {
+                setTimeout(showEndGameScreen, 400);
+            }
+        }
+
+        function updateScoreboardUI() {
+            for (let i = 0; i < numGroups; i++) {
+                const groupDiv = document.getElementById(`group-score-${i}`);
+                if (i === currentGroup) {
+                    groupDiv.classList.add('active-group');
+                } else {
+                    groupDiv.classList.remove('active-group');
+                }
+            }
+        }
+
+        function showEndGameScreen() {
+            const maxScore = Math.max(...scores);
+            const winners = [];
+            
+            for(let i = 0; i < scores.length; i++) {
+                if(scores[i] === maxScore) {
+                    winners.push(`${i + 1}. Grup`);
+                }
+            }
+            
+            let winnerMessage = "";
+            if(winners.length === 1) {
+                winnerMessage = `🎉 Harika! Kazanan: ${winners[0]} (${maxScore} Puan) 🎉`;
+            } else {
+                winnerMessage = `🤝 Beraberlik! ${winners.join(' ve ')} kazandı! (${maxScore} Puan) 🤝`;
+            }
+            
+            document.getElementById('winner-text').innerText = winnerMessage;
+            document.getElementById('game-area').classList.add('hidden');
+            document.getElementById('end-modal').classList.remove('hidden');
+            document.getElementById('end-modal').classList.add('flex');
+        }
+    </script>
+</body>
+</html>
