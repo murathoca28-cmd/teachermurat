@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 5 - Learning Hub</title>
+    <link rel="stylesheet" href="../../theme.css">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        /* Vertically centred content area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 15px 56px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 36px;
+            padding: 0 10px;
+        }
+
+        .page-title h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+            margin: 0;
+            color: #1A1F23;
+        }
+
+        .page-title h1 span { color: #0F766E; }
+
+        .page-title .sub-desc {
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: #3D4852;
+            margin: 8px 0 0 0;
+        }
+
+        /* ----- Step 1: main menu (4 cards) ----- */
+        .menu-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: stretch;
+            gap: 24px;
+            width: 100%;
+            max-width: 900px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            box-sizing: border-box;
+            background: #FFFFFF;
+            color: #1A1F23;
+            text-decoration: none;
+            font-family: inherit;
+            text-align: center;
+            cursor: pointer;
+            border: 4px solid #334155;
+            border-radius: 20px;
+            box-shadow: 0 6px 0 #94A3B8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 0 #94A3B8;
+        }
+
+        .card:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #94A3B8;
+        }
+
+        .card:focus-visible {
+            outline: 4px solid #F0A500;
+            outline-offset: 4px;
+        }
+
+        .menu-card {
+            width: 200px;
+            padding: 26px 12px 22px;
+        }
+
+        .badge {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: #CCFBF1;
+            border: 3px solid #0F766E;
+            font-size: 2.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .menu-card {
+            justify-content: flex-start;
+        }
+
+        /* Two-line height for every label so the circles line up across cards */
+        .menu-card .label {
+            font-size: 1.375rem;
+            font-weight: 800;
+            line-height: 1.25;
+            min-height: 2.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ----- Step 2: unit list ----- */
+        .unit-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 740px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .back-btn { margin-bottom: 18px; }
+
+        .back-btn button {
+            background: #FFFFFF;
+            color: #1A1F23;
+            border: 3px solid #334155;
+            border-radius: 12px;
+            box-shadow: 0 4px 0 #334155;
+            padding: 9px 24px;
+            font-family: inherit;
+            font-size: 1.0625rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .back-btn button:hover { transform: translateY(-2px); }
+        .back-btn button:active { transform: translateY(2px); box-shadow: none; }
+        .back-btn button:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
+
+        #unitGrid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .category-title {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 6px;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #0B4F4A;
+        }
+
+        .unit-card {
+            width: 128px;
+            height: 84px;
+            padding: 8px 6px;
+            border-width: 3px;
+            border-radius: 16px;
+            box-shadow: 0 5px 0 #94A3B8;
+        }
+
+        .unit-card .label {
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        /* Units that are not ready yet */
+        .unit-card.locked {
+            background: #EEF2F6;
+            border-style: dashed;
+            border-color: #64748B;
+            box-shadow: none;
+            color: #3D4852;
+        }
+
+        .unit-card.locked:hover { transform: none; box-shadow: none; }
+
+        .unit-card.locked .lock-badge {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            font-size: 0.875rem;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .page-title h1 { font-size: 2rem; }
+            .page-title .sub-desc { font-size: 1.125rem; }
+            .main-content { padding-bottom: 32px; }
+            .menu-container { gap: 14px; padding: 0; }
+            .menu-card { width: calc(50% - 7px); padding: 20px 8px 16px; }
+            .badge { width: 60px; height: 60px; font-size: 1.7rem; }
+            .menu-card .label { font-size: 1.0625rem; }
+            #unitGrid { gap: 12px; }
+            .unit-card { width: calc(33.33% - 8px); max-width: 128px; }
+        }
+
+        @media (max-width: 400px) {
+            .unit-card { width: calc(50% - 6px); max-width: none; }
+        }
+
+        /* ----- "Under construction" popup ----- */
+        .cs-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(20, 30, 40, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .cs-box {
+            background: #FFFFFF;
+            border: 4px solid #334155;
+            border-radius: 20px;
+            box-shadow: 0 6px 0 #94A3B8;
+            max-width: 380px;
+            width: 100%;
+            padding: 28px 24px 24px;
+            text-align: center;
+            animation: fadeIn 0.25s ease;
+            position: relative;
+        }
+
+        .cs-icon { font-size: 3rem; margin-bottom: 8px; }
+
+        .cs-title {
+            font-size: 1.375rem;
+            font-weight: 800;
+            color: #1A1F23;
+            margin: 0 0 8px;
+        }
+
+        .cs-text {
+            font-size: 1.0625rem;
+            font-weight: 600;
+            color: #3D4852;
+            margin: 0 0 20px;
+            line-height: 1.5;
+        }
+
+        .cs-close-btn {
+            background: #C2410C;
+            color: #FFFFFF;
+            border: 3px solid #7C2D12;
+            box-shadow: 0 4px 0 #7C2D12;
+            border-radius: 12px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 1.0625rem;
+            padding: 9px 34px;
+            cursor: pointer;
+        }
+
+        .cs-close-btn:active { transform: translateY(2px); box-shadow: none; }
+
+        .cs-x {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #3D4852;
+            cursor: pointer;
+            line-height: 1;
+            padding: 6px;
+        }
+
+        .cs-x:hover { color: #1A1F23; }
+        .cs-close-btn:focus-visible, .cs-x:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <div id="navbar-placeholder" style="min-height: 64px;"></div>
+    <script src="../../navbar.js"></script>
+
+    <main class="main-content">
+        <div class="page-title">
+            <h1>GRADE <span>5</span></h1>
+            <p class="sub-desc">Choose your activity below</p>
+        </div>
+
+        <!-- STEP 1: MAIN MENU -->
+        <div id="menuContainer" class="menu-container">
+            <button type="button" onclick="showUnits('tests')" class="card menu-card">
+                <div class="badge">📝</div>
+                <div class="label">Tests</div>
+            </button>
+            <button type="button" onclick="showUnits('activities')" class="card menu-card">
+                <div class="badge">🎯</div>
+                <div class="label">Worksheets<br>&amp; Activities</div>
+            </button>
+            <button type="button" onclick="showUnits('slides')" class="card menu-card">
+                <div class="badge">📊</div>
+                <div class="label">Slides</div>
+            </button>
+            <button type="button" onclick="showUnits('games')" class="card menu-card">
+                <div class="badge">🎲</div>
+                <div class="label">Games</div>
+            </button>
+        </div>
+
+        <!-- STEP 2: UNIT LIST (hidden at start) -->
+        <div id="unitContainer" class="unit-container">
+            <div class="back-btn">
+                <button type="button" onclick="goBack()">⬅ Back</button>
+            </div>
+            <div id="unitGrid"></div>
+        </div>
+    </main>
+
+    <!-- UNDER CONSTRUCTION POPUP -->
+    <div id="comingSoonOverlay" class="cs-overlay" onclick="if(event.target===this) closeComingSoon()">
+        <div class="cs-box">
+            <button type="button" class="cs-x" onclick="closeComingSoon()" aria-label="Close">✕</button>
+            <div class="cs-icon">🚧</div>
+            <p class="cs-title" id="comingSoonTitle">Yapım Aşamasında</p>
+            <p class="cs-text" id="comingSoonText">Bu içerik henüz hazır değil. Çok yakında burada olacak!</p>
+            <button type="button" class="cs-close-btn" onclick="closeComingSoon()">Tamam</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // DATA LISTS (unchanged: a url starting with "******" means "not ready yet")
+        // ============================================================
+        const testsUnits = [
+            { name: 'Revs', icon: '📝', url: 'multestpage/multop_revs_buton_5.html' },
+            { name: 'Unit 1', icon: '📝', url: 'multestpage/multop_un1_buton_5.html' },
+            { name: 'Unit 2', icon: '📝', url: '****** TEST - UNITE 2 ******' },
+            { name: 'Unit 3', icon: '📝', url: '****** TEST - UNITE 3 ******' },
+            { name: 'Unit 4', icon: '📝', url: '****** TEST - UNITE 4 ******' },
+            { name: 'Unit 5', icon: '📝', url: '****** TEST - UNITE 5 ******' },
+            { name: 'Unit 6', icon: '📝', url: '****** TEST - UNITE 6 ******' },
+            { name: 'Unit 7', icon: '📝', url: '****** TEST - UNITE 7 ******' },
+            { name: 'Unit 8', icon: '📝', url: '****** TEST - UNITE 8 ******' },
+        ];
+
+        const worksheetsActivitiesUnits = [
+            { name: 'Revs', icon: '🎯', url: 'worksheets/rev_buton_5.html' },
+            { name: 'Unit 1', icon: '🎯', url: 'worksheets/un1_buton_5.html' },
+            { name: 'Unit 2', icon: '🎯', url: '****** ACTIVITY - UNITE 2 ******' },
+            { name: 'Unit 3', icon: '🎯', url: '****** ACTIVITY - UNITE 3 ******' },
+            { name: 'Unit 4', icon: '🎯', url: '****** ACTIVITY - UNITE 4 ******' },
+            { name: 'Unit 5', icon: '🎯', url: '****** ACTIVITY - UNITE 5 ******' },
+            { name: 'Unit 6', icon: '🎯', url: '****** ACTIVITY - UNITE 6 ******' },
+            { name: 'Unit 7', icon: '🎯', url: '****** ACTIVITY - UNITE 7 ******' },
+            { name: 'Unit 8', icon: '🎯', url: '****** ACTIVITY - UNITE 8 ******' },
+        ];
+
+        const slidesUnits = [
+            { name: 'Revs', icon: '📊', url: 'slides/un_rev/grade_5_slide.html'},
+            { name: 'Unit 1', icon: '📊', url: 'slides/un1/grade_5_un1_slide.html' },
+            { name: 'Unit 2', icon: '📊', url: '****** PRES - UNITE 2 ******' },
+            { name: 'Unit 3', icon: '📊', url: '****** PRES - UNITE 3 ******' },
+            { name: 'Unit 4', icon: '📊', url: '****** PRES - UNITE 4 ******' },
+            { name: 'Unit 5', icon: '📊', url: '****** PRES - UNITE 5 ******' },
+            { name: 'Unit 6', icon: '📊', url: '****** PRES - UNITE 6 ******' },
+            { name: 'Unit 7', icon: '📊', url: '****** PRES - UNITE 7 ******' },
+            { name: 'Unit 8', icon: '📊', url: '****** PRES - UNITE 8 ******' },
+        ];
+
+        const gamesUnits = [
+            { name: 'Revs', icon: '🎲', url: 'games/un_rev/games_uni_rev_5.html' },
+            { name: 'Unit 1', icon: '🎲', url: 'games/un1/games_un1_5.html' },
+            { name: 'Unit 2', icon: '🎲', url: '****** GAME - UNITE 2 ******' },
+            { name: 'Unit 3', icon: '🎲', url: '****** GAME - UNITE 3 ******' },
+            { name: 'Unit 4', icon: '🎲', url: '****** GAME - UNITE 4 ******' },
+            { name: 'Unit 5', icon: '🎲', url: '****** GAME - UNITE 5 ******' },
+            { name: 'Unit 6', icon: '🎲', url: '****** GAME - UNITE 6 ******' },
+            { name: 'Unit 7', icon: '🎲', url: '****** GAME - UNITE 7 ******' },
+            { name: 'Unit 8', icon: '🎲', url: '****** GAME - UNITE 8 ******' },
+        ];
+
+        const categoryConfig = {
+            tests: { title: 'Tests' },
+            activities: { title: 'Worksheets & Activities' },
+            slides: { title: 'Slides' },
+            games: { title: 'Games' }
+        };
+
+        // ============================================================
+        // PLACEHOLDER DETECTION + POPUP
+        // ============================================================
+        function isPlaceholder(url) {
+            return typeof url === 'string' && url.trim().startsWith('******');
+        }
+
+        function openComingSoon(unitName) {
+            document.getElementById('comingSoonText').innerText =
+                `"${unitName}" içeriği yapım aşamasındadır. Çok yakında burada olacak!`;
+            document.getElementById('comingSoonOverlay').style.display = 'flex';
+        }
+
+        function closeComingSoon() {
+            document.getElementById('comingSoonOverlay').style.display = 'none';
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeComingSoon();
+        });
+
+        // ============================================================
+        // RENDER
+        // ============================================================
+        function renderUnits(type) {
+            const grid = document.getElementById('unitGrid');
+            grid.innerHTML = '';
+            let data = [];
+            switch (type) {
+                case 'tests': data = testsUnits; break;
+                case 'activities': data = worksheetsActivitiesUnits; break;
+                case 'slides': data = slidesUnits; break;
+                case 'games': data = gamesUnits; break;
+                default: data = testsUnits;
+            }
+            const config = categoryConfig[type];
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'category-title';
+            titleDiv.innerText = config.title;
+            grid.appendChild(titleDiv);
+
+            data.forEach(unit => {
+                const placeholder = isPlaceholder(unit.url);
+
+                // Ready content is a link; not-ready content is a button that opens the popup.
+                const link = document.createElement(placeholder ? 'button' : 'a');
+                link.className = 'card unit-card' + (placeholder ? ' locked' : '');
+                link.innerHTML = `<div class="label">${unit.name}</div>` +
+                                  (placeholder ? '<div class="lock-badge">🔒</div>' : '');
+
+                if (placeholder) {
+                    link.type = 'button';
+                    link.addEventListener('click', () => openComingSoon(unit.name));
+                } else {
+                    link.href = unit.url;
+                }
+
+                grid.appendChild(link);
+            });
+        }
+
+        function showUnits(type) {
+            document.getElementById('menuContainer').style.display = 'none';
+            document.getElementById('unitContainer').style.display = 'flex';
+            renderUnits(type);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goBack() {
+            document.getElementById('menuContainer').style.display = 'flex';
+            document.getElementById('unitContainer').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('unitContainer').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Choice Tests</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #1A1F23;
+            font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 15px 56px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 760px;
+            background: #FFFFFF;
+            border: 4px solid #334155;
+            border-radius: 24px;
+            box-shadow: 0 6px 0 #94A3B8;
+            padding: 30px 32px 38px;
+        }
+
+        .back-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .back-btn {
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 800;
+            padding: 8px 26px;
+            color: #1A1F23;
+            background: #FFFFFF;
+            border: 3px solid #334155;
+            border-radius: 14px;
+            box-shadow: 0 4px 0 #94A3B8;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #94A3B8;
+        }
+
+        .back-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #94A3B8;
+        }
+
+        .title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            text-align: center;
+            margin: 0 0 26px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 190px);
+            gap: 18px;
+            justify-content: center;
+        }
+
+        .test-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            min-height: 96px;
+            padding: 14px 10px;
+            background: #CCFBF1;
+            color: #064E48;
+            border: 3px solid #0F766E;
+            border-radius: 18px;
+            box-shadow: 0 5px 0 #0F766E;
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+
+        .test-btn .sub-text {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #0B4F4A;
+        }
+
+        .test-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 #0F766E;
+        }
+
+        .test-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #0F766E;
+        }
+
+        .back-btn:focus-visible,
+        .test-btn:focus-visible {
+            outline: 4px solid #F0A500;
+            outline-offset: 3px;
+        }
+
+        @media (max-width: 760px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .container {
+                padding: 22px 14px 28px;
+            }
+
+            .title {
+                font-size: 1.6rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .test-btn {
+                min-height: 80px;
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../../theme.css">
+</head>
+
+<body>
+    <div id="navbar-placeholder" style="min-height: 64px;"></div>
+    <script src="../../navbar.js"></script>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="back-container">
+                <a href="javascript:history.back()" class="back-btn">← Back</a>
+            </div>
+
+            <h1 class="title">Multiple Choice Tests</h1>
+
+            <div class="grid">
+                <a href="../multest/un1/multiptest_un1_01_5.html" class="test-btn">
+                    Test 1
+                    <span class="sub-text">(New Generation)</span>
+                </a>
+                <a href="../multest/un1/multiptest_un1_02_5.html" class="test-btn">
+                    Test 2
+                    <span class="sub-text">(New Generation)</span>
+                </a>
+                 <a href="../multest/un1/multiptest_un1_03_5.html" class="test-btn">
+                    Test 3
+                    <span class="sub-text">(New Generation)</span>
+                </a>
+            </div>
+        </div>
+    </main>
+    <dialog id="yapimda"
+        style="margin:auto; border:4px solid #1a2a3a; border-radius:20px; padding:30px 50px; font-size:28px; font-weight:bold; text-align:center;">
+        🚧 Bu etkinlik yapım aşamasında!<br><br>
+        <button onclick="this.closest('dialog').close()"
+            style="font-size:22px; padding:8px 30px; border-radius:12px; border:3px solid #1a2a3a; background:#fff; cursor:pointer;">Tamam</button>
+    </dialog>
+</body>
+
+</html>
