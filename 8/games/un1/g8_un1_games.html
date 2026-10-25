@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 8 - Unit-1 Games</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif;
+            color: #1A1F23;
+        }
+
+        .page-header { text-align: center; padding: 0px 15px 18px; }
+
+        .page-header h1 { margin: 0 0 14px; font-size: 2.25rem; font-weight: 800; }
+
+        .back-link {
+            display: inline-block;
+            padding: 8px 26px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #1A1F23;
+            background: #FFFFFF;
+            border: 3px solid #334155;
+            border-radius: 14px;
+            box-shadow: 0 4px 0 #94A3B8;
+            text-decoration: none;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+
+        .back-link:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #94A3B8; }
+        .back-link:active { transform: translateY(3px); box-shadow: 0 1px 0 #94A3B8; }
+        .back-link:focus-visible, .game-card:focus-visible, .close-btn:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 6px 20px 56px;
+        }
+
+        .game-card {
+            background: #FFFFFF;
+            border: 3px solid #334155;
+            border-radius: 16px;
+            box-shadow: 0 5px 0 #94A3B8;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+
+        .game-card:hover { transform: translateY(-3px); box-shadow: 0 8px 0 #94A3B8; }
+        .game-card:active { transform: translateY(3px); box-shadow: 0 1px 0 #94A3B8; }
+
+        .card-thumb {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            background: #E2E8F0;
+            border-bottom: 3px solid #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .card-thumb .fallback-icon { font-size: 1.4rem; font-weight: 800; color: #64748B; }
+
+        .card-info {
+            padding: 10px 10px 12px;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-name { font-weight: 800; font-size: 1.1rem; line-height: 1.25; color: #0B4F4A; word-break: break-word; }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 100000;
+        }
+
+        .modal-content {
+            /* as large as the screen allows while keeping the 16:9 game area */
+            width: min(96vw, calc((100vh - 110px) * 16 / 9));
+            background: #FFFFFF;
+            border: 4px solid #334155;
+            border-radius: 20px;
+            box-shadow: 0 6px 0 #94A3B8;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 18px;
+            background: #CCFBF1;
+            border-bottom: 4px solid #334155;
+        }
+
+        .modal-header h2 { margin: 0; font-size: 1.4rem; font-weight: 800; color: #064E48; }
+
+        .close-btn {
+            font-family: inherit;
+            flex-shrink: 0;
+            padding: 8px 20px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            background: #C2410C;
+            border: 3px solid #7C2D12;
+            border-radius: 12px;
+            box-shadow: 0 4px 0 #7C2D12;
+            cursor: pointer;
+        }
+
+        .close-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #7C2D12; }
+
+        .iframe-container { position: relative; width: 100%; padding-top: 56.25%; background: #F0F0F0; }
+
+        .iframe-container iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+
+        @media (max-width: 600px) {
+            .page-header h1 { font-size: 1.6rem; }
+            .games-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; padding: 6px 14px 40px; }
+            .game-name { font-size: 1rem; }
+            .modal-content { width: 98vw; }
+        }
+    </style>
+    <link rel="stylesheet" href="/theme.css">
+</head>
+
+<body>
+
+    <div id="navbar-placeholder" style="min-height: 64px;"></div>
+    <script src="/navbar.js"></script>
+
+    <div class="page-header">
+        <h1>Grade 8 – Unit 1 Games</h1>
+        <a href="/8/grade8.html#games" data-back class="back-link">← Back</a>
+    </div>
+
+    <div class="games-grid" id="gamesGrid"></div>
+
+    <div id="gameModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="modal-header">
+                <h2 id="modalTitle">Game</h2>
+                <button class="close-btn" id="closeModalBtn">Close ✕</button>
+            </div>
+            <div class="iframe-container"></div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        // ============================================================
+        // GAME DATA
+        // thumbnailUrl: image shown on the card
+        // embedUrl:     the game address (the <iframe src="..."> part)
+        // ============================================================
+        var games = [
+            {
+                name: 'Jeopardy Word Game',
+                thumbnailUrl: 'jeopardycap.webp',
+                embedUrl: 'jeopardy_game.html'
+            },
+            {
+                name: 'Vocabulary',
+                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/e3be2857eb39492784a859d051068e32_44',
+                embedUrl: 'https://wordwall.net/embed/e3be2857eb39492784a859d051068e32?themeId=44&templateId=73&fontStackId=0'
+            },
+            {
+                name: 'Complete the sentences',
+                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/cc5700d9b1204a9e8a5fadcb74542f32_45',
+                embedUrl: 'https://wordwall.net/embed/cc5700d9b1204a9e8a5fadcb74542f32?themeId=45&templateId=36&fontStackId=0'
+            },
+            {
+                name: 'Functional Language: Offers and Responses',
+                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/904759c964eb43df84424ab7fe6927c9_65',
+                embedUrl: 'https://wordwall.net/embed/904759c964eb43df84424ab7fe6927c9?themeId=65&templateId=2&fontStackId=0'
+            },
+            {
+                name: 'Match the words with the correct definitions',
+                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/df9f0a5f9e2f46b196c7978b5c51b942_21',
+                embedUrl: 'https://wordwall.net/embed/df9f0a5f9e2f46b196c7978b5c51b942?themeId=21&templateId=3&fontStackId=0'
+            },
+            {
+                name: 'Order the dialogue',
+                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/b7944bf2ebf04b16b4f287cdc33c816b_62',
+                embedUrl: 'https://wordwall.net/embed/b7944bf2ebf04b16b4f287cdc33c816b?themeId=62&templateId=50&fontStackId=0'
+            },
+            {
+                name: 'Friendship Class Game',
+                thumbnailUrl: 'friendship.webp',
+                embedUrl: 'friendship.html'
+            },
+            // To add a game, add a comma after the last block and copy it:
+            // , { name: '...', thumbnailUrl: '...', embedUrl: '...' }
+        ];
+
+        var gamesGrid = document.getElementById('gamesGrid');
+        var modal = document.getElementById('gameModal');
+        var modalTitle = document.getElementById('modalTitle');
+        var iframeContainer = document.querySelector('.iframe-container');
+
+        function renderGames() {
+            gamesGrid.innerHTML = '';
+            games.forEach(function (game) {
+                var card = document.createElement('div');
+                card.className = 'game-card';
+                card.tabIndex = 0;
+                card.setAttribute('role', 'button');
+
+                var thumbDiv = document.createElement('div');
+                thumbDiv.className = 'card-thumb';
+
+                var img = document.createElement('img');
+                img.src = game.thumbnailUrl;
+                img.alt = game.name;
+                img.loading = 'lazy';
+                img.onerror = function () {
+                    thumbDiv.innerHTML = '<span class="fallback-icon">GAME</span>';
+                };
+                thumbDiv.appendChild(img);
+
+                var infoDiv = document.createElement('div');
+                infoDiv.className = 'card-info';
+                var nameDiv = document.createElement('div');
+                nameDiv.className = 'game-name';
+                nameDiv.textContent = game.name;
+                infoDiv.appendChild(nameDiv);
+
+                card.appendChild(thumbDiv);
+                card.appendChild(infoDiv);
+
+                card.addEventListener('click', function () { openGameModal(game); });
+                card.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openGameModal(game); }
+                });
+                gamesGrid.appendChild(card);
+            });
+        }
+
+        function openGameModal(game) {
+            modalTitle.textContent = game.name;
+            iframeContainer.innerHTML = '';
+            var iframe = document.createElement('iframe');
+            iframe.src = game.embedUrl;
+            iframe.allow = 'autoplay; fullscreen';
+            iframe.allowFullscreen = true;
+            iframe.title = game.name;
+            iframeContainer.appendChild(iframe);
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+            iframeContainer.innerHTML = '';
+        }
+
+        document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+        modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
+        });
+
+        renderGames();
+    })();
+    </script>
+<script src="/back.js"></script>
+</body>
+</html>
