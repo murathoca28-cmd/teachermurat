@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade 5 Revs Slides</title>
+    <title>Grade 6 Revs Slides</title>
     <style>
         * { box-sizing: border-box; }
 
@@ -143,7 +143,7 @@
                  data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_slides/01-Grade5_Pre.pdf?v=3"
                  data-download="https://cdn.teachermurat.com/5/rev_slides/01-Grade5_Pre.pdf?v=3"
                  data-title="Slide 1">
-                <img class="card-thumbnail" src="../un_rev/thumbnails/grade_5_rev_pre1.webp" alt="Slide 1" decoding="async">
+                <img class="card-thumbnail" src="../un_rev/thumbnails/grade_6_rev_pre1.webp" alt="Slide 1" decoding="async">
                 <div class="card-body">
                     <h3>Slide 1</h3>
                     <p>REVISIONS SUMMARY</p>
@@ -155,7 +155,7 @@
                  data-embed="https://teachermurat.com/pdfjs/web/viewer.html?file=https://cdn.teachermurat.com/5/rev_slides/02-Grade5_Pre.pdf?v=4"
                  data-download="https://cdn.teachermurat.com/5/rev_slides/02-Grade5_Pre.pdf?v=4"
                  data-title="Slide 4">
-                <img class="card-thumbnail" src="../un_rev/thumbnails/grade_5_rev_pre2.webp" alt="Slide 4" decoding="async">
+                <img class="card-thumbnail" src="../un_rev/thumbnails/grade_6_rev_pre2.webp" alt="Slide 4" decoding="async">
                 <div class="card-body">
                     <h3>Slide 2</h3>
                     <p>WORD CARDS</p>
@@ -185,8 +185,18 @@
             var iframe = document.getElementById('modalIframe');
             var titleEl = document.getElementById('modalTitle');
 
+            // Use a fresh iframe every time: changing the src of an existing iframe adds
+            // an entry to the browser history (that is what made the Back button pile up).
+            function loadFrame(url) {
+                var fresh = iframe.cloneNode(false);
+                fresh.removeAttribute('src');
+                iframe.parentNode.replaceChild(fresh, iframe);
+                iframe = fresh;
+                if (url) fresh.src = url;
+            }
+
             function closeModal() {
-                iframe.src = '';
+                loadFrame('');
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
             }
@@ -196,7 +206,7 @@
                     var card = btn.closest('.card');
                     var embedUrl = (card.getAttribute('data-embed') || '').trim();
                     if (!embedUrl) return;
-                    iframe.src = embedUrl;
+                    loadFrame(embedUrl);
                     titleEl.textContent = card.getAttribute('data-title') || 'Slide';
                     overlay.classList.add('active');
                     document.body.style.overflow = 'hidden';
@@ -210,5 +220,6 @@
             });
         })();
     </script>
+<script src="/back.js" data-href="/6/grade6.html#slides"></script>
 </body>
 </html>
