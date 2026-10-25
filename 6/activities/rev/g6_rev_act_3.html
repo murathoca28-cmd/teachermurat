@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6th Grade Activity 3</title>
+    <style>
+        :root {
+            --primary: #0F766E;
+            --primary-soft: #CCFBF1;
+            --pink: #C2410C;
+            --pink-soft: #FFEDD5;
+            --green: #00875F;
+            --green-soft: #D5F5E8;
+            --yellow: #F0A500;
+            --yellow-soft: #FEF3C7;
+            --red: #D32F2F;
+            --red-soft: #FFDAD8;
+            --blue: #1D4ED8;
+            --blue-soft: #DBEAFE;
+            --bg: #F4F7FE;
+            --card-bg: #FFFFFF;
+            --text-dark: #1A1F23;
+            --text-muted: #3D4852;
+            --q-color: #0B4F4A;
+            --border-color: #64748B;
+            --border-strong: #334155;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        .app-container, .app-container * {
+            font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #115E59 0%, #0D9488 100%);
+            color: #FFFFFF;
+            padding: 28px 24px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(15, 118, 110, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner h1 {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-banner p {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 4px solid var(--border-strong);
+            box-shadow: 0 6px 0 #94A3B8, 0 12px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 3px dashed #94A3B8;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-md);
+            border: 3px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .card-title h2 {
+            font-size: 23px;
+            color: var(--text-dark);
+            font-weight: 800;
+        }
+
+        .card-title p {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 16px;
+        }
+
+        .space-y {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .quiz-item {
+            background: #EEF2FF;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 3px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .q-text {
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--q-color);
+        }
+
+        .opt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .opt-btn {
+            width: 100%;
+            padding: 13px 14px;
+            background: #FFFFFF;
+            border: 3px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: left;
+            box-shadow: 0 4px 0 var(--border-strong);
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+            box-shadow: 0 4px 0 var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .opt-btn:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 var(--border-strong);
+        }
+
+        .story-box {
+            background: var(--green-soft);
+            border: 4px solid var(--green);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            font-size: 19px;
+            font-weight: 600;
+            line-height: 1.7;
+            color: #0B3D33;
+            margin-bottom: 18px;
+        }
+
+        .story-box strong { font-weight: 800; }
+
+        .tr-btn {
+            margin-top: 12px;
+            background: #FFFFFF;
+            color: #0B4F4A;
+            border: 3px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 16px;
+            padding: 8px 14px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 var(--border-strong);
+        }
+
+        .tr-btn:hover { background: var(--primary-soft); }
+
+        .tr-text {
+            display: none;
+            margin-top: 12px;
+            padding: 14px 16px;
+            background: #FFFFFF;
+            border: 3px dashed var(--border-color);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            color: #1A1F23;
+        }
+
+        .tr-text.show { display: block; }
+
+        .pool-box {
+            background: #EEF2FF;
+            border: 3px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+            min-height: 70px;
+            align-items: center;
+        }
+
+        .item-chip {
+            background: #FFFFFF;
+            color: var(--text-dark);
+            border: 3px solid var(--border-strong);
+            padding: 10px 18px;
+            border-radius: 22px;
+            font-weight: 800;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 3px 0 var(--border-strong);
+            user-select: none;
+        }
+
+        .item-chip:hover {
+            border-color: var(--yellow);
+            box-shadow: 0 3px 0 var(--yellow);
+            transform: translateY(-2px);
+        }
+
+        .item-chip.active-select {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: #FFFFFF;
+            box-shadow: 0 3px 0 #064E48;
+            transform: scale(1.08);
+        }
+
+        .bucket-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 16px;
+        }
+
+        .bucket {
+            min-height: 160px;
+            border-radius: var(--radius-md);
+            padding: 14px;
+            border: 4px solid;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .bucket:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+        }
+
+        .bucket h3 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bucket .hint {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            pointer-events: none;
+        }
+
+        .bucket-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .bucket-items .item-chip {
+            pointer-events: auto;
+        }
+
+        .result-msg {
+            display: none;
+            margin-top: 16px;
+            padding: 14px 18px;
+            background: var(--green-soft);
+            border: 4px solid var(--green);
+            border-radius: var(--radius-md);
+            font-size: 20px;
+            font-weight: 800;
+            color: #004D36;
+            text-align: center;
+        }
+
+        .result-msg.show { display: block; }
+
+        .correct {
+            background: var(--green-soft) !important;
+            border-color: var(--green) !important;
+            color: #004D36 !important;
+            font-weight: 800;
+        }
+
+        .wrong {
+            background: var(--red-soft) !important;
+            border-color: var(--red) !important;
+            color: #8E1B1B !important;
+            font-weight: 800;
+        }
+
+        .opt-btn.correct::after { content: "  ✓"; }
+        .opt-btn.wrong::after { content: "  ✕"; }
+
+        :focus-visible {
+            outline: 4px solid #F0A500;
+            outline-offset: 3px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .shake { animation: shake 0.3s ease; }
+
+        @keyframes pop {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .pop { animation: pop 0.25s ease; }
+
+        /* Never let a section's children shrink inside the enlarged (fixed-height) card; the card scrolls instead. */
+        .activity-card > * { flex-shrink: 0; }
+
+        .zoom-btn {
+            margin-left: auto;
+            flex-shrink: 0;
+            background: #FFFFFF;
+            color: #0B4F4A;
+            border: 3px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 16px;
+            padding: 8px 14px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 var(--border-strong);
+        }
+
+        .zoom-btn:hover { background: var(--primary-soft); }
+
+        .zoom-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 var(--border-strong);
+        }
+
+        .activity-card.expanded {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100000;
+            border-radius: 0;
+            border-width: 0;
+            box-shadow: none;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: safe center;
+        }
+
+        @media (max-width: 700px) {
+            .zoom-btn { display: none; }
+        }
+
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: var(--text-muted);
+            font-size: 15px;
+            border-top: 1px solid var(--border-color);
+            background: #FFFFFF;
+            margin-top: auto;
+        }
+    </style>
+    <link rel="stylesheet" href="/theme.css">
+</head>
+<body>
+    <div id="navbar-placeholder" style="min-height: 0px;"></div>
+    <script src="/navbar.js"></script>
+
+    <div class="app-container">
+        <header class="hero-banner">
+            <h1>🎓 6th GRADE REVISIONS</h1>
+            <p>ACTIVITY 3</p>
+        </header>
+
+        <main class="space-y" style="gap:22px;">
+            <!-- SARAH'S SHOW AND TELL STORY -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">📖</div>
+                    <div class="card-title">
+                        <h2>Part A: Sarah's "Show and Tell" Story</h2>
+                        <p>Read Sarah's speech and answer the multiple choice questions!</p>
+                    </div>
+                </div>
+                <div class="story-box">
+                    <strong>💬 Sarah says:</strong><br>
+                    "Hello, everyone! I'm short and thin. I have got long wavy hair and brown eyes. I'm kind and friendly. In this winter photo, I was four years old. It was cold and snowy. I wore a coat, boots, gloves, and a hat. I could make a snowman! In my summer photo, the weather was hot and sunny. I wore a pink dress, sandals, and sunglasses. I like summer!"
+                    <br>
+                    <button type="button" class="tr-btn" id="trBtn">🇹🇷 Türkçesi</button>
+                    <div class="tr-text" id="trText">
+                        "Herkese merhaba! Ben kısa boylu ve zayıfım. Uzun dalgalı saçlarım ve kahverengi gözlerim var. Nazik ve cana yakınım. Bu kış fotoğrafında dört yaşındaydım. Hava soğuk ve karlıydı. Mont, bot, eldiven ve bere giymiştim. Kardan adam yapabiliyordum! Yaz fotoğrafımda hava sıcak ve güneşliydi. Pembe bir elbise, sandalet ve güneş gözlüğü giymiştim. Yazı seviyorum!"
+                    </div>
+                </div>
+                <div id="sarahQuizContainer" class="grid-2"></div>
+            </section>
+
+            <!-- SEASON & CLOTHING SORTING -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--pink-soft); color: var(--pink);">☀️</div>
+                    <div class="card-title">
+                        <h2>Part B: Season & Clothing Sorting</h2>
+                        <p>1. Click an item below to select it. 2. Click the correct Wardrobe box to place it!</p>
+                    </div>
+                </div>
+                <div id="clothesPool" class="pool-box"></div>
+                <div class="bucket-container">
+                    <div id="summerBucket" class="bucket" style="background: #FEF3C7; border-color: #D97706;">
+                        <h3 style="color: #78350F;">☀️ Summer Wardrobe</h3>
+                        <div class="hint">👆 Click here to place</div>
+                        <div class="bucket-items" id="summerItems"></div>
+                    </div>
+                    <div id="winterBucket" class="bucket" style="background: #DBEAFE; border-color: #2563EB;">
+                        <h3 style="color: #1E3A8A;">❄️ Winter Wardrobe</h3>
+                        <div class="hint">👆 Click here to place</div>
+                        <div class="bucket-items" id="winterItems"></div>
+                    </div>
+                </div>
+                <div id="clothesResult" class="result-msg" role="status"></div>
+            </section>
+
+            <!-- WEATHER & CLOTHES -->
+            <section class="activity-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--blue-soft); color: var(--blue);">🌦️</div>
+                    <div class="card-title">
+                        <h2>Part C: Weather & Clothes</h2>
+                        <p>Choose the best word or phrase to complete each sentence.</p>
+                    </div>
+                </div>
+                <div id="weatherQuizContainer" class="grid-2"></div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- SARAH QUIZ DATA & LOGIC ---
+        const sarahQuestions = [
+            { q: "1. What does Sarah look like?", opts: ["Tall and plump", "Short and thin", "Tall and blonde"], ans: "Short and thin", id: "sq1" },
+            { q: "2. What is Sarah like?", opts: ["Kind and friendly", "Funny and rude", "Shy and quiet"], ans: "Kind and friendly", id: "sq2" },
+            { q: "3. What could Sarah do in winter?", opts: ["Build a tree house", "Make a snowman", "Fly a kite"], ans: "Make a snowman", id: "sq3" },
+            { q: "4. What did Sarah wear in summer?", opts: ["A coat and boots", "A pink dress, sandals, and sunglasses", "A raincoat"], ans: "A pink dress, sandals, and sunglasses", id: "sq4" },
+            { q: "5. How old was Sarah in the winter photo?", opts: ["Four years old", "Six years old", "Ten years old"], ans: "Four years old", id: "sq5" },
+            { q: "6. What was the weather like in the winter photo?", opts: ["Cold and snowy", "Hot and sunny", "Warm and windy"], ans: "Cold and snowy", id: "sq6" },
+            { q: "7. What kind of hair does Sarah have?", opts: ["Short and straight", "Long and wavy", "Long and curly"], ans: "Long and wavy", id: "sq7" },
+            { q: "8. Which season does Sarah like?", opts: ["Summer", "Winter", "Autumn"], ans: "Summer", id: "sq8" }
+        ];
+
+        const weatherQuestions = [
+            { q: "1. It is hot and sunny. I wear ______.", opts: ["shorts and sunglasses", "a coat and gloves", "a scarf and boots"], ans: "shorts and sunglasses", id: "wq1" },
+            { q: "2. It is cold and snowy. I wear ______.", opts: ["a swimsuit", "a coat and gloves", "flip-flops"], ans: "a coat and gloves", id: "wq2" },
+            { q: "3. It is rainy. I take my ______.", opts: ["sunglasses", "sandals", "umbrella"], ans: "umbrella", id: "wq3" },
+            { q: "4. It is windy. We can fly a ______.", opts: ["kite", "snowman", "boat"], ans: "kite", id: "wq4" },
+            { q: "5. It is snowy. We can make a ______.", opts: ["sandcastle", "snowman", "kite"], ans: "snowman", id: "wq5" },
+            { q: "6. In summer, the weather is ______.", opts: ["cold and snowy", "hot and sunny", "freezing"], ans: "hot and sunny", id: "wq6" }
+        ];
+
+        function renderQuiz(containerId, questions) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = questions.map(sq => {
+                const shuffledOpts = [...sq.opts].sort(() => Math.random() - 0.5);
+                return `
+                <div class="quiz-item">
+                    <p class="q-text">${sq.q}</p>
+                    <div class="opt-list" id="sqOpts-${sq.id}">
+                        ${shuffledOpts.map(o => `<button type="button" data-q="${sq.id}" class="opt-btn">${o}</button>`).join('')}
+                    </div>
+                </div>`;
+            }).join('');
+            container.querySelectorAll('.opt-btn').forEach(btn => {
+                btn.addEventListener('click', () => checkAnswer(btn.dataset.q, btn));
+            });
+        }
+
+        function checkAnswer(id, btn) {
+            const correct = [...sarahQuestions, ...weatherQuestions].find(q => q.id === id).ans;
+            if (btn.innerText.trim() === correct) {
+                const parent = document.getElementById(`sqOpts-${id}`);
+                parent.querySelectorAll('button').forEach(b => b.disabled = true);
+                btn.classList.add('correct', 'pop');
+            } else {
+                btn.classList.add('wrong', 'shake');
+                setTimeout(() => btn.classList.remove('shake'), 300);
+            }
+        }
+
+        // --- TURKISH TRANSLATION TOGGLE ---
+        function initTranslation() {
+            const btn = document.getElementById('trBtn');
+            const box = document.getElementById('trText');
+            btn.addEventListener('click', () => {
+                const open = box.classList.toggle('show');
+                btn.textContent = open ? '🇹🇷 Hide Türkçe' : '🇹🇷 Türkçesi';
+                if (zoomedCard) fitZoom(zoomedCard);
+            });
+        }
+
+        // --- CLOTHES SORTING DATA & LOGIC ---
+        const clothesData = [
+            { name: "Flip-flops", category: "summer" },
+            { name: "Scarf", category: "winter" },
+            { name: "Shorts", category: "summer" },
+            { name: "Gloves", category: "winter" },
+            { name: "Sunglasses", category: "summer" },
+            { name: "Coat", category: "winter" },
+            { name: "Sandals", category: "summer" },
+            { name: "Boots", category: "winter" },
+            { name: "T-shirt", category: "summer" },
+            { name: "Jumper", category: "winter" },
+            { name: "Swimsuit", category: "summer" },
+            { name: "Beanie", category: "winter" }
+        ];
+        let activeClothIdx = null;
+
+        function renderClothes() {
+            const shuffled = clothesData.map((c, i) => ({ ...c, originalIndex: i })).sort(() => Math.random() - 0.5);
+            document.getElementById('clothesPool').innerHTML = shuffled.map(c => `
+                <div id="cloth-${c.originalIndex}" onclick="selectCloth(${c.originalIndex})" class="item-chip">${c.name}</div>
+            `).join('');
+            document.getElementById('summerBucket').addEventListener('click', () => placeCloth('summer'));
+            document.getElementById('winterBucket').addEventListener('click', () => placeCloth('winter'));
+        }
+
+        function selectCloth(index) {
+            document.querySelectorAll('#clothesPool .item-chip').forEach(el => el.classList.remove('active-select'));
+            activeClothIdx = index;
+            const el = document.getElementById(`cloth-${index}`);
+            if (el) el.classList.add('active-select');
+        }
+
+        function placeCloth(category) {
+            if (activeClothIdx === null) return;
+            const index = activeClothIdx;
+            const item = clothesData[index];
+            const el = document.getElementById(`cloth-${index}`);
+            const bucketContainer = document.getElementById(`${category}Items`);
+
+            el.classList.remove('active-select');
+            bucketContainer.appendChild(el);
+
+            if (item.category === category) {
+                el.classList.add('correct', 'pop');
+                el.classList.remove('wrong');
+                el.onclick = null;
+            } else {
+                el.classList.add('wrong', 'shake');
+                setTimeout(() => el.classList.remove('shake'), 300);
+                el.onclick = () => returnClothToPool(index);
+            }
+            activeClothIdx = null;
+            const done = document.querySelectorAll('#summerItems .correct, #winterItems .correct').length;
+            const msg = document.getElementById('clothesResult');
+            if (done === clothesData.length) {
+                msg.textContent = '🎉 Great job! All the clothes are in the right wardrobe.';
+                msg.classList.add('show');
+                if (zoomedCard) fitZoom(zoomedCard);
+            }
+        }
+
+        function returnClothToPool(index) {
+            const el = document.getElementById(`cloth-${index}`);
+            document.getElementById('clothesPool').appendChild(el);
+            el.classList.remove('wrong', 'correct');
+            el.onclick = () => selectCloth(index);
+        }
+
+        // --- ENLARGE A SECTION TO FILL THE SCREEN ---
+        let zoomedCard = null;
+
+        function fitZoom(card) {
+            // Try several layout widths and keep the one that gives the biggest zoom that still fits.
+            let best = { z: 0, w: 900 };
+            card.style.zoom = 1;
+            card.style.height = 'auto';
+            [600, 700, 800, 900, 1050, 1200, 1400, 1600].forEach(w => {
+                card.style.width = w + 'px';
+                const h = card.offsetHeight;
+                const z = Math.min(window.innerWidth / w, window.innerHeight / h);
+                if (z > best.z) best = { z, w };
+            });
+            let z = Math.min(4, Math.max(1, best.z * 0.98));
+            for (let i = 0; i < 12; i++) {
+                card.style.zoom = z;
+                card.style.width = (window.innerWidth / z) + 'px';
+                card.style.height = (window.innerHeight / z) + 'px';
+                if (z <= 1 || card.scrollHeight <= card.clientHeight + 1) break;
+                z = Math.max(1, z * 0.96);
+            }
+        }
+
+        function openZoom(card) {
+            closeZoom();
+            zoomedCard = card;
+            card.classList.add('expanded');
+            card.querySelector('.zoom-btn').textContent = '✕ Close';
+            document.body.style.overflow = 'hidden';
+            fitZoom(card);
+        }
+
+        function closeZoom() {
+            if (!zoomedCard) return;
+            const card = zoomedCard;
+            zoomedCard = null;
+            card.classList.remove('expanded');
+            card.style.zoom = '';
+            card.style.width = '';
+            card.style.height = '';
+            card.querySelector('.zoom-btn').textContent = '🔍 Enlarge';
+            document.body.style.overflow = '';
+        }
+
+        function initZoom() {
+            document.querySelectorAll('.activity-card').forEach(card => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'zoom-btn';
+                btn.textContent = '🔍 Enlarge';
+                btn.addEventListener('click', () => {
+                    card === zoomedCard ? closeZoom() : openZoom(card);
+                });
+                card.querySelector('.card-header').appendChild(btn);
+            });
+            window.addEventListener('keydown', e => { if (e.key === 'Escape') closeZoom(); });
+            window.addEventListener('resize', () => { if (zoomedCard) fitZoom(zoomedCard); });
+        }
+
+        // --- INITIALIZE ---
+        window.onload = () => {
+            renderQuiz('sarahQuizContainer', sarahQuestions);
+            renderQuiz('weatherQuizContainer', weatherQuestions);
+            renderClothes();
+            initTranslation();
+            initZoom();
+        };
+    </script>
+<script src="/back.js" data-href="/6/worksheets/rev/g6_rev_worksheets.html"></script>
+</body>
+</html>
