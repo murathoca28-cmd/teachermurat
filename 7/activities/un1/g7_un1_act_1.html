@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7th Grade English - Appearance & Personality</title>
+    <style>
+        :root {
+            --primary: #0F766E;
+            --primary-soft: #CCFBF1;
+            --pink: #C2410C;
+            --pink-soft: #FFEDD5;
+            --green: #00875F;
+            --green-soft: #D5F5E8;
+            --yellow: #F0A500;
+            --red: #D32F2F;
+            --red-soft: #FFDAD8;
+            --blue: #1D4ED8;
+            --blue-soft: #DBEAFE;
+            --bg: #F4F7FE;
+            --card-bg: #FFFFFF;
+            --text-dark: #1A1F23;
+            --text-muted: #3D4852;
+            --q-color: #0B4F4A;
+            --border-color: #64748B;
+            --border-strong: #334155;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        .app-container, .app-container * {
+            font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            margin: 0;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #115E59 0%, #0D9488 100%);
+            color: #FFFFFF;
+            padding: 28px 24px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(15, 118, 110, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner h1 {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin: 0 0 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-banner p {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 4px solid var(--border-strong);
+            box-shadow: 0 6px 0 #94A3B8, 0 12px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 3px dashed #94A3B8;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-md);
+            border: 3px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .card-title h2 {
+            font-size: 23px;
+            color: var(--text-dark);
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .card-title p {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin: 3px 0 0;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 16px;
+        }
+
+        .opt-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .space-y {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .quiz-item {
+            background: #EEF2FF;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 3px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .q-text {
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--q-color);
+            margin: 0;
+        }
+
+        .q-text i {
+            font-style: normal;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .opt-btn {
+            width: 100%;
+            padding: 13px 14px;
+            background: #FFFFFF;
+            border: 3px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: left;
+            box-shadow: 0 4px 0 var(--border-strong);
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+            color: var(--primary);
+            box-shadow: 0 4px 0 var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .opt-btn:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 var(--border-strong);
+        }
+
+        .opt-btn.correct::after { content: "  ✓"; }
+        .opt-btn.wrong::after { content: "  ✕"; }
+
+        .slot {
+            width: 100%;
+            min-height: 56px;
+            padding: 12px 14px;
+            background: #FFFFFF;
+            border: 3px dashed var(--border-color);
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--text-muted);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .slot:hover:not(:disabled) {
+            border-color: var(--pink);
+            background: var(--pink-soft);
+            color: #7C2D12;
+        }
+
+        .slot.correct, .slot.wrong { border-style: solid; }
+
+        .pool-box {
+            background: #EEF2FF;
+            border: 3px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+
+        .unscramble-zone {
+            min-height: 64px;
+            padding: 10px 14px;
+            background: #FFFFFF;
+            border: 3px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .unscramble-zone:empty::before {
+            content: "Your sentence appears here";
+            color: #5B6671;
+            font-weight: 700;
+            font-size: 17px;
+        }
+
+        .unscramble-zone.correct { border-style: solid; }
+        .unscramble-zone.wrong { border-style: solid; }
+
+        .unscramble-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            min-height: 52px;
+        }
+
+        .item-chip {
+            background: #FFFFFF;
+            color: var(--text-dark);
+            border: 3px solid var(--border-strong);
+            padding: 10px 18px;
+            border-radius: 22px;
+            font-weight: 800;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 3px 0 var(--border-strong);
+            user-select: none;
+        }
+
+        .item-chip:hover:not(:disabled) {
+            border-color: var(--yellow);
+            box-shadow: 0 3px 0 var(--yellow);
+            transform: translateY(-2px);
+        }
+
+        .item-chip.active-select {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: #FFFFFF;
+            box-shadow: 0 3px 0 #064E48;
+            transform: scale(1.06);
+        }
+
+        .action-btn {
+            background: var(--pink);
+            color: #FFFFFF;
+            border: 3px solid #7C2D12;
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            font-size: 18px;
+            cursor: pointer;
+            align-self: flex-start;
+            transition: all 0.15s ease;
+            box-shadow: 0 4px 0 #7C2D12;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            filter: brightness(1.08);
+        }
+
+        .action-btn:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #7C2D12;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.55;
+            cursor: default;
+        }
+
+        .correct {
+            background: var(--green-soft) !important;
+            border-color: var(--green) !important;
+            color: #004D36 !important;
+            font-weight: 800;
+        }
+
+        .wrong {
+            background: var(--red-soft) !important;
+            border-color: var(--red) !important;
+            color: #8E1B1B !important;
+            font-weight: 800;
+        }
+
+        :focus-visible {
+            outline: 4px solid #F0A500;
+            outline-offset: 3px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .shake { animation: shake 0.3s ease; }
+
+        @keyframes pop {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.04); }
+            100% { transform: scale(1); }
+        }
+        .pop { animation: pop 0.25s ease; }
+
+        /* Never let a section's children shrink inside the enlarged (fixed-height) card; the card scrolls instead. */
+        .activity-card > * { flex-shrink: 0; }
+
+        .zoom-btn {
+            margin-left: auto;
+            flex-shrink: 0;
+            background: #FFFFFF;
+            color: #0B4F4A;
+            border: 3px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 16px;
+            padding: 8px 14px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 var(--border-strong);
+        }
+
+        .zoom-btn:hover { background: var(--primary-soft); }
+
+        .zoom-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 var(--border-strong);
+        }
+
+        .activity-card.expanded {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100000;
+            border-radius: 0;
+            border-width: 0;
+            box-shadow: none;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: safe center;
+        }
+
+        .activity-card.expanded #appearanceContainer {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .activity-card.expanded #personalityContainer {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .activity-card.expanded #personalityContainer .opt-grid {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .activity-card.expanded #unscrambleContainer {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @media (max-width: 700px) {
+            .zoom-btn { display: none; }
+            .opt-grid { grid-template-columns: minmax(0, 1fr); }
+        }
+
+        footer {
+            text-align: center;
+            padding: 16px;
+            color: var(--text-muted);
+            font-size: 15px;
+            border-top: 1px solid var(--border-color);
+            background: #FFFFFF;
+            margin-top: auto;
+        }
+    </style>
+    <link rel="stylesheet" href="/theme.css">
+</head>
+<body>
+    <div id="navbar-placeholder" style="min-height: 0px;"></div>
+    <script src="/navbar.js"></script>
+
+    <div class="app-container">
+
+        <header class="hero-banner">
+            <h1>🎓 7th Grade English - Unit 1 Activities</h1>
+            <p>Appearance, Personality & Comparatives Revision</p>
+        </header>
+
+        <!-- Part A: Physical appearance matching -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">👤</div>
+                <div class="card-title">
+                    <h2>Part A: Physical Appearance Matching</h2>
+                    <p>1. Tap a word. 2. Tap the definition it matches!</p>
+                </div>
+            </div>
+            <div id="appearanceBank" class="pool-box"></div>
+            <div id="appearanceContainer" class="grid-2"></div>
+        </section>
+
+        <!-- Part B: Personality traits -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--pink-soft); color: var(--pink);">🧠</div>
+                <div class="card-title">
+                    <h2>Part B: Personality Traits Quiz</h2>
+                    <p>Choose the correct option that matches the description!</p>
+                </div>
+            </div>
+            <div id="personalityContainer" class="space-y"></div>
+        </section>
+
+        <!-- Part C: Sentence unscramble -->
+        <section class="activity-card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--blue-soft); color: var(--blue);">🔤</div>
+                <div class="card-title">
+                    <h2>Part C: Sentence Unscramble (Comparatives)</h2>
+                    <p>Click on the words below to build the correct comparative sentences!</p>
+                </div>
+            </div>
+            <div id="unscrambleContainer" class="space-y"></div>
+        </section>
+
+    </div>
+
+    <script>
+        // --- PART A: APPEARANCE MATCHING ---
+        const appearanceData = [
+            { id: "a1", q: "1. She has light-colored, fair hair.", ans: "blonde" },
+            { id: "a2", q: "2. He is a bit overweight, not thin.", ans: "plump" },
+            { id: "a3", q: "3. She covers her head with a piece of cloth.", ans: "headscarf" },
+            { id: "a4", q: "4. He is around 45-50 years old.", ans: "middle-aged" },
+            { id: "a5", q: "5. She wears these to see better.", ans: "glasses" },
+            { id: "a6", q: "6. His hair has round curves/waves.", ans: "curly hair" }
+        ];
+        const appearanceOptions = ["blonde", "plump", "glasses", "headscarf", "middle-aged", "curly hair"];
+        const SLOT_HINT = "Tap to answer";
+        let selectedAppearance = null;
+
+        function renderAppearance() {
+            const bank = document.getElementById('appearanceBank');
+            const order = appearanceOptions.map((text, i) => ({ text, i })).sort(() => Math.random() - 0.5);
+            bank.innerHTML = order.map(o =>
+                `<button type="button" class="item-chip" data-opt="${o.i}">${o.text}</button>`
+            ).join('');
+            bank.querySelectorAll('.item-chip').forEach(btn => {
+                btn.addEventListener('click', () => selectAppearance(Number(btn.dataset.opt)));
+            });
+
+            const container = document.getElementById('appearanceContainer');
+            container.innerHTML = appearanceData.map(item => `
+                <div class="quiz-item">
+                    <p class="q-text">${item.q}</p>
+                    <button type="button" class="slot" id="slot-${item.id}" data-id="${item.id}">${SLOT_HINT}</button>
+                </div>
+            `).join('');
+            container.querySelectorAll('.slot').forEach(btn => {
+                btn.addEventListener('click', () => placeAppearance(btn.dataset.id));
+            });
+        }
+
+        function selectAppearance(optIndex) {
+            selectedAppearance = (selectedAppearance === optIndex) ? null : optIndex;
+            document.querySelectorAll('#appearanceBank .item-chip').forEach(chip => {
+                chip.classList.toggle('active-select', Number(chip.dataset.opt) === selectedAppearance);
+            });
+        }
+
+        function placeAppearance(id) {
+            const slot = document.getElementById(`slot-${id}`);
+            if (slot.dataset.locked === "true") return;
+
+            if (selectedAppearance === null) {
+                slot.classList.add('shake');
+                setTimeout(() => slot.classList.remove('shake'), 300);
+                return;
+            }
+
+            const chosen = appearanceOptions[selectedAppearance];
+            const correctAns = appearanceData.find(a => a.id === id).ans;
+            selectAppearance(selectedAppearance);
+
+            if (chosen === correctAns) {
+                slot.textContent = "✓  " + chosen;
+                slot.classList.add('correct', 'pop');
+                slot.dataset.locked = "true";
+            } else {
+                slot.textContent = "✕  " + chosen;
+                slot.classList.add('wrong', 'shake');
+                setTimeout(() => slot.classList.remove('shake'), 300);
+                setTimeout(() => {
+                    if (slot.dataset.locked === "true") return;
+                    slot.classList.remove('wrong');
+                    slot.textContent = SLOT_HINT;
+                }, 1400);
+            }
+        }
+
+        // --- PART B: PERSONALITY TRAITS QUIZ ---
+        const traitData = [
+            { id: "t1", q: "1. Jack always buys gifts for his friends and likes sharing. What is he like?",
+              opts: ["Stubborn", "Generous", "Lazy", "Shy"], ans: "Generous" },
+            { id: "t2", q: "2. Mary never changes her mind and never listens to others. She is ________.",
+              opts: ["Stubborn", "Outgoing", "Honest", "Punctual"], ans: "Stubborn" },
+            { id: "t3", q: "3. Dave always comes to class on time. He is never late. What is he like?",
+              opts: ["Clumsy", "Selfish", "Punctual", "Forgetful"], ans: "Punctual" }
+        ];
+
+        function renderTraits() {
+            const container = document.getElementById('personalityContainer');
+            container.innerHTML = traitData.map(t => {
+                const shuffled = [...t.opts].sort(() => Math.random() - 0.5);
+                return `
+                <div class="quiz-item">
+                    <p class="q-text">${t.q}</p>
+                    <div class="opt-grid" id="tOpts-${t.id}">
+                        ${shuffled.map(o => `<button type="button" data-q="${t.id}" class="opt-btn">${o}</button>`).join('')}
+                    </div>
+                </div>`;
+            }).join('');
+            container.querySelectorAll('.opt-btn').forEach(btn => {
+                btn.addEventListener('click', () => checkTrait(btn.dataset.q, btn));
+            });
+        }
+
+        function checkTrait(id, btn) {
+            const correct = traitData.find(t => t.id === id).ans;
+            if (btn.innerText.trim() === correct) {
+                document.querySelectorAll(`#tOpts-${id} .opt-btn`).forEach(b => b.disabled = true);
+                btn.classList.add('correct', 'pop');
+            } else {
+                btn.classList.add('wrong', 'shake');
+                btn.disabled = true;
+                setTimeout(() => btn.classList.remove('shake'), 300);
+            }
+        }
+
+        // --- PART C: SENTENCE UNSCRAMBLE ---
+        // Both name orders are grammatical comparatives, so both are accepted.
+        const unscrambleData = [
+            { id: "u1", hint: "Sosyal/Dışa dönük karşılaştırması",
+              words: ["outgoing", "Sue", "than", "is", "more", "Kate"],
+              answers: ["Sue is more outgoing than Kate", "Kate is more outgoing than Sue"] },
+            { id: "u2", hint: "Boy karşılaştırması",
+              words: ["taller", "is", "Jack", "Mark", "than"],
+              answers: ["Jack is taller than Mark", "Mark is taller than Jack"] },
+            { id: "u3", hint: "Cömertlik karşılaştırması",
+              words: ["generous", "than", "is", "Linda", "more", "Tom"],
+              answers: ["Linda is more generous than Tom", "Tom is more generous than Linda"] },
+            { id: "u4", hint: "Yaş karşılaştırması",
+              words: ["is", "brother", "younger", "My", "me", "than"],
+              answers: ["My brother is younger than me"] }
+        ];
+
+        function renderUnscramble() {
+            const container = document.getElementById('unscrambleContainer');
+            container.innerHTML = unscrambleData.map((u, idx) => {
+                const shuffled = [...u.words].sort(() => Math.random() - 0.5);
+                return `
+                <div class="quiz-item">
+                    <p class="q-text">${idx + 1}. Order the words: <i>(${u.hint})</i></p>
+                    <div class="unscramble-zone" id="zone-${u.id}"></div>
+                    <div class="unscramble-pool" id="pool-${u.id}">
+                        ${shuffled.map(w => `<button type="button" class="item-chip" data-u="${u.id}">${w}</button>`).join('')}
+                    </div>
+                    <button type="button" class="action-btn" id="check-${u.id}" data-u="${u.id}">Check Sentence</button>
+                </div>`;
+            }).join('');
+            container.querySelectorAll('.item-chip').forEach(chip => {
+                chip.addEventListener('click', () => moveChip(chip, chip.dataset.u));
+            });
+            container.querySelectorAll('.action-btn').forEach(btn => {
+                btn.addEventListener('click', () => checkUnscramble(btn.dataset.u));
+            });
+        }
+
+        function moveChip(chip, id) {
+            const zone = document.getElementById(`zone-${id}`);
+            const pool = document.getElementById(`pool-${id}`);
+            if (zone.dataset.locked === "true") return;
+
+            if (chip.parentElement === pool) {
+                zone.appendChild(chip);
+                chip.classList.add('active-select');
+            } else {
+                pool.appendChild(chip);
+                chip.classList.remove('active-select');
+            }
+            zone.classList.remove('correct', 'wrong');
+        }
+
+        function checkUnscramble(id) {
+            const zone = document.getElementById(`zone-${id}`);
+            if (zone.dataset.locked === "true") return;
+            const chips = zone.querySelectorAll('.item-chip');
+
+            zone.classList.remove('correct', 'wrong');
+
+            if (chips.length === 0) {
+                zone.classList.add('shake');
+                setTimeout(() => zone.classList.remove('shake'), 300);
+                return;
+            }
+
+            const formed = Array.from(chips).map(c => c.innerText.trim()).join(' ').toLowerCase();
+            const data = unscrambleData.find(u => u.id === id);
+            const ok = data.answers.some(a => a.toLowerCase() === formed);
+
+            if (ok) {
+                zone.classList.add('correct', 'pop');
+                zone.dataset.locked = "true";
+                chips.forEach(c => {
+                    c.classList.remove('active-select');
+                    c.classList.add('correct');
+                    c.style.cursor = "default";
+                });
+                document.getElementById(`check-${id}`).disabled = true;
+            } else {
+                zone.classList.add('wrong', 'shake');
+                setTimeout(() => zone.classList.remove('shake'), 300);
+            }
+        }
+
+        // --- ENLARGE A SECTION TO FILL THE SCREEN ---
+        let zoomedCard = null;
+
+        function fitZoom(card) {
+            // Try several layout widths and keep the one that gives the biggest zoom that still fits.
+            let best = { z: 0, w: 900 };
+            card.style.zoom = 1;
+            card.style.height = 'auto';
+            [600, 700, 800, 900, 1050, 1200, 1400, 1600].forEach(w => {
+                card.style.width = w + 'px';
+                const h = card.offsetHeight;
+                const z = Math.min(window.innerWidth / w, window.innerHeight / h);
+                if (z > best.z) best = { z, w };
+            });
+            let z = Math.min(4, Math.max(1, best.z * 0.98));
+            for (let i = 0; i < 12; i++) {
+                card.style.zoom = z;
+                card.style.width = (window.innerWidth / z) + 'px';
+                card.style.height = (window.innerHeight / z) + 'px';
+                if (z <= 1 || card.scrollHeight <= card.clientHeight + 1) break;
+                z = Math.max(1, z * 0.96);
+            }
+        }
+
+        function openZoom(card) {
+            closeZoom();
+            zoomedCard = card;
+            card.classList.add('expanded');
+            card.querySelector('.zoom-btn').textContent = '✕ Close';
+            document.body.style.overflow = 'hidden';
+            fitZoom(card);
+        }
+
+        function closeZoom() {
+            if (!zoomedCard) return;
+            const card = zoomedCard;
+            zoomedCard = null;
+            card.classList.remove('expanded');
+            card.style.zoom = '';
+            card.style.width = '';
+            card.style.height = '';
+            card.querySelector('.zoom-btn').textContent = '🔍 Enlarge';
+            document.body.style.overflow = '';
+        }
+
+        function initZoom() {
+            document.querySelectorAll('.activity-card').forEach(card => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'zoom-btn';
+                btn.textContent = '🔍 Enlarge';
+                btn.addEventListener('click', () => {
+                    card === zoomedCard ? closeZoom() : openZoom(card);
+                });
+                card.querySelector('.card-header').appendChild(btn);
+            });
+            window.addEventListener('keydown', e => { if (e.key === 'Escape') closeZoom(); });
+            window.addEventListener('resize', () => { if (zoomedCard) fitZoom(zoomedCard); });
+        }
+
+        // --- INITIALIZE ---
+        window.onload = () => {
+            renderAppearance();
+            renderTraits();
+            renderUnscramble();
+            initZoom();
+        };
+    </script>
+<script src="/back.js" data-href="/7/worksheets/un1/g7_un1_worksheets.html"></script>
+</body>
+</html>
