@@ -185,8 +185,18 @@
             var iframe = document.getElementById('modalIframe');
             var titleEl = document.getElementById('modalTitle');
 
+            // Use a fresh iframe every time: changing the src of an existing iframe adds
+            // an entry to the browser history (that is what made the Back button pile up).
+            function loadFrame(url) {
+                var fresh = iframe.cloneNode(false);
+                fresh.removeAttribute('src');
+                iframe.parentNode.replaceChild(fresh, iframe);
+                iframe = fresh;
+                if (url) fresh.src = url;
+            }
+
             function closeModal() {
-                iframe.src = '';
+                loadFrame('');
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
             }
@@ -196,7 +206,7 @@
                     var card = btn.closest('.card');
                     var embedUrl = (card.getAttribute('data-embed') || '').trim();
                     if (!embedUrl) return;
-                    iframe.src = embedUrl;
+                    loadFrame(embedUrl);
                     titleEl.textContent = card.getAttribute('data-title') || 'Slide';
                     overlay.classList.add('active');
                     document.body.style.overflow = 'hidden';
@@ -210,5 +220,6 @@
             });
         })();
     </script>
+<script src="/back.js" data-href="/5/grade5.html#slides"></script>
 </body>
 </html>

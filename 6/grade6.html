@@ -484,21 +484,57 @@
             });
         }
 
-        function showUnits(type) {
+        // ============================================================
+        // VIEW SWITCHING (each unit list gets its own history entry: grade6.html#activities etc.)
+        // ============================================================
+        function currentHashType() {
+            const h = location.hash.replace('#', '');
+            return Object.prototype.hasOwnProperty.call(categoryConfig, h) ? h : null;
+        }
+
+        function displayUnits(type) {
             document.getElementById('menuContainer').style.display = 'none';
             document.getElementById('unitContainer').style.display = 'flex';
             renderUnits(type);
+        }
+
+        function displayMenu() {
+            document.getElementById('menuContainer').style.display = 'flex';
+            document.getElementById('unitContainer').style.display = 'none';
+        }
+
+        function showUnits(type) {
+            displayUnits(type);
+            history.pushState({ view: type }, '', '#' + type);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function goBack() {
-            document.getElementById('menuContainer').style.display = 'flex';
-            document.getElementById('unitContainer').style.display = 'none';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (history.state && history.state.view) {
+                // We opened this list ourselves: same as the browser back button.
+                history.back();
+            } else {
+                // Page was opened directly with #activities etc.: just show the menu.
+                displayMenu();
+                history.replaceState(null, '', location.pathname + location.search);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
 
+        // Browser back/forward buttons
+        window.addEventListener('popstate', function () {
+            const type = currentHashType();
+            if (type) displayUnits(type); else displayMenu();
+            window.scrollTo({ top: 0 });
+        });
+
         document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('unitContainer').style.display = 'none';
+            const type = currentHashType();
+            if (type) {
+                displayUnits(type);
+            } else {
+                document.getElementById('unitContainer').style.display = 'none';
+            }
         });
     </script>
 </body>

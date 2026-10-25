@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>5th Class – REVS Test 2</title>
+  <title>6th Class – REVS Test 2</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
   <style>
     * {
@@ -501,8 +501,8 @@
   <script src="../../../navbar.js"></script>
 
   <div id="splash">
-    <p>5th Class</p>
-    <h1>5th Class – REVS Test 2</h1>
+    <p>6th Class</p>
+    <h1>6th Class – REVS Test 2</h1>
     <button class="start" onclick="begin()"><span>▶</span><span>BAŞLAT</span></button>
     <ol class="steps">
   <li>Soruları sırayla oku.</li>
@@ -510,11 +510,12 @@
   <li>Cevaplar en sonda açılır!</li>
   <li>BAŞLAT tam ekranda ve büyütülmüş açılır.</li>
 </ol>
+  <a data-back href="/6/multestpage/multop_revs_buton_6.html" style="display:inline-block;margin-top:6px;padding:8px 24px;font-family:'Nunito','Segoe UI',Arial,sans-serif;font-weight:900;font-size:18px;color:#1e3a8a;background:#fff;border:3px solid #fff;border-bottom-width:6px;border-radius:16px;text-decoration:none">← Back</a>
   </div>
   <button class="fab hide" id="menuBtn" onclick="menu(1)" title="Menü">☰</button>
   <div id="menu" class="hide" onclick="menu(0)">
     <div onclick="event.stopPropagation()"><small>REVS TEST 2</small><button onclick="restart()">Yeniden
-        başlat</button><button onclick="menu(0)">Sürdür</button></div>
+        başlat</button><button type="button" data-back data-href="/6/multestpage/multop_revs_buton_6.html">← Back</button><button onclick="menu(0)">Sürdür</button></div>
 </div>
   </div>
   <main class="wrap hide" id="game"></main>
@@ -716,6 +717,7 @@
       else if (k === "z") toggleZoom(); else if (k === "f") fullscr();
     });
   </script>
+<script src="/back.js"></script>
 </body>
 
 </html>

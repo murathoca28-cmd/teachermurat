@@ -228,23 +228,23 @@
 
             <!-- 2. ACTIVITIES -->
             <div class="tab-panel" id="activities">
-                <a href="../activities/un_1/un1_act_1_5.html" class="card-btn">Activity 1</a>
-                <a href="../activities/un_1/un1_act_2_5.html" class="card-btn">Activity 2</a>
-                <a href="../activities/un_1/un1_act_3_5.html" class="card-btn">Activity 3</a>
+                <a href="../activities/un_1/un1_act_1_6.html" class="card-btn">Activity 1</a>
+                <a href="../activities/un_1/un1_act_2_6.html" class="card-btn">Activity 2</a>
+                <a href="../activities/un_1/un1_act_3_6.html" class="card-btn">Activity 3</a>
             </div>
 
             <!-- 3. READING -->
             <div class="tab-panel" id="reading">
-                <a href="../reading/un1/grade_5_un1read_1.html" class="card-btn">Reading 1</a>
-                <a href="../reading/un1/grade_5_un1read_2.html" class="card-btn">Reading 2</a>
-                <a href="../reading/un1/grade_5_un1read_3.html" class="card-btn">Reading 3</a>
+                <a href="../reading/un1/grade_6_un1read_1.html" class="card-btn">Reading 1</a>
+                <a href="../reading/un1/grade_6_un1read_2.html" class="card-btn">Reading 2</a>
+                <a href="../reading/un1/grade_6_un1read_3.html" class="card-btn">Reading 3</a>
             </div>
 
             <!-- 4. LISTENING -->
             <div class="tab-panel" id="listening">
-                <a href="../listening/un1/01-Grade5_un1listening.html" class="card-btn">Listening 1</a>
-                <a href="../listening/un1/02-Grade5_un1listening.html" class="card-btn">Listening 2</a>
-                <a href="../listening/un1/03-Grade5_un1listening.html" class="card-btn">Listening 3</a>
+                <a href="../listening/un1/01-Grade6_un1listening.html" class="card-btn">Listening 1</a>
+                <a href="../listening/un1/02-Grade6_un1listening.html" class="card-btn">Listening 2</a>
+                <a href="../listening/un1/03-Grade6_un1listening.html" class="card-btn">Listening 3</a>
             </div>
         </div>
     </main>
@@ -279,14 +279,24 @@
         var iframe = document.getElementById('pdfFrame');
         var titleEl = document.getElementById('modalTitle');
 
+        // Use a fresh iframe every time: changing the src of an existing iframe adds
+        // an entry to the browser history (that is what made the Back button pile up).
+        function loadFrame(url) {
+            var fresh = iframe.cloneNode(false);
+            fresh.removeAttribute('src');
+            iframe.parentNode.replaceChild(fresh, iframe);
+            iframe = fresh;
+            if (url) fresh.src = url;
+        }
+
         function closeModal() {
-            iframe.src = '';
+            loadFrame('');
             overlay.classList.remove('active');
         }
 
         document.querySelectorAll('.worksheet-btn').forEach(function (btn) {
             btn.addEventListener('click', function () {
-                iframe.src = btn.dataset.embed;
+                loadFrame(btn.dataset.embed);
                 titleEl.textContent = btn.dataset.title || 'Worksheet';
                 overlay.classList.add('active');
             });
@@ -297,5 +307,6 @@
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
     })();
     </script>
+<script src="/back.js" data-href="/6/grade6.html#activities"></script>
 </body>
 </html>
