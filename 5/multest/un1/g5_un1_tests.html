@@ -39,34 +39,12 @@
 
         .back-container {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             margin-bottom: 14px;
         }
 
-        .back-btn {
-            font-family: inherit;
-            font-size: 1.1rem;
-            font-weight: 800;
-            padding: 8px 26px;
-            color: #1A1F23;
-            background: #FFFFFF;
-            border: 3px solid #334155;
-            border-radius: 14px;
-            box-shadow: 0 4px 0 #94A3B8;
-            text-decoration: none;
-            cursor: pointer;
-            transition: transform 0.12s ease, box-shadow 0.12s ease;
-        }
 
-        .back-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 0 #94A3B8;
-        }
 
-        .back-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #94A3B8;
-        }
 
         .title {
             font-size: 2.25rem;
@@ -118,7 +96,6 @@
             box-shadow: 0 1px 0 #0F766E;
         }
 
-        .back-btn:focus-visible,
         .test-btn:focus-visible {
             outline: 4px solid #F0A500;
             outline-offset: 3px;
@@ -160,7 +137,7 @@
     <main class="main-content">
         <div class="container">
             <div class="back-container">
-                <a href="/5/grade5.html#tests" data-back class="back-btn">← Back</a>
+                <a href="/5/grade5.html#tests" data-back class="tm-back">← Back</a>
             </div>
 
             <h1 class="title">Multiple Choice Tests</h1>

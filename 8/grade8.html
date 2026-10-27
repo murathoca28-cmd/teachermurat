@@ -26,7 +26,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px 15px 56px;
+            position: relative;
+            padding: 90px 15px 56px;
             width: 100%;
             box-sizing: border-box;
         }
@@ -145,25 +146,22 @@
             animation: fadeIn 0.3s ease;
         }
 
-        .back-btn { margin-bottom: 18px; }
 
-        .back-btn button {
-            background: #FFFFFF;
-            color: #1A1F23;
-            border: 3px solid #334155;
-            border-radius: 12px;
-            box-shadow: 0 4px 0 #334155;
-            padding: 9px 24px;
-            font-family: inherit;
-            font-size: 1.0625rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: transform 0.15s ease;
+        /* Top-left Back row (same position on every page) */
+        .top-back {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            width: min(1000px, 100%);
+            margin: 0 auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: flex-start;
         }
 
-        .back-btn button:hover { transform: translateY(-2px); }
-        .back-btn button:active { transform: translateY(2px); box-shadow: none; }
-        .back-btn button:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
+
 
         #unitGrid {
             display: flex;
@@ -318,6 +316,10 @@
     <script src="/navbar.js"></script>
 
     <main class="main-content">
+        <div class="top-back">
+            <button type="button" class="tm-back" onclick="topBack()">← Back</button>
+        </div>
+
         <div class="page-title">
             <h1>GRADE <span>8</span></h1>
             <p class="sub-desc">Choose your activity below</p>
@@ -345,9 +347,6 @@
 
         <!-- STEP 2: UNIT LIST (hidden at start) -->
         <div id="unitContainer" class="unit-container">
-            <div class="back-btn">
-                <button type="button" onclick="goBack()">⬅ Back</button>
-            </div>
             <div id="unitGrid"></div>
         </div>
     </main>
@@ -513,6 +512,14 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // Top-left Back: unit list -> grade menu; grade menu -> site home page
+        function topBack() {
+            if (document.getElementById('unitContainer').style.display === 'flex') {
+                goBack();
+            } else {
+                location.href = '/';
+            }
+        }
         function goBack() {
             if (history.state && history.state.view) {
                 // We opened this list ourselves: same as the browser back button.
@@ -541,5 +548,6 @@
             }
         });
     </script>
+<script src="/back.js"></script>
 </body>
-</html>
+</html>

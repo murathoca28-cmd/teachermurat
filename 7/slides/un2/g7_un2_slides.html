@@ -14,18 +14,23 @@
             color: #1A1F23;
         }
 
+        /* The navbar placeholder already reserves the 64px under the fixed navbar; theme.css adds it a second time */
+        html body { padding-top: 0; }
+
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 24px 20px 56px;
+            padding: 20px 20px 56px;
         }
 
-        h1 {
+        .container h1 {
             margin: 0 0 24px;
             text-align: center;
             font-size: 2.25rem;
             font-weight: 800;
         }
+
+        .container .tm-back-row { margin-bottom: 18px; }
 
         .card-grid {
             display: grid;
