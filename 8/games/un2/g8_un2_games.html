@@ -14,27 +14,16 @@
             color: #1A1F23;
         }
 
-        .page-header { text-align: center; padding: 24px 15px 18px; }
+        /* The navbar placeholder already reserves the 64px under the fixed navbar; theme.css adds it a second time */
+        html body { padding-top: 0; }
 
-        .page-header h1 { margin: 0 0 14px; font-size: 2.25rem; font-weight: 800; }
+        .page-header { max-width: 1000px; margin: 0 auto; text-align: center; padding: 20px 20px 18px; }
 
-        .back-link {
-            display: inline-block;
-            padding: 8px 26px;
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #1A1F23;
-            background: #FFFFFF;
-            border: 3px solid #334155;
-            border-radius: 14px;
-            box-shadow: 0 4px 0 #94A3B8;
-            text-decoration: none;
-            transition: transform 0.12s ease, box-shadow 0.12s ease;
-        }
+        .page-header h1 { margin: 0; font-size: 2.25rem; font-weight: 800; }
 
-        .back-link:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #94A3B8; }
-        .back-link:active { transform: translateY(3px); box-shadow: 0 1px 0 #94A3B8; }
-        .back-link:focus-visible, .game-card:focus-visible, .close-btn:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
+        .page-header .back-link { display: flex; width: fit-content; margin: 0 0 18px; }
+
+        .game-card:focus-visible, .close-btn:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
 
         .games-grid {
             display: grid;
@@ -155,8 +144,8 @@
     <script src="/navbar.js"></script>
 
     <div class="page-header">
+        <a href="/8/grade8.html#games" data-back class="tm-back back-link">← Back</a>
         <h1>Grade 8 – Unit 2 Games</h1>
-        <a href="/8/grade8.html#games" data-back class="back-link">← Back</a>
     </div>
 
     <div class="games-grid" id="gamesGrid"></div>

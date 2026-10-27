@@ -45,20 +45,35 @@
         });
     }
 
-    function inject() {
-        if (!scriptTarget) return;
-
+    // One shared look for EVERY Back button on the site (injected, page-own links and buttons).
+    // Give any Back link/button the class "tm-back" and it gets this style. Page CSS should only
+    // handle layout (position/margins), never colours, fonts or sizes of the Back button.
+    function ensureStyle() {
+        if (document.getElementById('tm-back-style')) return;
         var style = document.createElement('style');
+        style.id = 'tm-back-style';
+        // Selectors keep the same weight as the old injected rules (.tm-back-row .tm-back), so page CSS
+        // such as ".container a {...}" cannot change the Back look by accident.
+        function sel(suffix) {
+            suffix = suffix || '';
+            return '.tm-back-row .tm-back' + suffix + ',a.tm-back' + suffix + ',button.tm-back' + suffix;
+        }
         style.textContent =
             '.tm-back-row{display:flex;justify-content:flex-start;align-self:flex-start;margin:0 0 12px;}' +
-            '.tm-back-row .tm-back{display:inline-flex;align-items:center;gap:8px;margin:0;padding:8px 20px;' +
+            sel() + '{display:inline-flex;align-items:center;gap:8px;margin:0;padding:8px 20px;' +
             "font-family:'Segoe UI',Verdana,Tahoma,Arial,system-ui,sans-serif;font-size:18px;font-weight:800;line-height:1.3;" +
             'color:#1A1F23;background:#FFFFFF;border:3px solid #334155;border-radius:14px;box-shadow:0 4px 0 #94A3B8;' +
             'text-decoration:none;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease;}' +
-            '.tm-back-row .tm-back:hover{transform:translateY(-2px);box-shadow:0 6px 0 #94A3B8;}' +
-            '.tm-back-row .tm-back:active{transform:translateY(3px);box-shadow:0 1px 0 #94A3B8;}' +
-            '.tm-back-row .tm-back:focus-visible{outline:4px solid #F0A500;outline-offset:3px;}';
+            sel(':hover') + '{transform:translateY(-2px);box-shadow:0 6px 0 #94A3B8;}' +
+            sel(':active') + '{transform:translateY(3px);box-shadow:0 1px 0 #94A3B8;}' +
+            sel(':focus-visible') + '{outline:4px solid #F0A500;outline-offset:3px;}';
         document.head.appendChild(style);
+    }
+    ensureStyle();
+
+    function inject() {
+        if (!scriptTarget) return;
+        ensureStyle();
 
         var row = document.createElement('div');
         row.className = 'tm-back-row';
