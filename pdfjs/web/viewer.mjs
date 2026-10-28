@@ -20871,6 +20871,35 @@ const AppConstants = {
   SpreadMode: SpreadMode
 };
 window.PDFViewerApplication = PDFViewerApplication;
+// teachermurat.com: the parent page's Present / zoom buttons talk to the viewer with postMessage
+// (works even when the page and the viewer are on different origins).
+window.addEventListener("message", evt => {
+  if (evt.source !== window.parent || !evt.data) {
+    return;
+  }
+  const app = PDFViewerApplication;
+  if (evt.data.tmPresent) {
+    const ok = !!app.pdfViewer?.pagesCount;
+    if (ok) {
+      app.requestPresentationMode();
+    }
+    window.parent.postMessage({
+      tmPresentAck: true,
+      ok
+    }, "*");
+  } else if (evt.data.tmFit && app.pdfViewer) {
+    const fit = () => {
+      app.pdfViewer.currentScaleValue = "page-fit";
+    };
+    if (app.pdfViewer.pagesCount) {
+      fit();
+    } else {
+      app.eventBus.on("pagesinit", fit, {
+        once: true
+      });
+    }
+  }
+});
 window.PDFViewerApplicationConstants = AppConstants;
 window.PDFViewerApplicationOptions = AppOptions;
 function getViewerConfiguration() {
