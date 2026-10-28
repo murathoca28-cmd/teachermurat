@@ -8199,3 +8199,142 @@ dialog :link{
 #downloadButton .toolbarButtonIcon {
   filter: brightness(0) invert(1) !important;
 }
+
+/* teachermurat.com: page navigation overlay for presentation mode */
+.tm-pnav{
+  display:none;
+}
+#viewerContainer.pdfPresentationMode .tm-pnav{
+  display:block;
+}
+.tm-pnav button{
+  cursor:pointer;
+  font-family:"Segoe UI", Verdana, Tahoma, Arial, sans-serif;
+  margin:0;
+}
+.tm-pnav button:focus-visible{
+  outline:4px solid #F0A500;
+  outline-offset:3px;
+}
+.tm-pnav-handle{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:20;
+  width:46px;
+  height:46px;
+  padding:0;
+  border-radius:50%;
+  border:3px solid #FFFFFF;
+  background:rgba(15, 23, 42, 0.6);
+  color:#FFFFFF;
+  font-size:26px;
+  font-weight:800;
+  line-height:1;
+  opacity:0.3;
+  transition:opacity 0.2s;
+}
+.tm-pnav-handle:hover,
+.tm-pnav-handle:focus-visible{
+  opacity:1;
+}
+.tm-pnav-panel{
+  position:fixed;
+  left:50%;
+  bottom:22px;
+  z-index:20;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px 14px;
+  background:rgba(15, 23, 42, 0.92);
+  border:3px solid #FFFFFF;
+  border-radius:18px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.2s;
+}
+.tm-pnav-panel.show{
+  opacity:1;
+  pointer-events:auto;
+}
+.tm-pnav-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:68px;
+  height:56px;
+  padding:0;
+  color:#FFFFFF;
+  background:#0F766E;
+  border:3px solid #FFFFFF;
+  border-radius:12px;
+}
+.tm-pnav-label{
+  min-width:132px;
+  padding:8px 14px;
+  color:#FFFFFF;
+  background:transparent;
+  border:3px solid #FFFFFF;
+  border-radius:12px;
+  font-size:1.6rem;
+  font-weight:800;
+}
+.tm-pnav-grid{
+  position:fixed;
+  inset:0;
+  z-index:30;
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));
+  gap:18px;
+  align-content:start;
+  padding:72px 28px 28px;
+  overflow:auto;
+  background:rgba(2, 6, 23, 0.96);
+}
+.tm-pnav-grid[hidden]{
+  display:none;
+}
+.tm-pnav-gridclose{
+  position:fixed;
+  top:14px;
+  right:20px;
+  padding:8px 20px;
+  color:#FFFFFF;
+  background:#C2410C;
+  border:3px solid #FFFFFF;
+  border-radius:12px;
+  font-size:1.2rem;
+  font-weight:800;
+}
+.tm-pnav-thumb{
+  position:relative;
+  padding:0;
+  overflow:hidden;
+  background:#FFFFFF;
+  border:4px solid #64748B;
+  border-radius:10px;
+}
+.tm-pnav-thumb.cur{
+  border-color:#F0A500;
+}
+.tm-pnav-thumb canvas{
+  display:block;
+  width:100%;
+  height:auto;
+  min-height:60px;
+  background:#FFFFFF;
+}
+.tm-pnav-num{
+  position:absolute;
+  left:6px;
+  bottom:6px;
+  min-width:34px;
+  padding:2px 9px;
+  color:#FFFFFF;
+  background:#0F172A;
+  border-radius:8px;
+  font-size:1.15rem;
+  font-weight:800;
+}

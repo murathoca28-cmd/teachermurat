@@ -21181,3 +21181,167 @@ if (document.readyState === "interactive" || document.readyState === "complete")
 export { PDFViewerApplication, AppConstants as PDFViewerApplicationConstants, AppOptions as PDFViewerApplicationOptions };
 
 //# sourceMappingURL=viewer.mjs.map
+
+// teachermurat.com: page navigation overlay for presentation mode (prev / next / page picker with thumbnails)
+PDFViewerApplication.initializedPromise.then(() => {
+  const app = PDFViewerApplication;
+  const bus = app.eventBus;
+  const container = document.getElementById("viewerContainer");
+  if (!container || !bus) {
+    return;
+  }
+  const el = (tag, cls, html) => {
+    const e = document.createElement(tag);
+    if (cls) {
+      e.className = cls;
+    }
+    if (html !== undefined) {
+      e.innerHTML = html;
+    }
+    if (tag === "button") {
+      e.type = "button";
+    }
+    return e;
+  };
+  const ARROW_L = '<svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor" aria-hidden="true"><path d="M15 4v16L5 12z"/></svg>';
+  const ARROW_R = '<svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor" aria-hidden="true"><path d="M9 4v16l10-8z"/></svg>';
+  const root = el("div", "tm-pnav");
+  const handle = el("button", "tm-pnav-handle", "&#8943;");
+  handle.setAttribute("aria-label", "Page menu");
+  const panel = el("div", "tm-pnav-panel");
+  const prev = el("button", "tm-pnav-btn", ARROW_L);
+  prev.setAttribute("aria-label", "Previous page");
+  const next = el("button", "tm-pnav-btn", ARROW_R);
+  next.setAttribute("aria-label", "Next page");
+  const label = el("button", "tm-pnav-label", "1 / 1");
+  label.setAttribute("aria-label", "Choose a page");
+  const grid = el("div", "tm-pnav-grid");
+  grid.hidden = true;
+  const gridClose = el("button", "tm-pnav-gridclose", "Close &#10005;");
+  panel.append(prev, label, next);
+  root.append(handle, panel, grid);
+  container.append(root);
+
+  // Keep clicks / touches / wheel on the overlay away from PDF.js's own "click = next page" handlers
+  for (const type of ["mousedown", "touchstart", "touchmove", "touchend", "wheel", "contextmenu", "click"]) {
+    root.addEventListener(type, e => e.stopPropagation(), {
+      passive: true
+    });
+  }
+  const inPresentation = () => container.classList.contains("pdfPresentationMode");
+  const viewer = () => app.pdfViewer;
+  let hideTimer = null;
+  const show = () => {
+    panel.classList.add("show");
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => panel.classList.remove("show"), 4000);
+  };
+  const hide = () => {
+    clearTimeout(hideTimer);
+    panel.classList.remove("show");
+  };
+  const update = () => {
+    const v = viewer();
+    if (!v) {
+      return;
+    }
+    label.textContent = v.currentPageNumber + " / " + v.pagesCount;
+    for (const t of grid.querySelectorAll(".tm-pnav-thumb")) {
+      t.classList.toggle("cur", +t.dataset.page === v.currentPageNumber);
+    }
+  };
+  bus.on("pagechanging", update);
+  bus.on("pagesloaded", update);
+
+  let builtFor = null;
+  const closeGrid = () => {
+    grid.hidden = true;
+  };
+  const openGrid = () => {
+    const doc = app.pdfDocument;
+    if (!doc) {
+      return;
+    }
+    hide();
+    grid.hidden = false;
+    if (builtFor !== doc) {
+      builtFor = doc;
+      grid.replaceChildren(gridClose);
+      const canvases = [];
+      for (let i = 1; i <= doc.numPages; i++) {
+        const b = el("button", "tm-pnav-thumb");
+        b.dataset.page = i;
+        b.setAttribute("aria-label", "Page " + i);
+        const c = document.createElement("canvas");
+        canvases.push(c);
+        b.append(c, el("span", "tm-pnav-num", String(i)));
+        grid.append(b);
+      }
+      (async () => {
+        for (let i = 1; i <= doc.numPages && builtFor === doc; i++) {
+          try {
+            const page = await doc.getPage(i);
+            const base = page.getViewport({
+              scale: 1
+            });
+            const vp = page.getViewport({
+              scale: 360 / base.width
+            });
+            const c = canvases[i - 1];
+            c.width = Math.floor(vp.width);
+            c.height = Math.floor(vp.height);
+            await page.render({
+              canvas: c,
+              viewport: vp
+            }).promise;
+          } catch {}
+        }
+      })();
+    }
+    update();
+    grid.querySelector(".tm-pnav-thumb.cur")?.scrollIntoView({
+      block: "center"
+    });
+  };
+  grid.addEventListener("click", e => {
+    const t = e.target.closest(".tm-pnav-thumb");
+    if (t) {
+      viewer().currentPageNumber = +t.dataset.page;
+      closeGrid();
+      show();
+    } else {
+      closeGrid();
+    }
+  });
+  const press = (btn, fn) => btn.addEventListener("click", () => {
+    fn();
+    btn.blur();
+    if (!grid.hidden) {
+      return;
+    }
+    show();
+  });
+  press(prev, () => viewer().previousPage());
+  press(next, () => viewer().nextPage());
+  press(label, openGrid);
+  press(gridClose, closeGrid);
+  handle.addEventListener("click", () => {
+    handle.blur();
+    if (panel.classList.contains("show")) {
+      hide();
+    } else {
+      show();
+    }
+  });
+  panel.addEventListener("mousemove", show);
+  container.addEventListener("mousemove", e => {
+    if (inPresentation() && e.clientY > window.innerHeight * 0.85) {
+      show();
+    }
+  });
+  bus.on("presentationmodechanged", () => {
+    closeGrid();
+    hide();
+    update();
+  });
+});

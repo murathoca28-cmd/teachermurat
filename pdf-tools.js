@@ -34,6 +34,17 @@
         '.pdf-tool-btn svg { width: 1.25em; height: 1.25em; flex-shrink: 0; }',
         '.modal-box:fullscreen, .modal-content:fullscreen { width: 100% !important; max-width: none !important; height: 100% !important; border-radius: 0; border: 0; }',
         '.modal-box:-webkit-full-screen, .modal-content:-webkit-full-screen { width: 100% !important; max-width: none !important; height: 100% !important; border-radius: 0; border: 0; }',
+        '.pdf-nav { display: flex; align-items: center; gap: 8px; }',
+        '.pdf-nav[hidden] { display: none; }',
+        '.pdf-nav-btn { display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 42px; padding: 0; margin: 0;',
+        '  color: #FFFFFF; background: #1E293B; border: 3px solid #0F172A; border-radius: 12px; box-shadow: 0 4px 0 #0F172A; cursor: pointer; }',
+        '.pdf-nav-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #0F172A; }',
+        '.pdf-nav-btn:focus-visible, .pdf-nav-input:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }',
+        '.pdf-nav-btn svg { width: 20px; height: 20px; }',
+        '.pdf-nav-input { width: 58px; height: 42px; padding: 0; font-family: inherit; font-size: 1.2rem; font-weight: 800; text-align: center;',
+        '  color: #064E48; background: #FFFFFF; border: 3px solid #334155; border-radius: 10px; }',
+        '.pdf-nav-total { font-size: 1.2rem; font-weight: 800; color: #064E48; min-width: 3.2em; }',
+        '@media (max-width: 1000px) { .pdf-nav { display: none; } }',
         '@media (max-width: 760px) { .pdf-tool-btn .lbl { display: none; } .pdf-tool-btn { padding: 8px 12px; } }'
     ].join('\n');
     var style = document.createElement('style');
@@ -168,25 +179,71 @@
     var f0 = frame();
     if (f0) { f0.setAttribute('allowfullscreen', ''); f0.setAttribute('allow', 'fullscreen'); }
 
-    // Slides: show the whole slide in the window (page-fit) instead of "auto zoom".
-    if (withPresent) {
-        new MutationObserver(function () {
-            var f = frame();
-            if (!f || f._tmFit) return;
-            f._tmFit = true;
-            f.addEventListener('load', function () {
-                var tries = 0;
-                (function wait() {
-                    var app = rawApp();
-                    if (!app && tries === 0) { try { f.contentWindow.postMessage({ tmFit: true }, '*'); } catch (e) {} }
-                    if (app && app.eventBus) {
-                        app.eventBus.on('pagesinit', function () { app.pdfViewer.currentScaleValue = 'page-fit'; });
-                        if (app.pdfViewer.pagesCount) app.pdfViewer.currentScaleValue = 'page-fit';
-                    } else if (tries++ < 40) {
-                        setTimeout(wait, 150);
-                    }
-                })();
-            });
-        }).observe(box, { childList: true, subtree: true });
+    /* ---------- page navigation in the header (slides; other PDFs only when they have 3+ pages) ---------- */
+    var nav = document.createElement('div');
+    nav.className = 'pdf-nav';
+    nav.hidden = true;
+    var navPrev = document.createElement('button');
+    navPrev.type = 'button'; navPrev.className = 'pdf-nav-btn'; navPrev.title = 'Previous page'; navPrev.setAttribute('aria-label', 'Previous page');
+    navPrev.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15 4v16L5 12z"/></svg>';
+    var navNext = document.createElement('button');
+    navNext.type = 'button'; navNext.className = 'pdf-nav-btn'; navNext.title = 'Next page'; navNext.setAttribute('aria-label', 'Next page');
+    navNext.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 4v16l10-8z"/></svg>';
+    var navInput = document.createElement('input');
+    navInput.type = 'text'; navInput.inputMode = 'numeric'; navInput.className = 'pdf-nav-input'; navInput.title = 'Go to page'; navInput.setAttribute('aria-label', 'Page number');
+    var navTotal = document.createElement('span');
+    navTotal.className = 'pdf-nav-total';
+    nav.appendChild(navPrev); nav.appendChild(navInput); nav.appendChild(navTotal); nav.appendChild(navNext);
+    header.insertBefore(nav, tools);
+
+    var curApp = null;
+    function goTo(n) {
+        if (!curApp) return;
+        var v = curApp.pdfViewer, max = v.pagesCount || 1;
+        n = parseInt(n, 10);
+        if (!isNaN(n)) v.currentPageNumber = Math.min(Math.max(n, 1), max);
+        navInput.value = v.currentPageNumber;
     }
+    navPrev.addEventListener('click', function () { if (curApp) curApp.pdfViewer.previousPage(); });
+    navNext.addEventListener('click', function () { if (curApp) curApp.pdfViewer.nextPage(); });
+    navInput.addEventListener('focus', function () { navInput.select(); });
+    navInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { goTo(navInput.value); navInput.blur(); }
+        e.stopPropagation(); // typing digits must not trigger other shortcuts
+    });
+    navInput.addEventListener('change', function () { goTo(navInput.value); });
+
+    function attach(app) {
+        curApp = app;
+        var v = app.pdfViewer, bus = app.eventBus;
+        function refresh() {
+            var n = v.pagesCount || 0;
+            nav.hidden = !((withPresent && n > 1) || n > 2);
+            navTotal.textContent = '/ ' + n;
+            navInput.value = v.currentPageNumber;
+        }
+        function fit() { if (withPresent) v.currentScaleValue = 'page-fit'; } // slides: whole slide visible
+        bus.on('pagesinit', function () { fit(); refresh(); });
+        bus.on('pagechanging', function (e) { navInput.value = e.pageNumber; });
+        if (v.pagesCount) { fit(); refresh(); }
+    }
+
+    // Every time the page opens a PDF it creates a fresh iframe: hook each one when it has loaded.
+    new MutationObserver(function () {
+        var f = frame();
+        if (!f || f._tmHooked) return;
+        f._tmHooked = true;
+        nav.hidden = true;
+        curApp = null;
+        f.addEventListener('load', function () {
+            var tries = 0;
+            (function wait() {
+                if (frame() !== f) return;
+                var app = rawApp();
+                if (!app && tries === 0 && withPresent) { try { f.contentWindow.postMessage({ tmFit: true }, '*'); } catch (e) {} }
+                if (app && app.eventBus) attach(app);
+                else if (tries++ < 60) setTimeout(wait, 150);
+            })();
+        });
+    }).observe(box, { childList: true, subtree: true });
 })();
