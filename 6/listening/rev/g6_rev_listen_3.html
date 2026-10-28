@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade 6 Listening Activity</title>
+    <title>6th Grade Listening Activity</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css">
     <style>
     :root {
@@ -431,6 +431,16 @@
 
     #floatingPlayBtn.visible { display: flex; }
     #floatingPlayBtn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--orange-dark); }
+
+    /* Turkish support line under each transcript sentence */
+    .tr {
+        display: block;
+        font-size: 20px;
+        font-weight: 700;
+        font-style: italic;
+        color: var(--text-muted);
+        margin-top: 2px;
+    }
     </style>
     <link rel="stylesheet" href="/theme.css">
 </head>
@@ -444,7 +454,7 @@
     <div class="app-container">
         <header class="hero-banner">
             <h1>🎧 6th Grade Listening Activity</h1>
-            <p>Jobs Around Us</p>
+            <p>Club Day Announcement</p>
         </header>
 
         <main class="space-y">
@@ -455,18 +465,18 @@
                     <div class="card-icon" style="background: var(--orange-soft); color: var(--orange);">🎧</div>
                     <div class="card-title">
                         <h2>Listen</h2>
-                        <p>Listen to Mia talk about the jobs in her family.</p>
+                        <p>Listen to Ms Clark's announcement about Club Day.</p>
                     </div>
                 </div>
 
                 <div class="hint-bar" lang="tr">👂 Düğmeye bas ve dinle. İstediğin kadar tekrar dinleyebilirsin.</div>
 
-                <button type="button" id="listenBtn" class="action-btn listen-btn" onclick="startListening()">🔊 Listen to the Text</button>
+                <button type="button" id="listenBtn" class="action-btn listen-btn" onclick="startListening()">🔊 Listen to the Announcement</button>
             </section>
 
             <div id="playerWrap">
                 <audio id="player" controls preload="metadata">
-                    <source src="https://cdn.teachermurat.com/5/rev_listens/03-Grade5_listening.mp3" type="audio/mpeg">
+                    <source src="https://cdn.teachermurat.com/6/rev_listens/03-Grade6_rev_listening.mp3?v=2" type="audio/mpeg">
                 </audio>
             </div>
 
@@ -483,34 +493,34 @@
                     </div>
 
                 <div class="question-card" data-type="mc" data-answer="b">
-                    <span class="question-text">1. What is Mia's mother's job?</span>
+                    <span class="question-text">1. When does the drama club meet?</span>
                     <div class="options">
-                        <label><input type="radio" name="q1" value="a"> a) She is a doctor.</label>
-                        <label><input type="radio" name="q1" value="b"> b) She is a teacher.</label>
-                        <label><input type="radio" name="q1" value="c"> c) She is a singer.</label>
-                        <label><input type="radio" name="q1" value="d"> d) She is a police officer.</label>
+                        <label><input type="radio" name="q1" value="a"> a) On Friday at three o'clock</label>
+                        <label><input type="radio" name="q1" value="b"> b) On Monday at half past four</label>
+                        <label><input type="radio" name="q1" value="c"> c) On Monday at three o'clock</label>
+                        <label><input type="radio" name="q1" value="d"> d) On Wednesday at half past four</label>
                     </div>
                     <div class="feedback-detail"></div>
                 </div>
 
                 <div class="question-card" data-type="mc" data-answer="c">
-                    <span class="question-text">2. Where does Mia's father work?</span>
+                    <span class="question-text">2. Where are the clubs?</span>
                     <div class="options">
-                        <label><input type="radio" name="q2" value="a"> a) At a school</label>
-                        <label><input type="radio" name="q2" value="b"> b) On a farm</label>
-                        <label><input type="radio" name="q2" value="c"> c) At the hospital</label>
-                        <label><input type="radio" name="q2" value="d"> d) At the police station</label>
+                        <label><input type="radio" name="q2" value="a"> a) In the library</label>
+                        <label><input type="radio" name="q2" value="b"> b) In the laboratory</label>
+                        <label><input type="radio" name="q2" value="c"> c) In the conference hall</label>
+                        <label><input type="radio" name="q2" value="d"> d) In the cafeteria</label>
                     </div>
                     <div class="feedback-detail"></div>
                 </div>
 
                 <div class="question-card" data-type="mc" data-answer="a">
-                    <span class="question-text">3. Who grows fresh food on his farm?</span>
+                    <span class="question-text">3. What mustn't the students do in the hall?</span>
                     <div class="options">
-                        <label><input type="radio" name="q3" value="a"> a) Mia's uncle</label>
-                        <label><input type="radio" name="q3" value="b"> b) Mia's brother</label>
-                        <label><input type="radio" name="q3" value="c"> c) Mia's mother</label>
-                        <label><input type="radio" name="q3" value="d"> d) Mia's father</label>
+                        <label><input type="radio" name="q3" value="a"> a) Eat</label>
+                        <label><input type="radio" name="q3" value="b"> b) Sing</label>
+                        <label><input type="radio" name="q3" value="c"> c) Read</label>
+                        <label><input type="radio" name="q3" value="d"> d) Draw</label>
                     </div>
                     <div class="feedback-detail"></div>
                 </div>
@@ -526,20 +536,20 @@
                         </div>
                     </div>
 
-                <div class="question-card" data-type="sa" data-answers='["mia"]'>
-                    <span class="question-text">4. What is the name of the speaker?</span>
+                <div class="question-card" data-type="sa" data-answers="[&quot;at three o&#x27;clock&quot;, &quot;three o&#x27;clock&quot;, &quot;at 3 o&#x27;clock&quot;, &quot;3 o&#x27;clock&quot;]">
+                    <span class="question-text">4. What time does the music club meet?</span>
                     <input type="text" class="short-answer-input" name="q4" placeholder="Type your answer here..." autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
-                <div class="question-card" data-type="sa" data-answers='["police officer", "police", "a police officer", "policewoman", "police woman", "she is a police officer"]'>
-                    <span class="question-text">5. What is Mia's aunt's job?</span>
+                <div class="question-card" data-type="sa" data-answers="[&quot;school uniform&quot;, &quot;your school uniform&quot;, &quot;their school uniform&quot;, &quot;the school uniform&quot;]">
+                    <span class="question-text">5. What must the students wear?</span>
                     <input type="text" class="short-answer-input" name="q5" placeholder="Type your answer here..." autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
-                <div class="question-card" data-type="sa" data-answers='["singer", "a singer", "great singer", "a great singer"]'>
-                    <span class="question-text">6. What is Mia's big brother's job?</span>
+                <div class="question-card" data-type="sa" data-answers="[&quot;on the noticeboard&quot;, &quot;noticeboard&quot;, &quot;the noticeboard&quot;]">
+                    <span class="question-text">6. Where can the students see the poster?</span>
                     <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..." autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
@@ -551,7 +561,7 @@
 
                 <div id="result"></div>
 
-                <button type="button" id="transcriptBtn" class="action-btn" onclick="showTranscript()">📝 See the Text</button>
+                <button type="button" id="transcriptBtn" class="action-btn" onclick="showTranscript()">📝 See the Announcement</button>
             </form>
 
             <!-- TRANSCRIPT (revealed after checking) -->
@@ -559,15 +569,16 @@
                 <div class="card-header">
                     <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">📝</div>
                     <div class="card-title">
-                        <h2>The Text</h2>
+                        <h2>The Announcement</h2>
                         <p>Read what you heard.</p>
                     </div>
                 </div>
                 <div class="reading-section">
-                    <p>Hello! My name is Mia. I love talking about jobs!</p>
-                    <p>My mother is a teacher. She works at a school and loves her students. My father is a doctor. He helps sick people at the hospital.</p>
-                    <p>My uncle is a farmer, and he grows fresh food on his farm. My aunt is a police officer; she helps people and keeps our town safe.</p>
-                    <p>My big brother loves music, and he is a great singer. What about you? What is your dream job?</p>
+                    <p>Good morning, students! This is Ms Clark with some news for Club Day.<span class="tr" lang="tr">Günaydın öğrenciler! Ben Bayan Clark, Kulüp Günü için bazı haberlerim var.</span></p>
+                    <p>The drama club meets every Monday at half past four. The music club meets on Friday at three o'clock. Both clubs are in the conference hall.<span class="tr" lang="tr">Tiyatro kulübü her pazartesi dört buçukta toplanıyor. Müzik kulübü cuma günü saat üçte toplanıyor. İki kulüp de konferans salonunda.</span></p>
+                    <p>Please remember the rules. You must wear your school uniform. You mustn't run in the corridor, and you mustn't eat in the hall.<span class="tr" lang="tr">Lütfen kuralları unutmayın. Okul üniformanızı giymelisiniz. Koridorda koşmamalısınız ve salonda yememelisiniz.</span></p>
+                    <p>The science club is going to do a fun experiment next week. You can see the poster on the noticeboard.<span class="tr" lang="tr">Fen kulübü gelecek hafta eğlenceli bir deney yapacak. Afişi ilan panosunda görebilirsiniz.</span></p>
+                    <p>Thank you, and have a great day!<span class="tr" lang="tr">Teşekkürler, iyi günler!</span></p>
                 </div>
             </section>
         </main>

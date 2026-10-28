@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>6th Grade English - Unit 1 Activity 1</title>
-<style>:root{--primary:#0F766E;--primary-soft:#CCFBF1;--pink:#C2410C;--pink-soft:#FFEDD5;--green:#00875F;--green-soft:#D5F5E8;--yellow:#F0A500;--red:#D32F2F;--red-soft:#FFDAD8;--blue:#1D4ED8;--blue-soft:#DBEAFE;--bg:#F4F7FE;--text-dark:#1A1F23;--text-muted:#3D4852;--q-color:#0B4F4A;--border-color:#64748B;--border-strong:#334155;--radius-lg:24px;--radius-md:16px;--radius-sm:12px}
+<title>Grade 6 English - Unit 1 Activity 1: School Places and People</title>
+<style>
+:root{--primary:#0F766E;--primary-soft:#CCFBF1;--pink:#C2410C;--pink-soft:#FFEDD5;--green:#00875F;--green-soft:#D5F5E8;--yellow:#F0A500;--red:#D32F2F;--red-soft:#FFDAD8;--blue:#1D4ED8;--blue-soft:#DBEAFE;--bg:#F4F7FE;--text-dark:#1A1F23;--text-muted:#3D4852;--q-color:#0B4F4A;--border-color:#64748B;--border-strong:#334155;--radius-lg:24px;--radius-md:16px;--radius-sm:12px}
 *,*::before,*::after{box-sizing:border-box}
 .app-container,.app-container *{font-family:'Segoe UI',Verdana,Tahoma,Arial,system-ui,sans-serif}
 body{background:var(--bg);color:var(--text-dark);min-height:100vh;display:flex;flex-direction:column;user-select:none}
@@ -65,67 +66,48 @@ textarea.custom-input{width:100%;min-height:64px;resize:vertical}
 .activity-card.expanded{position:fixed;top:0;left:0;z-index:100000;border-radius:0;border-width:0;box-shadow:none;overflow:auto;display:flex;flex-direction:column;justify-content:safe center}
 @media(max-width:700px){.zoom-btn{display:none}.match-grid{grid-template-columns:1fr}.hero-banner h1{font-size:24px}.card-title h2{font-size:20px}}
 footer{text-align:center;padding:16px;color:var(--text-muted);font-size:15px;border-top:1px solid var(--border-color);background:#fff;margin-top:auto}
-
 .flag{width:108px;height:72px;border:3px solid var(--border-strong);border-radius:8px;display:block;background:#fff}
 .flag.sm{width:72px;height:48px;display:inline-block;vertical-align:middle;margin-right:12px}
 .flagq{display:block;margin-top:10px}
 .match-l .flag{margin:0 auto}
 .sign{width:88px;height:88px;display:block}
 .tr-row{margin-top:16px}
+
+.stack{display:flex;flex-direction:column;gap:16px}
+.tr-row{margin-top:16px}
+
 </style>
 <link rel="stylesheet" href="/theme.css">
 </head>
 <body>
 <div id="navbar-placeholder" style="min-height:0px"></div>
 <script src="/navbar.js"></script>
-
 <div class="app-container">
-  <header class="hero-banner">
-    <h1>🎓 6th GRADE ENGLISH</h1>
-    <p>UNIT 1 • ACTIVITY 1: School Clubs</p>
-  </header>
-  <main class="space-y">
-<section class="activity-card">
-  <div class="card-header">
-    <div class="card-icon" style="background:var(--primary-soft);color:var(--primary);">🎸</div>
-    <div class="card-title"><h2>Part A: Which Club?</h2><p>Click a sentence, then click the correct club. There is an extra club!</p></div>
-  </div>
-  <div id="pA"></div><div class="btn-row tr-row"><button type="button" class="tr-btn" data-tr="trA">🇹🇷 Türkçesi</button></div>
-  <div id="trA" class="tr-text">1. Gitar ve piyano çalarım. → Müzik kulübü<br>2. Laboratuvarda deney yaparım. → Fen kulübü<br>3. Resim yaparım. → Sanat kulübü<br>4. Arkadaşlarımla satranç oynarım. → Satranç kulübü<br>5. Sahnede oyunculuk yaparım. → Drama kulübü<br>6. Bilgisayarlar ve robotlar hakkında öğrenirim. → Teknoloji kulübü</div>
-</section>
-<section class="activity-card">
-  <div class="card-header">
-    <div class="card-icon" style="background:var(--pink-soft);color:var(--pink);">🔎</div>
-    <div class="card-title"><h2>Part B: Who Is in Which Club?</h2><p>Read and choose the correct club!</p></div>
-  </div>
-  <div id="pB" class="grid-2"></div>
-</section>
-<section class="activity-card">
-  <div class="card-header">
-    <div class="card-icon" style="background:var(--green-soft);color:var(--green);">✏️</div>
-    <div class="card-title"><h2>Part C: Fill in the Blanks</h2><p>Type the missing word and click Check!</p></div>
-  </div>
-  <div id="pC" class="space-y" style="gap:14px"></div><div class="btn-row tr-row"><button type="button" class="tr-btn" data-tr="trC">🇹🇷 Türkçesi</button></div>
-  <div id="trC" class="tr-text">1. En sevdiğin okul kulübü nedir? Drama kulübü.<br>2. Gitar çalmayı sever misin?<br>3. En sevdiğim okul kulübü müzik kulübüdür.<br>4. Biz satranç kulübündeyiz.<br>5. Antrenör nerede? O spor sahasında.</div>
-</section>
-<section class="activity-card">
-  <div class="card-header">
-    <div class="card-icon" style="background:var(--blue-soft);color:var(--blue);">🧩</div>
-    <div class="card-title"><h2>Part D: Make the Sentence</h2><p>Click the words in the correct order, then click Check!</p></div>
-  </div>
-  <div id="pD" class="space-y" style="gap:14px"></div>
-</section>
-<section class="activity-card">
-  <div class="card-header">
-    <div class="card-icon" style="background:var(--pink-soft);color:var(--pink);">💬</div>
-    <div class="card-title"><h2>Part E: About You</h2><p>Write a full sentence for each question and click Done!</p></div>
-  </div>
-  <div id="pE" class="space-y" style="gap:14px"></div>
-</section>
-  </main>
+<header class="hero-banner"><h1>🎓 6th GRADE ENGLISH</h1><p>UNIT 1 • ACTIVITY 1: School Places and People</p></header>
+<main class="space-y">
+<section class="activity-card"><div class="card-header"><div class="card-icon" style="background:var(--primary-soft);color:var(--primary);">🏫</div><div class="card-title"><h2>Part A: Where Is It?</h2><p>Look at the picture and choose the correct place.</p></div></div><div id="p_A" class="grid-2"></div><div class="btn-row tr-row"><button type="button" class="tr-btn" data-tr="tr_A">🇹🇷 Türkçesi</button></div><div id="tr_A" class="tr-text"><b>a library</b> = kütüphane, <b>a lab</b> = laboratuvar, <b>a school garden</b> = okul bahçesi, <b>a lunch hall</b> = yemekhane, <b>an art club</b> = resim kulübü, <b>a sports club</b> = spor kulübü</div></section><section class="activity-card"><div class="card-header"><div class="card-icon" style="background:var(--pink-soft);color:var(--pink);">🔗</div><div class="card-title"><h2>Part B: Match the Meanings</h2><p>Click a word, then click its meaning.</p></div></div><div id="p_B" class="stack"></div></section><section class="activity-card"><div class="card-header"><div class="card-icon" style="background:var(--green-soft);color:var(--green);">🗂️</div><div class="card-title"><h2>Part C: Place, Person or Event?</h2><p>Click a card, then click the correct box.</p></div></div><div id="p_C" class="pool-box"></div><div class="bucket-container"><div class="bucket" data-bucket="place" style="background:var(--primary-soft);border-color:var(--primary)"><h3 style="color:#0B3D33">🏫 Places</h3><div class="hint">👆 Click here to place</div><div class="bucket-items"></div></div><div class="bucket" data-bucket="person" style="background:var(--pink-soft);border-color:var(--pink)"><h3 style="color:#0B3D33">🧑‍🏫 People</h3><div class="hint">👆 Click here to place</div><div class="bucket-items"></div></div><div class="bucket" data-bucket="event" style="background:var(--green-soft);border-color:var(--green)"><h3 style="color:#0B3D33">🎉 Events</h3><div class="hint">👆 Click here to place</div><div class="bucket-items"></div></div></div><div class="result-msg" role="status"></div><div class="btn-row tr-row"><button type="button" class="tr-btn" data-tr="tr_C">🇹🇷 Türkçesi</button></div><div id="tr_C" class="tr-text"><b>a headmaster</b> = okul müdürü, <b>a secretary</b> = sekreter, <b>a parent</b> = anne veya baba, <b>a talent show</b> = yetenek gösterisi, <b>a parade</b> = geçit töreni, <b>a school ceremony</b> = okul töreni</div></section><section class="activity-card"><div class="card-header"><div class="card-icon" style="background:var(--blue-soft);color:var(--blue);">✏️</div><div class="card-title"><h2>Part D: Fill in the Blanks</h2><p>Write the missing word.</p></div></div><div id="p_D" class="stack"></div></section>
+</main>
 </div>
 
 <script>
+const SECTIONS = [{"id": "A", "type": "choice", "items": [{"q": "What is this?<span class=\"flagq\" style=\"font-size:60px;line-height:1\">📚<\/span>", "opts": ["a library", "a lab", "a lunch hall"], "ans": "a library"}, {"q": "What is this?<span class=\"flagq\" style=\"font-size:60px;line-height:1\">🧪<\/span>", "opts": ["a school garden", "a lab", "a library"], "ans": "a lab"}, {"q": "What is this?<span class=\"flagq\" style=\"font-size:60px;line-height:1\">🌳<\/span>", "opts": ["a lab", "a lunch hall", "a school garden"], "ans": "a school garden"}, {"q": "What is this?<span class=\"flagq\" style=\"font-size:60px;line-height:1\">🍽️<\/span>", "opts": ["a lunch hall", "a library", "a lab"], "ans": "a lunch hall"}, {"q": "What is this?<span class=\"flagq\" style=\"font-size:60px;line-height:1\">🎨<\/span>", "opts": ["a sports club", "an art club", "a lab"], "ans": "an art club"}, {"q": "What is this?<span class=\"flagq\" style=\"font-size:60px;line-height:1\">⚽<\/span>", "opts": ["a sports club", "an art club", "a library"], "ans": "a sports club"}]}, {"id": "B", "type": "match", "pairs": [{"l": "a headmaster", "r": "the person who runs the whole school"}, {"l": "a secretary", "r": "a person who does office work in a school"}, {"l": "a parent", "r": "a mother or a father"}, {"l": "a talent show", "r": "an event where students sing, dance or act"}, {"l": "a canteen", "r": "a place where students buy food at school"}], "extras": ["a place where students borrow books"]}, {"id": "C", "type": "sort", "buckets": [{"key": "place", "label": "Places", "icon": "🏫", "color": "primary"}, {"key": "person", "label": "People", "icon": "🧑‍🏫", "color": "pink"}, {"key": "event", "label": "Events", "icon": "🎉", "color": "green"}], "items": [{"name": "a library", "type": "place"}, {"name": "a lab", "type": "place"}, {"name": "a playground", "type": "place"}, {"name": "a teacher's room", "type": "place"}, {"name": "a teacher", "type": "person"}, {"name": "a headmaster", "type": "person"}, {"name": "a secretary", "type": "person"}, {"name": "a parent", "type": "person"}, {"name": "a talent show", "type": "event"}, {"name": "a school ceremony", "type": "event"}, {"name": "a parade", "type": "event"}, {"name": "a celebration", "type": "event"}]}, {"id": "D", "type": "fill", "items": [{"s": "We borrow books from the ___.", "ans": ["library", "school library"]}, {"s": "The ___ runs the whole school. He is the boss of all the teachers.", "ans": ["headmaster", "head teacher", "principal"]}, {"s": "We do science experiments in the ___.", "ans": ["lab", "laboratory", "science lab"]}, {"s": "We play football on the sports ___.", "ans": ["field"]}, {"s": "Students sing and dance in the talent ___.", "ans": ["show"]}, {"s": "Our lunch is ready in the lunch ___.", "ans": ["hall"]}]}];
+let _uid=0;
+function starPoly(n,cx,cy,R,r,rot){const p=[];for(let i=0;i<n*2;i++){const a=(rot+i*180/n)*Math.PI/180,rad=i%2===0?R:r;p.push((cx+rad*Math.cos(a)).toFixed(2)+','+(cy-rad*Math.sin(a)).toFixed(2));}return p.join(' ');}
+const FLAGS={
+ it:()=>`<rect width="30" height="60" fill="#009246"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#CE2B37"/>`,
+ fr:()=>`<rect width="30" height="60" fill="#0055A4"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#EF4135"/>`,
+ jp:()=>`<rect width="90" height="60" fill="#fff"/><circle cx="45" cy="30" r="18" fill="#BC002D"/>`,
+ tr:()=>`<rect width="90" height="60" fill="#E30A17"/><circle cx="33.3" cy="30" r="15" fill="#fff"/><circle cx="37" cy="30" r="12" fill="#E30A17"/><polygon fill="#fff" points="${starPoly(5,48.6,30,7.5,2.9,180)}"/>`,
+ es:()=>`<rect width="90" height="60" fill="#AA151B"/><rect y="15" width="90" height="30" fill="#F1BF00"/><rect x="20" y="22" width="10" height="16" rx="2.5" fill="#AA151B" stroke="#7A5C00" stroke-width="1"/>`,
+ mx:()=>`<rect width="30" height="60" fill="#006847"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#CE1126"/><circle cx="45" cy="30" r="7" fill="#A67C45" stroke="#4F8A3C" stroke-width="2"/>`,
+ ru:()=>`<rect width="90" height="20" fill="#fff"/><rect y="20" width="90" height="20" fill="#0039A6"/><rect y="40" width="90" height="20" fill="#D52B1E"/>`,
+ az:()=>`<rect width="90" height="20" fill="#00B5E2"/><rect y="20" width="90" height="20" fill="#EF3340"/><rect y="40" width="90" height="20" fill="#509E2F"/><circle cx="41" cy="30" r="6.5" fill="#fff"/><circle cx="43" cy="30" r="5.2" fill="#EF3340"/><polygon fill="#fff" points="${starPoly(8,49.5,30,3.6,1.7,90)}"/>`,
+ ca:()=>`<rect width="90" height="60" fill="#fff"/><rect width="22.5" height="60" fill="#D52B1E"/><rect x="67.5" width="22.5" height="60" fill="#D52B1E"/><path fill="#D52B1E" d="M45,11 L48.2,19.5 L53.5,17.5 L51.8,26 L59.5,23 L57.5,29.5 L62,31.5 L53.5,37.5 L55,41.5 L46.8,40 L46.8,48 L43.2,48 L43.2,40 L35,41.5 L36.5,37.5 L28,31.5 L32.5,29.5 L30.5,23 L38.2,26 L36.5,17.5 L41.8,19.5 Z"/>`,
+ uk:()=>{const s='s'+(++_uid),t='t'+_uid;return `<svg x="0" y="0" width="90" height="60" viewBox="0 0 60 30" preserveAspectRatio="none"><clipPath id="${s}"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="${t}"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#${s})"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#${t})" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>`;}
+};
+function flag(code,cls=''){return `<svg class="flag ${cls}" viewBox="0 0 90 60" preserveAspectRatio="none" role="img" aria-label="flag">${FLAGS[code]()}</svg>`;}
+function sign(emoji){return `<svg class="sign" viewBox="0 0 60 60" role="img" aria-label="prohibition sign"><circle cx="30" cy="30" r="26" fill="#fff" stroke="#D32F2F" stroke-width="6"/><text x="30" y="40" font-size="28" text-anchor="middle">${emoji}</text><line x1="12" y1="12" x2="48" y2="48" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/></svg>`;}
+
 const shuffle = a => [...a].sort(() => Math.random() - 0.5);
 const norm = s => String(s).toLowerCase().replace(/[.,!?'’`]/g, '').replace(/\s+/g, ' ').trim();
 const flash = (el, cls = 'wrong', ms = 400) => { el.classList.add(cls, 'shake'); setTimeout(() => el.classList.remove(cls, 'shake'), ms); };
@@ -305,74 +287,32 @@ function initZoom() {
   window.addEventListener('resize', () => { if (zoomedCard) fitZoom(zoomedCard); });
 }
 
-/* ---------- Bayrak ve levha çizimleri (kodla, görsel dosyası yok) ---------- */
-let _uid = 0;
-function starPoly(n, cx, cy, R, r, rot) {
-  const pts = [];
-  for (let i = 0; i < n * 2; i++) {
-    const a = (rot + i * 180 / n) * Math.PI / 180, rad = i % 2 === 0 ? R : r;
-    pts.push((cx + rad * Math.cos(a)).toFixed(2) + ',' + (cy - rad * Math.sin(a)).toFixed(2));
-  }
-  return pts.join(' ');
+
+/* ---- {{flag:xx}} / {{flag:xx:sm}} / {{sign:🚫}} işaretlerini q, l, s alanlarında SVG'ye çevirir ---- */
+function richStr(s) {
+  if (typeof s !== 'string') return s;
+  return s.replace(/\{\{flag:([a-z]+)(?::(\w+))?\}\}/g, (m, c, cls) => flag(c, cls || ''))
+          .replace(/\{\{sign:([^}]+)\}\}/g, (m, e) => sign(e));
 }
-const FLAGS = {
-  it: () => `<rect width="30" height="60" fill="#009246"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#CE2B37"/>`,
-  fr: () => `<rect width="30" height="60" fill="#0055A4"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#EF4135"/>`,
-  jp: () => `<rect width="90" height="60" fill="#fff"/><circle cx="45" cy="30" r="18" fill="#BC002D"/>`,
-  tr: () => `<rect width="90" height="60" fill="#E30A17"/><circle cx="33.3" cy="30" r="15" fill="#fff"/><circle cx="37" cy="30" r="12" fill="#E30A17"/><polygon fill="#fff" points="${starPoly(5, 48.6, 30, 7.5, 2.9, 180)}"/>`,
-  es: () => `<rect width="90" height="60" fill="#AA151B"/><rect y="15" width="90" height="30" fill="#F1BF00"/><rect x="20" y="22" width="10" height="16" rx="2.5" fill="#AA151B" stroke="#7A5C00" stroke-width="1"/>`,
-  mx: () => `<rect width="30" height="60" fill="#006847"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#CE1126"/><circle cx="45" cy="30" r="7" fill="#A67C45" stroke="#4F8A3C" stroke-width="2"/>`,
-  ru: () => `<rect width="90" height="20" fill="#fff"/><rect y="20" width="90" height="20" fill="#0039A6"/><rect y="40" width="90" height="20" fill="#D52B1E"/>`,
-  az: () => `<rect width="90" height="20" fill="#00B5E2"/><rect y="20" width="90" height="20" fill="#EF3340"/><rect y="40" width="90" height="20" fill="#509E2F"/><circle cx="41" cy="30" r="6.5" fill="#fff"/><circle cx="43" cy="30" r="5.2" fill="#EF3340"/><polygon fill="#fff" points="${starPoly(8, 49.5, 30, 3.6, 1.7, 90)}"/>`,
-  ca: () => `<rect width="90" height="60" fill="#fff"/><rect width="22.5" height="60" fill="#D52B1E"/><rect x="67.5" width="22.5" height="60" fill="#D52B1E"/><path fill="#D52B1E" d="M45,11 L48.2,19.5 L53.5,17.5 L51.8,26 L59.5,23 L57.5,29.5 L62,31.5 L53.5,37.5 L55,41.5 L46.8,40 L46.8,48 L43.2,48 L43.2,40 L35,41.5 L36.5,37.5 L28,31.5 L32.5,29.5 L30.5,23 L38.2,26 L36.5,17.5 L41.8,19.5 Z"/>`,
-  uk: () => {
-    const s = 's' + (++_uid), t = 't' + _uid;
-    return `<svg x="0" y="0" width="90" height="60" viewBox="0 0 60 30" preserveAspectRatio="none"><clipPath id="${s}"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="${t}"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#${s})"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#${t})" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>`;
+function richWalk(o) {
+  if (Array.isArray(o)) o.forEach(richWalk);
+  else if (o && typeof o === 'object') for (const k of Object.keys(o)) {
+    if (k === 'q' || k === 'l' || k === 's') o[k] = richStr(o[k]); else richWalk(o[k]);
   }
+}
+
+/* ---- SECTIONS verisinden bölümleri çizer ---- */
+const RENDER = {
+  choice: s => renderChoice('p_' + s.id, s.items),
+  tf:     s => renderChoice('p_' + s.id, s.items.map(i => ({ ...i, opts: ['True', 'False'], fixed: true }))),
+  match:  s => renderMatch('p_' + s.id, s.pairs, s.extras || []),
+  fill:   s => renderFill('p_' + s.id, s.items),
+  order:  s => renderOrder('p_' + s.id, s.items),
+  open:   s => renderOpen('p_' + s.id, s.qs),
+  sort:   s => renderSort('p_' + s.id, s.items, s.done || undefined)
 };
-function flag(code, cls = '') {
-  return `<svg class="flag ${cls}" viewBox="0 0 90 60" preserveAspectRatio="none" role="img" aria-label="flag">${FLAGS[code]()}</svg>`;
-}
-function sign(emoji) {
-  return `<svg class="sign" viewBox="0 0 60 60" role="img" aria-label="prohibition sign"><circle cx="30" cy="30" r="26" fill="#fff" stroke="#D32F2F" stroke-width="6"/><text x="30" y="40" font-size="28" text-anchor="middle">${emoji}</text><line x1="12" y1="12" x2="48" y2="48" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/></svg>`;
-}
-
-
-const dA = [
-  { l: "I play the guitar and the piano.", r: "Music club" },
-  { l: "I do experiments in a lab.", r: "Science club" },
-  { l: "I paint pictures.", r: "Art club" },
-  { l: "I play chess with my friends.", r: "Chess club" },
-  { l: "I act on a stage.", r: "Drama club" },
-  { l: "I learn about computers and robots.", r: "Technology club" }
-];
-const xA = ["Folk dance club"];
-const dB = [
-  { q: "Sara likes doing experiments. Which club does she join?", opts: ["Science club", "Drama club", "Music club"], ans: "Science club" },
-  { q: "Pedro likes acting on a stage. Which club is his favourite?", opts: ["Drama club", "Chess club", "Art club"], ans: "Drama club" },
-  { q: "Mary likes painting pictures. Which club is she in?", opts: ["Art club", "Sports club", "Maths club"], ans: "Art club" },
-  { q: "Edward plays football and basketball. Which club is he in?", opts: ["Sports club", "Technology club", "Music club"], ans: "Sports club" },
-  { q: "Jurgen likes computers and robots. Which club is he in?", opts: ["Technology club", "Drama club", "Environment club"], ans: "Technology club" }
-];
-const dC = [
-  { s: "What is your favourite school ___? It is drama club.", ans: ["club"] },
-  { s: "Do you ___ playing the guitar?", ans: ["like", "enjoy", "love"] },
-  { s: "My favourite school club ___ music club.", ans: ["is"] },
-  { s: "We ___ in the chess club.", ans: ["are"] },
-  { s: "Where is the coach? He is in the sports ___.", ans: ["field", "hall", "centre", "center", "ground"] }
-];
-const dD = [
-  { words: ["What", "is", "your", "favourite", "school", "club?"], ans: "What is your favourite school club?" },
-  { words: ["Do", "you", "like", "playing", "the", "guitar?"], ans: "Do you like playing the guitar?" },
-  { words: ["I", "like", "painting", "pictures", "in", "the", "art", "club."], ans: "I like painting pictures in the art club." }
-];
-const dE = ["What is your favourite school club?", "Do you like playing the guitar?", "What do you do in your favourite club?"];
 window.onload = () => {
-  renderMatch('pA', dA, xA);
-  renderChoice('pB', dB);
-  renderFill('pC', dC);
-  renderOrder('pD', dD);
-  renderOpen('pE', dE);
+  SECTIONS.forEach(s => { richWalk(s); RENDER[s.type](s); });
   initZoom(); initTranslation();
 };
 

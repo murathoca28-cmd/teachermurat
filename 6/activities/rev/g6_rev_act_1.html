@@ -1,685 +1,322 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>6th Grade English - Fun Practice Hub</title>
-    <style>
-    :root {
-        --primary: #0F766E;
-        --primary-soft: #CCFBF1;
-        --pink: #C2410C;
-        --pink-soft: #FFEDD5;
-        --green: #00875F;
-        --green-soft: #D5F5E8;
-        --yellow: #F0A500;
-        --yellow-soft: #FEF9E7;
-        --red: #D32F2F;
-        --red-soft: #FFDAD8;
-        --bg: #F4F7FE;
-        --card-bg: #FFFFFF;
-        --text-dark: #1A1F23;
-        --text-muted: #3D4852;
-        --border-color: #64748B;
-        --border-strong: #334155;
-        --radius-lg: 24px;
-        --radius-md: 16px;
-        --radius-sm: 12px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 6 English - Unit REVS Activity 1: School Life and Routines</title>
+<style>
+:root{--primary:#0F766E;--primary-soft:#CCFBF1;--pink:#C2410C;--pink-soft:#FFEDD5;--green:#00875F;--green-soft:#D5F5E8;--yellow:#F0A500;--red:#D32F2F;--red-soft:#FFDAD8;--blue:#1D4ED8;--blue-soft:#DBEAFE;--bg:#F4F7FE;--text-dark:#1A1F23;--text-muted:#3D4852;--q-color:#0B4F4A;--border-color:#64748B;--border-strong:#334155;--radius-lg:24px;--radius-md:16px;--radius-sm:12px}
+*,*::before,*::after{box-sizing:border-box}
+.app-container,.app-container *{font-family:'Segoe UI',Verdana,Tahoma,Arial,system-ui,sans-serif}
+body{background:var(--bg);color:var(--text-dark);min-height:100vh;display:flex;flex-direction:column;user-select:none}
+input,textarea{user-select:text}
+.app-container{width:100%;max-width:900px;margin:0 auto;padding:20px 16px 40px;flex-grow:1;display:flex;flex-direction:column;gap:22px}
+.hero-banner{background:linear-gradient(135deg,#115E59 0%,#0D9488 100%);color:#fff;padding:28px 24px;border-radius:var(--radius-lg);text-align:center;box-shadow:0 10px 25px rgba(15,118,110,.3)}
+.hero-banner h1{font-size:30px;font-weight:800;margin-bottom:6px;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+.hero-banner p{font-size:18px;font-weight:700}
+.space-y{display:flex;flex-direction:column;gap:22px}
+.activity-card{background:#fff;border-radius:var(--radius-lg);padding:24px;border:4px solid var(--border-strong);box-shadow:0 6px 0 #94A3B8,0 12px 24px rgba(0,0,0,.12)}
+.activity-card>*{flex-shrink:0}
+.card-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:14px;border-bottom:3px dashed #94A3B8}
+.card-icon{width:56px;height:56px;border-radius:var(--radius-md);border:3px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.card-title h2{font-size:23px;font-weight:800}
+.card-title p{font-size:17px;font-weight:600;color:var(--text-muted);margin-top:3px}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px}
+.quiz-item{background:#EEF2FF;padding:16px;border-radius:var(--radius-md);border:3px solid var(--border-color);display:flex;flex-direction:column;gap:12px}
+.quiz-item-row{background:#EEF2FF;padding:14px 16px;border-radius:var(--radius-md);border:3px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.quiz-item-row>span,.q-text{font-weight:800;font-size:18px;color:var(--q-color)}
+.opt-list{display:flex;flex-direction:column;gap:10px}
+.opt-list.two-col{flex-direction:row}.opt-list.two-col .opt-btn{flex:1;text-align:center}
+.opt-btn{width:100%;padding:13px 14px;background:#fff;border:3px solid var(--border-strong);border-radius:var(--radius-sm);font-weight:800;font-size:18px;color:var(--text-dark);cursor:pointer;text-align:left;transition:all .15s ease;box-shadow:0 4px 0 var(--border-strong)}
+.opt-btn:hover:not(:disabled){border-color:var(--primary);background:var(--primary-soft);color:var(--primary);box-shadow:0 4px 0 var(--primary);transform:translateY(-2px)}
+.opt-btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 var(--border-strong)}
+.opt-btn.active-select{border-color:var(--primary);background:var(--primary);color:#fff;box-shadow:0 4px 0 #064E48}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.match-col{display:flex;flex-direction:column;gap:10px}
+.custom-input{padding:11px 14px;border-radius:var(--radius-sm);border:3px solid var(--border-strong);background:#fff;color:var(--text-dark);font-weight:700;font-size:18px;outline:none}
+.custom-input:focus{border-color:var(--pink);box-shadow:0 0 0 4px rgba(194,65,12,.25)}
+.custom-input.gap{width:150px;margin:0 6px}
+textarea.custom-input{width:100%;min-height:64px;resize:vertical}
+.action-btn{background:var(--pink);color:#fff;border:3px solid #7C2D12;padding:10px 20px;border-radius:var(--radius-sm);font-weight:800;font-size:18px;cursor:pointer;box-shadow:0 4px 0 #7C2D12;transition:all .15s ease}
+.action-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}.action-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #7C2D12}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.tr-btn,.zoom-btn{background:#fff;color:#0B4F4A;border:3px solid var(--border-strong);border-radius:var(--radius-sm);font-family:inherit;font-weight:800;font-size:16px;padding:8px 14px;cursor:pointer;box-shadow:0 3px 0 var(--border-strong)}
+.tr-btn:hover,.zoom-btn:hover{background:var(--primary-soft)}
+.zoom-btn{margin-left:auto;flex-shrink:0}
+.tr-text{display:none;margin-top:12px;padding:14px 16px;background:#fff;border:3px dashed var(--border-color);border-radius:var(--radius-sm);font-weight:600}.tr-text.show{display:block}
+.story-box{background:var(--green-soft);border:4px solid var(--green);border-radius:var(--radius-md);padding:18px 20px;font-size:19px;font-weight:600;line-height:1.7;color:#0B3D33;margin-bottom:18px}
+.pool-box{background:#EEF2FF;border:3px dashed var(--border-color);border-radius:var(--radius-md);padding:16px;display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px;min-height:70px;align-items:center}
+.order-line{min-height:60px;border:3px dashed var(--border-color);border-radius:var(--radius-sm);background:#fff;padding:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:800;font-size:18px}
+.item-chip{background:#fff;color:var(--text-dark);border:3px solid var(--border-strong);padding:10px 18px;border-radius:22px;font-weight:800;font-size:18px;cursor:pointer;transition:all .15s ease;box-shadow:0 3px 0 var(--border-strong)}
+.item-chip:hover{border-color:var(--yellow);box-shadow:0 3px 0 var(--yellow);transform:translateY(-2px)}
+.item-chip.active-select{border-color:var(--primary);background:var(--primary);color:#fff;box-shadow:0 3px 0 #064E48;transform:scale(1.08)}
+.bucket-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.bucket{min-height:160px;border-radius:var(--radius-md);padding:14px;border:4px solid;cursor:pointer;transition:all .2s ease}
+.bucket:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.15)}
+.bucket h3{font-size:20px;font-weight:800;margin-bottom:4px;pointer-events:none}
+.bucket .hint{font-size:15px;font-weight:700;color:var(--text-muted);margin-bottom:10px;pointer-events:none}
+.bucket-items{display:flex;flex-wrap:wrap;gap:8px;pointer-events:none}.bucket-items .item-chip{pointer-events:auto}
+.result-msg{display:none;margin-top:16px;padding:14px 18px;background:var(--green-soft);border:4px solid var(--green);border-radius:var(--radius-md);font-size:20px;font-weight:800;color:#004D36;text-align:center}.result-msg.show{display:block}
+.correct{background:var(--green-soft)!important;border-color:var(--green)!important;color:#004D36!important;font-weight:800}
+.wrong{background:var(--red-soft)!important;border-color:var(--red)!important;color:#8E1B1B!important;font-weight:800}
+.opt-btn.correct,.opt-btn.wrong{box-shadow:0 4px 0 currentColor}
+.opt-btn.correct::after{content:"  \2713"}.opt-btn.wrong::after{content:"  \2715"}
+:focus-visible{outline:4px solid #F0A500;outline-offset:3px}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}.shake{animation:shake .3s ease}
+@keyframes pop{0%{transform:scale(.95)}50%{transform:scale(1.05)}100%{transform:scale(1)}}.pop{animation:pop .25s ease}
+.activity-card.expanded{position:fixed;top:0;left:0;z-index:100000;border-radius:0;border-width:0;box-shadow:none;overflow:auto;display:flex;flex-direction:column;justify-content:safe center}
+@media(max-width:700px){.zoom-btn{display:none}.match-grid{grid-template-columns:1fr}.hero-banner h1{font-size:24px}.card-title h2{font-size:20px}}
+footer{text-align:center;padding:16px;color:var(--text-muted);font-size:15px;border-top:1px solid var(--border-color);background:#fff;margin-top:auto}
+.flag{width:108px;height:72px;border:3px solid var(--border-strong);border-radius:8px;display:block;background:#fff}
+.flag.sm{width:72px;height:48px;display:inline-block;vertical-align:middle;margin-right:12px}
+.flagq{display:block;margin-top:10px}
+.match-l .flag{margin:0 auto}
+.sign{width:88px;height:88px;display:block}
+.tr-row{margin-top:16px}
 
-    *, *::before, *::after {
-        box-sizing: border-box;
-    }
+.stack{display:flex;flex-direction:column;gap:16px}
+.tr-row{margin-top:16px}
 
-    .app-container, .app-container * {
-        font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif;
-    }
-
-    body {
-        background-color: var(--bg);
-        color: var(--text-dark);
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        user-select: none;
-    }
-
-    input { user-select: text; }
-
-    .app-container {
-        width: 100%;
-        max-width: 820px;
-        margin: 0 auto;
-        padding: 20px 16px 40px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 22px;
-    }
-
-    .hero-banner {
-        background: linear-gradient(135deg, #115E59 0%, #0D9488 100%);
-        color: #FFFFFF;
-        padding: 28px 24px;
-        border-radius: var(--radius-lg);
-        text-align: center;
-        box-shadow: 0 10px 25px rgba(15, 118, 110, 0.3);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .hero-banner h1 {
-        font-size: 30px;
-        font-weight: 800;
-        letter-spacing: 0.5px;
-        margin-bottom: 6px;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .hero-banner p {
-        font-size: 18px;
-        font-weight: 700;
-    }
-
-    .activity-card {
-        background: var(--card-bg);
-        border-radius: var(--radius-lg);
-        padding: 24px;
-        border: 4px solid var(--border-strong);
-        box-shadow: 0 6px 0 #94A3B8, 0 12px 24px rgba(0, 0, 0, 0.12);
-    }
-
-    .card-header {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        margin-bottom: 18px;
-        padding-bottom: 14px;
-        border-bottom: 3px dashed #94A3B8;
-    }
-
-    .card-icon {
-        width: 56px;
-        height: 56px;
-        border-radius: var(--radius-md);
-        border: 3px solid currentColor;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 28px;
-        flex-shrink: 0;
-    }
-
-    .card-title h2 {
-        font-size: 23px;
-        color: var(--text-dark);
-        font-weight: 800;
-    }
-
-    .card-title p {
-        font-size: 17px;
-        font-weight: 600;
-        color: var(--text-muted);
-        margin-top: 3px;
-    }
-
-    .grid-2 {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-        gap: 16px;
-    }
-
-    .space-y {
-        display: flex;
-        flex-direction: column;
-        gap: 22px;
-    }
-
-    .quiz-item {
-        background: #EEF2FF;
-        padding: 16px;
-        border-radius: var(--radius-md);
-        border: 3px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .quiz-item-row {
-        background: #EEF2FF;
-        padding: 14px 16px;
-        border-radius: var(--radius-md);
-        border: 3px solid var(--border-color);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-
-    .quiz-item p,
-    .quiz-item-row > span {
-        font-weight: 800;
-        font-size: 18px;
-        color: #0B4F4A;
-    }
-
-    .opt-btn {
-        width: 100%;
-        padding: 13px 14px;
-        background: #FFFFFF;
-        border: 3px solid var(--border-strong);
-        border-radius: var(--radius-sm);
-        font-weight: 800;
-        font-size: 18px;
-        color: var(--text-dark);
-        cursor: pointer;
-        transition: all 0.15s ease;
-        box-shadow: 0 4px 0 var(--border-strong);
-    }
-
-    .opt-btn:hover:not(:disabled) {
-        border-color: var(--primary);
-        background: var(--primary-soft);
-        color: var(--primary);
-        box-shadow: 0 4px 0 var(--primary);
-        transform: translateY(-2px);
-    }
-
-    .opt-btn:active:not(:disabled) {
-        transform: translateY(2px);
-        box-shadow: 0 1px 0 var(--border-strong);
-    }
-
-    .custom-input {
-        padding: 11px 14px;
-        border-radius: var(--radius-sm);
-        border: 3px solid var(--border-strong);
-        background: #FFFFFF;
-        color: var(--text-dark);
-        font-weight: 700;
-        font-size: 18px;
-        outline: none;
-        transition: all 0.2s;
-        width: 170px;
-    }
-
-    .custom-input::placeholder {
-        color: #5B6671;
-        font-weight: 600;
-    }
-
-    .custom-input:focus {
-        border-color: var(--pink);
-        box-shadow: 0 0 0 4px rgba(194, 65, 12, 0.25);
-    }
-
-    .action-btn {
-        background: var(--pink);
-        color: #FFFFFF;
-        border: 3px solid #7C2D12;
-        padding: 10px 20px;
-        border-radius: var(--radius-sm);
-        font-weight: 800;
-        font-size: 18px;
-        cursor: pointer;
-        transition: all 0.15s ease;
-        box-shadow: 0 4px 0 #7C2D12;
-    }
-
-    .action-btn:hover {
-        transform: translateY(-2px);
-        filter: brightness(1.08);
-    }
-
-    .action-btn:active {
-        transform: translateY(2px);
-        box-shadow: 0 1px 0 #7C2D12;
-    }
-
-    :focus-visible {
-        outline: 4px solid #F0A500;
-        outline-offset: 3px;
-    }
-
-    .correct {
-        background: var(--green-soft) !important;
-        border-color: var(--green) !important;
-        color: #004D36 !important;
-        font-weight: 800;
-    }
-
-    .wrong {
-        background: var(--red-soft) !important;
-        border-color: var(--red) !important;
-        color: #8E1B1B !important;
-        font-weight: 800;
-    }
-
-    .opt-btn.correct, .opt-btn.wrong { box-shadow: 0 4px 0 currentColor; }
-    .opt-btn.correct::after { content: "  ✓"; }
-    .opt-btn.wrong::after { content: "  ✕"; }
-
-    .pool-box {
-        background: #EEF2FF;
-        border: 3px dashed var(--border-color);
-        border-radius: var(--radius-md);
-        padding: 16px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-bottom: 16px;
-        min-height: 70px;
-        align-items: center;
-    }
-
-    .item-chip {
-        background: #FFFFFF;
-        color: var(--text-dark);
-        border: 3px solid var(--border-strong);
-        padding: 10px 18px;
-        border-radius: 22px;
-        font-weight: 800;
-        font-size: 18px;
-        cursor: pointer;
-        transition: all 0.15s ease;
-        box-shadow: 0 3px 0 var(--border-strong);
-    }
-
-    .item-chip:hover {
-        border-color: var(--yellow);
-        box-shadow: 0 3px 0 var(--yellow);
-        transform: translateY(-2px);
-    }
-
-    .item-chip.active-select {
-        border-color: var(--primary);
-        background: var(--primary);
-        color: #FFFFFF;
-        box-shadow: 0 3px 0 #064E48;
-        transform: scale(1.08);
-    }
-
-    .bucket-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-        gap: 16px;
-    }
-
-    .bucket {
-        min-height: 160px;
-        border-radius: var(--radius-md);
-        padding: 14px;
-        border: 4px solid;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    .bucket:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 14px rgba(0,0,0,0.15);
-    }
-
-    .bucket h3 {
-        font-size: 20px;
-        font-weight: 800;
-        margin-bottom: 4px;
-        pointer-events: none;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .bucket .hint {
-        font-size: 15px;
-        font-weight: 700;
-        color: var(--text-muted);
-        margin-bottom: 10px;
-        pointer-events: none;
-    }
-
-    .bucket-items {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        pointer-events: none;
-    }
-
-    .bucket-items .item-chip {
-        pointer-events: auto;
-    }
-
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-4px); }
-        75% { transform: translateX(4px); }
-    }
-    .shake { animation: shake 0.3s ease; }
-
-    @keyframes pop {
-        0% { transform: scale(0.95); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
-    }
-    .pop { animation: pop 0.25s ease; }
-
-    /* Never let a section's children shrink inside the enlarged (fixed-height) card; the card scrolls instead. */
-    .activity-card > * { flex-shrink: 0; }
-
-    .zoom-btn {
-        margin-left: auto;
-        flex-shrink: 0;
-        background: #FFFFFF;
-        color: #0B4F4A;
-        border: 3px solid var(--border-strong);
-        border-radius: var(--radius-sm);
-        font-family: inherit;
-        font-weight: 800;
-        font-size: 16px;
-        padding: 8px 14px;
-        cursor: pointer;
-        box-shadow: 0 3px 0 var(--border-strong);
-    }
-
-    .zoom-btn:hover { background: var(--primary-soft); }
-
-    .zoom-btn:active {
-        transform: translateY(2px);
-        box-shadow: 0 1px 0 var(--border-strong);
-    }
-
-    .activity-card.expanded {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 100000;
-        border-radius: 0;
-        border-width: 0;
-        box-shadow: none;
-        overflow: auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: safe center;
-    }
-
-    @media (max-width: 700px) {
-        .zoom-btn { display: none; }
-    }
-
-    footer {
-        text-align: center;
-        padding: 16px;
-        color: var(--text-muted);
-        font-size: 15px;
-        border-top: 1px solid var(--border-color);
-        background: #FFFFFF;
-        margin-top: auto;
-    }
 </style>
 <link rel="stylesheet" href="/theme.css">
 </head>
 <body>
-    <div id="navbar-placeholder" style="min-height: 0px;"></div>
-    <script src="/navbar.js"></script>
+<div id="navbar-placeholder" style="min-height:0px"></div>
+<script src="/navbar.js"></script>
+<div class="app-container">
+<header class="hero-banner"><h1>🎓 6th GRADE ENGLISH</h1><p>UNIT REVS • ACTIVITY 1: School Life and Routines</p></header>
+<main class="space-y">
+<section class="activity-card"><div class="card-header"><div class="card-icon" style="background:var(--primary-soft);color:var(--primary);">🏫</div><div class="card-title"><h2>Part A: School Places and Things</h2><p>Choose the correct answer.</p></div></div><div id="p_A" class="grid-2"></div><div class="btn-row tr-row"><button type="button" class="tr-btn" data-tr="tr_A">🇹🇷 Türkçesi</button></div><div id="tr_A" class="tr-text">library: kütüphane · laboratory: laboratuvar · noticeboard: ilan panosu · timetable: ders programı · cafeteria: kafeterya</div></section><section class="activity-card"><div class="card-header"><div class="card-icon" style="background:var(--pink-soft);color:var(--pink);">👕</div><div class="card-title"><h2>Part B: Clothes</h2><p>Click a picture, then click the correct word.</p></div></div><div id="p_B" class="stack"></div></section><section class="activity-card"><div class="card-header"><div class="card-icon" style="background:var(--green-soft);color:var(--green);">✏️</div><div class="card-title"><h2>Part C: Now or Every Day?</h2><p>Write the correct form of the verb.</p></div></div><div id="p_C" class="stack"></div><div class="btn-row tr-row"><button type="button" class="tr-btn" data-tr="tr_C">🇹🇷 Türkçesi</button></div><div id="tr_C" class="tr-text">Şu anda olan işler için <b>am / is / are + fiil-ing</b>, düzenli yapılan işler için basit geniş zaman kullanılır.</div></section><section class="activity-card"><div class="card-header"><div class="card-icon" style="background:var(--blue-soft);color:var(--blue);">🔤</div><div class="card-title"><h2>Part D: Unscramble</h2><p>Put the words in the correct order.</p></div></div><div id="p_D" class="stack"></div></section><section class="activity-card"><div class="card-header"><div class="card-icon" style="background:var(--primary-soft);color:var(--primary);">💬</div><div class="card-title"><h2>Part E: About You</h2><p>Write full sentences.</p></div></div><div id="p_E" class="grid-2"></div></section>
+</main>
+</div>
 
-    <div class="app-container">
-        <header class="hero-banner">
-            <h1>🎓 6th GRADE REVISIONS</h1>
-            <p>ACTIVITY 1</p>
-        </header>
+<script>
+const SECTIONS = [{"id": "A", "type": "choice", "items": [{"q": "Where do we borrow story books?", "opts": ["library", "laboratory", "sports field"], "ans": "library"}, {"q": "Where do students do science experiments?", "opts": ["cafeteria", "laboratory", "music room"], "ans": "laboratory"}, {"q": "Where can you read school announcements?", "opts": ["noticeboard", "timetable", "uniform"], "ans": "noticeboard"}, {"q": "What shows your lessons for each day?", "opts": ["noticeboard", "timetable", "concert"], "ans": "timetable"}, {"q": "Where do students eat lunch at school?", "opts": ["cafeteria", "laboratory", "library"], "ans": "cafeteria"}, {"q": "What do students do in the music club?", "opts": ["practise a song", "do experiments", "read a map"], "ans": "practise a song"}]}, {"id": "B", "type": "match", "pairs": [{"l": "👕", "r": "T-shirt"}, {"l": "👗", "r": "dress"}, {"l": "🧤", "r": "gloves"}, {"l": "👟", "r": "sneakers"}, {"l": "☂️", "r": "umbrella"}], "extras": ["raincoat"]}, {"id": "C", "type": "fill", "items": [{"s": "Look! Mum ___ (make) a cake in the kitchen.", "ans": ["is making"]}, {"s": "I usually ___ (take) the bus to school.", "ans": ["take"]}, {"s": "She ___ (join) the drama club every Friday.", "ans": ["joins"]}, {"s": "They ___ (practise) the guitar right now.", "ans": ["are practising", "are practicing"]}, {"s": "My brother ___ (not / like) cold weather.", "ans": ["doesn't like", "does not like"]}]}, {"id": "D", "type": "order", "items": [{"words": ["usually", "I", "at", "wake", "seven", "up"], "ans": "I usually wake up at seven."}, {"words": ["is", "What", "doing", "she", "now"], "ans": "What is she doing now?"}, {"words": ["half", "starts", "The", "past", "lesson", "two", "at"], "ans": "The lesson starts at half past two."}]}, {"id": "E", "type": "open", "qs": ["What do you do after school?", "What is your favourite school club?", "What are you wearing today?"]}];
+let _uid=0;
+function starPoly(n,cx,cy,R,r,rot){const p=[];for(let i=0;i<n*2;i++){const a=(rot+i*180/n)*Math.PI/180,rad=i%2===0?R:r;p.push((cx+rad*Math.cos(a)).toFixed(2)+','+(cy-rad*Math.sin(a)).toFixed(2));}return p.join(' ');}
+const FLAGS={
+ it:()=>`<rect width="30" height="60" fill="#009246"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#CE2B37"/>`,
+ fr:()=>`<rect width="30" height="60" fill="#0055A4"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#EF4135"/>`,
+ jp:()=>`<rect width="90" height="60" fill="#fff"/><circle cx="45" cy="30" r="18" fill="#BC002D"/>`,
+ tr:()=>`<rect width="90" height="60" fill="#E30A17"/><circle cx="33.3" cy="30" r="15" fill="#fff"/><circle cx="37" cy="30" r="12" fill="#E30A17"/><polygon fill="#fff" points="${starPoly(5,48.6,30,7.5,2.9,180)}"/>`,
+ es:()=>`<rect width="90" height="60" fill="#AA151B"/><rect y="15" width="90" height="30" fill="#F1BF00"/><rect x="20" y="22" width="10" height="16" rx="2.5" fill="#AA151B" stroke="#7A5C00" stroke-width="1"/>`,
+ mx:()=>`<rect width="30" height="60" fill="#006847"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#CE1126"/><circle cx="45" cy="30" r="7" fill="#A67C45" stroke="#4F8A3C" stroke-width="2"/>`,
+ ru:()=>`<rect width="90" height="20" fill="#fff"/><rect y="20" width="90" height="20" fill="#0039A6"/><rect y="40" width="90" height="20" fill="#D52B1E"/>`,
+ az:()=>`<rect width="90" height="20" fill="#00B5E2"/><rect y="20" width="90" height="20" fill="#EF3340"/><rect y="40" width="90" height="20" fill="#509E2F"/><circle cx="41" cy="30" r="6.5" fill="#fff"/><circle cx="43" cy="30" r="5.2" fill="#EF3340"/><polygon fill="#fff" points="${starPoly(8,49.5,30,3.6,1.7,90)}"/>`,
+ ca:()=>`<rect width="90" height="60" fill="#fff"/><rect width="22.5" height="60" fill="#D52B1E"/><rect x="67.5" width="22.5" height="60" fill="#D52B1E"/><path fill="#D52B1E" d="M45,11 L48.2,19.5 L53.5,17.5 L51.8,26 L59.5,23 L57.5,29.5 L62,31.5 L53.5,37.5 L55,41.5 L46.8,40 L46.8,48 L43.2,48 L43.2,40 L35,41.5 L36.5,37.5 L28,31.5 L32.5,29.5 L30.5,23 L38.2,26 L36.5,17.5 L41.8,19.5 Z"/>`,
+ uk:()=>{const s='s'+(++_uid),t='t'+_uid;return `<svg x="0" y="0" width="90" height="60" viewBox="0 0 60 30" preserveAspectRatio="none"><clipPath id="${s}"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="${t}"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#${s})"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#${t})" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>`;}
+};
+function flag(code,cls=''){return `<svg class="flag ${cls}" viewBox="0 0 90 60" preserveAspectRatio="none" role="img" aria-label="flag">${FLAGS[code]()}</svg>`;}
+function sign(emoji){return `<svg class="sign" viewBox="0 0 60 60" role="img" aria-label="prohibition sign"><circle cx="30" cy="30" r="26" fill="#fff" stroke="#D32F2F" stroke-width="6"/><text x="30" y="40" font-size="28" text-anchor="middle">${emoji}</text><line x1="12" y1="12" x2="48" y2="48" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/></svg>`;}
 
-        <main class="space-y">
-            <!-- WHO AM I? (JOBS) -->
-            <section class="activity-card">
-                <div class="card-header">
-                    <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">💼</div>
-                    <div class="card-title">
-                        <h2>Part A: Who Am I? (Jobs & Duties)</h2>
-                        <p>Read the clue and choose the correct job!</p>
-                    </div>
-                </div>
-                <div id="jobsContainer" class="grid-2"></div>
-            </section>
+const shuffle = a => [...a].sort(() => Math.random() - 0.5);
+const norm = s => String(s).toLowerCase().replace(/[.,!?'’`]/g, '').replace(/\s+/g, ' ').trim();
+const flash = (el, cls = 'wrong', ms = 400) => { el.classList.add(cls, 'shake'); setTimeout(() => el.classList.remove(cls, 'shake'), ms); };
 
-            <!-- WHERE AM I? (PLACES) -->
-            <section class="activity-card">
-                <div class="card-header">
-                    <div class="card-icon" style="background: var(--pink-soft); color: var(--pink);">🏪</div>
-                    <div class="card-title">
-                        <h2>Part B: Where Am I? (Places in Town)</h2>
-                        <p>Type the correct place name! (e.g. bakery, chemist's)</p>
-                    </div>
-                </div>
-                <div id="placesContainer" class="space-y" style="gap:14px;"></div>
-            </section>
+/* Multiple choice ve True/False: items = [{q, opts, ans, fixed?}]  (True/False: opts:["True","False"], fixed:true) */
+function renderChoice(id, items) {
+  const box = document.getElementById(id);
+  box.innerHTML = items.map((it, n) => `
+    <div class="quiz-item">
+      <p class="q-text">${n + 1}. ${it.q}</p>
+      <div class="opt-list${it.fixed ? ' two-col' : ''}">
+        ${(it.fixed ? it.opts : shuffle(it.opts)).map(o => `<button type="button" class="opt-btn" data-v="${o}">${o}</button>`).join('')}
+      </div>
+    </div>`).join('');
+  box.querySelectorAll('.quiz-item').forEach((card, n) => {
+    card.querySelectorAll('.opt-btn').forEach(btn => btn.addEventListener('click', () => {
+      if (btn.dataset.v === items[n].ans) {
+        card.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+        btn.classList.add('correct', 'pop');
+      } else { btn.classList.add('wrong', 'shake'); setTimeout(() => btn.classList.remove('shake'), 300); }
+    }));
+  });
+}
 
-            <!-- HEALTHY VS UNHEALTHY FOOD SORT -->
-            <section class="activity-card">
-                <div class="card-header">
-                    <div class="card-icon" style="background: var(--green-soft); color: var(--green);">🥗</div>
-                    <div class="card-title">
-                        <h2>Part C: Healthy vs Unhealthy Food Sort</h2>
-                        <p>1. Click a food to select it. 2. Click the correct bucket to place it!</p>
-                    </div>
-                </div>
-                <div id="foodPool" class="pool-box"></div>
-                <div class="bucket-container">
-                    <div id="healthyBucket" class="bucket" style="background: var(--green-soft); border-color: #00875F;" onclick="placeFood('healthy')">
-                        <h3 style="color: #004D36;">❤️ Healthy Food</h3>
-                        <div class="hint">👆 Click here to place</div>
-                        <div class="bucket-items" id="healthyItems"></div>
-                    </div>
-                    <div id="unhealthyBucket" class="bucket" style="background: var(--red-soft); border-color: #D32F2F;" onclick="placeFood('unhealthy')">
-                        <h3 style="color: #7A1414;">🍔 Unhealthy Food</h3>
-                        <div class="hint">👆 Click here to place</div>
-                        <div class="bucket-items" id="unhealthyItems"></div>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
+/* Matching: pairs = [{l, r}], extras = ek (fazladan) sağ seçenekler. Önce soldan, sonra sağdan seç. */
+function renderMatch(id, pairs, extras = []) {
+  const box = document.getElementById(id);
+  const rights = shuffle([...pairs.map((p, i) => ({ t: p.r, i: String(i) })), ...extras.map(t => ({ t, i: 'x' }))]);
+  box.innerHTML = `<div class="match-grid">
+    <div class="match-col">${pairs.map((p, i) => `<button type="button" class="opt-btn match-l" data-i="${i}">${p.l}</button>`).join('')}</div>
+    <div class="match-col">${rights.map(r => `<button type="button" class="opt-btn match-r" data-i="${r.i}">${r.t}</button>`).join('')}</div></div>`;
+  let sel = null;
+  box.querySelectorAll('.opt-btn').forEach(b => b.addEventListener('click', () => {
+    if (b.classList.contains('correct')) return;
+    if (b.classList.contains('match-l')) {
+      box.querySelectorAll('.match-l').forEach(x => x.classList.remove('active-select'));
+      sel = b; b.classList.add('active-select'); return;
+    }
+    if (!sel) return;
+    if (sel.dataset.i === b.dataset.i) {
+      sel.classList.remove('active-select'); sel.classList.add('correct', 'pop'); b.classList.add('correct', 'pop'); sel = null;
+    } else flash(b);
+  }));
+}
 
-    <script>
-        // --- DATA & LOGIC ---
-        const jobsData = [
-            { duty: "I help sick people in a hospital.", job: "Doctor", opts: ["Farmer", "Doctor", "Singer"], id: "j1" },
-            { duty: "I grow fruits and vegetables on a farm.", job: "Farmer", opts: ["Farmer", "Teacher", "Police Officer"], id: "j2" },
-            { duty: "I teach English to students.", job: "Teacher", opts: ["Singer", "Doctor", "Teacher"], id: "j3" },
-            { duty: "I keep the city safe.", job: "Police Officer", opts: ["Police Officer", "Farmer", "Singer"], id: "j4" }
-        ];
+/* Fill in the blank: items = [{s:"I ___ a teacher.", ans:"am" veya ["am"]}] */
+function renderFill(id, items) {
+  const box = document.getElementById(id);
+  box.innerHTML = items.map((it, n) => {
+    const [a, b] = it.s.split('___');
+    return `<div class="quiz-item-row"><span>${n + 1}. ${a}<input type="text" class="custom-input gap" autocomplete="off" autocapitalize="off" spellcheck="false">${b}</span><button type="button" class="action-btn">Check</button></div>`;
+  }).join('');
+  box.querySelectorAll('.quiz-item-row').forEach((row, n) => {
+    const inp = row.querySelector('input'), btn = row.querySelector('button'), ok = [].concat(items[n].ans).map(norm);
+    const check = () => {
+      if (ok.includes(norm(inp.value))) { inp.classList.add('correct', 'pop'); inp.disabled = true; btn.style.display = 'none'; }
+      else flash(inp);
+    };
+    btn.addEventListener('click', check);
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+  });
+}
 
-        function renderJobs() {
-            document.getElementById('jobsContainer').innerHTML = jobsData.map(j => {
-                const shuffledOpts = [...j.opts].sort(() => Math.random() - 0.5);
-                return `
-                <div class="quiz-item">
-                    <p>"${j.duty}"</p>
-                    <div style="display:flex; flex-direction:column; gap:10px;" id="jobOpts-${j.id}">
-                        ${shuffledOpts.map(o => `<button data-job="${j.id}" class="opt-btn">${o}</button>`).join('')}
-                    </div>
-                </div>`;
-            }).join('');
+/* Unscramble: items = [{words:["work","hospital","doctors","at","a"], ans:"Doctors work at a hospital."}] */
+function renderOrder(id, items) {
+  const box = document.getElementById(id);
+  box.innerHTML = items.map((it, n) => `
+    <div class="quiz-item">
+      <p class="q-text">${n + 1}. Put the words in the correct order.</p>
+      <div class="order-line"></div>
+      <div class="pool-box" style="margin:0"></div>
+      <div class="btn-row"><button type="button" class="action-btn chk">Check</button><button type="button" class="tr-btn rst">Reset</button></div>
+    </div>`).join('');
+  box.querySelectorAll('.quiz-item').forEach((card, n) => {
+    const it = items[n], line = card.querySelector('.order-line'), pool = card.querySelector('.pool-box');
+    const fill = () => {
+      pool.innerHTML = ''; line.innerHTML = '';
+      shuffle(it.words).forEach(w => {
+        const c = document.createElement('div'); c.className = 'item-chip'; c.textContent = w;
+        c.addEventListener('click', () => { if (!card.dataset.done) (c.parentElement === pool ? line : pool).appendChild(c); });
+        pool.appendChild(c);
+      });
+    };
+    fill();
+    card.querySelector('.rst').addEventListener('click', () => { if (!card.dataset.done) fill(); });
+    card.querySelector('.chk').addEventListener('click', () => {
+      const got = [...line.children].map(c => c.textContent).join(' ');
+      if (norm(got) === norm(it.ans)) {
+        card.dataset.done = '1'; line.textContent = it.ans; line.classList.add('correct', 'pop');
+        card.querySelector('.btn-row').style.display = 'none'; pool.style.display = 'none';
+      } else flash(line, 'wrong', 500);
+    });
+  });
+}
 
-            document.querySelectorAll('#jobsContainer .opt-btn').forEach(btn => {
-                btn.addEventListener('click', () => checkJob(btn.dataset.job, btn));
-            });
-        }
+/* Kısa açık uçlu soru (kişisel cevap): qs = ["What is your favourite hobby?", ...]  En az 3 kelime yazınca Done çalışır. */
+function renderOpen(id, qs) {
+  const box = document.getElementById(id);
+  box.innerHTML = qs.map((q, n) => `<div class="quiz-item"><p class="q-text">${n + 1}. ${q}</p>
+    <textarea class="custom-input" placeholder="Write a full sentence..."></textarea>
+    <div class="btn-row"><button type="button" class="action-btn">Done</button></div></div>`).join('');
+  box.querySelectorAll('.quiz-item').forEach(card => {
+    const ta = card.querySelector('textarea'), btn = card.querySelector('button');
+    btn.addEventListener('click', () => {
+      if (ta.value.trim().split(/\s+/).length < 3) return flash(ta);
+      ta.classList.add('correct', 'pop'); ta.disabled = true; btn.outerHTML = '<span class="q-text">✓ Well done!</span>';
+    });
+  });
+}
 
-        function checkJob(id, btn) {
-            const correct = jobsData.find(j => j.id === id).job;
-            if (btn.innerText.trim() === correct) {
-                const parent = document.getElementById(`jobOpts-${id}`);
-                parent.querySelectorAll('button').forEach(b => b.disabled = true);
-                btn.classList.add('correct', 'pop');
-            } else {
-                btn.classList.add('wrong', 'shake');
-                setTimeout(() => btn.classList.remove('shake'), 300);
-            }
-        }
+/* Sıralama (2+ kova): HTML'de .bucket[data-bucket="anahtar"] elemanları olur; items = [{name, type:"anahtar"}] */
+function renderSort(poolId, items, doneMsg = '🎉 Great job! Everything is in the right place.') {
+  const pool = document.getElementById(poolId), sec = pool.closest('.activity-card');
+  const msg = sec.querySelector('.result-msg');
+  let active = null;
+  const select = (el, it) => {
+    if (el.dataset.locked) return;
+    if (el.parentElement !== pool) { pool.appendChild(el); el.classList.remove('wrong'); return; }
+    sec.querySelectorAll('.item-chip.active-select').forEach(x => x.classList.remove('active-select'));
+    active = { el, it }; el.classList.add('active-select');
+  };
+  shuffle(items).forEach(it => {
+    const el = document.createElement('div'); el.className = 'item-chip'; el.textContent = it.name;
+    el.addEventListener('click', () => select(el, it)); pool.appendChild(el);
+  });
+  sec.querySelectorAll('.bucket').forEach(b => b.addEventListener('click', () => {
+    if (!active) return;
+    const { el, it } = active; active = null; el.classList.remove('active-select');
+    b.querySelector('.bucket-items').appendChild(el);
+    if (it.type === b.dataset.bucket) { el.dataset.locked = '1'; el.classList.add('correct', 'pop'); }
+    else { el.classList.add('wrong', 'shake'); setTimeout(() => el.classList.remove('shake'), 300); }
+    if (msg && sec.querySelectorAll('.item-chip[data-locked]').length === items.length) { msg.textContent = doneMsg; msg.classList.add('show'); if (zoomedCard) fitZoom(zoomedCard); }
+  }));
+}
 
-        const placesData = [
-            { clue: "1. You can buy fresh bread here in the morning.", ans: "bakery", id: "p1" },
-            { clue: "2. You can see historical objects here.", ans: "museum", id: "p2" },
-            { clue: "3. You can buy medicine here when you are sick.", ans: "chemist's", id: "p3" },
-            { clue: "4. You can watch new films with your friends here.", ans: "cinema", id: "p4" }
-        ];
+/* Türkçe çeviri düğmesi: <button class="tr-btn" data-tr="trBox">🇹🇷 Türkçesi</button> <div id="trBox" class="tr-text">...</div> */
+function initTranslation() {
+  document.querySelectorAll('.tr-btn[data-tr]').forEach(btn => btn.addEventListener('click', () => {
+    const open = document.getElementById(btn.dataset.tr).classList.toggle('show');
+    btn.textContent = open ? '🇹🇷 Hide Türkçe' : '🇹🇷 Türkçesi';
+    if (zoomedCard) fitZoom(zoomedCard);
+  }));
+}
 
-        function renderPlaces() {
-            document.getElementById('placesContainer').innerHTML = placesData.map(p => `
-                <div class="quiz-item-row">
-                    <span>${p.clue}</span>
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" id="in-${p.id}" placeholder="Type place..." class="custom-input">
-                        <button onclick="checkPlace('${p.id}')" class="action-btn">Check</button>
-                    </div>
-                </div>
-            `).join('');
-        }
+/* Enlarge: kartı ekranı dolduracak şekilde büyütür */
+let zoomedCard = null;
+function fitZoom(card) {
+  let best = { z: 0, w: 900 };
+  card.style.zoom = 1; card.style.height = 'auto';
+  [600, 700, 800, 900, 1050, 1200, 1400, 1600].forEach(w => {
+    card.style.width = w + 'px';
+    const z = Math.min(window.innerWidth / w, window.innerHeight / card.offsetHeight);
+    if (z > best.z) best = { z, w };
+  });
+  let z = Math.min(4, Math.max(1, best.z * 0.98));
+  for (let i = 0; i < 12; i++) {
+    card.style.zoom = z; card.style.width = (window.innerWidth / z) + 'px'; card.style.height = (window.innerHeight / z) + 'px';
+    if (z <= 1 || card.scrollHeight <= card.clientHeight + 1) break;
+    z = Math.max(1, z * 0.96);
+  }
+}
+function openZoom(card) { closeZoom(); zoomedCard = card; card.classList.add('expanded'); card.querySelector('.zoom-btn').textContent = '✕ Close'; document.body.style.overflow = 'hidden'; fitZoom(card); }
+function closeZoom() {
+  if (!zoomedCard) return;
+  const card = zoomedCard; zoomedCard = null;
+  card.classList.remove('expanded'); card.style.zoom = card.style.width = card.style.height = '';
+  card.querySelector('.zoom-btn').textContent = '🔍 Enlarge'; document.body.style.overflow = '';
+}
+function initZoom() {
+  document.querySelectorAll('.activity-card').forEach(card => {
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'zoom-btn'; btn.textContent = '🔍 Enlarge';
+    btn.addEventListener('click', () => card === zoomedCard ? closeZoom() : openZoom(card));
+    card.querySelector('.card-header').appendChild(btn);
+  });
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') closeZoom(); });
+  window.addEventListener('resize', () => { if (zoomedCard) fitZoom(zoomedCard); });
+}
 
-        function checkPlace(id) {
-            const input = document.getElementById(`in-${id}`);
-            const val = input.value.trim().toLowerCase().replace(/['`’]/g, "");
-            const target = placesData.find(p => p.id === id).ans.toLowerCase().replace(/['`’]/g, "");
 
-            if (val === target) {
-                input.classList.remove('wrong');
-                input.classList.add('correct');
-                input.disabled = true;
-            } else {
-                input.classList.add('wrong', 'shake');
-                setTimeout(() => input.classList.remove('shake'), 300);
-            }
-        }
+/* ---- {{flag:xx}} / {{flag:xx:sm}} / {{sign:🚫}} işaretlerini q, l, s alanlarında SVG'ye çevirir ---- */
+function richStr(s) {
+  if (typeof s !== 'string') return s;
+  return s.replace(/\{\{flag:([a-z]+)(?::(\w+))?\}\}/g, (m, c, cls) => flag(c, cls || ''))
+          .replace(/\{\{sign:([^}]+)\}\}/g, (m, e) => sign(e));
+}
+function richWalk(o) {
+  if (Array.isArray(o)) o.forEach(richWalk);
+  else if (o && typeof o === 'object') for (const k of Object.keys(o)) {
+    if (k === 'q' || k === 'l' || k === 's') o[k] = richStr(o[k]); else richWalk(o[k]);
+  }
+}
 
-        const foodData = [
-            { name: "Chips", type: "unhealthy" },
-            { name: "Green Salad", type: "healthy" },
-            { name: "Fizzy Drinks", type: "unhealthy" },
-            { name: "Yoghurt", type: "healthy" },
-            { name: "Sweets", type: "unhealthy" },
-            { name: "Broccoli", type: "healthy" },
-            { name: "Hamburger", type: "unhealthy" },
-            { name: "Fish", type: "healthy" },
-            { name: "Chocolate", type: "unhealthy" },
-            { name: "Eggs", type: "healthy" },
-            { name: "Nuts", type: "healthy" },
-            { name: "Sausages", type: "unhealthy" },
-            { name: "Spinach", type: "healthy" },
-            { name: "Ice Cream", type: "unhealthy" }
-        ];
-        let activeFoodIdx = null;
+/* ---- SECTIONS verisinden bölümleri çizer ---- */
+const RENDER = {
+  choice: s => renderChoice('p_' + s.id, s.items),
+  tf:     s => renderChoice('p_' + s.id, s.items.map(i => ({ ...i, opts: ['True', 'False'], fixed: true }))),
+  match:  s => renderMatch('p_' + s.id, s.pairs, s.extras || []),
+  fill:   s => renderFill('p_' + s.id, s.items),
+  order:  s => renderOrder('p_' + s.id, s.items),
+  open:   s => renderOpen('p_' + s.id, s.qs),
+  sort:   s => renderSort('p_' + s.id, s.items, s.done || undefined)
+};
+window.onload = () => {
+  SECTIONS.forEach(s => { richWalk(s); RENDER[s.type](s); });
+  initZoom(); initTranslation();
+};
 
-        function renderFood() {
-            const shuffled = foodData.map((f, i) => ({ ...f, originalIndex: i })).sort(() => Math.random() - 0.5);
-            document.getElementById('foodPool').innerHTML = shuffled.map(f => `
-                <div id="food-${f.originalIndex}" onclick="selectFood(${f.originalIndex})" class="item-chip">${f.name}</div>
-            `).join('');
-        }
-
-        function selectFood(index) {
-            document.querySelectorAll('#foodPool .item-chip').forEach(el => el.classList.remove('active-select'));
-            activeFoodIdx = index;
-            const el = document.getElementById(`food-${index}`);
-            if (el) el.classList.add('active-select');
-        }
-
-        function placeFood(type) {
-            if (activeFoodIdx === null) return;
-            const index = activeFoodIdx;
-            const item = foodData[index];
-            const el = document.getElementById(`food-${index}`);
-            const bucketContainer = document.getElementById(`${type}Items`);
-
-            el.classList.remove('active-select');
-            bucketContainer.appendChild(el);
-
-            if (item.type === type) {
-                el.classList.add('correct', 'pop');
-                el.classList.remove('wrong');
-                el.onclick = null;
-            } else {
-                el.classList.add('wrong', 'shake');
-                setTimeout(() => el.classList.remove('shake'), 300);
-                el.onclick = () => returnFoodToPool(index);
-            }
-            activeFoodIdx = null;
-        }
-
-        function returnFoodToPool(index) {
-            const el = document.getElementById(`food-${index}`);
-            document.getElementById('foodPool').appendChild(el);
-            el.classList.remove('wrong', 'correct');
-            el.onclick = () => selectFood(index);
-        }
-
-        // --- ENLARGE A SECTION TO FILL THE SCREEN ---
-        let zoomedCard = null;
-
-        function fitZoom(card) {
-            // Try several layout widths and keep the one that gives the biggest zoom that still fits.
-            let best = { z: 0, w: 900 };
-            card.style.zoom = 1;
-            card.style.height = 'auto';
-            [600, 700, 800, 900, 1050, 1200, 1400, 1600].forEach(w => {
-                card.style.width = w + 'px';
-                const h = card.offsetHeight;
-                const z = Math.min(window.innerWidth / w, window.innerHeight / h);
-                if (z > best.z) best = { z, w };
-            });
-            let z = Math.min(4, Math.max(1, best.z * 0.98));
-            for (let i = 0; i < 12; i++) {
-                card.style.zoom = z;
-                card.style.width = (window.innerWidth / z) + 'px';
-                card.style.height = (window.innerHeight / z) + 'px';
-                if (z <= 1 || card.scrollHeight <= card.clientHeight + 1) break;
-                z = Math.max(1, z * 0.96);
-            }
-        }
-
-        function openZoom(card) {
-            closeZoom();
-            zoomedCard = card;
-            card.classList.add('expanded');
-            card.querySelector('.zoom-btn').textContent = '✕ Close';
-            document.body.style.overflow = 'hidden';
-            fitZoom(card);
-        }
-
-        function closeZoom() {
-            if (!zoomedCard) return;
-            const card = zoomedCard;
-            zoomedCard = null;
-            card.classList.remove('expanded');
-            card.style.zoom = '';
-            card.style.width = '';
-            card.style.height = '';
-            card.querySelector('.zoom-btn').textContent = '🔍 Enlarge';
-            document.body.style.overflow = '';
-        }
-
-        function initZoom() {
-            document.querySelectorAll('.activity-card').forEach(card => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'zoom-btn';
-                btn.textContent = '🔍 Enlarge';
-                btn.addEventListener('click', () => {
-                    card === zoomedCard ? closeZoom() : openZoom(card);
-                });
-                card.querySelector('.card-header').appendChild(btn);
-            });
-            window.addEventListener('keydown', e => { if (e.key === 'Escape') closeZoom(); });
-            window.addEventListener('resize', () => { if (zoomedCard) fitZoom(zoomedCard); });
-        }
-
-        window.onload = () => {
-            renderJobs();
-            renderPlaces();
-            renderFood();
-            initZoom();
-        };
-    </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"701fb242892d47c08ed8ae1dcd5529b0","r":1,"spa":2}' crossorigin="anonymous"></script>
+</script>
 <script src="/back.js" data-href="/6/worksheets/rev/g6_rev_worksheets.html"></script>
 </body>
 </html>

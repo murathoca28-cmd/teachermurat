@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade 6 Listening Activity</title>
+    <title>6th Grade Listening Activity</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css">
     <style>
     :root {
@@ -431,6 +431,16 @@
 
     #floatingPlayBtn.visible { display: flex; }
     #floatingPlayBtn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--orange-dark); }
+
+    /* Turkish support line under each transcript sentence */
+    .tr {
+        display: block;
+        font-size: 20px;
+        font-weight: 700;
+        font-style: italic;
+        color: var(--text-muted);
+        margin-top: 2px;
+    }
     </style>
     <link rel="stylesheet" href="/theme.css">
 </head>
@@ -444,7 +454,7 @@
     <div class="app-container">
         <header class="hero-banner">
             <h1>🎧 6th Grade Listening Activity</h1>
-            <p>Healthy and Unhealthy Food</p>
+            <p>Animals at the Zoo</p>
         </header>
 
         <main class="space-y">
@@ -455,18 +465,18 @@
                     <div class="card-icon" style="background: var(--orange-soft); color: var(--orange);">🎧</div>
                     <div class="card-title">
                         <h2>Listen</h2>
-                        <p>Listen to Leo talk about his food.</p>
+                        <p>Listen to Ryan and Lily talking about animals at the zoo.</p>
                     </div>
                 </div>
 
                 <div class="hint-bar" lang="tr">👂 Düğmeye bas ve dinle. İstediğin kadar tekrar dinleyebilirsin.</div>
 
-                <button type="button" id="listenBtn" class="action-btn listen-btn" onclick="startListening()">🔊 Listen to the Text</button>
+                <button type="button" id="listenBtn" class="action-btn listen-btn" onclick="startListening()">🔊 Listen to the Dialogue</button>
             </section>
 
             <div id="playerWrap">
                 <audio id="player" controls preload="metadata">
-                    <source src="https://cdn.teachermurat.com/5/rev_listens/02-Grade5_listening.mp3?v=1" type="audio/mpeg">
+                    <source src="https://cdn.teachermurat.com/6/rev_listens/02-Grade6_rev_listening.mp3?v=2" type="audio/mpeg">
                 </audio>
             </div>
 
@@ -482,35 +492,35 @@
                         </div>
                     </div>
 
-                <div class="question-card" data-type="mc" data-answer="b">
-                    <span class="question-text">1. What does Leo eat for breakfast?</span>
-                    <div class="options">
-                        <label><input type="radio" name="q1" value="a"> a) Chips and chocolate</label>
-                        <label><input type="radio" name="q1" value="b"> b) Eggs and yoghurt</label>
-                        <label><input type="radio" name="q1" value="c"> c) Hamburger and ice cream</label>
-                        <label><input type="radio" name="q1" value="d"> d) Sausages and sweets</label>
-                    </div>
-                    <div class="feedback-detail"></div>
-                </div>
-
                 <div class="question-card" data-type="mc" data-answer="c">
-                    <span class="question-text">2. Which healthy foods does Leo eat at dinner?</span>
+                    <span class="question-text">1. Which animal is the heaviest?</span>
                     <div class="options">
-                        <label><input type="radio" name="q2" value="a"> a) Noodles and sausages</label>
-                        <label><input type="radio" name="q2" value="b"> b) Sweets and broccoli</label>
-                        <label><input type="radio" name="q2" value="c"> c) Fish, spinach, and green salad</label>
-                        <label><input type="radio" name="q2" value="d"> d) Chips and ice cream</label>
+                        <label><input type="radio" name="q1" value="a"> a) The giraffe</label>
+                        <label><input type="radio" name="q1" value="b"> b) The cheetah</label>
+                        <label><input type="radio" name="q1" value="c"> c) The elephant</label>
+                        <label><input type="radio" name="q1" value="d"> d) The parrot</label>
                     </div>
                     <div class="feedback-detail"></div>
                 </div>
 
                 <div class="question-card" data-type="mc" data-answer="a">
-                    <span class="question-text">3. On which day does Leo eat foods like hamburgers, chips, or ice cream?</span>
+                    <span class="question-text">2. Which animal is the fastest?</span>
                     <div class="options">
-                        <label><input type="radio" name="q3" value="a"> a) On Saturdays</label>
-                        <label><input type="radio" name="q3" value="b"> b) Every morning</label>
-                        <label><input type="radio" name="q3" value="c"> c) On Tuesdays</label>
-                        <label><input type="radio" name="q3" value="d"> d) Never</label>
+                        <label><input type="radio" name="q2" value="a"> a) The cheetah</label>
+                        <label><input type="radio" name="q2" value="b"> b) The giraffe</label>
+                        <label><input type="radio" name="q2" value="c"> c) The monkey</label>
+                        <label><input type="radio" name="q2" value="d"> d) The parrot</label>
+                    </div>
+                    <div class="feedback-detail"></div>
+                </div>
+
+                <div class="question-card" data-type="mc" data-answer="b">
+                    <span class="question-text">3. What are they going to do after they see the monkeys?</span>
+                    <div class="options">
+                        <label><input type="radio" name="q3" value="a"> a) Ride a bus</label>
+                        <label><input type="radio" name="q3" value="b"> b) Have lunch</label>
+                        <label><input type="radio" name="q3" value="c"> c) Buy souvenirs</label>
+                        <label><input type="radio" name="q3" value="d"> d) Go home</label>
                     </div>
                     <div class="feedback-detail"></div>
                 </div>
@@ -526,20 +536,20 @@
                         </div>
                     </div>
 
-                <div class="question-card" data-type="sa" data-answers='["leo"]'>
-                    <span class="question-text">4. What is the name of the speaker?</span>
+                <div class="question-card" data-type="sa" data-answers="[&quot;the parrots&quot;, &quot;parrots&quot;]">
+                    <span class="question-text">4. Which birds are the most colourful?</span>
                     <input type="text" class="short-answer-input" name="q4" placeholder="Type your answer here..." autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
-                <div class="question-card" data-type="sa" data-answers='["yoghurt", "yogurt"]'>
-                    <span class="question-text">5. What healthy food does Leo eat for breakfast with eggs?</span>
+                <div class="question-card" data-type="sa" data-answers="[&quot;red and blue&quot;]">
+                    <span class="question-text">5. What colour are the parrots' feathers?</span>
                     <input type="text" class="short-answer-input" name="q5" placeholder="Type your answer here..." autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
-                <div class="question-card" data-type="sa" data-answers='["great", "good", "happy", "feel great", "feels great", "he feels great"]'>
-                    <span class="question-text">6. How does eating healthy make Leo feel?</span>
+                <div class="question-card" data-type="sa" data-answers="[&quot;hungry&quot;, &quot;i am hungry&quot;]">
+                    <span class="question-text">6. How does Ryan feel at the end?</span>
                     <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..." autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
@@ -551,7 +561,7 @@
 
                 <div id="result"></div>
 
-                <button type="button" id="transcriptBtn" class="action-btn" onclick="showTranscript()">📝 See the Text</button>
+                <button type="button" id="transcriptBtn" class="action-btn" onclick="showTranscript()">📝 See the Dialogue</button>
             </form>
 
             <!-- TRANSCRIPT (revealed after checking) -->
@@ -559,15 +569,20 @@
                 <div class="card-header">
                     <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">📝</div>
                     <div class="card-title">
-                        <h2>The Text</h2>
+                        <h2>The Dialogue</h2>
                         <p>Read what you heard.</p>
                     </div>
                 </div>
                 <div class="reading-section">
-                    <p>Hello! My name is Leo. I try to eat healthy food every day.</p>
-                    <p>For breakfast, I usually eat eggs and yoghurt. At dinner, my family and I often eat fish, spinach, and a big green salad. They are very good for our health!</p>
-                    <p>I also like some unhealthy food. On Saturdays, I sometimes eat a small hamburger, chips, or ice cream. I love chocolate and sweets too, but I don't eat them every day.</p>
-                    <p>Eating healthy makes me feel great!</p>
+                    <p><strong>Ryan:</strong> Look, Lily! The giraffes are so tall!<span class="tr" lang="tr">Bak Lily! Zürafalar çok uzun!</span></p>
+                    <p><strong>Lily:</strong> Yes! They are taller than the elephants.<span class="tr" lang="tr">Evet! Fillerden daha uzunlar.</span></p>
+                    <p><strong>Ryan:</strong> But the elephants are heavier than the giraffes. I think the elephant is the heaviest animal here.<span class="tr" lang="tr">Ama filler zürafalardan daha ağır. Bence fil buradaki en ağır hayvan.</span></p>
+                    <p><strong>Lily:</strong> You are right. Which animal is the fastest?<span class="tr" lang="tr">Haklısın. Hangi hayvan en hızlı?</span></p>
+                    <p><strong>Ryan:</strong> The cheetah is the fastest. It runs very quickly.<span class="tr" lang="tr">Çita en hızlısı. Çok hızlı koşuyor.</span></p>
+                    <p><strong>Lily:</strong> What about the parrots? They are not fast, but they are the most colourful birds in the zoo.<span class="tr" lang="tr">Peki ya papağanlar? Hızlı değiller ama hayvanat bahçesindeki en renkli kuşlar.</span></p>
+                    <p><strong>Ryan:</strong> I love their red and blue feathers. Are we going to see the monkeys next?<span class="tr" lang="tr">Kırmızı ve mavi tüylerine bayılıyorum. Sıradaki maymunları mı göreceğiz?</span></p>
+                    <p><strong>Lily:</strong> Yes, we are. After that, we are going to have lunch.<span class="tr" lang="tr">Evet. Ondan sonra öğle yemeği yiyeceğiz.</span></p>
+                    <p><strong>Ryan:</strong> Great idea! I am hungry.<span class="tr" lang="tr">Harika fikir! Çok acıktım.</span></p>
                 </div>
             </section>
         </main>

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>6th Grade English - Unit 1 Activity 2</title>
-<style>:root{--primary:#0F766E;--primary-soft:#CCFBF1;--pink:#C2410C;--pink-soft:#FFEDD5;--green:#00875F;--green-soft:#D5F5E8;--yellow:#F0A500;--red:#D32F2F;--red-soft:#FFDAD8;--blue:#1D4ED8;--blue-soft:#DBEAFE;--bg:#F4F7FE;--text-dark:#1A1F23;--text-muted:#3D4852;--q-color:#0B4F4A;--border-color:#64748B;--border-strong:#334155;--radius-lg:24px;--radius-md:16px;--radius-sm:12px}
+<title>Grade 6 English - Unit 1 Activity 2: School Actions and Celebrations</title>
+<style>
+:root{--primary:#0F766E;--primary-soft:#CCFBF1;--pink:#C2410C;--pink-soft:#FFEDD5;--green:#00875F;--green-soft:#D5F5E8;--yellow:#F0A500;--red:#D32F2F;--red-soft:#FFDAD8;--blue:#1D4ED8;--blue-soft:#DBEAFE;--bg:#F4F7FE;--text-dark:#1A1F23;--text-muted:#3D4852;--q-color:#0B4F4A;--border-color:#64748B;--border-strong:#334155;--radius-lg:24px;--radius-md:16px;--radius-sm:12px}
 *,*::before,*::after{box-sizing:border-box}
 .app-container,.app-container *{font-family:'Segoe UI',Verdana,Tahoma,Arial,system-ui,sans-serif}
 body{background:var(--bg);color:var(--text-dark);min-height:100vh;display:flex;flex-direction:column;user-select:none}
@@ -65,69 +66,48 @@ textarea.custom-input{width:100%;min-height:64px;resize:vertical}
 .activity-card.expanded{position:fixed;top:0;left:0;z-index:100000;border-radius:0;border-width:0;box-shadow:none;overflow:auto;display:flex;flex-direction:column;justify-content:safe center}
 @media(max-width:700px){.zoom-btn{display:none}.match-grid{grid-template-columns:1fr}.hero-banner h1{font-size:24px}.card-title h2{font-size:20px}}
 footer{text-align:center;padding:16px;color:var(--text-muted);font-size:15px;border-top:1px solid var(--border-color);background:#fff;margin-top:auto}
-
 .flag{width:108px;height:72px;border:3px solid var(--border-strong);border-radius:8px;display:block;background:#fff}
 .flag.sm{width:72px;height:48px;display:inline-block;vertical-align:middle;margin-right:12px}
 .flagq{display:block;margin-top:10px}
 .match-l .flag{margin:0 auto}
 .sign{width:88px;height:88px;display:block}
 .tr-row{margin-top:16px}
+
+.stack{display:flex;flex-direction:column;gap:16px}
+.tr-row{margin-top:16px}
+
 </style>
 <link rel="stylesheet" href="/theme.css">
 </head>
 <body>
 <div id="navbar-placeholder" style="min-height:0px"></div>
 <script src="/navbar.js"></script>
-
 <div class="app-container">
-  <header class="hero-banner">
-    <h1>🎓 6th GRADE ENGLISH</h1>
-    <p>UNIT 1 • ACTIVITY 2: Countries, People &amp; Places</p>
-  </header>
-  <main class="space-y">
-<section class="activity-card">
-  <div class="card-header">
-    <div class="card-icon" style="background:var(--primary-soft);color:var(--primary);">🚩</div>
-    <div class="card-title"><h2>Part A: Match the Flags</h2><p>Click a flag, then click the correct country. There is an extra country!</p></div>
-  </div>
-  <div id="pA"></div>
-</section>
-<section class="activity-card">
-  <div class="card-header">
-    <div class="card-icon" style="background:var(--pink-soft);color:var(--pink);">🌍</div>
-    <div class="card-title"><h2>Part B: Which Country?</h2><p>Look at the flag and choose the correct country!</p></div>
-  </div>
-  <div id="pB" class="grid-2"></div>
-</section>
-<section class="activity-card">
-  <div class="card-header">
-    <div class="card-icon" style="background:var(--green-soft);color:var(--green);">✏️</div>
-    <div class="card-title"><h2>Part C: Where Is He or She From?</h2><p>Look at the flag. Type the country and click Check!</p></div>
-  </div>
-  <div id="pC" class="space-y" style="gap:14px"></div><div class="btn-row tr-row"><button type="button" class="tr-btn" data-tr="trC">🇹🇷 Türkçesi</button></div>
-  <div id="trC" class="tr-text">1. Sara İspanya'dan.<br>2. Jack Kanada'dan.<br>3. Janet Birleşik Krallık'tan.<br>4. Alp Türkiye'den.<br>5. Leyla Azerbaycan'dan.</div>
-</section>
-<section class="activity-card">
-  <div class="card-header">
-    <div class="card-icon" style="background:var(--blue-soft);color:var(--blue);">🏫</div>
-    <div class="card-title"><h2>Part D: People or Places?</h2><p>1. Click a word to select it. 2. Click the correct box to place it!</p></div>
-  </div>
-  <div id="pD" class="pool-box"></div>
-  <div class="bucket-container"><div class="bucket" data-bucket="people" style="background:var(--blue-soft);border-color:#1D4ED8"><h3 style="color:#12306E">👤 People at School</h3><div class="hint">👆 Click here to place</div><div class="bucket-items"></div></div><div class="bucket" data-bucket="places" style="background:var(--pink-soft);border-color:#C2410C"><h3 style="color:#7C2D12">🏫 Places at School</h3><div class="hint">👆 Click here to place</div><div class="bucket-items"></div></div></div>
-  <div class="result-msg" role="status"></div><div class="btn-row tr-row"><button type="button" class="tr-btn" data-tr="trD">🇹🇷 Türkçesi</button></div>
-  <div id="trD" class="tr-text">headmaster = müdür • coach = antrenör • secretary = sekreter • cook = aşçı • doctor = doktor • assistant to the headmaster = müdür yardımcısı<br>canteen = kantin • science lab = fen laboratuvarı • library = kütüphane • sports field = spor sahası • administration department = idari birim • conference hall = konferans salonu</div>
-</section>
-<section class="activity-card">
-  <div class="card-header">
-    <div class="card-icon" style="background:var(--pink-soft);color:var(--pink);">🧩</div>
-    <div class="card-title"><h2>Part E: Make the Sentence</h2><p>Click the words in the correct order, then click Check!</p></div>
-  </div>
-  <div id="pE" class="space-y" style="gap:14px"></div>
-</section>
-  </main>
+<header class="hero-banner"><h1>🎓 6th GRADE ENGLISH</h1><p>UNIT 1 • ACTIVITY 2: School Actions and Celebrations</p></header>
+<main class="space-y">
+<section class="activity-card"><div class="card-header"><div class="card-icon" style="background:var(--pink-soft);color:var(--pink);">🇹🇷</div><div class="card-title"><h2>Part A: A National Day at School</h2><p>Read the story and choose the correct answer.</p></div></div><div class="story-box">Today is a national day. Our school has a ceremony in the hall. The headmaster gives a speech. The choir sings the national anthem. A student carries the flag. After the ceremony, the students clean the hall.</div><div class="btn-row tr-row"><button type="button" class="tr-btn" data-tr="tr_A">🇹🇷 Türkçesi</button></div><div id="tr_A" class="tr-text">Bugün ulusal bir gün. Okulumuzda salonda bir tören var. Okul müdürü bir konuşma yapıyor. Koro milli marşı söylüyor. Bir öğrenci bayrağı taşıyor. Törenden sonra öğrenciler salonu temizliyor.</div><div id="p_A" class="grid-2"></div></section><section class="activity-card"><div class="card-header"><div class="card-icon" style="background:var(--green-soft);color:var(--green);">🔗</div><div class="card-title"><h2>Part B: Match the Verbs</h2><p>Click a verb, then click its meaning.</p></div></div><div id="p_B" class="stack"></div><div class="btn-row tr-row"><button type="button" class="tr-btn" data-tr="tr_B">🇹🇷 Türkçesi</button></div><div id="tr_B" class="tr-text"><b>to pass</b> = (sınavdan) geçmek, <b>to fail</b> = (sınavdan) kalmak, <b>to follow</b> = uymak, takip etmek, <b>to try</b> = denemek, çabalamak, <b>to greet</b> = selamlamak</div></section><section class="activity-card"><div class="card-header"><div class="card-icon" style="background:var(--blue-soft);color:var(--blue);">✏️</div><div class="card-title"><h2>Part C: Complete the Sentences</h2><p>Use these verbs: pass, fail, follow, enter, try.</p></div></div><div id="p_C" class="stack"></div></section><section class="activity-card"><div class="card-header"><div class="card-icon" style="background:var(--primary-soft);color:var(--primary);">✅</div><div class="card-title"><h2>Part D: True or False?</h2><p>Choose True or False.</p></div></div><div id="p_D" class="grid-2"></div><div class="btn-row tr-row"><button type="button" class="tr-btn" data-tr="tr_D">🇹🇷 Türkçesi</button></div><div id="tr_D" class="tr-text"><b>a national anthem</b> = milli marş, <b>a flag</b> = bayrak, <b>a speech</b> = konuşma, <b>a parade</b> = geçit töreni, <b>a headmaster</b> = okul müdürü</div></section><section class="activity-card"><div class="card-header"><div class="card-icon" style="background:var(--pink-soft);color:var(--pink);">🔤</div><div class="card-title"><h2>Part E: Unscramble</h2><p>Put the words in the correct order.</p></div></div><div id="p_E" class="stack"></div></section>
+</main>
 </div>
 
 <script>
+const SECTIONS = [{"id": "A", "type": "choice", "items": [{"q": "Who gives a speech?", "opts": ["The headmaster", "The choir", "A student"], "ans": "The headmaster"}, {"q": "What does the choir sing?", "opts": ["a birthday song", "the national anthem", "a funny song"], "ans": "the national anthem"}, {"q": "What does a student carry?", "opts": ["a book", "a box", "the flag"], "ans": "the flag"}, {"q": "What do the students do after the ceremony?", "opts": ["They give a speech.", "They clean the hall.", "They carry the flag."], "ans": "They clean the hall."}]}, {"id": "B", "type": "match", "pairs": [{"l": "to pass", "r": "to do well in a test"}, {"l": "to fail", "r": "not to do well in a test"}, {"l": "to follow", "r": "to do what a rule says"}, {"l": "to try", "r": "to make an effort to do something"}, {"l": "to greet", "r": "to say hello to someone"}], "extras": ["to say goodbye to someone"]}, {"id": "C", "type": "fill", "items": [{"s": "I study hard because I want to ___ the exam.", "ans": ["pass"]}, {"s": "If you do not study at all, you may ___ the test.", "ans": ["fail"]}, {"s": "We must ___ the school rules.", "ans": ["follow"]}, {"s": "The students ___ the hall and sit down.", "ans": ["enter"]}, {"s": "Do not give up! ___ again.", "ans": ["try", "Try"]}]}, {"id": "D", "type": "tf", "items": [{"q": "A national anthem is a special song for a country.", "ans": "True"}, {"q": "A flag is a kind of food.", "ans": "False"}, {"q": "A parade is a public celebration with people walking in the street.", "ans": "True"}, {"q": "If you pass an exam, you do badly in it.", "ans": "False"}, {"q": "A speech is something a person says to a group of people.", "ans": "True"}, {"q": "A headmaster is a student in the school.", "ans": "False"}]}, {"id": "E", "type": "order", "items": [{"words": ["speech", "a", "gives", "headmaster", "Our"], "ans": "Our headmaster gives a speech."}, {"words": ["the", "choir", "sings", "anthem", "The", "national"], "ans": "The choir sings the national anthem."}, {"words": ["reads", "a", "poem", "Defne"], "ans": "Defne reads a poem."}, {"words": ["Students", "enter", "the", "hall"], "ans": "Students enter the hall."}]}];
+let _uid=0;
+function starPoly(n,cx,cy,R,r,rot){const p=[];for(let i=0;i<n*2;i++){const a=(rot+i*180/n)*Math.PI/180,rad=i%2===0?R:r;p.push((cx+rad*Math.cos(a)).toFixed(2)+','+(cy-rad*Math.sin(a)).toFixed(2));}return p.join(' ');}
+const FLAGS={
+ it:()=>`<rect width="30" height="60" fill="#009246"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#CE2B37"/>`,
+ fr:()=>`<rect width="30" height="60" fill="#0055A4"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#EF4135"/>`,
+ jp:()=>`<rect width="90" height="60" fill="#fff"/><circle cx="45" cy="30" r="18" fill="#BC002D"/>`,
+ tr:()=>`<rect width="90" height="60" fill="#E30A17"/><circle cx="33.3" cy="30" r="15" fill="#fff"/><circle cx="37" cy="30" r="12" fill="#E30A17"/><polygon fill="#fff" points="${starPoly(5,48.6,30,7.5,2.9,180)}"/>`,
+ es:()=>`<rect width="90" height="60" fill="#AA151B"/><rect y="15" width="90" height="30" fill="#F1BF00"/><rect x="20" y="22" width="10" height="16" rx="2.5" fill="#AA151B" stroke="#7A5C00" stroke-width="1"/>`,
+ mx:()=>`<rect width="30" height="60" fill="#006847"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#CE1126"/><circle cx="45" cy="30" r="7" fill="#A67C45" stroke="#4F8A3C" stroke-width="2"/>`,
+ ru:()=>`<rect width="90" height="20" fill="#fff"/><rect y="20" width="90" height="20" fill="#0039A6"/><rect y="40" width="90" height="20" fill="#D52B1E"/>`,
+ az:()=>`<rect width="90" height="20" fill="#00B5E2"/><rect y="20" width="90" height="20" fill="#EF3340"/><rect y="40" width="90" height="20" fill="#509E2F"/><circle cx="41" cy="30" r="6.5" fill="#fff"/><circle cx="43" cy="30" r="5.2" fill="#EF3340"/><polygon fill="#fff" points="${starPoly(8,49.5,30,3.6,1.7,90)}"/>`,
+ ca:()=>`<rect width="90" height="60" fill="#fff"/><rect width="22.5" height="60" fill="#D52B1E"/><rect x="67.5" width="22.5" height="60" fill="#D52B1E"/><path fill="#D52B1E" d="M45,11 L48.2,19.5 L53.5,17.5 L51.8,26 L59.5,23 L57.5,29.5 L62,31.5 L53.5,37.5 L55,41.5 L46.8,40 L46.8,48 L43.2,48 L43.2,40 L35,41.5 L36.5,37.5 L28,31.5 L32.5,29.5 L30.5,23 L38.2,26 L36.5,17.5 L41.8,19.5 Z"/>`,
+ uk:()=>{const s='s'+(++_uid),t='t'+_uid;return `<svg x="0" y="0" width="90" height="60" viewBox="0 0 60 30" preserveAspectRatio="none"><clipPath id="${s}"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="${t}"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#${s})"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#${t})" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>`;}
+};
+function flag(code,cls=''){return `<svg class="flag ${cls}" viewBox="0 0 90 60" preserveAspectRatio="none" role="img" aria-label="flag">${FLAGS[code]()}</svg>`;}
+function sign(emoji){return `<svg class="sign" viewBox="0 0 60 60" role="img" aria-label="prohibition sign"><circle cx="30" cy="30" r="26" fill="#fff" stroke="#D32F2F" stroke-width="6"/><text x="30" y="40" font-size="28" text-anchor="middle">${emoji}</text><line x1="12" y1="12" x2="48" y2="48" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/></svg>`;}
+
 const shuffle = a => [...a].sort(() => Math.random() - 0.5);
 const norm = s => String(s).toLowerCase().replace(/[.,!?'’`]/g, '').replace(/\s+/g, ' ').trim();
 const flash = (el, cls = 'wrong', ms = 400) => { el.classList.add(cls, 'shake'); setTimeout(() => el.classList.remove(cls, 'shake'), ms); };
@@ -307,79 +287,32 @@ function initZoom() {
   window.addEventListener('resize', () => { if (zoomedCard) fitZoom(zoomedCard); });
 }
 
-/* ---------- Bayrak ve levha çizimleri (kodla, görsel dosyası yok) ---------- */
-let _uid = 0;
-function starPoly(n, cx, cy, R, r, rot) {
-  const pts = [];
-  for (let i = 0; i < n * 2; i++) {
-    const a = (rot + i * 180 / n) * Math.PI / 180, rad = i % 2 === 0 ? R : r;
-    pts.push((cx + rad * Math.cos(a)).toFixed(2) + ',' + (cy - rad * Math.sin(a)).toFixed(2));
-  }
-  return pts.join(' ');
+
+/* ---- {{flag:xx}} / {{flag:xx:sm}} / {{sign:🚫}} işaretlerini q, l, s alanlarında SVG'ye çevirir ---- */
+function richStr(s) {
+  if (typeof s !== 'string') return s;
+  return s.replace(/\{\{flag:([a-z]+)(?::(\w+))?\}\}/g, (m, c, cls) => flag(c, cls || ''))
+          .replace(/\{\{sign:([^}]+)\}\}/g, (m, e) => sign(e));
 }
-const FLAGS = {
-  it: () => `<rect width="30" height="60" fill="#009246"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#CE2B37"/>`,
-  fr: () => `<rect width="30" height="60" fill="#0055A4"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#EF4135"/>`,
-  jp: () => `<rect width="90" height="60" fill="#fff"/><circle cx="45" cy="30" r="18" fill="#BC002D"/>`,
-  tr: () => `<rect width="90" height="60" fill="#E30A17"/><circle cx="33.3" cy="30" r="15" fill="#fff"/><circle cx="37" cy="30" r="12" fill="#E30A17"/><polygon fill="#fff" points="${starPoly(5, 48.6, 30, 7.5, 2.9, 180)}"/>`,
-  es: () => `<rect width="90" height="60" fill="#AA151B"/><rect y="15" width="90" height="30" fill="#F1BF00"/><rect x="20" y="22" width="10" height="16" rx="2.5" fill="#AA151B" stroke="#7A5C00" stroke-width="1"/>`,
-  mx: () => `<rect width="30" height="60" fill="#006847"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#CE1126"/><circle cx="45" cy="30" r="7" fill="#A67C45" stroke="#4F8A3C" stroke-width="2"/>`,
-  ru: () => `<rect width="90" height="20" fill="#fff"/><rect y="20" width="90" height="20" fill="#0039A6"/><rect y="40" width="90" height="20" fill="#D52B1E"/>`,
-  az: () => `<rect width="90" height="20" fill="#00B5E2"/><rect y="20" width="90" height="20" fill="#EF3340"/><rect y="40" width="90" height="20" fill="#509E2F"/><circle cx="41" cy="30" r="6.5" fill="#fff"/><circle cx="43" cy="30" r="5.2" fill="#EF3340"/><polygon fill="#fff" points="${starPoly(8, 49.5, 30, 3.6, 1.7, 90)}"/>`,
-  ca: () => `<rect width="90" height="60" fill="#fff"/><rect width="22.5" height="60" fill="#D52B1E"/><rect x="67.5" width="22.5" height="60" fill="#D52B1E"/><path fill="#D52B1E" d="M45,11 L48.2,19.5 L53.5,17.5 L51.8,26 L59.5,23 L57.5,29.5 L62,31.5 L53.5,37.5 L55,41.5 L46.8,40 L46.8,48 L43.2,48 L43.2,40 L35,41.5 L36.5,37.5 L28,31.5 L32.5,29.5 L30.5,23 L38.2,26 L36.5,17.5 L41.8,19.5 Z"/>`,
-  uk: () => {
-    const s = 's' + (++_uid), t = 't' + _uid;
-    return `<svg x="0" y="0" width="90" height="60" viewBox="0 0 60 30" preserveAspectRatio="none"><clipPath id="${s}"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="${t}"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#${s})"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#${t})" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>`;
+function richWalk(o) {
+  if (Array.isArray(o)) o.forEach(richWalk);
+  else if (o && typeof o === 'object') for (const k of Object.keys(o)) {
+    if (k === 'q' || k === 'l' || k === 's') o[k] = richStr(o[k]); else richWalk(o[k]);
   }
+}
+
+/* ---- SECTIONS verisinden bölümleri çizer ---- */
+const RENDER = {
+  choice: s => renderChoice('p_' + s.id, s.items),
+  tf:     s => renderChoice('p_' + s.id, s.items.map(i => ({ ...i, opts: ['True', 'False'], fixed: true }))),
+  match:  s => renderMatch('p_' + s.id, s.pairs, s.extras || []),
+  fill:   s => renderFill('p_' + s.id, s.items),
+  order:  s => renderOrder('p_' + s.id, s.items),
+  open:   s => renderOpen('p_' + s.id, s.qs),
+  sort:   s => renderSort('p_' + s.id, s.items, s.done || undefined)
 };
-function flag(code, cls = '') {
-  return `<svg class="flag ${cls}" viewBox="0 0 90 60" preserveAspectRatio="none" role="img" aria-label="flag">${FLAGS[code]()}</svg>`;
-}
-function sign(emoji) {
-  return `<svg class="sign" viewBox="0 0 60 60" role="img" aria-label="prohibition sign"><circle cx="30" cy="30" r="26" fill="#fff" stroke="#D32F2F" stroke-width="6"/><text x="30" y="40" font-size="28" text-anchor="middle">${emoji}</text><line x1="12" y1="12" x2="48" y2="48" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/></svg>`;
-}
-
-
-const dA = [
-  { l: flag('ca'), r: "Canada" },
-  { l: flag('jp'), r: "Japan" },
-  { l: flag('it'), r: "Italy" },
-  { l: flag('fr'), r: "France" },
-  { l: flag('es'), r: "Spain" },
-  { l: flag('mx'), r: "Mexico" }
-];
-const xA = ["Russia"];
-const dB = [
-  { q: `Which country is this?<span class="flagq">${flag('tr')}</span>`, opts: ["Türkiye", "Azerbaijan", "Russia"], ans: "Türkiye" },
-  { q: `Which country is this?<span class="flagq">${flag('az')}</span>`, opts: ["Azerbaijan", "Russia", "France"], ans: "Azerbaijan" },
-  { q: `Which country is this?<span class="flagq">${flag('uk')}</span>`, opts: ["The UK", "Canada", "Italy"], ans: "The UK" },
-  { q: `Which country is this?<span class="flagq">${flag('ru')}</span>`, opts: ["Russia", "France", "Mexico"], ans: "Russia" }
-];
-const dC = [
-  { s: flag('es', 'sm') + "Sara is from ___.", ans: ["Spain"] },
-  { s: flag('ca', 'sm') + "Jack is from ___.", ans: ["Canada"] },
-  { s: flag('uk', 'sm') + "Janet is from ___.", ans: ["the UK", "UK", "the United Kingdom", "United Kingdom"] },
-  { s: flag('tr', 'sm') + "Alp is from ___.", ans: ["Türkiye", "Turkiye", "Turkey"] },
-  { s: flag('az', 'sm') + "Leyla is from ___.", ans: ["Azerbaijan"] }
-];
-const dD = [
-  { name: "headmaster", type: "people" }, { name: "coach", type: "people" }, { name: "secretary", type: "people" },
-  { name: "cook", type: "people" }, { name: "doctor", type: "people" }, { name: "assistant to the headmaster", type: "people" },
-  { name: "canteen", type: "places" }, { name: "science lab", type: "places" }, { name: "library", type: "places" },
-  { name: "sports field", type: "places" }, { name: "administration department", type: "places" }, { name: "conference hall", type: "places" }
-];
-const dE = [
-  { words: ["Where", "is", "the", "coach?"], ans: "Where is the coach?" },
-  { words: ["He", "is", "in", "the", "sports", "field."], ans: "He is in the sports field." },
-  { words: ["Where", "is", "Jack", "from?"], ans: "Where is Jack from?" },
-  { words: ["Jack", "is", "from", "Canada."], ans: "Jack is from Canada." }
-];
 window.onload = () => {
-  renderMatch('pA', dA, xA);
-  renderChoice('pB', dB);
-  renderFill('pC', dC);
-  renderSort('pD', dD);
-  renderOrder('pE', dE);
+  SECTIONS.forEach(s => { richWalk(s); RENDER[s.type](s); });
   initZoom(); initTranslation();
 };
 

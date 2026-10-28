@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeopardy - Kids Edition</title>
+    <title>Grade 6 Revs - Jeopardy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
     <style>
@@ -67,11 +67,11 @@
 <body class="text-gray-800 p-2 sm:p-4 relative min-h-screen flex flex-col justify-start items-center">
 
     <!-- Karşılama Ekranı -->
-    <div id="splash" class="fixed inset-0 z-40 flex flex-col items-center justify-center gap-4 sm:gap-6 p-6 text-center text-white bg-gradient-to-br from-indigo-700 via-purple-700 to-pink-600">
+    <div id="splash" class="fixed inset-0 z-40 flex flex-col items-center justify-center gap-4 sm:gap-6 p-6 text-center text-white bg-gradient-to-br from-[#0b6a7a] via-[#0e8a97] to-[#14a698]">
         <p class="text-lg sm:text-2xl font-bold opacity-90">Kelime Yarışması</p>
-        <h1 class="text-3xl sm:text-6xl font-black drop-shadow-lg">Grade 6 – Jeopardy</h1>
+        <h1 class="text-3xl sm:text-6xl font-black drop-shadow-lg">Grade 6 – Revs Jeopardy</h1>
 
-        <button onclick="closeSplash()" class="mt-2 sm:mt-4 bg-sky-400 hover:bg-sky-500 border-b-8 border-sky-600 rounded-3xl w-32 h-32 sm:w-40 sm:h-40 flex flex-col items-center justify-center shadow-2xl transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+        <button onclick="closeSplash()" class="mt-2 sm:mt-4 bg-amber-400 hover:bg-amber-500 text-slate-900 border-b-8 border-amber-600 rounded-3xl w-32 h-32 sm:w-40 sm:h-40 flex flex-col items-center justify-center shadow-2xl transition-transform hover:scale-105 active:scale-95 cursor-pointer">
             <span class="text-5xl sm:text-6xl leading-none">▶</span>
             <span class="text-lg sm:text-2xl font-extrabold mt-1">BAŞLAT</span>
         </button>
@@ -110,9 +110,9 @@
         <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 bg-purple-50 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-2xl border-2 border-purple-200 w-full sm:w-auto">
             <label for="category-select" class="font-bold text-xs sm:text-sm text-purple-800">Kelime Seti:</label>
             <select id="category-select" class="w-full sm:w-auto bg-white border-2 border-purple-300 rounded-lg sm:rounded-xl p-1 text-xs sm:text-sm font-bold text-purple-900 focus:outline-none focus:border-purple-500">
-                <option value="set1">Meslekler, Yiyecekler & İfadeler</option>
-                <option value="set2">Okul, Teknoloji & Yönergeler</option>
-                <option value="set3">Kişilik, Doğa, Yerler & Kıyafetler</option>
+                <option value="set1">Okul, Kulüpler & Rutinler</option>
+                <option value="set2">Görünüş, Aile & Kıyafetler</option>
+                <option value="set3">Yiyecek, Hayvanlar, Yerler & Tatil</option>
                 <option value="all" selected>TÜMÜ</option>
             </select>
         </div>
@@ -224,64 +224,124 @@
 
     <script>
         const wordSets = {
-            // SAYFA 1: Meslekler, Yiyecekler & İfadeler
+            // SET 1: Okul, Kulüpler & Rutinler
             set1: [
-                { en: "It's raining cats and dogs!", tr: "Bardaktan boşanırcasına yağmak" },
-                { en: "Let's break the ice!", tr: "Buzu kırmak / Tanışıp kaynaşmak" },
-                { en: "It fits like a glove!", tr: "Üstüne tam oturmak / Cuk oturmak" },
-                { en: "Feel free to use this!", tr: "Rahatça / Çekinmeden kullanabilirsin" },
-                { en: "I'm sorry to hear that!", tr: "Bunu duyduğuma üzüldüm" },
-                { en: "Go ahead!", tr: "Hadi, devam et / Buyur" },
-                { en: "I'm glad to hear that!", tr: "Bunu duyduğuma sevindim" },
-                { en: "Teacher", tr: "Öğretmen" }, { en: "Farmer", tr: "Çiftçi" },
-                { en: "Doctor", tr: "Doktor / Hekim" }, { en: "Singer", tr: "Şarkıcı" },
-                { en: "Police Officer", tr: "Polis Memuru" }, { en: "Dentist", tr: "Diş Hekimi" },
-                { en: "Lawyer / Attorney", tr: "Avukat" }, { en: "Vet / Veterinarian", tr: "Veteriner Hekim" },
-                { en: "Chef / Cook", tr: "Aşçı / Şef" }, { en: "Firefighter", tr: "İtfaiyeci" },
-                { en: "Nurse", tr: "Hemşire" }, { en: "Pilot", tr: "Pilot" },
-                { en: "Green salad", tr: "Yeşil salata" }, { en: "Yoghurt", tr: "Yoğurt" },
-                { en: "Fish / Grilled fish", tr: "Balık / Izgara balık" }, { en: "Eggs", tr: "Yumurta" },
-                { en: "Nuts", tr: "Kuruyemiş" }, { en: "Spinach", tr: "Ispanak" },
-                { en: "Broccoli", tr: "Brokoli" }, { en: "Grapes", tr: "Üzüm" },
-                { en: "Fresh fruit", tr: "Taze meyve" }, { en: "Vegetables", tr: "Sebzeler" },
-                { en: "Water / Milk", tr: "Su / Süt" }, { en: "Chips", tr: "Patates cipsi" },
-                { en: "Noodles", tr: "Erişte / Noodle" }, { en: "Sweets", tr: "Şekerlemeler / Tatlılar" },
-                { en: "Hamburger", tr: "Hamburger" }, { en: "Chocolate", tr: "Çikolata" },
-                { en: "Sausages", tr: "Sosisler" }, { en: "Ice cream", tr: "Dondurma" },
-                { en: "Fizzy drinks / Soda", tr: "Gazlı içecekler" }
+                { en: "creative writing club", tr: "yaratıcı yazarlık kulübü" },
+                { en: "science club", tr: "fen kulübü" },
+                { en: "music club", tr: "müzik kulübü" },
+                { en: "technology club", tr: "teknoloji kulübü" },
+                { en: "basketball club", tr: "basketbol kulübü" },
+                { en: "Maths", tr: "Matematik dersi" },
+                { en: "Science", tr: "Fen Bilimleri dersi" },
+                { en: "PE lesson", tr: "Beden Eğitimi dersi" },
+                { en: "Geography", tr: "Coğrafya dersi" },
+                { en: "timetable", tr: "ders programı" },
+                { en: "cafeteria", tr: "okul kafeteryası" },
+                { en: "canteen", tr: "kantin" },
+                { en: "library", tr: "kütüphane" },
+                { en: "lab", tr: "laboratuvar" },
+                { en: "sports field", tr: "spor sahası" },
+                { en: "conference hall", tr: "konferans salonu" },
+                { en: "noticeboard", tr: "ilan panosu" },
+                { en: "classroom", tr: "sınıf" },
+                { en: "school concert", tr: "okul konseri" },
+                { en: "experiments", tr: "deneyler" },
+                { en: "problem-solving", tr: "problem çözme" },
+                { en: "Students must join the meetings.", tr: "Öğrenciler toplantılara katılmalı." },
+                { en: "You mustn't run in the corridor!", tr: "Koridorda koşmamalısın!" },
+                { en: "Our lesson starts at half past one.", tr: "Dersimiz bir buçukta başlıyor." },
+                { en: "It's twenty-five past one.", tr: "Saat biri yirmi beş geçiyor." },
+                { en: "Which club do you join?", tr: "Hangi kulübe katılıyorsun?" },
+                { en: "I join the club in the morning.", tr: "Sabahları kulübe katılıyorum." },
+                { en: "What are you doing now?", tr: "Şu anda ne yapıyorsun?" },
+                { en: "I'm new here.", tr: "Burada yeniyim." },
+                { en: "Can you help me, please?", tr: "Bana yardım edebilir misin, lütfen?" },
+                { en: "Excuse me!", tr: "Affedersiniz!" },
+                { en: "Let's be quick!", tr: "Hadi çabuk olalım!" }
             ],
-            // SAYFA 2: Okul, Teknoloji, Yönergeler & Dersler
+            // SET 2: Görünüş, Aile & Kıyafetler
             set2: [
-                { en: "A folder", tr: "Dosya / Klasör" }, { en: "A stapler", tr: "Zımba" },
-                { en: "A printer", tr: "Yazıcı" }, { en: "Headphones", tr: "Kulaklık" },
-                { en: "A projector", tr: "Projeksiyon cihazı" }, { en: "A rubbish bin", tr: "Çöp kutusu" },
-                { en: "A calculator", tr: "Hesap makinesi" }, { en: "A speaker", tr: "Hoparlör" },
-                { en: "A highlighter", tr: "Fosforlu kalem" }, { en: "A Screen", tr: "Ekran / Tahta ekranı" },
-                { en: "Look at the screen, please!", tr: "Lütfen ekrana bakın!" },
-                { en: "Listen carefully, please!", tr: "Lütfen dikkatlice dinleyin!" },
-                { en: "Talk with your peers, please!", tr: "Lütfen arkadaşlarınızla konuşun!" },
-                { en: "Write this down, please!", tr: "Lütfen bunu yazın / not edin!" },
-                { en: "Read this, please!", tr: "Lütfen bunu okuyun!" },
-                { en: "Check your answers, please!", tr: "Lütfen cevaplarınızı kontrol edin!" },
-                { en: "Club meetings", tr: "Kulüp toplantıları" }, { en: "School plays", tr: "Okul tiyatro oyunları" },
-                { en: "Talent show", tr: "Yetenek gösterisi" }, { en: "Drama", tr: "Drama / Tiyatro dersi" },
-                { en: "Science", tr: "Fen Bilimleri dersi" }, { en: "Art", tr: "Resim / Görsel Sanatlar" },
-                { en: "Doing experiments", tr: "Deney yapmak" }, { en: "Writing English stories", tr: "İngilizce hikayeler yazmak" }
+                { en: "tall and slim", tr: "uzun boylu ve ince" },
+                { en: "medium height", tr: "orta boylu" },
+                { en: "long wavy hair", tr: "uzun dalgalı saç" },
+                { en: "curly black hair", tr: "kıvırcık siyah saç" },
+                { en: "short straight hair", tr: "kısa düz saç" },
+                { en: "hazel eyes", tr: "ela gözler" },
+                { en: "grandmother", tr: "büyükanne" },
+                { en: "grandfather", tr: "büyükbaba" },
+                { en: "aunt", tr: "teyze / hala" },
+                { en: "sister", tr: "kız kardeş / abla" },
+                { en: "brother", tr: "erkek kardeş / abi" },
+                { en: "mum", tr: "anne" },
+                { en: "dad", tr: "baba" },
+                { en: "sneakers", tr: "spor ayakkabı" },
+                { en: "boots", tr: "bot" },
+                { en: "gloves", tr: "eldiven" },
+                { en: "sunglasses", tr: "güneş gözlüğü" },
+                { en: "cap", tr: "kep / şapka" },
+                { en: "raincoat", tr: "yağmurluk" },
+                { en: "umbrella", tr: "şemsiye" },
+                { en: "handbag", tr: "el çantası" },
+                { en: "necklace", tr: "kolye" },
+                { en: "earrings", tr: "küpeler" },
+                { en: "skirt", tr: "etek" },
+                { en: "dress", tr: "elbise" },
+                { en: "jeans", tr: "kot pantolon" },
+                { en: "T-shirt", tr: "tişört" },
+                { en: "comfortable clothes", tr: "rahat kıyafetler" },
+                { en: "fancy outfits", tr: "gösterişli kıyafetler" },
+                { en: "She follows the fashion.", tr: "Modayı takip ediyor." },
+                { en: "He is grilling some food.", tr: "Biraz yemek ızgara yapıyor." },
+                { en: "She is decorating the house.", tr: "Evi süslüyor." },
+                { en: "having a barbecue", tr: "mangal yapmak" },
+                { en: "I'm so excited!", tr: "Çok heyecanlıyım!" }
             ],
-            // SAYFA 3: Kişilik, Doğa, Yerler & Kıyafetler
+            // SET 3: Yiyecek, Hayvanlar, Yerler & Tatil
             set3: [
-                { en: "Short / Thin", tr: "Kısa boylu / Zayıf" }, { en: "Tall / Plump", tr: "Uzun boylu / Kilolu" },
-                { en: "Long wavy hair", tr: "Uzun dalgalı saç" }, { en: "Brown eyes", tr: "Kahverengi gözler" },
-                { en: "Kind & Friendly", tr: "Nazik & Cana yakın" }, { en: "Funny & Clever", tr: "Komik & Zeki" },
-                { en: "Coat & Raincoat", tr: "Mont & Yağmurluk" }, { en: "Boots & Gloves", tr: "Bot & Eldiven" },
-                { en: "Scarf & Hoodie", tr: "Atkı & Kapüşonlu" }, { en: "Trainers & Sandals", tr: "Spor ayakkabı & Sandalet" },
-                { en: "Flip-flops & Shorts", tr: "Terlik & Şort" }, { en: "Cold / Hot weather", tr: "Soğuk / Sıcak hava" },
-                { en: "Dolphin", tr: "Yunus balığı" }, { en: "Crab", tr: "Yengeç" },
-                { en: "Sea turtle", tr: "Deniz kaplumbağası" }, { en: "Jellyfish", tr: "Denizanası" },
-                { en: "Lagoon & Ocean", tr: "Lagün & Okyanus" }, { en: "Protect nature", tr: "Doğayı korumak" },
-                { en: "Bakery", tr: "Fırın (Ekmek fırını)" }, { en: "Chemist's", tr: "Eczane" },
-                { en: "Greengrocer's", tr: "Manav" }, { en: "Museum & Cinema", tr: "Müze & Sinema" },
-                { en: "Park & Hospital", tr: "Park & Hastane" }, { en: "Police Station", tr: "Polis Karakolu" }
+                { en: "a bowl of soup", tr: "bir kase çorba" },
+                { en: "a glass of lemonade", tr: "bir bardak limonata" },
+                { en: "a slice of pizza", tr: "bir dilim pizza" },
+                { en: "a slice of cake", tr: "bir dilim pasta" },
+                { en: "a glass of juice", tr: "bir bardak meyve suyu" },
+                { en: "cheese", tr: "peynir" },
+                { en: "pasta", tr: "makarna" },
+                { en: "beef", tr: "dana eti" },
+                { en: "tuna sandwich", tr: "ton balıklı sandviç" },
+                { en: "green salad", tr: "yeşil salata" },
+                { en: "mineral water", tr: "maden suyu" },
+                { en: "dessert", tr: "tatlı" },
+                { en: "menu", tr: "menü" },
+                { en: "waiter", tr: "garson" },
+                { en: "Can I have meat, please?", tr: "Et alabilir miyim, lütfen?" },
+                { en: "Enjoy your meal!", tr: "Afiyet olsun!" },
+                { en: "Would you like a dessert?", tr: "Tatlı ister misiniz?" },
+                { en: "bear", tr: "ayı" },
+                { en: "deer", tr: "geyik" },
+                { en: "elephant", tr: "fil" },
+                { en: "lion", tr: "aslan" },
+                { en: "cheetah", tr: "çita" },
+                { en: "parrot", tr: "papağan" },
+                { en: "owl", tr: "baykuş" },
+                { en: "monkey", tr: "maymun" },
+                { en: "butterfly", tr: "kelebek" },
+                { en: "The cheetah is the fastest.", tr: "Çita en hızlısıdır." },
+                { en: "The elephant is bigger than the deer.", tr: "Fil, geyikten daha büyüktür." },
+                { en: "Parrots are more colourful.", tr: "Papağanlar daha renklidir." },
+                { en: "tiny house", tr: "minik ev" },
+                { en: "seaside", tr: "deniz kenarı" },
+                { en: "food festival", tr: "yemek festivali" },
+                { en: "hot air balloon", tr: "sıcak hava balonu" },
+                { en: "Planet Earth", tr: "Dünya Gezegeni" },
+                { en: "desert", tr: "çöl" },
+                { en: "ocean", tr: "okyanus" },
+                { en: "coral reef", tr: "mercan resifi" },
+                { en: "valley", tr: "vadi" },
+                { en: "fairy chimneys", tr: "peri bacaları" },
+                { en: "sandcastle", tr: "kumdan kale" },
+                { en: "ancient theatre", tr: "antik tiyatro" },
+                { en: "We're going on a jolly to the seaside!", tr: "Deniz kenarına eğlenceli bir geziye gidiyoruz!" },
+                { en: "I'm going to visit my grandparents.", tr: "Büyükannemle büyükbabamı ziyaret edeceğim." },
+                { en: "We are going to go camping.", tr: "Kamp yapmaya gideceğiz." }
             ]
         };
 

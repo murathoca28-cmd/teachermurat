@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade 6 - Unit 1 Jeopardy</title>
+    <title>Grade 6 Unit 1 - Jeopardy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
     <style>
@@ -67,11 +67,11 @@
 <body class="text-gray-800 p-2 sm:p-4 relative min-h-screen flex flex-col justify-start items-center">
 
     <!-- Karşılama Ekranı -->
-    <div id="splash" class="fixed inset-0 z-40 flex flex-col items-center justify-center gap-4 sm:gap-6 p-6 text-center text-white bg-gradient-to-br from-indigo-700 via-purple-700 to-pink-600">
+    <div id="splash" class="fixed inset-0 z-40 flex flex-col items-center justify-center gap-4 sm:gap-6 p-6 text-center text-white bg-gradient-to-br from-[#0b6a7a] via-[#0e8a97] to-[#14a698]">
         <p class="text-lg sm:text-2xl font-bold opacity-90">Kelime Yarışması</p>
-        <h1 class="text-3xl sm:text-6xl font-black drop-shadow-lg">Grade 6 - Unit 1 Jeopardy</h1>
+        <h1 class="text-3xl sm:text-6xl font-black drop-shadow-lg">Grade 6 – Unit 1 Jeopardy</h1>
 
-        <button onclick="closeSplash()" class="mt-2 sm:mt-4 bg-sky-400 hover:bg-sky-500 border-b-8 border-sky-600 rounded-3xl w-32 h-32 sm:w-40 sm:h-40 flex flex-col items-center justify-center shadow-2xl transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+        <button onclick="closeSplash()" class="mt-2 sm:mt-4 bg-amber-400 hover:bg-amber-500 text-slate-900 border-b-8 border-amber-600 rounded-3xl w-32 h-32 sm:w-40 sm:h-40 flex flex-col items-center justify-center shadow-2xl transition-transform hover:scale-105 active:scale-95 cursor-pointer">
             <span class="text-5xl sm:text-6xl leading-none">▶</span>
             <span class="text-lg sm:text-2xl font-extrabold mt-1">BAŞLAT</span>
         </button>
@@ -104,17 +104,15 @@
 
     <!-- Kurulum Üst Bar -->
     <div id="setup-bar" class="w-full max-w-5xl bg-white/90 backdrop-blur-md shadow-xl p-4 sm:p-6 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-5 rounded-2xl sm:rounded-3xl border-2 sm:border-4 border-white mt-8 sm:mt-2">
-        <h1 class="text-xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 text-center drop-shadow-sm">🎮 Grade 6 - Unit 1 Jeopardy</h1>
+        <h1 class="text-xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 text-center drop-shadow-sm">🎮 Jeopardy Word Game</h1>
         
         <!-- Kategori / Set Seçimi -->
         <div class="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 bg-purple-50 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-2xl border-2 border-purple-200 w-full sm:w-auto">
             <label for="category-select" class="font-bold text-xs sm:text-sm text-purple-800">Kelime Seti:</label>
             <select id="category-select" class="w-full sm:w-auto bg-white border-2 border-purple-300 rounded-lg sm:rounded-xl p-1 text-xs sm:text-sm font-bold text-purple-900 focus:outline-none focus:border-purple-500">
-                <option value="set1">Ülkeler & Bayramlar</option>
-                <option value="set2">Okul: Kulüpler, Kişiler & Yerler</option>
-                <option value="set3">Okul Kuralları</option>
-                <option value="set4">Etkinlikler, Hobiler & Cümle Kalıpları</option>
-                <option value="set5">Faydalı Kalıplar & Dil Bilgisi</option>
+                <option value="set1">Okul Yerleri &amp; Kişiler</option>
+                <option value="set2">Tören, Kutlama &amp; Fiiller</option>
+                <option value="set3">Roller, Rutinler &amp; Kalıplar</option>
                 <option value="all" selected>TÜMÜ</option>
             </select>
         </div>
@@ -226,177 +224,113 @@
 
     <script>
         const wordSets = {
-            // Ülkeler & Bayramlar
+            // SET 1: Okul Yerleri & Kişiler
             set1: [
-                {"en": "the Turkish Republic of Northern Cyprus", "tr": "Kuzey Kıbrıs Türk Cumhuriyeti"},
-                {"en": "Azerbaijan", "tr": "Azerbaycan"},
-                {"en": "the UK (the United Kingdom)", "tr": "Birleşik Krallık"},
-                {"en": "England", "tr": "İngiltere"},
-                {"en": "Scotland", "tr": "İskoçya"},
-                {"en": "the USA", "tr": "ABD (Amerika Birleşik Devletleri)"},
-                {"en": "Canada", "tr": "Kanada"},
-                {"en": "Mexico", "tr": "Meksika"},
-                {"en": "Brazil", "tr": "Brezilya"},
-                {"en": "Argentina", "tr": "Arjantin"},
-                {"en": "Spain", "tr": "İspanya"},
-                {"en": "France", "tr": "Fransa"},
-                {"en": "Italy", "tr": "İtalya"},
-                {"en": "Germany", "tr": "Almanya"},
-                {"en": "Greece", "tr": "Yunanistan"},
-                {"en": "Russia", "tr": "Rusya"},
-                {"en": "Kazakhstan", "tr": "Kazakistan"},
-                {"en": "Turkmenistan", "tr": "Türkmenistan"},
-                {"en": "Uzbekistan", "tr": "Özbekistan"},
-                {"en": "Kyrgyzstan", "tr": "Kırgızistan"},
-                {"en": "China", "tr": "Çin"},
-                {"en": "Japan", "tr": "Japonya"},
-                {"en": "South Korea", "tr": "Güney Kore"},
-                {"en": "Singapore", "tr": "Singapur"},
-                {"en": "23 April", "tr": "Ulusal Egemenlik ve Çocuk Bayramı"},
-                {"en": "19 May", "tr": "Atatürk'ü Anma, Gençlik ve Spor Bayramı"},
-                {"en": "30 August", "tr": "Zafer Bayramı"},
-                {"en": "29 October", "tr": "Cumhuriyet Bayramı"},
-                {"en": "Eid-al-Fitr", "tr": "Ramazan Bayramı"},
-                {"en": "Eid-al-Adha", "tr": "Kurban Bayramı"},
-                {"en": "national day", "tr": "ulusal bayram (gün)"},
-                {"en": "religious day", "tr": "dinî bayram (gün)"}
+                { en: "sports field", tr: "spor sahası" },
+                { en: "playground", tr: "oyun parkı" },
+                { en: "lab", tr: "laboratuvar" },
+                { en: "library", tr: "kütüphane" },
+                { en: "teacher's room", tr: "öğretmenler odası" },
+                { en: "school garden", tr: "okul bahçesi" },
+                { en: "lunch hall", tr: "yemekhane" },
+                { en: "canteen", tr: "kantin" },
+                { en: "conference hall", tr: "konferans salonu" },
+                { en: "assembly hall", tr: "toplantı salonu" },
+                { en: "classroom", tr: "sınıf" },
+                { en: "stage", tr: "sahne" },
+                { en: "art club", tr: "resim kulübü" },
+                { en: "sports club", tr: "spor kulübü" },
+                { en: "talent show", tr: "yetenek gösterisi" },
+                { en: "parent", tr: "anne veya baba (veli)" },
+                { en: "secretary", tr: "sekreter" },
+                { en: "headmaster", tr: "okul müdürü" },
+                { en: "teacher", tr: "öğretmen" },
+                { en: "choir", tr: "koro" },
+                { en: "team player", tr: "takım oyuncusu" },
+                { en: "leader", tr: "lider" },
+                { en: "school trip", tr: "okul gezisi" },
+                { en: "festival", tr: "festival" },
+                { en: "bell", tr: "zil" },
+                { en: "desk", tr: "sıra / masa" },
+                { en: "reading corner", tr: "okuma köşesi" },
+                { en: "bus driver", tr: "otobüs şoförü" },
+                { en: "underground", tr: "metro" },
+                { en: "minibus", tr: "minibüs" },
+                { en: "storybook", tr: "hikâye kitabı" },
+                { en: "homework", tr: "ödev" }
             ],
-            // Okul: Kulüpler, Kişiler & Yerler
+            // SET 2: Tören, Kutlama & Fiiller
             set2: [
-                {"en": "music club", "tr": "müzik kulübü"},
-                {"en": "technology club", "tr": "teknoloji kulübü"},
-                {"en": "maths club", "tr": "matematik kulübü"},
-                {"en": "drama club", "tr": "drama kulübü"},
-                {"en": "art club", "tr": "resim (sanat) kulübü"},
-                {"en": "folk dance club", "tr": "halk oyunları kulübü"},
-                {"en": "environment club", "tr": "çevre kulübü"},
-                {"en": "science club", "tr": "bilim (fen) kulübü"},
-                {"en": "film club", "tr": "film kulübü"},
-                {"en": "chess club", "tr": "satranç kulübü"},
-                {"en": "sports club", "tr": "spor kulübü"},
-                {"en": "surfing team", "tr": "sörf takımı"},
-                {"en": "headmaster", "tr": "okul müdürü"},
-                {"en": "assistant to the headmaster", "tr": "müdür yardımcısı"},
-                {"en": "coach", "tr": "antrenör"},
-                {"en": "secretary", "tr": "sekreter"},
-                {"en": "cook", "tr": "aşçı"},
-                {"en": "doctor", "tr": "doktor"},
-                {"en": "English teacher", "tr": "İngilizce öğretmeni"},
-                {"en": "science teacher", "tr": "fen bilimleri öğretmeni"},
-                {"en": "student", "tr": "öğrenci"},
-                {"en": "best friend", "tr": "en yakın arkadaş"},
-                {"en": "new at school", "tr": "okulda yeni"},
-                {"en": "canteen", "tr": "kantin"},
-                {"en": "science lab", "tr": "fen laboratuvarı"},
-                {"en": "library", "tr": "kütüphane"},
-                {"en": "sports field", "tr": "spor sahası"},
-                {"en": "sports hall", "tr": "spor salonu"},
-                {"en": "administration department", "tr": "idari birim (idare)"},
-                {"en": "conference hall", "tr": "konferans salonu"},
-                {"en": "classroom", "tr": "sınıf"},
-                {"en": "downstairs", "tr": "alt katta, aşağıda"},
-                {"en": "language camp", "tr": "dil kampı"}
+                { en: "school ceremony", tr: "okul töreni" },
+                { en: "celebration", tr: "kutlama" },
+                { en: "assembly", tr: "toplantı / okul toplantısı" },
+                { en: "parade", tr: "geçit töreni" },
+                { en: "speech", tr: "konuşma" },
+                { en: "national anthem", tr: "milli marş" },
+                { en: "flag", tr: "bayrak" },
+                { en: "Republic Day", tr: "Cumhuriyet Bayramı" },
+                { en: "15 July Democracy and National Unity Day", tr: "15 Temmuz Demokrasi ve Milli Birlik Günü" },
+                { en: "Sports Day", tr: "Spor Günü" },
+                { en: "to enter", tr: "girmek" },
+                { en: "to pass", tr: "(sınavı) geçmek" },
+                { en: "to fail", tr: "(sınavda) başarısız olmak" },
+                { en: "to greet", tr: "selamlamak" },
+                { en: "to follow", tr: "takip etmek / uymak" },
+                { en: "to try", tr: "denemek / çalışmak" },
+                { en: "helpful", tr: "yardımsever / faydalı" },
+                { en: "interview", tr: "görüşme / mülakat" },
+                { en: "to arrange", tr: "düzenlemek" },
+                { en: "to borrow", tr: "ödünç almak" },
+                { en: "to bring", tr: "getirmek" },
+                { en: "to care", tr: "önemsemek" },
+                { en: "to celebrate", tr: "kutlamak" },
+                { en: "to forget", tr: "unutmak" },
+                { en: "to lead", tr: "yönetmek / liderlik etmek" },
+                { en: "to leave", tr: "ayrılmak / bırakmak" },
+                { en: "to lend", tr: "ödünç vermek" },
+                { en: "to organise", tr: "organize etmek" },
+                { en: "to pack", tr: "(çantayı) hazırlamak" },
+                { en: "to shout", tr: "bağırmak" },
+                { en: "to smile", tr: "gülümsemek" },
+                { en: "to solve", tr: "çözmek" },
+                { en: "to support", tr: "desteklemek" },
+                { en: "to volunteer", tr: "gönüllü olmak" }
             ],
-            // Okul Kuralları & Kural Kelimeleri
+            // SET 3: Roller, Rutinler & Kalıplar
             set3: [
-                {"en": "rule", "tr": "kural"},
-                {"en": "follow the rules", "tr": "kurallara uymak"},
-                {"en": "obey", "tr": "(kurallara) uymak"},
-                {"en": "run", "tr": "koşmak"},
-                {"en": "shout", "tr": "bağırmak"},
-                {"en": "fight", "tr": "kavga etmek"},
-                {"en": "noise", "tr": "gürültü"},
-                {"en": "line up", "tr": "sıraya girmek"},
-                {"en": "lab coat", "tr": "laboratuvar önlüğü"},
-                {"en": "gloves", "tr": "eldiven"},
-                {"en": "goggles", "tr": "koruyucu gözlük"},
-                {"en": "play safe", "tr": "güvenli davranmak"},
-                {"en": "rude", "tr": "kaba, saygısız"},
-                {"en": "password", "tr": "şifre"},
-                {"en": "false information", "tr": "yanlış bilgi"},
-                {"en": "chew gum", "tr": "sakız çiğnemek"},
-                {"en": "in public", "tr": "toplum içinde"},
-                {"en": "high heels", "tr": "yüksek topuklu ayakkabılar"},
-                {"en": "ancient city", "tr": "antik şehir"},
-                {"en": "historical fountain", "tr": "tarihi çeşme"},
-                {"en": "feed pigeons", "tr": "güvercin beslemek"},
-                {"en": "dangerous dog species", "tr": "tehlikeli köpek türleri"},
-                {"en": "own, buy, sell", "tr": "sahip olmak, satın almak, satmak"},
-                {"en": "dirty car", "tr": "kirli araba"},
-                {"en": "protect", "tr": "korumak"},
-                {"en": "keep clean", "tr": "temiz tutmak"},
-                {"en": "public order", "tr": "kamu düzeni"},
-                {"en": "local laws", "tr": "yerel yasalar"},
-                {"en": "respect", "tr": "saygı göstermek; saygı"},
-                {"en": "Don't shout in the library!", "tr": "Kütüphanede bağırma!"},
-                {"en": "You mustn't run in the lab.", "tr": "Laboratuvarda koşmamalısın."},
-                {"en": "You can't chew gum in public.", "tr": "Toplum içinde sakız çiğneyemezsin."}
-            ],
-            // Etkinlikler, Hobiler & Cümle Kalıpları
-            set4: [
-                {"en": "play the piano", "tr": "piyano çalmak"},
-                {"en": "play the guitar", "tr": "gitar çalmak"},
-                {"en": "sing songs", "tr": "şarkı söylemek"},
-                {"en": "draw pictures", "tr": "resim çizmek"},
-                {"en": "listen to music", "tr": "müzik dinlemek"},
-                {"en": "dance", "tr": "dans etmek"},
-                {"en": "do experiments", "tr": "deney yapmak"},
-                {"en": "learn new things", "tr": "yeni şeyler öğrenmek"},
-                {"en": "read books", "tr": "kitap okumak"},
-                {"en": "solve problems", "tr": "problem çözmek"},
-                {"en": "surf", "tr": "sörf yapmak"},
-                {"en": "water sports", "tr": "su sporları"},
-                {"en": "take nature photos", "tr": "doğa fotoğrafı çekmek"},
-                {"en": "colour and fold paper", "tr": "boyamak ve kâğıt katlamak"},
-                {"en": "perform a dance show", "tr": "dans gösterisi yapmak"},
-                {"en": "organise a tournament", "tr": "turnuva düzenlemek"},
-                {"en": "arrange an exhibition", "tr": "sergi düzenlemek"},
-                {"en": "join a team / club", "tr": "takıma / kulübe katılmak"},
-                {"en": "take part in", "tr": "-e katılmak"},
-                {"en": "contact", "tr": "iletişime geçmek"},
-                {"en": "favourite", "tr": "en sevilen, favori"},
-                {"en": "Do you like playing the guitar?", "tr": "Gitar çalmaktan hoşlanır mısın?"},
-                {"en": "I like playing the guitar.", "tr": "Gitar çalmayı severim."},
-                {"en": "Do you enjoy solving problems?", "tr": "Problem çözmekten hoşlanır mısın?"},
-                {"en": "like / love / enjoy", "tr": "sevmek / hoşlanmak / keyif almak (fiil + -ing)"},
-                {"en": "can / can't", "tr": "yapabilmek / yapamamak"},
-                {"en": "I can play the guitar.", "tr": "Gitar çalabilirim."},
-                {"en": "I can't play the piano.", "tr": "Piyano çalamam."},
-                {"en": "What is your favourite school club?", "tr": "En sevdiğin okul kulübü hangisi?"},
-                {"en": "My favourite school club is music club.", "tr": "En sevdiğim okul kulübü müzik kulübü."}
-            ],
-            // Faydalı Kalıplar & Dil Bilgisi
-            set5: [
-                {"en": "Welcome to our school!", "tr": "Okulumuza hoş geldin!"},
-                {"en": "Nice to meet you.", "tr": "Tanıştığımıza memnun oldum."},
-                {"en": "Excuse me!", "tr": "Affedersiniz!"},
-                {"en": "What's up?", "tr": "Ne haber? / Ne var ne yok?"},
-                {"en": "Cheers!", "tr": "Sağ ol! (Teşekkürler!)"},
-                {"en": "Are you new at school?", "tr": "Okulda yeni misin?"},
-                {"en": "Would you like to join our team?", "tr": "Takımımıza katılmak ister misin?"},
-                {"en": "I'm looking for the science club.", "tr": "Fen kulübünü arıyorum."},
-                {"en": "Come in. / Let's get started!", "tr": "İçeri gel. / Haydi başlayalım!"},
-                {"en": "By the way", "tr": "Bu arada"},
-                {"en": "Where is he/she from?", "tr": "O nereli? (O nereden geliyor?)"},
-                {"en": "Who is your English teacher?", "tr": "İngilizce öğretmenin kim?"},
-                {"en": "Where is the coach?", "tr": "Antrenör nerede?"},
-                {"en": "What can't you do in Singapore?", "tr": "Singapur'da ne yapamazsın?"},
-                {"en": "Where", "tr": "nerede"},
-                {"en": "Who", "tr": "kim"},
-                {"en": "What", "tr": "ne"},
-                {"en": "How many", "tr": "kaç tane"},
-                {"en": "He/She is from Spain.", "tr": "O İspanyalı. (O İspanya'dan geliyor.)"},
-                {"en": "Ms Wilson is my English teacher.", "tr": "İngilizce öğretmenim Ms Wilson."},
-                {"en": "He is in the sports field.", "tr": "O spor sahasında."},
-                {"en": "I am Alex.", "tr": "Ben Alex'im."},
-                {"en": "He is from Scotland.", "tr": "O İskoçyalı."},
-                {"en": "We are in the music club.", "tr": "Biz müzik kulübündeyiz."},
-                {"en": "I'm from Brazil.", "tr": "Brezilyalıyım."},
-                {"en": "falling intonation", "tr": "düşen tonlama (cümle sonunda ses düşer)"},
-                {"en": "Yes, I do. / No, I don't.", "tr": "Evet, severim/hoşlanırım. / Hayır, hoşlanmam."},
-                {"en": "be (am / is / are)", "tr": "olmak fiili (am / is / are)"},
-                {"en": "Don't", "tr": "olumsuz emir: yapma! (Don't shout!)"},
-                {"en": "mustn't / can't", "tr": "yapmamalısın / yapamazsın (yasak)"}
+                { en: "carrying the flag", tr: "bayrak taşımak" },
+                { en: "reading a poem", tr: "şiir okumak" },
+                { en: "researching Atatürk's speeches", tr: "Atatürk'ün konuşmalarını araştırmak" },
+                { en: "decorating the classroom", tr: "sınıfı süslemek" },
+                { en: "being the leader for preparations", tr: "hazırlıkların lideri olmak" },
+                { en: "singing in the choir", tr: "koroda şarkı söylemek" },
+                { en: "guiding the programme", tr: "programı yönetmek" },
+                { en: "role", tr: "rol" },
+                { en: "responsibility", tr: "sorumluluk" },
+                { en: "routine", tr: "rutin / alışkanlık" },
+                { en: "positive feedback", tr: "olumlu geri bildirim" },
+                { en: "Mehmet is responsible for carrying the flag.", tr: "Mehmet bayrağı taşımaktan sorumludur." },
+                { en: "She's such a team player!", tr: "O gerçekten harika bir takım oyuncusu!" },
+                { en: "You need to work harder to make the grade!", tr: "Başarılı olmak için daha çok çalışmalısın!" },
+                { en: "The choir is always in the spotlight!", tr: "Koro her zaman ilgi odağıdır!" },
+                { en: "Do your best!", tr: "Elinden gelenin en iyisini yap!" },
+                { en: "Follow the instructions.", tr: "Talimatlara uy." },
+                { en: "Listen carefully.", tr: "Dikkatlice dinle." },
+                { en: "Walk quietly.", tr: "Sessizce yürü." },
+                { en: "We never come to school late.", tr: "Okula asla geç gelmeyiz." },
+                { en: "always", tr: "her zaman" },
+                { en: "usually", tr: "genellikle" },
+                { en: "often", tr: "sık sık" },
+                { en: "sometimes", tr: "bazen" },
+                { en: "never", tr: "asla / hiçbir zaman" },
+                { en: "How often do you play sports?", tr: "Ne sıklıkla spor yaparsın?" },
+                { en: "I always walk to school.", tr: "Okula her zaman yürüyerek giderim." },
+                { en: "The teacher often greets us.", tr: "Öğretmen bizi sık sık selamlar." },
+                { en: "Help me, please!", tr: "Lütfen bana yardım et!" },
+                { en: "I see them every day.", tr: "Onları her gün görüyorum." },
+                { en: "Give her the book.", tr: "Ona kitabı ver." },
+                { en: "We need him.", tr: "Ona ihtiyacımız var." },
+                { en: "Working together makes our school successful.", tr: "Birlikte çalışmak okulumuzu başarılı yapar." }
             ]
         };
 
