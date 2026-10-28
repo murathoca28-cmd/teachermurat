@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade 6 Reading Activity</title>
+    <title>Grade 6 Reading Activity - Ece's Holiday Plan</title>
     <style>
     :root {
         --primary: #0F766E;
@@ -440,6 +440,12 @@
         .question-text { font-size: 19px; }
         .options label { font-size: 18px; }
     }
+
+    .tr-row { margin-top: 18px; }
+    .tr-btn { background:#fff; color:#0B4F4A; border:3px solid var(--border-strong); border-radius:var(--radius-sm); font-family:inherit; font-weight:800; font-size:18px; padding:10px 18px; cursor:pointer; box-shadow:0 3px 0 var(--border-strong); }
+    .tr-btn:hover { background: var(--primary-soft); }
+    .tr-text { display:none; margin-top:12px; padding:14px 16px; background:#fff; border:3px dashed var(--border-color); border-radius:var(--radius-sm); font-size:20px; font-weight:600; line-height:1.6; }
+    .tr-text.show { display:block; }
     </style>
     <link rel="stylesheet" href="/theme.css">
 </head>
@@ -463,7 +469,7 @@
     <div class="app-container">
         <header class="hero-banner">
             <h1>🎓 6th Grade Reading Activity</h1>
-            <p>Lucy's Healthy Food Day</p>
+            <p>Ece's Holiday Plan</p>
         </header>
 
         <main class="space-y">
@@ -474,136 +480,16 @@
                     <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">📖</div>
                     <div class="card-title">
                         <h2>Read the Text</h2>
-                        <p>Read about Lucy and healthy food.</p>
+                        <p>Read about Ece's holiday plan.</p>
                     </div>
                 </div>
 
                 <div class="hint-bar" lang="tr">👆 Turkuaz renkli bir kelimeye dokun, Türkçe anlamını gör.</div>
 
-                <div class="reading-section" id="reading-text">
-                    <p>
-                        Hello, I'm Lucy. Last weekend, I <span class="vocab" data-translation="ziyaret ettim">visited</span> my grandmother. Every morning, she <span class="vocab" data-translation="hazırladı">made</span> a <span class="vocab" data-translation="sağlıklı kahvaltı">healthy breakfast</span> for me. We ate <span class="vocab" data-translation="yumurta">eggs</span>, <span class="vocab" data-translation="yoğurt">yoghurt</span> and <span class="vocab" data-translation="ıspanak">spinach</span>. My grandmother said, "<span class="vocab" data-translation="sağlıklı besinler">Healthy food</span> gives you <span class="vocab" data-translation="enerji">energy</span>!"
-                    </p>
-                    <p>
-                        On Monday, my teacher, Mrs. Carter, <span class="vocab" data-translation="getirdi">brought</span> a big <span class="vocab" data-translation="poster">poster</span> to class. It had two <span class="vocab" data-translation="sütun">columns</span>: "Healthy Food" and "Unhealthy Food". She gave us some <span class="vocab" data-translation="kartlar">cards</span> with pictures of food, like <span class="vocab" data-translation="patates cipsi">chips</span>, <span class="vocab" data-translation="brokoli">broccoli</span>, <span class="vocab" data-translation="şekerlemeler">sweets</span> and <span class="vocab" data-translation="erişte/makarna">noodles</span>. We had to put the cards in the right column. It was a fun <span class="vocab" data-translation="oyun">game</span>!
-                    </p>
-                    <p>
-                        I put <span class="vocab" data-translation="yeşil salata">green salad</span>, <span class="vocab" data-translation="kuruyemiş">nuts</span> and <span class="vocab" data-translation="balık">fish</span> under "Healthy Food". I put <span class="vocab" data-translation="hamburger">hamburger</span>, <span class="vocab" data-translation="çikolata">chocolate</span>, <span class="vocab" data-translation="sosisler">sausages</span> and <span class="vocab" data-translation="erişte/makarna">noodles</span> under "Unhealthy Food" too. My friend Daniel said, "<span class="vocab" data-translation="dondurma">Ice cream</span> is healthy because it has milk!" But Mrs. Carter said, "No, ice cream has too much <span class="vocab" data-translation="şeker">sugar</span>. That is not good for our <span class="vocab" data-translation="vücut">body</span>."
-                    </p>
-                    <p>
-                        That evening, I helped my mother pack my <span class="vocab" data-translation="beslenme çantası">lunchbox</span> for school. I chose fruit, green salad and water. I did not choose chips. My mother was <span class="vocab" data-translation="gurur duydu">proud</span> of me. Now I eat more healthy food every day, and I feel happy and full of energy!
-                    </p>
-                </div>
+                <div class="reading-section" id="reading-text"><p>Next week, my family is going to go on a <span class="vocab" data-translation="tatil">holiday</span> to Antalya. We are going to stay in a <span class="vocab" data-translation="küçük ev">tiny house</span> near the beach. There are two bedrooms and a small <span class="vocab" data-translation="mutfak">kitchen</span>.</p><p>On the first night, we are going to eat at a <span class="vocab" data-translation="restoran">restaurant</span>. I want to order a bowl of <span class="vocab" data-translation="çorba">soup</span> and some <span class="vocab" data-translation="balık">fish</span>. My mum would like a <span class="vocab" data-translation="salata">salad</span> and a glass of <span class="vocab" data-translation="limonata">lemonade</span>. Is there any <span class="vocab" data-translation="tatlı">dessert</span>? We must ask the <span class="vocab" data-translation="garson">waiter</span>!</p><p>Tonight, I am going to <span class="vocab" data-translation="bavul hazırlamak">pack</span> my suitcase. I must take my sunglasses and a cap because it is going to be <span class="vocab" data-translation="güneşli">sunny</span>.</p></div><div class="tr-row"><button type="button" class="tr-btn" onclick="toggleTr(this)">🇹🇷 Türkçesi</button></div><div id="trText" class="tr-text" lang="tr">Gelecek hafta ailemle Antalya'ya tatile gideceğiz. Plajın yakınındaki küçük bir evde kalacağız. İki yatak odası ve küçük bir mutfak var. İlk akşam bir restoranda yemek yiyeceğiz. Ben bir kase çorba ve balık sipariş etmek istiyorum. Annem bir salata ve bir bardak limonata ister. Tatlı var mı? Garsona sormalıyız! Bu akşam bavulumu hazırlayacağım. Güneş gözlüğümü ve şapkamı almalıyım çünkü hava güneşli olacak.</div>
             </section>
 
-            <form id="quizForm" class="space-y" onsubmit="return false;">
-
-                <!-- PART 1 -->
-                <section class="activity-card">
-                    <div class="card-header">
-                        <div class="card-icon" style="background: var(--orange-soft); color: var(--orange);">✅</div>
-                        <div class="card-title">
-                            <h2>Part 1: Multiple Choice</h2>
-                            <p>Choose the correct answer.</p>
-                        </div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="b">
-                        <span class="question-text">1. Where did Lucy go last weekend?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q1" value="a"> a) To school</label>
-                            <label><input type="radio" name="q1" value="b"> b) To her grandmother's house</label>
-                            <label><input type="radio" name="q1" value="c"> c) To the market</label>
-                            <label><input type="radio" name="q1" value="d"> d) To the beach</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="c">
-                        <span class="question-text">2. What did Lucy eat for breakfast?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q2" value="a"> a) Chips and sausages</label>
-                            <label><input type="radio" name="q2" value="b"> b) Chocolate and sweets</label>
-                            <label><input type="radio" name="q2" value="c"> c) Eggs, yoghurt and spinach</label>
-                            <label><input type="radio" name="q2" value="d"> d) Ice cream and noodles</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="a">
-                        <span class="question-text">3. What did Mrs. Carter bring to class?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q3" value="a"> a) A poster and food cards</label>
-                            <label><input type="radio" name="q3" value="b"> b) A box of fruit</label>
-                            <label><input type="radio" name="q3" value="c"> c) A cooking video</label>
-                            <label><input type="radio" name="q3" value="d"> d) A big cake</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="d">
-                        <span class="question-text">4. Why is ice cream not healthy?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q4" value="a"> a) It is too cold.</label>
-                            <label><input type="radio" name="q4" value="b"> b) It has no milk.</label>
-                            <label><input type="radio" name="q4" value="c"> c) It does not taste good.</label>
-                            <label><input type="radio" name="q4" value="d"> d) It has too much sugar.</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="b">
-                        <span class="question-text">5. What did Lucy put in her lunchbox?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q5" value="a"> a) Chips and chocolate</label>
-                            <label><input type="radio" name="q5" value="b"> b) Fruit, green salad and water</label>
-                            <label><input type="radio" name="q5" value="c"> c) A hamburger</label>
-                            <label><input type="radio" name="q5" value="d"> d) Noodles and sweets</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-                </section>
-
-                <!-- PART 2 -->
-                <section class="activity-card">
-                    <div class="card-header">
-                        <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">✏️</div>
-                        <div class="card-title">
-                            <h2>Part 2: Short Answers</h2>
-                            <p>Type a short answer.</p>
-                        </div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["her grandmother", "grandmother", "grandma", "her grandma"]'>
-                        <span class="question-text">6. Who made breakfast for Lucy?</span>
-                        <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["broccoli", "green salad", "salad", "nuts", "fish", "eggs", "egg", "yoghurt", "yogurt", "spinach", "fruit"]'>
-                        <span class="question-text">7. Write one healthy food from the passage.</span>
-                        <input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["chips", "chip", "sweets", "sweet", "noodles", "noodle", "hamburger", "chocolate", "sausages", "sausage", "ice cream"]'>
-                        <span class="question-text">8. Write one unhealthy food from the passage.</span>
-                        <input type="text" class="short-answer-input" name="q8" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["daniel", "her friend daniel"]'>
-                        <span class="question-text">9. Who said ice cream was healthy?</span>
-                        <input type="text" class="short-answer-input" name="q9" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["happy and full of energy", "happy", "full of energy"]'>
-                        <span class="question-text">10. How does Lucy feel now?</span>
-                        <input type="text" class="short-answer-input" name="q10" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-                </section>
+            <form id="quizForm" class="space-y" onsubmit="return false;"><section class="activity-card"><div class="card-header"><div class="card-icon" style="background: var(--orange-soft); color: var(--orange);">✅</div><div class="card-title"><h2>Part 1: Multiple Choice</h2><p>Choose the correct answer.</p></div></div><div class="question-card" data-type="mc" data-answer="c"><span class="question-text">1. Where is Ece's family going to go on holiday?</span><div class="options"><label><input type="radio" name="q1" value="a"> a) Izmir</label><label><input type="radio" name="q1" value="b"> b) Ankara</label><label><input type="radio" name="q1" value="c"> c) Antalya</label><label><input type="radio" name="q1" value="d"> d) Bursa</label></div><div class="feedback-detail"></div></div><div class="question-card" data-type="mc" data-answer="a"><span class="question-text">2. Where are they going to stay?</span><div class="options"><label><input type="radio" name="q2" value="a"> a) In a tiny house</label><label><input type="radio" name="q2" value="b"> b) In a hotel</label><label><input type="radio" name="q2" value="c"> c) In a tent</label><label><input type="radio" name="q2" value="d"> d) In a flat</label></div><div class="feedback-detail"></div></div><div class="question-card" data-type="mc" data-answer="b"><span class="question-text">3. What would Ece like to eat at the restaurant?</span><div class="options"><label><input type="radio" name="q3" value="a"> a) Salad and cake</label><label><input type="radio" name="q3" value="b"> b) Soup and fish</label><label><input type="radio" name="q3" value="c"> c) Pasta and juice</label><label><input type="radio" name="q3" value="d"> d) Pizza and cake</label></div><div class="feedback-detail"></div></div><div class="question-card" data-type="mc" data-answer="d"><span class="question-text">4. What would Ece's mum like to drink?</span><div class="options"><label><input type="radio" name="q4" value="a"> a) Water</label><label><input type="radio" name="q4" value="b"> b) Tea</label><label><input type="radio" name="q4" value="c"> c) Milk</label><label><input type="radio" name="q4" value="d"> d) Lemonade</label></div><div class="feedback-detail"></div></div><div class="question-card" data-type="mc" data-answer="a"><span class="question-text">5. Why must Ece take sunglasses and a cap?</span><div class="options"><label><input type="radio" name="q5" value="a"> a) It is going to be sunny.</label><label><input type="radio" name="q5" value="b"> b) It is going to be cold.</label><label><input type="radio" name="q5" value="c"> c) It is going to be rainy.</label><label><input type="radio" name="q5" value="d"> d) It is going to be windy.</label></div><div class="feedback-detail"></div></div></section><section class="activity-card"><div class="card-header"><div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">✏️</div><div class="card-title"><h2>Part 2: Short Answers</h2><p>Type a short answer.</p></div></div><div class="question-card" data-type="sa" data-answers="[&quot;two&quot;, &quot;two.&quot;, &quot;two bedrooms&quot;, &quot;two bedrooms.&quot;, &quot;there are two bedrooms&quot;, &quot;there are two bedrooms.&quot;, &quot;2&quot;, &quot;2.&quot;]"><span class="question-text">6. How many bedrooms are there in the tiny house?</span><input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div><div class="question-card" data-type="sa" data-answers="[&quot;small&quot;, &quot;small.&quot;, &quot;it is small&quot;, &quot;it is small.&quot;, &quot;it&#x27;s small&quot;, &quot;it&#x27;s small.&quot;, &quot;it’s small&quot;, &quot;it’s small.&quot;, &quot;it is a small kitchen&quot;, &quot;it is a small kitchen.&quot;, &quot;it&#x27;s a small kitchen&quot;, &quot;it&#x27;s a small kitchen.&quot;, &quot;it’s a small kitchen&quot;, &quot;it’s a small kitchen.&quot;, &quot;a small kitchen&quot;, &quot;a small kitchen.&quot;]"><span class="question-text">7. What size is the kitchen in the tiny house?</span><input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div><div class="question-card" data-type="sa" data-answers="[&quot;the waiter&quot;, &quot;the waiter.&quot;, &quot;waiter&quot;, &quot;waiter.&quot;, &quot;they must ask the waiter&quot;, &quot;they must ask the waiter.&quot;]"><span class="question-text">8. Who must they ask about dessert?</span><input type="text" class="short-answer-input" name="q8" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div><div class="question-card" data-type="sa" data-answers="[&quot;pack her suitcase&quot;, &quot;pack her suitcase.&quot;, &quot;pack her suitcase tonight&quot;, &quot;pack her suitcase tonight.&quot;, &quot;she is going to pack her suitcase&quot;, &quot;she is going to pack her suitcase.&quot;, &quot;she&#x27;s going to pack her suitcase&quot;, &quot;she&#x27;s going to pack her suitcase.&quot;, &quot;she’s going to pack her suitcase&quot;, &quot;she’s going to pack her suitcase.&quot;, &quot;pack&quot;, &quot;pack.&quot;]"><span class="question-text">9. What is Ece going to do tonight?</span><input type="text" class="short-answer-input" name="q9" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div><div class="question-card" data-type="sa" data-answers="[&quot;a salad&quot;, &quot;a salad.&quot;, &quot;salad&quot;, &quot;salad.&quot;, &quot;she is going to eat a salad&quot;, &quot;she is going to eat a salad.&quot;, &quot;she&#x27;s going to eat a salad&quot;, &quot;she&#x27;s going to eat a salad.&quot;, &quot;she’s going to eat a salad&quot;, &quot;she’s going to eat a salad.&quot;, &quot;she would like a salad&quot;, &quot;she would like a salad.&quot;]"><span class="question-text">10. What is Ece's mum going to eat?</span><input type="text" class="short-answer-input" name="q10" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div></section>
 
                 <button type="button" class="action-btn" onclick="checkQuiz()">Check Answers &amp; Finish Quiz</button>
 
@@ -676,7 +562,7 @@
 
     // ---------- Quiz ----------
     function normalizeText(text) {
-        return text.toLowerCase().trim().replace(/\s+/g, ' ').replace(/[.,!?']/g, '');
+        return text.toLowerCase().trim().replace(/\s+/g, ' ');
     }
 
     function getOptionText(questionElement, value) {
@@ -803,6 +689,13 @@
         });
         window.addEventListener('keydown', e => { if (e.key === 'Escape') { closeZoom(); closeTextModal(); } });
         window.addEventListener('resize', () => { if (zoomedCard) fitZoom(zoomedCard); });
+    }
+
+    function toggleTr(btn) {
+        const box = document.getElementById('trText');
+        const open = box.classList.toggle('show');
+        btn.textContent = open ? '🇹🇷 Hide Türkçe' : '🇹🇷 Türkçesi';
+        if (zoomedCard) fitZoom(zoomedCard);
     }
 
     window.onload = initZoom;

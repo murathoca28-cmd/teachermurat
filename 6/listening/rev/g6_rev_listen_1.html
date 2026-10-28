@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade 6 Listening Activity</title>
+    <title>6th Grade Listening Activity</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css">
     <style>
     :root {
@@ -431,6 +431,16 @@
 
     #floatingPlayBtn.visible { display: flex; }
     #floatingPlayBtn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--orange-dark); }
+
+    /* Turkish support line under each transcript sentence */
+    .tr {
+        display: block;
+        font-size: 20px;
+        font-weight: 700;
+        font-style: italic;
+        color: var(--text-muted);
+        margin-top: 2px;
+    }
     </style>
     <link rel="stylesheet" href="/theme.css">
 </head>
@@ -444,7 +454,7 @@
     <div class="app-container">
         <header class="hero-banner">
             <h1>🎧 6th Grade Listening Activity</h1>
-            <p>Lilly's School Day</p>
+            <p>Dinner at a Restaurant</p>
         </header>
 
         <main class="space-y">
@@ -455,18 +465,18 @@
                     <div class="card-icon" style="background: var(--orange-soft); color: var(--orange);">🎧</div>
                     <div class="card-title">
                         <h2>Listen</h2>
-                        <p>Listen to Lilly talk about her school day.</p>
+                        <p>Listen to Mia ordering food at a restaurant.</p>
                     </div>
                 </div>
 
                 <div class="hint-bar" lang="tr">👂 Düğmeye bas ve dinle. İstediğin kadar tekrar dinleyebilirsin.</div>
 
-                <button type="button" id="listenBtn" class="action-btn listen-btn" onclick="startListening()">🔊 Listen to the Text</button>
+                <button type="button" id="listenBtn" class="action-btn listen-btn" onclick="startListening()">🔊 Listen to the Dialogue</button>
             </section>
 
             <div id="playerWrap">
                 <audio id="player" controls preload="metadata">
-                    <source src="https://cdn.teachermurat.com/5/rev_listens/01-Grade5_listening.mp3?v=1" type="audio/mpeg">
+                    <source src="https://cdn.teachermurat.com/6/rev_listens/01-Grade6_rev_listening.mp3?v=2" type="audio/mpeg">
                 </audio>
             </div>
 
@@ -483,34 +493,34 @@
                     </div>
 
                 <div class="question-card" data-type="mc" data-answer="b">
-                    <span class="question-text">1. What is Lilly's favourite lesson?</span>
+                    <span class="question-text">1. Where are the speakers?</span>
                     <div class="options">
-                        <label><input type="radio" name="q1" value="a"> a) English</label>
-                        <label><input type="radio" name="q1" value="b"> b) Science</label>
-                        <label><input type="radio" name="q1" value="c"> c) Art</label>
-                        <label><input type="radio" name="q1" value="d"> d) Drama</label>
+                        <label><input type="radio" name="q1" value="a"> a) At a market</label>
+                        <label><input type="radio" name="q1" value="b"> b) At a restaurant</label>
+                        <label><input type="radio" name="q1" value="c"> c) At a school</label>
+                        <label><input type="radio" name="q1" value="d"> d) At the beach</label>
                     </div>
                     <div class="feedback-detail"></div>
                 </div>
 
                 <div class="question-card" data-type="mc" data-answer="c">
-                    <span class="question-text">2. Which club is Lilly in?</span>
+                    <span class="question-text">2. What does Mia want to drink?</span>
                     <div class="options">
-                        <label><input type="radio" name="q2" value="a"> a) Music Club</label>
-                        <label><input type="radio" name="q2" value="b"> b) Chess Club</label>
-                        <label><input type="radio" name="q2" value="c"> c) Art Club</label>
-                        <label><input type="radio" name="q2" value="d"> d) Sports Club</label>
+                        <label><input type="radio" name="q2" value="a"> a) Water</label>
+                        <label><input type="radio" name="q2" value="b"> b) Tea</label>
+                        <label><input type="radio" name="q2" value="c"> c) Lemonade</label>
+                        <label><input type="radio" name="q2" value="d"> d) Juice</label>
                     </div>
                     <div class="feedback-detail"></div>
                 </div>
 
                 <div class="question-card" data-type="mc" data-answer="a">
-                    <span class="question-text">3. What sport does Lilly play after school?</span>
+                    <span class="question-text">3. Which ice cream does Mia choose?</span>
                     <div class="options">
-                        <label><input type="radio" name="q3" value="a"> a) Basketball</label>
-                        <label><input type="radio" name="q3" value="b"> b) Football</label>
-                        <label><input type="radio" name="q3" value="c"> c) Tennis</label>
-                        <label><input type="radio" name="q3" value="d"> d) Swimming</label>
+                        <label><input type="radio" name="q3" value="a"> a) Chocolate</label>
+                        <label><input type="radio" name="q3" value="b"> b) Strawberry</label>
+                        <label><input type="radio" name="q3" value="c"> c) Vanilla</label>
+                        <label><input type="radio" name="q3" value="d"> d) Lemon</label>
                     </div>
                     <div class="feedback-detail"></div>
                 </div>
@@ -526,20 +536,20 @@
                         </div>
                     </div>
 
-                <div class="question-card" data-type="sa" data-answers='["lilly"]'>
-                    <span class="question-text">4. What is the name of the student speaking?</span>
+                <div class="question-card" data-type="sa" data-answers="[&quot;chicken soup&quot;, &quot;chicken&quot;]">
+                    <span class="question-text">4. What kind of soup does Mia order?</span>
                     <input type="text" class="short-answer-input" name="q4" placeholder="Type your answer here..." autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
-                <div class="question-card" data-type="sa" data-answers='["friday", "fridays", "on friday", "on fridays"]'>
-                    <span class="question-text">5. On which day do Lilly and her friends participate in the drama club?</span>
+                <div class="question-card" data-type="sa" data-answers="[&quot;chocolate and strawberry&quot;, &quot;chocolate and strawberry ice cream&quot;]">
+                    <span class="question-text">5. What kinds of ice cream are there?</span>
                     <input type="text" class="short-answer-input" name="q5" placeholder="Type your answer here..." autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
 
-                <div class="question-card" data-type="sa" data-answers='["five o&#39;clock", "5 o&#39;clock", "5:00", "5.00", "5", "five", "at five", "at 5", "at 5 o&#39;clock", "at five o&#39;clock", "5 pm", "5 p.m.", "five pm", "at 5 pm", "at five pm"]'>
-                    <span class="question-text">6. What time does Lilly go home after basketball?</span>
+                <div class="question-card" data-type="sa" data-answers="[&quot;enjoy your meal&quot;]">
+                    <span class="question-text">6. What does the waiter say at the end?</span>
                     <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..." autocomplete="off">
                     <div class="feedback-detail"></div>
                 </div>
@@ -551,7 +561,7 @@
 
                 <div id="result"></div>
 
-                <button type="button" id="transcriptBtn" class="action-btn" onclick="showTranscript()">📝 See the Text</button>
+                <button type="button" id="transcriptBtn" class="action-btn" onclick="showTranscript()">📝 See the Dialogue</button>
             </form>
 
             <!-- TRANSCRIPT (revealed after checking) -->
@@ -559,16 +569,21 @@
                 <div class="card-header">
                     <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">📝</div>
                     <div class="card-title">
-                        <h2>The Text</h2>
+                        <h2>The Dialogue</h2>
                         <p>Read what you heard.</p>
                     </div>
                 </div>
                 <div class="reading-section">
-                    <p>Hello! My name is Lilly. I am a 6th-grade student, and I really love my school!</p>
-                    <p>My favourite lesson is Science because I like doing experiments in the lab. On Tuesdays and Thursdays, we have English and Art. In English lessons, I love learning new words, reading short stories, and speaking with my friends.</p>
-                    <p>I also enjoy school activities. I am in the Art Club, and I like drawing pictures. On Fridays, my friends and I participate in the school drama club and school plays.</p>
-                    <p>After school, at half past three, I play basketball with my classmates. Basketball is my favourite sport. We play until five o'clock, and then I go home.</p>
-                    <p>What about you? What is your favourite lesson at school?</p>
+                    <p><strong>Waiter:</strong> Good evening! Welcome to our restaurant. What can I get for you?<span class="tr" lang="tr">İyi akşamlar! Restoranımıza hoş geldiniz. Size ne getirebilirim?</span></p>
+                    <p><strong>Mia:</strong> Hello! I would like a bowl of chicken soup, please.<span class="tr" lang="tr">Merhaba! Bir kase tavuk çorbası istiyorum, lütfen.</span></p>
+                    <p><strong>Waiter:</strong> Of course. Would you like a salad, too?<span class="tr" lang="tr">Tabii. Salata da ister misiniz?</span></p>
+                    <p><strong>Mia:</strong> Yes, please. And can I have a glass of lemonade?<span class="tr" lang="tr">Evet, lütfen. Ve bir bardak limonata alabilir miyim?</span></p>
+                    <p><strong>Waiter:</strong> Sure. Is that all?<span class="tr" lang="tr">Tabii. Hepsi bu kadar mı?</span></p>
+                    <p><strong>Mia:</strong> Hmm, is there any ice cream?<span class="tr" lang="tr">Hımm, dondurma var mı?</span></p>
+                    <p><strong>Waiter:</strong> Yes, there is. We have chocolate and strawberry ice cream.<span class="tr" lang="tr">Evet, var. Çikolatalı ve çilekli dondurmamız var.</span></p>
+                    <p><strong>Mia:</strong> Chocolate, please. It is my favourite!<span class="tr" lang="tr">Çikolatalı, lütfen. En sevdiğim!</span></p>
+                    <p><strong>Waiter:</strong> Wonderful choice! I will bring your food now. Enjoy your meal!<span class="tr" lang="tr">Harika bir seçim! Yemeğinizi şimdi getireceğim. Afiyet olsun!</span></p>
+                    <p><strong>Mia:</strong> Thank you very much!<span class="tr" lang="tr">Çok teşekkür ederim!</span></p>
                 </div>
             </section>
         </main>

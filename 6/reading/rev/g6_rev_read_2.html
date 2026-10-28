@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade 6 Reading Activity</title>
+    <title>Grade 6 Reading Activity - A Day at the Safari Park</title>
     <style>
     :root {
         --primary: #0F766E;
@@ -440,6 +440,12 @@
         .question-text { font-size: 19px; }
         .options label { font-size: 18px; }
     }
+
+    .tr-row { margin-top: 18px; }
+    .tr-btn { background:#fff; color:#0B4F4A; border:3px solid var(--border-strong); border-radius:var(--radius-sm); font-family:inherit; font-weight:800; font-size:18px; padding:10px 18px; cursor:pointer; box-shadow:0 3px 0 var(--border-strong); }
+    .tr-btn:hover { background: var(--primary-soft); }
+    .tr-text { display:none; margin-top:12px; padding:14px 16px; background:#fff; border:3px dashed var(--border-color); border-radius:var(--radius-sm); font-size:20px; font-weight:600; line-height:1.6; }
+    .tr-text.show { display:block; }
     </style>
     <link rel="stylesheet" href="/theme.css">
 </head>
@@ -463,7 +469,7 @@
     <div class="app-container">
         <header class="hero-banner">
             <h1>🎓 6th Grade Reading Activity</h1>
-            <p>A Summer at the Seaside</p>
+            <p>A Day at the Safari Park</p>
         </header>
 
         <main class="space-y">
@@ -474,142 +480,22 @@
                     <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">📖</div>
                     <div class="card-title">
                         <h2>Read the Text</h2>
-                        <p>Read about Robert's summer by the sea.</p>
+                        <p>Read about a day at the safari park.</p>
                     </div>
                 </div>
 
                 <div class="hint-bar" lang="tr">👆 Turkuaz renkli bir kelimeye dokun, Türkçe anlamını gör.</div>
 
-                <div class="reading-section" id="reading-text">
-                    <p>
-                        Hello, I'm Robert. Last summer, my family and I <span class="vocab" data-translation="kaldık">stayed</span> in a <span class="vocab" data-translation="küçük sahil evi">small beach house</span> near a <span class="vocab" data-translation="güzel lagün">beautiful lagoon</span>. Every morning, I <span class="vocab" data-translation="uyandım">woke up</span> to the <span class="vocab" data-translation="dalgaların sesi">sound of the waves</span> and <span class="vocab" data-translation="izledim">watched</span> the <span class="vocab" data-translation="deniz hayvanları">sea animals</span>. I saw a <span class="vocab" data-translation="yunus">dolphin</span> <span class="vocab" data-translation="sudan dışarı atlamak">jump out of the water</span> and a <span class="vocab" data-translation="yengeç">crab</span> <span class="vocab" data-translation="sürünmek">crawl</span> on the rocks. It was amazing!
-                    </p>
-                    <p>
-                        One day, we <span class="vocab" data-translation="dalışa gittik">went diving</span> in the ocean. I <span class="vocab" data-translation="yüzdüm">swam</span> with a group of <span class="vocab" data-translation="renkli balıklar">colourful fish</span> and saw a <span class="vocab" data-translation="deniz kaplumbağası">sea turtle</span> <span class="vocab" data-translation="saklanan">hiding</span> under a rock. I also saw something very bad. There were some <span class="vocab" data-translation="plastik torbalar">plastic bags</span> in the water. A <span class="vocab" data-translation="denizanası">jellyfish</span> was in one of those plastic bags. My dad <span class="vocab" data-translation="yardım etti">helped</span> it and we <span class="vocab" data-translation="çıkardık">took</span> the bags out of the sea.
-                    </p>
-                    <p>
-                        That night, we <span class="vocab" data-translation="konuştuk">talked</span> about <span class="vocab" data-translation="korumak">protecting</span> sea animals. My sister said, "We <span class="vocab" data-translation="-memeli, -mamalı (tavsiye)">shouldn't</span> <span class="vocab" data-translation="çöp atmak">throw rubbish</span> into the sea." I said, "We <span class="vocab" data-translation="-meli, -malı (zorunluluk)">must</span> <span class="vocab" data-translation="denizi temiz tutmak">keep the sea clean</span>." My parents were very happy because we <span class="vocab" data-translation="önemsedik, değer verdik">cared about</span> nature.
-                    </p>
-                    <p>
-                        The next morning, we went to the <span class="vocab" data-translation="yerel pazar">local market</span> and <span class="vocab" data-translation="satın aldık">bought</span> <span class="vocab" data-translation="taze meyve ve balık">fresh fruit and fish</span>. We had a delicious lunch with grapes, green salad, and grilled fish. We ate together in front of our beach house and watched the calm sea. I felt happy. It was the most beautiful day of the summer!
-                    </p>
-                </div>
+                <div class="reading-section" id="reading-text"><p>We are at the safari park today! My brother Kerem and I are looking at the <span class="vocab" data-translation="zürafalar">giraffes</span>. They are <span class="vocab" data-translation="daha uzun boylu">taller</span> than the other animals. There are some <span class="vocab" data-translation="filler">elephants</span> near the lake, too.</p><p>The elephant is the <span class="vocab" data-translation="en ağır">heaviest</span> animal in the park, but the cheetah is the <span class="vocab" data-translation="en hızlı">fastest</span>. I think the parrots are the most <span class="vocab" data-translation="renkli">colourful</span> birds here. They live in the <span class="vocab" data-translation="orman">forest</span>.</p><p>After lunch, we are going to ride a safari bus. We can't <span class="vocab" data-translation="dokunmak">touch</span> the animals because it is <span class="vocab" data-translation="tehlikeli">dangerous</span>. Then we are going to buy <span class="vocab" data-translation="hediyelik eşyalar">souvenirs</span>. It is going to be an <span class="vocab" data-translation="harika">amazing</span> day!</p></div><div class="tr-row"><button type="button" class="tr-btn" onclick="toggleTr(this)">🇹🇷 Türkçesi</button></div><div id="trText" class="tr-text" lang="tr">Bugün safari parkındayız! Kardeşim Kerem ve ben zürafalara bakıyoruz. Onlar diğer hayvanlardan daha uzun boylu. Gölün yakınında bazı filler de var. Fil parktaki en ağır hayvan ama çita en hızlısı. Bence papağanlar buradaki en renkli kuşlar. Onlar ormanda yaşar. Öğle yemeğinden sonra bir safari otobüsüne bineceğiz. Hayvanlara dokunamayız çünkü tehlikeli. Sonra hediyelik eşya alacağız. Harika bir gün olacak!</div>
             </section>
 
-            <form id="quizForm" class="space-y" onsubmit="return false;">
-
-                <!-- PART 1 -->
-                <section class="activity-card">
-                    <div class="card-header">
-                        <div class="card-icon" style="background: var(--orange-soft); color: var(--orange);">✅</div>
-                        <div class="card-title">
-                            <h2>Part 1: Multiple Choice</h2>
-                            <p>Choose the correct answer.</p>
-                        </div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="c">
-                        <span class="question-text">1. Where did Robert and his family stay last summer?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q1" value="a"> a) In a big city hotel</label>
-                            <label><input type="radio" name="q1" value="b"> b) In a mountain cabin</label>
-                            <label><input type="radio" name="q1" value="c"> c) In a small beach house near a lagoon</label>
-                            <label><input type="radio" name="q1" value="d"> d) In a village house</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="a">
-                        <span class="question-text">2. Which sea animal did Robert see crawling on the rocks?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q2" value="a"> a) A crab</label>
-                            <label><input type="radio" name="q2" value="b"> b) A dolphin</label>
-                            <label><input type="radio" name="q2" value="c"> c) A sea turtle</label>
-                            <label><input type="radio" name="q2" value="d"> d) A jellyfish</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="b">
-                        <span class="question-text">3. What was inside one of the plastic bags in the water?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q3" value="a"> a) A colourful fish</label>
-                            <label><input type="radio" name="q3" value="b"> b) A jellyfish</label>
-                            <label><input type="radio" name="q3" value="c"> c) A sea turtle</label>
-                            <label><input type="radio" name="q3" value="d"> d) A crab</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="d">
-                        <span class="question-text">4. What did Robert's sister say about protecting the sea?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q4" value="a"> a) We must go diving every day.</label>
-                            <label><input type="radio" name="q4" value="b"> b) We should buy fresh fruit.</label>
-                            <label><input type="radio" name="q4" value="c"> c) We must keep the sea clean.</label>
-                            <label><input type="radio" name="q4" value="d"> d) We shouldn't throw rubbish into the sea.</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="c">
-                        <span class="question-text">5. What did Robert and his family buy at the local market?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q5" value="a"> a) Plastic bags and bottles</label>
-                            <label><input type="radio" name="q5" value="b"> b) Beach toys and a boat</label>
-                            <label><input type="radio" name="q5" value="c"> c) Fresh fruit and fish</label>
-                            <label><input type="radio" name="q5" value="d"> d) Grapes and green salad only</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-                </section>
-
-                <!-- PART 2 -->
-                <section class="activity-card">
-                    <div class="card-header">
-                        <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">✏️</div>
-                        <div class="card-title">
-                            <h2>Part 2: Short Answers</h2>
-                            <p>Type a short answer.</p>
-                        </div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["sound of the waves", "the sound of the waves", "waves"]'>
-                        <span class="question-text">6. What sound did Robert wake up to every morning?</span>
-                        <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["a sea turtle", "sea turtle", "turtle"]'>
-                        <span class="question-text">7. What animal was hiding under a rock when Robert went diving?</span>
-                        <input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["plastic bags", "some plastic bags", "plastic bag"]'>
-                        <span class="question-text">8. What very bad thing did Robert see in the ocean water?</span>
-                        <input type="text" class="short-answer-input" name="q8" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["keep the sea clean", "we must keep the sea clean"]'>
-                        <span class="question-text">9. According to Robert, what must they do for the environment?</span>
-                        <input type="text" class="short-answer-input" name="q9" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["happy", "he felt happy", "felt happy"]'>
-                        <span class="question-text">10. How did Robert feel after lunch?</span>
-                        <input type="text" class="short-answer-input" name="q10" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-                </section>
+            <form id="quizForm" class="space-y" onsubmit="return false;"><section class="activity-card"><div class="card-header"><div class="card-icon" style="background: var(--orange-soft); color: var(--orange);">✅</div><div class="card-title"><h2>Part 1: Multiple Choice</h2><p>Choose the correct answer.</p></div></div><div class="question-card" data-type="mc" data-answer="b"><span class="question-text">1. Who is at the safari park with the writer?</span><div class="options"><label><input type="radio" name="q1" value="a"> a) A cousin</label><label><input type="radio" name="q1" value="b"> b) Kerem, the writer's brother</label><label><input type="radio" name="q1" value="c"> c) A teacher</label><label><input type="radio" name="q1" value="d"> d) A neighbour</label></div><div class="feedback-detail"></div></div><div class="question-card" data-type="mc" data-answer="d"><span class="question-text">2. Which animal is the heaviest in the park?</span><div class="options"><label><input type="radio" name="q2" value="a"> a) The giraffe</label><label><input type="radio" name="q2" value="b"> b) The cheetah</label><label><input type="radio" name="q2" value="c"> c) The parrot</label><label><input type="radio" name="q2" value="d"> d) The elephant</label></div><div class="feedback-detail"></div></div><div class="question-card" data-type="mc" data-answer="a"><span class="question-text">3. Which animal is the fastest?</span><div class="options"><label><input type="radio" name="q3" value="a"> a) The cheetah</label><label><input type="radio" name="q3" value="b"> b) The elephant</label><label><input type="radio" name="q3" value="c"> c) The giraffe</label><label><input type="radio" name="q3" value="d"> d) The parrot</label></div><div class="feedback-detail"></div></div><div class="question-card" data-type="mc" data-answer="b"><span class="question-text">4. What are they going to ride after lunch?</span><div class="options"><label><input type="radio" name="q4" value="a"> a) A boat</label><label><input type="radio" name="q4" value="b"> b) A safari bus</label><label><input type="radio" name="q4" value="c"> c) A train</label><label><input type="radio" name="q4" value="d"> d) A hot air balloon</label></div><div class="feedback-detail"></div></div><div class="question-card" data-type="mc" data-answer="c"><span class="question-text">5. Why can't they touch the animals?</span><div class="options"><label><input type="radio" name="q5" value="a"> a) The animals are sleepy.</label><label><input type="radio" name="q5" value="b"> b) The animals are small.</label><label><input type="radio" name="q5" value="c"> c) It is dangerous.</label><label><input type="radio" name="q5" value="d"> d) It is cold.</label></div><div class="feedback-detail"></div></div></section><section class="activity-card"><div class="card-header"><div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">✏️</div><div class="card-title"><h2>Part 2: Short Answers</h2><p>Type a short answer.</p></div></div><div class="question-card" data-type="sa" data-answers="[&quot;in the forest&quot;, &quot;in the forest.&quot;, &quot;the forest&quot;, &quot;the forest.&quot;, &quot;they live in the forest&quot;, &quot;they live in the forest.&quot;, &quot;forest&quot;, &quot;forest.&quot;]"><span class="question-text">6. Where do the parrots live?</span><input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div><div class="question-card" data-type="sa" data-answers="[&quot;the other animals&quot;, &quot;the other animals.&quot;, &quot;other animals&quot;, &quot;other animals.&quot;, &quot;they are taller than the other animals&quot;, &quot;they are taller than the other animals.&quot;, &quot;they&#x27;re taller than the other animals&quot;, &quot;they&#x27;re taller than the other animals.&quot;, &quot;they’re taller than the other animals&quot;, &quot;they’re taller than the other animals.&quot;]"><span class="question-text">7. What are the giraffes taller than?</span><input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div><div class="question-card" data-type="sa" data-answers="[&quot;souvenirs&quot;, &quot;souvenirs.&quot;, &quot;some souvenirs&quot;, &quot;some souvenirs.&quot;, &quot;they are going to buy souvenirs&quot;, &quot;they are going to buy souvenirs.&quot;, &quot;they&#x27;re going to buy souvenirs&quot;, &quot;they&#x27;re going to buy souvenirs.&quot;, &quot;they’re going to buy souvenirs&quot;, &quot;they’re going to buy souvenirs.&quot;]"><span class="question-text">8. What are they going to buy?</span><input type="text" class="short-answer-input" name="q8" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div><div class="question-card" data-type="sa" data-answers="[&quot;elephants&quot;, &quot;elephants.&quot;, &quot;the elephants&quot;, &quot;the elephants.&quot;, &quot;some elephants&quot;, &quot;some elephants.&quot;]"><span class="question-text">9. Which animals are near the lake?</span><input type="text" class="short-answer-input" name="q9" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div><div class="question-card" data-type="sa" data-answers="[&quot;amazing&quot;, &quot;amazing.&quot;, &quot;an amazing day&quot;, &quot;an amazing day.&quot;, &quot;it is going to be amazing&quot;, &quot;it is going to be amazing.&quot;, &quot;it&#x27;s going to be amazing&quot;, &quot;it&#x27;s going to be amazing.&quot;, &quot;it’s going to be amazing&quot;, &quot;it’s going to be amazing.&quot;, &quot;it is going to be an amazing day&quot;, &quot;it is going to be an amazing day.&quot;, &quot;it&#x27;s going to be an amazing day&quot;, &quot;it&#x27;s going to be an amazing day.&quot;, &quot;it’s going to be an amazing day&quot;, &quot;it’s going to be an amazing day.&quot;]"><span class="question-text">10. How is the day going to be?</span><input type="text" class="short-answer-input" name="q10" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div></section>
 
                 <button type="button" class="action-btn" onclick="checkQuiz()">Check Answers &amp; Finish Quiz</button>
 
                 <div id="result"></div>
 
-                <a href="https://cdn.teachermurat.com/6/rev_read_acts/Grade_6_revs_read_2.pdf?v=1"
+                <a href="https://cdn.teachermurat.com/6/rev_read_acts/Grade_6_revs_read_2.pdf"
                    download="Grade_6_revs_read_2.pdf"
                    class="action-btn download-btn">
                     <span style="font-size:1.3rem;">⬇️</span><br>
@@ -803,6 +689,13 @@
         });
         window.addEventListener('keydown', e => { if (e.key === 'Escape') { closeZoom(); closeTextModal(); } });
         window.addEventListener('resize', () => { if (zoomedCard) fitZoom(zoomedCard); });
+    }
+
+    function toggleTr(btn) {
+        const box = document.getElementById('trText');
+        const open = box.classList.toggle('show');
+        btn.textContent = open ? '🇹🇷 Hide Türkçe' : '🇹🇷 Türkçesi';
+        if (zoomedCard) fitZoom(zoomedCard);
     }
 
     window.onload = initZoom;

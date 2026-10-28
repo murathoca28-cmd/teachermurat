@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade 6 Reading Activity</title>
+    <title>Grade 6 Reading Activity - Drama Club Day</title>
     <style>
     :root {
         --primary: #0F766E;
@@ -440,6 +440,12 @@
         .question-text { font-size: 19px; }
         .options label { font-size: 18px; }
     }
+
+    .tr-row { margin-top: 18px; }
+    .tr-btn { background:#fff; color:#0B4F4A; border:3px solid var(--border-strong); border-radius:var(--radius-sm); font-family:inherit; font-weight:800; font-size:18px; padding:10px 18px; cursor:pointer; box-shadow:0 3px 0 var(--border-strong); }
+    .tr-btn:hover { background: var(--primary-soft); }
+    .tr-text { display:none; margin-top:12px; padding:14px 16px; background:#fff; border:3px dashed var(--border-color); border-radius:var(--radius-sm); font-size:20px; font-weight:600; line-height:1.6; }
+    .tr-text.show { display:block; }
     </style>
     <link rel="stylesheet" href="/theme.css">
 </head>
@@ -463,7 +469,7 @@
     <div class="app-container">
         <header class="hero-banner">
             <h1>🎓 6th Grade Reading Activity</h1>
-            <p>My Family's Amazing Jobs</p>
+            <p>Drama Club Day</p>
         </header>
 
         <main class="space-y">
@@ -474,136 +480,16 @@
                     <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">📖</div>
                     <div class="card-title">
                         <h2>Read the Text</h2>
-                        <p>Read about Alex and his family.</p>
+                        <p>Read about Selin and her drama club.</p>
                     </div>
                 </div>
 
                 <div class="hint-bar" lang="tr">👆 Turkuaz renkli bir kelimeye dokun, Türkçe anlamını gör.</div>
 
-                <div class="reading-section" id="reading-text">
-                    <p>
-                        Hello! My name is Alex. Today, I want to tell you about my family and their interesting <span class="vocab" data-translation="meslekler">jobs</span>. My family is very <span class="vocab" data-translation="çalışkan">hard-working</span>!
-                    </p>
-                    <p>
-                        My father is a <span class="vocab" data-translation="polis">police officer</span>. He <span class="vocab" data-translation="çalışır">works</span> at a big police station. He <span class="vocab" data-translation="insanlara yardım eder">helps people</span> and <span class="vocab" data-translation="şehrimizi güvende tutar">keeps our city safe</span>. He <span class="vocab" data-translation="üniforma giyer">wears a uniform</span> every day. My mother is a <span class="vocab" data-translation="doktor">doctor</span>. She <span class="vocab" data-translation="çalışır">works</span> at a hospital. She is very kind and she <span class="vocab" data-translation="hasta insanlara yardım eder">helps sick people</span>. She sometimes <span class="vocab" data-translation="gece çalışır">works at night</span>, but she loves her job!
-                    </p>
-                    <p>
-                        My brother, Leo, is a <span class="vocab" data-translation="çiftçi">farmer</span>. He lives in a small village. He <span class="vocab" data-translation="taze meyve ve sebze yetiştirir">grows fresh fruit and vegetables</span>. He also <span class="vocab" data-translation="bakar, ilgilenir">takes care of</span> many animals. He <span class="vocab" data-translation="çok erken kalkar">gets up very early</span> in the morning! My sister, Emma, is a <span class="vocab" data-translation="şarkıcı">singer</span>. She is very talented. She <span class="vocab" data-translation="şarkı söyler">sings songs</span> in a studio with her band. She is very happy when she is on stage.
-                    </p>
-                    <p>
-                        Finally, my uncle is a <span class="vocab" data-translation="öğretmen">teacher</span>. He <span class="vocab" data-translation="çalışır">works</span> at a primary school. He <span class="vocab" data-translation="İngilizce öğretir">teaches English</span> to many students. He thinks his job is very important because he <span class="vocab" data-translation="çocukların yeni şeyler öğrenmesine yardım eder">helps children learn new things</span>. We are a very happy family!
-                    </p>
-                </div>
+                <div class="reading-section" id="reading-text"><p>Hi! I am Selin. Every Monday, I <span class="vocab" data-translation="katılırım">join</span> the <span class="vocab" data-translation="tiyatro kulübü">drama club</span> after lunch. We <span class="vocab" data-translation="prova yaparız">practise</span> a short play in the <span class="vocab" data-translation="konferans salonu">conference hall</span>. It is my favourite club because we act and laugh a lot.</p><p>Right now, I am wearing my <span class="vocab" data-translation="kostüm">costume</span>. My friend Can is putting up a poster on the <span class="vocab" data-translation="ilan panosu">noticeboard</span>. Our teacher is helping us with the lines. She is very <span class="vocab" data-translation="sabırlı">patient</span>, isn't she?</p><p>The play starts at half past four. We <span class="vocab" data-translation="yapmamalıyız (yasak)">mustn't</span> be late, so I am checking the <span class="vocab" data-translation="ders programı">timetable</span> again. I am <span class="vocab" data-translation="gergin">nervous</span>, but I am also <span class="vocab" data-translation="heyecanlı">excited</span>!</p></div><div class="tr-row"><button type="button" class="tr-btn" onclick="toggleTr(this)">🇹🇷 Türkçesi</button></div><div id="trText" class="tr-text" lang="tr">Merhaba! Ben Selin. Her pazartesi öğle yemeğinden sonra tiyatro kulübüne katılırım. Kısa bir oyunu konferans salonunda prova ederiz. Burası en sevdiğim kulüp çünkü hem oyunculuk yaparız hem çok gülürüz. Şu anda kostümümü giyiyorum. Arkadaşım Can ilan panosuna bir afiş asıyor. Öğretmenimiz replikler konusunda bize yardım ediyor. Çok sabırlı, değil mi? Oyun dört buçukta başlıyor. Geç kalmamalıyız, bu yüzden ders programına tekrar bakıyorum. Gerginim ama aynı zamanda heyecanlıyım!</div>
             </section>
 
-            <form id="quizForm" class="space-y" onsubmit="return false;">
-
-                <!-- PART 1 -->
-                <section class="activity-card">
-                    <div class="card-header">
-                        <div class="card-icon" style="background: var(--orange-soft); color: var(--orange);">✅</div>
-                        <div class="card-title">
-                            <h2>Part 1: Multiple Choice</h2>
-                            <p>Choose the correct answer.</p>
-                        </div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="a">
-                        <span class="question-text">1. What is Alex's father's job?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q1" value="a"> a) He is a police officer.</label>
-                            <label><input type="radio" name="q1" value="b"> b) He is a farmer.</label>
-                            <label><input type="radio" name="q1" value="c"> c) He is a doctor.</label>
-                            <label><input type="radio" name="q1" value="d"> d) He is a singer.</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="b">
-                        <span class="question-text">2. Where does Alex's mother work?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q2" value="a"> a) At a school</label>
-                            <label><input type="radio" name="q2" value="b"> b) At a hospital</label>
-                            <label><input type="radio" name="q2" value="c"> c) At a studio</label>
-                            <label><input type="radio" name="q2" value="d"> d) In a garden</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="c">
-                        <span class="question-text">3. What does Leo do?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q3" value="a"> a) He teaches English.</label>
-                            <label><input type="radio" name="q3" value="b"> b) He sings songs.</label>
-                            <label><input type="radio" name="q3" value="c"> c) He grows vegetables.</label>
-                            <label><input type="radio" name="q3" value="d"> d) He helps sick people.</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="d">
-                        <span class="question-text">4. Who works in a studio?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q4" value="a"> a) The father</label>
-                            <label><input type="radio" name="q4" value="b"> b) The mother</label>
-                            <label><input type="radio" name="q4" value="c"> c) The uncle</label>
-                            <label><input type="radio" name="q4" value="d"> d) Emma</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="mc" data-answer="a">
-                        <span class="question-text">5. What does Alex's uncle teach?</span>
-                        <div class="options">
-                            <label><input type="radio" name="q5" value="a"> a) English</label>
-                            <label><input type="radio" name="q5" value="b"> b) Math</label>
-                            <label><input type="radio" name="q5" value="c"> c) Science</label>
-                            <label><input type="radio" name="q5" value="d"> d) Music</label>
-                        </div>
-                        <div class="feedback-detail"></div>
-                    </div>
-                </section>
-
-                <!-- PART 2 -->
-                <section class="activity-card">
-                    <div class="card-header">
-                        <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">✏️</div>
-                        <div class="card-title">
-                            <h2>Part 2: Short Answers</h2>
-                            <p>Type a short answer.</p>
-                        </div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["a uniform", "uniform"]'>
-                        <span class="question-text">6. What does Alex's father wear every day?</span>
-                        <input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["in a small village", "a small village", "small village", "in a village", "village"]'>
-                        <span class="question-text">7. Where does Leo live?</span>
-                        <input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["very early", "early", "very early in the morning", "early in the morning"]'>
-                        <span class="question-text">8. How early does Leo get up in the morning?</span>
-                        <input type="text" class="short-answer-input" name="q8" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["sick people", "sick person", "the sick people"]'>
-                        <span class="question-text">9. Who does Alex's mother help at the hospital?</span>
-                        <input type="text" class="short-answer-input" name="q9" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-
-                    <div class="question-card" data-type="sa" data-answers='["at a primary school", "primary school", "a primary school", "at primary school", "school"]'>
-                        <span class="question-text">10. Where does Alex's uncle work?</span>
-                        <input type="text" class="short-answer-input" name="q10" placeholder="Type your answer here..." autocomplete="off">
-                        <div class="feedback-detail"></div>
-                    </div>
-                </section>
+            <form id="quizForm" class="space-y" onsubmit="return false;"><section class="activity-card"><div class="card-header"><div class="card-icon" style="background: var(--orange-soft); color: var(--orange);">✅</div><div class="card-title"><h2>Part 1: Multiple Choice</h2><p>Choose the correct answer.</p></div></div><div class="question-card" data-type="mc" data-answer="b"><span class="question-text">1. Which club does Selin join?</span><div class="options"><label><input type="radio" name="q1" value="a"> a) The music club</label><label><input type="radio" name="q1" value="b"> b) The drama club</label><label><input type="radio" name="q1" value="c"> c) The art club</label><label><input type="radio" name="q1" value="d"> d) The science club</label></div><div class="feedback-detail"></div></div><div class="question-card" data-type="mc" data-answer="d"><span class="question-text">2. When does Selin join the club?</span><div class="options"><label><input type="radio" name="q2" value="a"> a) On Friday</label><label><input type="radio" name="q2" value="b"> b) On Sunday</label><label><input type="radio" name="q2" value="c"> c) On Wednesday</label><label><input type="radio" name="q2" value="d"> d) On Monday</label></div><div class="feedback-detail"></div></div><div class="question-card" data-type="mc" data-answer="a"><span class="question-text">3. Where do the students practise the play?</span><div class="options"><label><input type="radio" name="q3" value="a"> a) In the conference hall</label><label><input type="radio" name="q3" value="b"> b) In the library</label><label><input type="radio" name="q3" value="c"> c) In the laboratory</label><label><input type="radio" name="q3" value="d"> d) In the cafeteria</label></div><div class="feedback-detail"></div></div><div class="question-card" data-type="mc" data-answer="c"><span class="question-text">4. What is Can doing?</span><div class="options"><label><input type="radio" name="q4" value="a"> a) Playing the guitar</label><label><input type="radio" name="q4" value="b"> b) Reading a book</label><label><input type="radio" name="q4" value="c"> c) Putting up a poster</label><label><input type="radio" name="q4" value="d"> d) Wearing a costume</label></div><div class="feedback-detail"></div></div><div class="question-card" data-type="mc" data-answer="b"><span class="question-text">5. What time does the play start?</span><div class="options"><label><input type="radio" name="q5" value="a"> a) At four o'clock</label><label><input type="radio" name="q5" value="b"> b) At half past four</label><label><input type="radio" name="q5" value="c"> c) At half past five</label><label><input type="radio" name="q5" value="d"> d) At quarter to five</label></div><div class="feedback-detail"></div></div></section><section class="activity-card"><div class="card-header"><div class="card-icon" style="background: var(--primary-soft); color: var(--primary);">✏️</div><div class="card-title"><h2>Part 2: Short Answers</h2><p>Type a short answer.</p></div></div><div class="question-card" data-type="sa" data-answers="[&quot;a costume&quot;, &quot;a costume.&quot;, &quot;her costume&quot;, &quot;her costume.&quot;, &quot;she is wearing a costume&quot;, &quot;she is wearing a costume.&quot;, &quot;she&#x27;s wearing a costume&quot;, &quot;she&#x27;s wearing a costume.&quot;, &quot;she’s wearing a costume&quot;, &quot;she’s wearing a costume.&quot;, &quot;she is wearing her costume&quot;, &quot;she is wearing her costume.&quot;, &quot;she&#x27;s wearing her costume&quot;, &quot;she&#x27;s wearing her costume.&quot;, &quot;she’s wearing her costume&quot;, &quot;she’s wearing her costume.&quot;]"><span class="question-text">6. What is Selin wearing?</span><input type="text" class="short-answer-input" name="q6" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div><div class="question-card" data-type="sa" data-answers="[&quot;the teacher&quot;, &quot;the teacher.&quot;, &quot;their teacher&quot;, &quot;their teacher.&quot;, &quot;teacher&quot;, &quot;teacher.&quot;, &quot;their patient teacher&quot;, &quot;their patient teacher.&quot;]"><span class="question-text">7. Who is helping the students with the lines?</span><input type="text" class="short-answer-input" name="q7" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div><div class="question-card" data-type="sa" data-answers="[&quot;patient&quot;, &quot;patient.&quot;, &quot;she is patient&quot;, &quot;she is patient.&quot;, &quot;she&#x27;s patient&quot;, &quot;she&#x27;s patient.&quot;, &quot;she’s patient&quot;, &quot;she’s patient.&quot;, &quot;she is very patient&quot;, &quot;she is very patient.&quot;, &quot;she&#x27;s very patient&quot;, &quot;she&#x27;s very patient.&quot;, &quot;she’s very patient&quot;, &quot;she’s very patient.&quot;, &quot;very patient&quot;, &quot;very patient.&quot;]"><span class="question-text">8. What is the teacher like?</span><input type="text" class="short-answer-input" name="q8" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div><div class="question-card" data-type="sa" data-answers="[&quot;be late&quot;, &quot;be late.&quot;, &quot;they mustn&#x27;t be late&quot;, &quot;they mustn&#x27;t be late.&quot;, &quot;they mustn’t be late&quot;, &quot;they mustn’t be late.&quot;, &quot;they must not be late&quot;, &quot;they must not be late.&quot;]"><span class="question-text">9. What mustn't the students do?</span><input type="text" class="short-answer-input" name="q9" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div><div class="question-card" data-type="sa" data-answers="[&quot;nervous but excited&quot;, &quot;nervous but excited.&quot;, &quot;nervous and excited&quot;, &quot;nervous and excited.&quot;, &quot;excited but nervous&quot;, &quot;excited but nervous.&quot;, &quot;she is nervous but excited&quot;, &quot;she is nervous but excited.&quot;, &quot;she&#x27;s nervous but excited&quot;, &quot;she&#x27;s nervous but excited.&quot;, &quot;she’s nervous but excited&quot;, &quot;she’s nervous but excited.&quot;]"><span class="question-text">10. How does Selin feel?</span><input type="text" class="short-answer-input" name="q10" placeholder="Type your answer here..." autocomplete="off"><div class="feedback-detail"></div></div></section>
 
                 <button type="button" class="action-btn" onclick="checkQuiz()">Check Answers &amp; Finish Quiz</button>
 
@@ -803,6 +689,13 @@
         });
         window.addEventListener('keydown', e => { if (e.key === 'Escape') { closeZoom(); closeTextModal(); } });
         window.addEventListener('resize', () => { if (zoomedCard) fitZoom(zoomedCard); });
+    }
+
+    function toggleTr(btn) {
+        const box = document.getElementById('trText');
+        const open = box.classList.toggle('show');
+        btn.textContent = open ? '🇹🇷 Hide Türkçe' : '🇹🇷 Türkçesi';
+        if (zoomedCard) fitZoom(zoomedCard);
     }
 
     window.onload = initZoom;
