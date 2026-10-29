@@ -155,7 +155,7 @@ a.btn{display:inline-block;text-decoration:none}
       w.innerHTML = `<div class="card res"><h2>🏆 Test bitti! 🏆</h2><div class="big">${ok} / ${Q.length}</div><p><b>${ok}</b> doğru • <b>${Q.length - ok - b}</b> yanlış • <b>${b}</b> boş</p>
   <div class="nav" style="justify-content:center;margin-top:10px"><button class="btn g" onclick="restart()">🔄 Yeniden Başlat</button></div>
   <div class="rv">${Q.map((d, k) => { const s = sel[k], c = s === d.a; return `<div class="${s === null ? "bl" : c ? "ok" : "no"}">${c ? "✅" : s === null ? "⬜" : "❌"} <b>${k + 1}.</b> ${s === null ? "Boş bırakıldı" : c ? "Doğru" : "Senin cevabın: " + L[s]}<small>Doğru cevap: ${ot(d, d.a)} — ${d.w}</small></div>` }).join("")}</div>
-  <div class="nav" style="justify-content:center;margin-top:10px"><a class="btn" href="https://cdn.teachermurat.com/7/un1_lgstests/g7_un1_test_3.pdf" download>📄 Testi indir (PDF)</a></div></div>`;
+  <div class="nav" style="justify-content:center;margin-top:10px"><a class="btn" href="https://cdn.teachermurat.com/7/un1_lgstests/g7_un1_test_3.pdf?v=1" download>📄 Testi indir (PDF)</a></div></div>`;
       window.scrollTo(0, 0);
     }
 
@@ -175,6 +175,7 @@ a.btn{display:inline-block;text-decoration:none}
       else if (k === "z") toggleZoom(); else if (k === "f") fullscr();
     });
   </script>
+<script src="/pdf-download.js"></script>
 <script src="/back.js"></script>
 </body>
 
