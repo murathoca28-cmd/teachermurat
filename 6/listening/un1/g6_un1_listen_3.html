@@ -204,12 +204,25 @@
         box-shadow: 0 4px 0 var(--primary-dark);
     }
 
+    /* Radio dugmesi gizli: secili sik tum satirin rengiyle gosterilir */
+    .options label { position: relative; }
     .options input[type="radio"] {
-        width: 26px;
-        height: 26px;
+        position: absolute;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
         margin: 0;
-        flex-shrink: 0;
-        accent-color: var(--orange);
+        pointer-events: none;
+    }
+    .options label:focus-within {
+        outline: 4px solid var(--orange);
+        outline-offset: 3px;
+    }
+    .options label.is-selected {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: #FFFFFF;
+        box-shadow: 0 4px 0 var(--primary-dark);
     }
 
     .short-answer-input {
@@ -763,5 +776,17 @@
     window.onload = initZoom;
 </script>
 <script src="/back.js" data-href="/6/worksheets/un1/g6_un1_worksheets.html"></script>
+<script>
+/* Eski tarayicilar icin yedek: secili sikka is-selected sinifi ekler (:has desteklenmezse de renk gorunur) */
+document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t && t.type === 'radio' && t.closest && t.closest('.options')) {
+        document.querySelectorAll('input[name="' + t.name + '"]').forEach(function (r) {
+            var l = r.closest('label');
+            if (l) l.classList.toggle('is-selected', r.checked);
+        });
+    }
+});
+</script>
 </body>
 </html>
