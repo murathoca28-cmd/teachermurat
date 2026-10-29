@@ -240,6 +240,8 @@ a.btn{display:inline-block;text-decoration:none}
  }
 ];
     const IMG = ["img/g5_un1_test_1_q01.webp", "img/g5_un1_test_1_q02.webp", "img/g5_un1_test_1_q03.webp", "img/g5_un1_test_1_q04.webp", "img/g5_un1_test_1_q05.webp", "img/g5_un1_test_1_q06.webp", "img/g5_un1_test_1_q07.webp", "img/g5_un1_test_1_q08.webp", "img/g5_un1_test_1_q09.webp", "img/g5_un1_test_1_q10.webp"];
+    /* Tüm soru görsellerini sayfa açılır açılmaz arka planda indirir; "Sonraki" denince hazır bekler */
+    const PRE = IMG.map(src => { const im = new Image(); im.decoding = "async"; im.src = src; return im });
     const LO = [6]; // sadece harf şıkkı olan sorular (şıklar görselin içinde)
     const L = "ABCD", $ = s => document.getElementById(s), strip = h => h.replace(/<[^>]+>/g, ""), alt = d => d.c.replace(/"/g, "&quot;");
     let i = 0, sel = [], zoom = false;

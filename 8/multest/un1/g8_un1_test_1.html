@@ -533,6 +533,8 @@
       {"t": "Mert invites Can to play basketball. Read their conversation below.", "c": "Mert ve Can’in basketbol konuşması", "q": "What is the function of the sentence in bold in the conversation above?", "o": ["Asking for a reason", "Accepting an invitation", "Offering some food", "Making a promise"], "a": 0, "w": "“Oh! Why not?” (Neden olmasın/Neden gelemiyorsun?) bir sebep sorma ifadesidir."}
     ];
     const IMG = ["img/g8_un1_test_1_q01.webp", "img/g8_un1_test_1_q02.webp", "img/g8_un1_test_1_q03.webp", "img/g8_un1_test_1_q04.webp", "img/g8_un1_test_1_q05.webp", "img/g8_un1_test_1_q06.webp", "img/g8_un1_test_1_q07.webp", "img/g8_un1_test_1_q08.webp", "img/g8_un1_test_1_q09.webp", "img/g8_un1_test_1_q10.webp"];
+    /* Tüm soru görsellerini sayfa açılır açılmaz arka planda indirir; "Sonraki" denince hazır bekler */
+    const PRE = IMG.map(src => { const im = new Image(); im.decoding = "async"; im.src = src; return im });
     const LO = []; // sadece harf şıkkı olan sorular (şıklar görselin içinde)
     const L = "ABCD", $ = s => document.getElementById(s), strip = h => h.replace(/<[^>]+>/g, ""), alt = d => d.c.replace(/"/g, "&quot;");
     let i = 0, sel = [], zoom = false;

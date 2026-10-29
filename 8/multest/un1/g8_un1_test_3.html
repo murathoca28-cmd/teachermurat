@@ -533,6 +533,8 @@
       {"t": "Read the conversation below.", "c": "Lucy ve Tim’in konuşması", "q": "Which of the following does <u>NOT</u> fill in any of the blanks?", "o": ["Are you busy tomorrow evening", "Do you want to go to the cinema", "What about going to the cinema", "I'm afraid I can't join you"], "a": 3, "w": "1. boşluğa “Are you busy tomorrow evening”, 2. boşluğa “Do you want to go to the cinema” veya “What about going to the cinema” uyar. Tim kabul ettiği için “I'm afraid I can't join you” uymaz."}
     ];
     const IMG = ["img/g8_un1_test_3_q01.webp", "img/g8_un1_test_3_q02.webp", "img/g8_un1_test_3_q03.webp", "img/g8_un1_test_3_q04.webp", "img/g8_un1_test_3_q05.webp", "img/g8_un1_test_3_q06.webp", "img/g8_un1_test_3_q07.webp", "img/g8_un1_test_3_q08.webp", "img/g8_un1_test_3_q09.webp", "img/g8_un1_test_3_q10.webp"];
+    /* Tüm soru görsellerini sayfa açılır açılmaz arka planda indirir; "Sonraki" denince hazır bekler */
+    const PRE = IMG.map(src => { const im = new Image(); im.decoding = "async"; im.src = src; return im });
     const LO = [1, 6]; // sadece harf şıkkı olan sorular (şıklar görselin içinde)
     const L = "ABCD", $ = s => document.getElementById(s), strip = h => h.replace(/<[^>]+>/g, ""), alt = d => d.c.replace(/"/g, "&quot;");
     let i = 0, sel = [], zoom = false;
