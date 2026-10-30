@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Healthy Food Order Game</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 8px 12px 12px; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #left { flex: 0 0 38%; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
+  @media (orientation: portrait) { #left { flex: 0 0 44%; } }
+  #bubble { flex: 1 1 auto; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 22px; padding: 10px 16px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+  #who { font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.7rem); color: #0B5C56; }
+  #order-en { font-weight: 900; font-size: clamp(1.2rem, 3vw, 2.4rem); line-height: 1.2; }
+  #order-tr { font-weight: 800; font-size: clamp(.9rem, 1.9vw, 1.4rem); color: #0B5C56; }
+  #tray { flex: 0 0 auto; display: flex; gap: 10px; background: #FFD23F; border: 5px solid #0B2F2C; border-radius: 18px; padding: 8px; }
+  .slot { flex: 1; min-height: clamp(70px, 14vh, 130px); background: #fff; border: 4px dashed #0B2F2C; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; font-size: clamp(.8rem, 1.7vw, 1.2rem); text-align: center; padding: 2px; cursor: pointer; }
+  .slot .e { font-size: clamp(1.6rem, 5vh, 3rem); line-height: 1.1; }
+  #serve { font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 900; padding: .25em 1em; border: 5px solid #0B2F2C; border-radius: 16px; background: #1F5FBF; color: #fff; box-shadow: 0 5px 0 #0B2F2C; }
+  #serve:disabled { background: #B8C2C1; color: #5B6B69; cursor: not-allowed; }
+  #fb { min-height: 1.3em; text-align: center; font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.8rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #menu { flex: 1; min-width: 0; min-height: 0; display: grid; gap: 10px; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); }
+  @media (orientation: portrait) { #menu { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)); } }
+  .tile { container-type: size; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0B2F2C; }
+  .tile .e { font-size: 40cqmin; line-height: 1.05; }
+  .tile .p { font-weight: 900; font-size: 11cqmin; line-height: 1.1; padding: 0 4px; }
+  .tile .t { font-weight: 800; font-size: 8.5cqmin; color: #0B5C56; }
+  .tile.sel { background: #FFF3B0; border-color: #D62828; border-width: 7px; }
+  body.no-tr .tile .t, body.no-tr #order-tr { display: none; }
+  body.no-en .tile .p, body.no-en .slot .w { display: none; }
+  body.no-en .tile .e { font-size: 44cqmin; line-height: 1.25; }
+  .tile .e svg { width: 50cqmin; height: 50cqmin; display: block; }
+  body.no-en .tile .e svg { width: 52cqmin; height: 52cqmin; }
+  .slot .e svg { width: clamp(2rem, 8vh, 4.4rem); height: clamp(2rem, 8vh, 4.4rem); display: block; }
+</style>
+</head>
+<body class="no-tr">
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Healthy Food<br>Order Game</h1>
+  <p class="subtitle">Serve the right food!</p>
+  <div class="preview">🥦 🐟 🍔 🍟</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Order: <span id="no">1</span>/8</div>
+  <div class="stat">Stars: <span id="stars">0</span> ⭐</div>
+  <button class="restart-btn" id="enbtn" onclick="toggleEN()">English Labels: Off</button>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: Off</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="left">
+    <div id="bubble"><div id="who"></div><div id="order-en"></div><div id="order-tr"></div></div>
+    <div id="tray"><div class="slot" onclick="removeAt(0)"></div><div class="slot" onclick="removeAt(1)"></div></div>
+    <button id="serve" onclick="serve()" disabled>Serve</button>
+    <div id="fb"></div>
+  </div>
+  <div id="menu"></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  var ITEMS = {
+    broccoli: ['🥦', 'some broccoli', 'biraz brokoli'], salad: ['🥗', 'a green salad', 'bir yeşil salata'],
+    fish: ['🐟', 'grilled fish', 'ızgara balık'], eggs: ['🥚', 'two eggs', 'iki yumurta'],
+    nuts: ['🥜', 'some nuts', 'biraz kuruyemiş'], spinach: ['🥬', 'some spinach', 'biraz ıspanak'],
+    chips: ['🍟', 'chips', 'patates kızartması'], hamburger: ['🍔', 'a hamburger', 'bir hamburger'],
+    sweets: ['🍬', 'some sweets', 'biraz şekerleme'], chocolate: ['🍫', 'a chocolate bar', 'bir çikolata'],
+    icecream: ['🍦', 'ice cream', 'dondurma'], sausages: ['🌭', 'sausages', 'sosis']
+  };
+  var ORDERS = [
+    { en: 'I want a healthy lunch, please. A green salad and grilled fish.', tr: 'Sağlıklı bir öğle yemeği istiyorum, lütfen. Yeşil salata ve ızgara balık.', w: ['salad', 'fish'] },
+    { en: 'Can I have some chips and a hamburger, please?', tr: 'Biraz patates kızartması ve bir hamburger alabilir miyim, lütfen?', w: ['chips', 'hamburger'] },
+    { en: "I'd like some broccoli and two eggs, please. I like healthy food.", tr: 'Biraz brokoli ve iki yumurta istiyorum, lütfen. Sağlıklı yiyecekleri severim.', w: ['broccoli', 'eggs'] },
+    { en: 'I love sweet things. Some sweets and a chocolate bar, please.', tr: 'Tatlıları çok severim. Biraz şekerleme ve bir çikolata, lütfen.', w: ['sweets', 'chocolate'] },
+    { en: "I'd like ice cream and some chocolate, please.", tr: 'Dondurma ve biraz çikolata istiyorum, lütfen.', w: ['icecream', 'chocolate'] },
+    { en: 'Can I have some nuts and some spinach, please? They are healthy.', tr: 'Biraz kuruyemiş ve biraz ıspanak alabilir miyim, lütfen? Sağlıklılar.', w: ['nuts', 'spinach'] },
+    { en: 'I want sausages and chips, please.', tr: 'Sosis ve patates kızartması istiyorum, lütfen.', w: ['sausages', 'chips'] },
+    { en: "I'd like grilled fish and some broccoli, please.", tr: 'Izgara balık ve biraz brokoli istiyorum, lütfen.', w: ['fish', 'broccoli'] }
+  ];
+  var oi, sel, stars, tried, lock;
+  document.body.classList.add('no-en');
+
+  function toggleEN() {
+    var off = document.body.classList.toggle('no-en');
+    document.getElementById('enbtn').textContent = 'English Labels: ' + (off ? 'Off' : 'On');
+  }
+  function toggleTR() {
+    var off = document.body.classList.toggle('no-tr');
+    document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On');
+  }
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    oi = 0; stars = 0; document.getElementById('stars').textContent = 0;
+    var m = document.getElementById('menu'); m.innerHTML = '';
+    shuffle(Object.keys(ITEMS)).forEach(function (k) {
+      var it = ITEMS[k], b = document.createElement('button'); b.className = 'tile'; b.dataset.k = k;
+      b.innerHTML = '<div class="e">' + it[0] + '</div><div class="p">' + it[1] + '</div><div class="t">' + it[2] + '</div>';
+      b.addEventListener('click', function () { pick(k); });
+      m.appendChild(b);
+    });
+    showOrder();
+  }
+  function showOrder() {
+    var o = ORDERS[oi]; sel = []; tried = false; lock = false;
+    document.getElementById('no').textContent = oi + 1;
+    document.getElementById('who').textContent = '🍽️ Table ' + (oi + 1) + ' says:';
+    document.getElementById('order-en').textContent = '"' + o.en + '"';
+    document.getElementById('order-tr').textContent = o.tr;
+    document.getElementById('fb').textContent = '';
+    draw();
+  }
+  function pick(k) {
+    if (lock) return;
+    var i = sel.indexOf(k);
+    if (i >= 0) sel.splice(i, 1); else if (sel.length < 2) sel.push(k);
+    draw();
+  }
+  function removeAt(i) { if (lock || !sel[i]) return; sel.splice(i, 1); draw(); }
+  function draw() {
+    var slots = document.querySelectorAll('.slot');
+    for (var i = 0; i < 2; i++) {
+      slots[i].innerHTML = sel[i] ? '<div class="e">' + ITEMS[sel[i]][0] + '</div><div class="w">' + ITEMS[sel[i]][1] + '</div>' : '?';
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('.tile'), function (t) { t.classList.toggle('sel', sel.indexOf(t.dataset.k) >= 0); });
+    document.getElementById('serve').disabled = (sel.length !== 2);
+  }
+  function serve() {
+    if (lock || sel.length !== 2) return;
+    var w = ORDERS[oi].w, ok = sel.every(function (k) { return w.indexOf(k) >= 0; });
+    var fb = document.getElementById('fb');
+    if (ok) {
+      lock = true;
+      if (!tried) { stars++; document.getElementById('stars').textContent = stars; }
+      fb.textContent = '🎉 Thank you! Enjoy your meal!';
+      setTimeout(function () { oi++; if (oi >= ORDERS.length) finish(); else showOrder(); }, 1500);
+    } else {
+      tried = true; fb.textContent = 'Oops! Read the order again.';
+      var tr = document.getElementById('tray'); tr.classList.remove('shake'); void tr.offsetWidth; tr.classList.add('shake');
+      sel = []; draw();
+    }
+  }
+  function finish() {
+    document.getElementById('win-title').textContent = stars >= 7 ? 'Super Waiter!' : (stars >= 4 ? 'Well Done!' : 'Good Try!');
+    document.getElementById('win-stats').textContent = 'Stars: ' + stars + ' / ' + ORDERS.length + ' (first try)';
+    document.getElementById('win-screen').style.display = 'flex';
+  }
+</script>
+</body>
+</html>

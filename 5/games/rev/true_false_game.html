@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>True or False</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 6px 14px 14px; }
+  #card { flex: 1; min-height: 0; background: #fff; border: 6px solid #0B2F2C; border-radius: 22px; padding: 10px 20px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px; text-align: center; }
+  #s-en { font-weight: 900; font-size: clamp(1.6rem, 4.6vw, 3.8rem); line-height: 1.2; }
+  #s-tr { font-weight: 800; font-size: clamp(1rem, 2.2vw, 1.7rem); color: #0B5C56; }
+  #tbar { flex: 0 0 auto; height: 22px; background: #fff; border: 4px solid #0B2F2C; border-radius: 12px; overflow: hidden; }
+  #tfill { height: 100%; width: 100%; background: #FFD23F; }
+  #tfill.low { background: #D62828; }
+  #ans { flex: 0 0 auto; display: flex; gap: 14px; }
+  .abtn { flex: 1; font-size: clamp(1.8rem, 5vw, 4rem); font-weight: 900; padding: .25em 0; border: 6px solid #0B2F2C; border-radius: 22px; box-shadow: 0 7px 0 #0B2F2C; color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  .abtn:active { transform: translateY(4px); box-shadow: 0 3px 0 #0B2F2C; }
+  #bt { background: #0A7A2F; } #bf { background: #D62828; }
+  .abtn:disabled { opacity: .5; cursor: default; }
+  #fbbox { flex: 0 0 auto; min-height: 5.2em; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #fb-en { font-weight: 900; font-size: clamp(1.1rem, 2.8vw, 2.1rem); }
+  #fb-tr { font-weight: 800; font-size: clamp(.9rem, 1.9vw, 1.4rem); }
+  #next { display: none; font-size: clamp(1.1rem, 2.6vw, 1.8rem); }
+  .ok { color: #C8F7D4; } .no { color: #FFD6D6; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">True<br>or False?</h1>
+  <p class="subtitle">Read fast. Decide fast!</p>
+  <div class="preview">✔ ❌</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Question: <span id="rn">1</span>/12</div>
+  <div class="stat">Score: <span id="sc">0</span></div>
+  <div class="stat">Streak: <span id="sk">0</span> 🔥</div>
+  <button class="restart-btn" id="tmbtn" onclick="toggleTimer()">Timer: On</button>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="card"><div id="s-en"></div><div id="s-tr" class="tr"></div></div>
+  <div id="tbar"><div id="tfill"></div></div>
+  <div id="ans"><button class="abtn" id="bt" onclick="answer(true)">TRUE ✔</button><button class="abtn" id="bf" onclick="answer(false)">FALSE ✘</button></div>
+  <div id="fbbox"><div id="fb-en"></div><div id="fb-tr" class="tr"></div><button class="big-btn" id="next" onclick="nextQ()">Next</button></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  function toggleTR() { var off = document.body.classList.toggle('no-tr'); document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On'); }
+
+  var Q = [["A projector shows a big picture on the wall.", "Projeksiyon duvarda büyük bir görüntü gösterir.", true, "", ""], ["You throw rubbish in a folder.", "Çöpü dosyanın içine atarsın.", false, "You throw rubbish in a rubbish bin.", "Çöpü çöp kutusuna atarsın."], ["You listen to music with headphones.", "Kulaklıkla müzik dinlersin.", true, "", ""], ["A printer prints pages from the computer.", "Yazıcı bilgisayardaki sayfaları yazdırır.", true, "", ""], ["You wear sandals in the snow.", "Karda sandalet giyersin.", false, "You wear boots in the snow.", "Karda bot giyersin."], ["You wear gloves on your hands.", "Eldivenleri ellerine takarsın.", true, "", ""], ["You open an umbrella when it is sunny.", "Güneşli olduğunda şemsiye açarsın.", false, "You open an umbrella when it rains.", "Yağmur yağınca şemsiye açarsın."], ["Sunglasses protect your eyes from the sun.", "Güneş gözlüğü gözlerini güneşten korur.", true, "", ""], ["Sarah is short and thin.", "Sarah kısa boylu ve zayıf.", true, "", ""], ["Sarah has got short straight hair.", "Sarah'ın kısa düz saçları var.", false, "Sarah has got long wavy hair.", "Sarah'ın uzun dalgalı saçları var."], ["A farmer grows fruit and vegetables.", "Çiftçi meyve ve sebze yetiştirir.", true, "", ""], ["A singer works in a hospital.", "Şarkıcı hastanede çalışır.", false, "A doctor works in a hospital.", "Doktor hastanede çalışır."], ["A teacher teaches students.", "Öğretmen öğrencilere ders verir.", true, "", ""], ["You buy medicine at the bakery.", "İlacı fırından alırsın.", false, "You buy medicine at the chemist's.", "İlacı eczaneden alırsın."], ["You can watch a film at the cinema.", "Sinemada film izleyebilirsin.", true, "", ""], ["You look at ancient objects in a museum.", "Müzede eski eşyalara bakarsın.", true, "", ""], ["An octopus has four arms.", "Ahtapotun dört kolu vardır.", false, "An octopus has eight arms.", "Ahtapotun sekiz kolu vardır."], ["A dolphin lives in the sea.", "Yunus denizde yaşar.", true, "", ""], ["Plastic bags are good for sea animals.", "Plastik poşetler deniz hayvanları için iyidir.", false, "Plastic bags are dangerous for sea animals.", "Plastik poşetler deniz hayvanları için tehlikelidir."], ["We must keep the sea clean.", "Denizi temiz tutmalıyız.", true, "", ""], ["Broccoli is unhealthy food.", "Brokoli sağlıksız bir yiyecektir.", false, "Broccoli is healthy food.", "Brokoli sağlıklı bir yiyecektir."], ["Chips are healthy food.", "Cips sağlıklı bir yiyecektir.", false, "Chips are unhealthy food.", "Cips sağlıksız bir yiyecektir."], ["Fish and eggs are healthy food.", "Balık ve yumurta sağlıklı yiyeceklerdir.", true, "", ""], ["Winter is hot and sunny.", "Kış sıcak ve güneşlidir.", false, "Summer is hot and sunny.", "Yaz sıcak ve güneşlidir."]], ROUNDS = 12, TIME = 15000;
+  var order, qi, score, streak, best, locked, timerOn = true, t0, tid;
+
+  function toggleTimer() { timerOn = !timerOn; document.getElementById('tmbtn').textContent = 'Timer: ' + (timerOn ? 'On' : 'Off'); if (!locked) runTimer(); }
+  function runTimer() {
+    clearInterval(tid); var f = document.getElementById('tfill'); f.className = ''; f.style.width = '100%';
+    if (!timerOn) return;
+    t0 = Date.now();
+    tid = setInterval(function () {
+      var left = 1 - (Date.now() - t0) / TIME;
+      f.style.width = Math.max(0, left * 100) + '%'; f.className = left < .3 ? 'low' : '';
+      if (left <= 0) { clearInterval(tid); answer(null); }
+    }, 100);
+  }
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    order = shuffle(Q.slice()).slice(0, ROUNDS); qi = 0; score = 0; streak = 0; best = 0;
+    document.getElementById('sc').textContent = 0; document.getElementById('sk').textContent = 0;
+    showQ();
+  }
+  function showQ() {
+    var q = order[qi]; locked = false;
+    document.getElementById('rn').textContent = qi + 1;
+    document.getElementById('s-en').textContent = q[0]; document.getElementById('s-tr').textContent = q[1];
+    document.getElementById('fb-en').textContent = ''; document.getElementById('fb-tr').textContent = '';
+    document.getElementById('next').style.display = 'none';
+    document.getElementById('bt').disabled = false; document.getElementById('bf').disabled = false;
+    runTimer();
+  }
+  function answer(v) {
+    if (locked) return; locked = true; clearInterval(tid);
+    var q = order[qi], ok = (v === q[2]);
+    document.getElementById('bt').disabled = true; document.getElementById('bf').disabled = true;
+    var en = document.getElementById('fb-en'), tr = document.getElementById('fb-tr');
+    if (ok) { score++; streak++; best = Math.max(best, streak); } else { streak = 0; }
+    document.getElementById('sc').textContent = score; document.getElementById('sk').textContent = streak;
+    var head = ok ? '✔ Correct!' : (v === null ? '⏰ Time is up!' : '✘ Not quite.');
+    if (q[2]) { en.textContent = head + ' This sentence is true.'; tr.textContent = 'Bu cümle doğru.'; }
+    else { en.textContent = head + ' ' + q[3]; tr.textContent = q[4]; }
+    en.className = ok ? 'ok' : 'no';
+    var nx = document.getElementById('next'); nx.textContent = (qi === order.length - 1) ? 'Finish' : 'Next'; nx.style.display = 'inline-block';
+  }
+  function nextQ() {
+    qi++;
+    if (qi >= order.length) {
+      document.getElementById('win-title').textContent = score >= 11 ? 'Perfect!' : (score >= 8 ? 'Great Job!' : 'Good Try!');
+      document.getElementById('win-stats').textContent = 'Score: ' + score + ' / ' + order.length + '  |  Best streak: ' + best;
+      document.getElementById('win-screen').style.display = 'flex'; return;
+    }
+    showQ();
+  }
+</script>
+</body>
+</html>

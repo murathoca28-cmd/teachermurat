@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Make the Sentence</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 6px 14px 14px; justify-content: space-evenly; }
+  #hint { text-align: center; background: #fff; border: 5px solid #0B2F2C; border-radius: 18px; padding: 6px 14px; font-weight: 900; font-size: clamp(1.1rem, 2.8vw, 2.1rem); }
+  #line { min-height: clamp(80px, 17vh, 150px); background: #fff; border: 6px dashed #0B2F2C; border-radius: 20px; padding: 10px; display: flex; flex-wrap: wrap;
+    gap: 8px; align-content: center; justify-content: center; }
+  #line.ok { border-style: solid; border-color: #0A7A2F; background: #C8F7D4; }
+  #bank { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-content: center; min-height: clamp(90px, 20vh, 200px); }
+  .chip { font-size: clamp(1.1rem, 3vw, 2.3rem); font-weight: 900; padding: .1em .6em; background: #FFD23F; color: #0B2F2C; border: 5px solid #0B2F2C; border-radius: 14px; box-shadow: 0 5px 0 #0B2F2C; }
+  .chip:active { transform: translateY(3px); box-shadow: 0 2px 0 #0B2F2C; }
+  #line .chip { background: #fff; }
+  .chip.used { visibility: hidden; }
+  #btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  #btns .big-btn { font-size: clamp(1.1rem, 2.8vw, 2rem); }
+  #fb { min-height: 1.4em; text-align: center; font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.8rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #next { display: none; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Make the<br>Sentence</h1>
+  <p class="subtitle">Tap the words in the right order!</p>
+  <div class="preview">is she a dress wearing</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Sentence: <span id="rn">1</span>/10</div>
+  <div class="stat">Stars: <span id="st">0</span> ⭐</div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="hint" class="tr"></div>
+  <div id="line"></div>
+  <div id="bank"></div>
+  <div id="fb"></div>
+  <div id="btns">
+    <button class="big-btn" id="check" onclick="check()">Check</button>
+    <button class="big-btn" id="clear" onclick="clearLine()" style="background:#fff">Clear</button>
+    <button class="big-btn" id="next" onclick="nextS()">Next</button>
+  </div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  function toggleTR() { var off = document.body.classList.toggle('no-tr'); document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On'); }
+
+  var S = [["She is wearing a red dress.", "Kırmızı bir elbise giyiyor."], ["My brother has got short black hair.", "Erkek kardeşimin kısa siyah saçları var."], ["We are having a picnic in the park.", "Parkta piknik yapıyoruz."], ["You must wear a raincoat today.", "Bugün yağmurluk giymelisin."], ["Students mustn't run in the corridor.", "Öğrenciler koridorda koşmamalı."], ["There are three clubs in our school.", "Okulumuzda üç kulüp var."], ["The elephant is bigger than the lion.", "Fil aslandan daha büyüktür."], ["The cheetah is the fastest animal.", "Çita en hızlı hayvandır."], ["I am going to visit my grandparents.", "Büyükanne ve büyükbabamı ziyaret edeceğim."], ["Can I have a glass of water, please?", "Bir bardak su alabilir miyim, lütfen?"], ["My mum is cooking dinner now.", "Annem şimdi akşam yemeği pişiriyor."], ["They are going to travel by train.", "Trenle seyahat edecekler."], ["Parrots are more colourful than owls.", "Papağanlar baykuşlardan daha renklidir."], ["He plays the guitar in the music club.", "Müzik kulübünde gitar çalar."], ["We are going to stay in a tent.", "Çadırda kalacağız."], ["I would like a bowl of soup, please.", "Bir kase çorba istiyorum, lütfen."], ["Our Maths lesson starts at half past nine.", "Matematik dersimiz dokuz buçukta başlar."], ["It is going to be sunny and warm.", "Hava güneşli ve sıcak olacak."], ["My sister is wearing sunglasses and a cap.", "Kız kardeşim güneş gözlüğü ve kasket takıyor."], ["The giraffe is the tallest animal in the zoo.", "Zürafa hayvanat bahçesindeki en uzun hayvandır."]], ROUNDS = 10;
+  var order, qi, line, words, stars, tried, locked;
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    order = shuffle(S.slice()).slice(0, ROUNDS); qi = 0; stars = 0;
+    document.getElementById('st').textContent = 0;
+    showS();
+  }
+  function showS() {
+    var s = order[qi][0];
+    words = s.split(' ').map(function (w, i) { return { w: w, id: i }; });
+    var bank; do { bank = shuffle(words.slice()); } while (bank.map(function (x) { return x.id; }).join() === words.map(function (x) { return x.id; }).join());
+    words = bank; line = []; tried = false; locked = false;
+    document.getElementById('rn').textContent = qi + 1;
+    document.getElementById('hint').textContent = order[qi][1];
+    document.getElementById('fb').textContent = '';
+    document.getElementById('line').className = '';
+    document.getElementById('next').style.display = 'none';
+    document.getElementById('check').style.display = ''; document.getElementById('clear').style.display = '';
+    draw();
+  }
+  function draw() {
+    var ln = document.getElementById('line'); ln.innerHTML = '';
+    line.forEach(function (id) {
+      var b = document.createElement('button'); b.className = 'chip'; b.textContent = words.filter(function (x) { return x.id === id; })[0].w;
+      b.addEventListener('click', function () { if (locked) return; line.splice(line.indexOf(id), 1); draw(); });
+      ln.appendChild(b);
+    });
+    var bk = document.getElementById('bank'); bk.innerHTML = '';
+    words.forEach(function (x) {
+      var b = document.createElement('button'); b.className = 'chip' + (line.indexOf(x.id) >= 0 ? ' used' : ''); b.textContent = x.w;
+      b.addEventListener('click', function () { if (locked || line.indexOf(x.id) >= 0) return; line.push(x.id); draw(); });
+      bk.appendChild(b);
+    });
+  }
+  function clearLine() { if (locked) return; line = []; draw(); document.getElementById('fb').textContent = ''; }
+  function check() {
+    if (locked) return;
+    var fb = document.getElementById('fb');
+    if (line.length < words.length) { fb.textContent = 'Use all the words!'; return; }
+    var got = line.map(function (id) { return words.filter(function (x) { return x.id === id; })[0].w; }).join(' ');
+    if (got === order[qi][0]) {
+      locked = true; if (!tried) { stars++; document.getElementById('st').textContent = stars; }
+      document.getElementById('line').className = 'ok'; fb.textContent = '✔ Great job!';
+      document.getElementById('check').style.display = 'none'; document.getElementById('clear').style.display = 'none';
+      var nx = document.getElementById('next'); nx.textContent = (qi === order.length - 1) ? 'Finish' : 'Next'; nx.style.display = 'inline-block';
+    } else {
+      tried = true; fb.textContent = 'Not yet. Try again!';
+      var l = document.getElementById('line'); l.classList.remove('shake'); void l.offsetWidth; l.classList.add('shake');
+    }
+  }
+  function nextS() {
+    qi++;
+    if (qi >= order.length) {
+      document.getElementById('win-title').textContent = stars >= 8 ? 'Sentence Master!' : (stars >= 5 ? 'Well Done!' : 'Good Try!');
+      document.getElementById('win-stats').textContent = 'Stars: ' + stars + ' / ' + order.length;
+      document.getElementById('win-screen').style.display = 'flex'; return;
+    }
+    showS();
+  }
+</script>
+</body>
+</html>

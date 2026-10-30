@@ -19,7 +19,8 @@
 
         .page-header { max-width: 1000px; margin: 0 auto; text-align: center; padding: 20px 20px 18px; }
 
-        .page-header h1 { margin: 0; font-size: 2.25rem; font-weight: 800; }
+        .page-header h1 { margin: 0; font-size: 2.25rem; font-weight: 800; }
+
 
         .unit-tag {
             font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif;
@@ -35,6 +36,15 @@
         .page-header .back-link { display: flex; width: fit-content; margin: 0 0 18px; }
 
         .game-card:focus-visible, .close-btn:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
+
+
+        .tabs { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 1000px; margin: 0 auto; padding: 4px 20px 14px; }
+        .tab-btn { font-family: inherit; font-size: 1.05rem; font-weight: 800; padding: 8px 18px; border: 3px solid #334155; border-radius: 999px; background: #FFFFFF; color: #0B4F4A; box-shadow: 0 4px 0 #94A3B8; cursor: pointer; }
+        .tab-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #94A3B8; }
+        .tab-btn.active { background: #FFD23F; color: #0B2F2C; }
+        .tab-btn .n { opacity: .7; font-weight: 700; margin-left: 4px; }
+        .tab-btn:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
+        @media (max-width: 600px) { .tabs { gap: 8px; padding: 4px 12px 12px; } .tab-btn { font-size: .95rem; padding: 6px 12px; } }
 
         .games-grid {
             display: grid;
@@ -160,6 +170,7 @@
         <h1>Games</h1>
     </div>
 
+    <div class="tabs" id="tabs" role="tablist"></div>
     <div class="games-grid" id="gamesGrid"></div>
 
     <div id="gameModal" class="modal-overlay" style="display: none;">
@@ -180,102 +191,61 @@
         // embedUrl:     the game address (the <iframe src="..."> part)
         // ============================================================
         var games = [
-            {
-                name: 'Jeopardy Word Game',
-                thumbnailUrl: 'jeopardycap.webp',
-                embedUrl: 'jeopardy_game.html'
-            },
-            {
-                name: 'Find Objects',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/6b666df146c44dffa0391083fbe8ab11_2',
-                embedUrl: 'https://wordwall.net/tr/embed/6b666df146c44dffa0391083fbe8ab11?themeId=2&templateId=10&fontStackId=0'
-            },
-            {
-                name: 'Matching',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/400/3606ddd7b2394c9b8f5ad305c063f0c1_1',  // kendi linkiniz
-                embedUrl: 'https://wordwall.net/tr/embed/3606ddd7b2394c9b8f5ad305c063f0c1?themeId=1&templateId=3&fontStackId=0'
-            },
-            {
-                name: 'Classroom Objects',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/2645b41e5baf488ba8eda0b8fc74179e_45',
-                embedUrl: 'https://wordwall.net/embed/2645b41e5baf488ba8eda0b8fc74179e?themeId=45&templateId=76&fontStackId=0'
-            },
-            {
-                name: 'Questions/Answers',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/f343887ffc874ae69a6d5cc21edb29c5_65',
-                embedUrl: 'https://wordwall.net/embed/f343887ffc874ae69a6d5cc21edb29c5?themeId=65&templateId=46&fontStackId=0'
-            },
-            {
-                name: 'Questions Translation',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/6cc3f029a055490fab990f8fe2128f12_65',
-                embedUrl: 'https://wordwall.net/embed/6cc3f029a055490fab990f8fe2128f12?themeId=65&templateId=46&fontStackId=1'
-            },
-            {
-                name: 'Classroom Instructions',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/77504a042bf24bb8b9fb77e9653b47d1_2',
-                embedUrl: 'https://wordwall.net/embed/77504a042bf24bb8b9fb77e9653b47d1?themeId=2&templateId=72&fontStackId=0'
-            },
-            {
-                name: 'Classroom Instructions',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/ed52f60fc6834b2c883f9c4fbec734af_46',
-                embedUrl: 'https://wordwall.net/embed/ed52f60fc6834b2c883f9c4fbec734af?themeId=46&templateId=3&fontStackId=0'
-            },
-            {
-                name: 'Match Sentences',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/445741427826449ea0a72991d68faf17_43',
-                embedUrl: 'https://wordwall.net/embed/445741427826449ea0a72991d68faf17?themeId=43&templateId=46&fontStackId=0'
-            },
-            {
-                name: 'Match Sentences',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/de14b034c5fc454a8b04c11ac2af2b76_50',
-                embedUrl: 'https://wordwall.net/embed/de14b034c5fc454a8b04c11ac2af2b76?themeId=50&templateId=46&fontStackId=0'
-            },
-            {
-                name: 'Flash Cards: English Turkish Translation',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/707a7ffb5b044d59916f35c99be8992d_2',
-                embedUrl: 'https://wordwall.net/embed/707a7ffb5b044d59916f35c99be8992d?themeId=2&templateId=76&fontStackId=0'
-            },
-            {
-                name: 'Jobs',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/aa45c21e163a4a279f6db791f4ff352d_44',
-                embedUrl: 'https://wordwall.net/embed/aa45c21e163a4a279f6db791f4ff352d?themeId=44&templateId=73&fontStackId=0'
-            },
-            {
-                name: 'Jobs',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/fe019f4abad34f479db9aed839074584_65',
-                embedUrl: 'https://wordwall.net/embed/fe019f4abad34f479db9aed839074584?themeId=65&templateId=3&fontStackId=0'
-            },
-            {
-                name: 'Jobs Spell the Word',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/e463b556e5e942f5b445a79690e54582_41',
-                embedUrl: 'https://wordwall.net/embed/e463b556e5e942f5b445a79690e54582?themeId=41&templateId=79&fontStackId=0'
-            },
-            {
-                name: 'Turkish Meanings of Places',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/a89378cac06c4c28aebb26717a7fcb23_41',
-                embedUrl: 'https://wordwall.net/embed/a89378cac06c4c28aebb26717a7fcb23?themeId=41&templateId=76&fontStackId=0'
-            },
-            {
-                name: 'Where Am I?',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/234b7a42cd7844d8a3dfdb219c34ecf1_49',
-                embedUrl: 'https://wordwall.net/embed/234b7a42cd7844d8a3dfdb219c34ecf1?themeId=49&templateId=89&fontStackId=0'
-            },
-            {
-                name: 'Where Am I?',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/3fbdc37368a644f98b4d0be191ffadc8_68',
-                embedUrl: 'https://wordwall.net/embed/3fbdc37368a644f98b4d0be191ffadc8?themeId=68&templateId=3&fontStackId=0'
-            },
-            {
-                name: 'Healthy and Unhealthy Food',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/17cab43ff57d402797544e7fe8b02335_52',
-                embedUrl: 'https://wordwall.net/embed/17cab43ff57d402797544e7fe8b02335?themeId=52&templateId=81&fontStackId=0'
-            },
-            {
-                name: 'Healthy and Unhealthy Food',
-                thumbnailUrl: 'https://screens.cdn.wordwall.net/200/32b800d6b4df45ddbfc129cdc49b9545_65',
-                embedUrl: 'https://wordwall.net/embed/32b800d6b4df45ddbfc129cdc49b9545?themeId=65&templateId=2&fontStackId=0'
-            },
+            { name: 'Jeopardy Word Game', thumbnailUrl: 'jeopardycap.webp?v=1', embedUrl: 'jeopardy_game.html?v=1', tab: 'quiz' },
+            { name: 'Clothes Memory Match', thumbnailUrl: 'clothesmemorycap.webp?v=1', embedUrl: 'memory_clothes_game.html?v=1', tab: 'words' },
+            { name: 'Memory Match - Sea Animals', thumbnailUrl: 'memoryseacap.webp?v=1', embedUrl: 'memory_sea_animals_game.html?v=1', tab: 'words' },
+            { name: 'Anagram Race', thumbnailUrl: 'anagramracecap.webp?v=1', embedUrl: 'anagram_race_game.html?v=1', tab: 'words' },
+            { name: 'Guess the Word', thumbnailUrl: 'guesswordcap.webp?v=1', embedUrl: 'guess_the_word_game.html?v=1', tab: 'words' },
+            { name: 'Word Search', thumbnailUrl: 'wordsearchcap.webp?v=1', embedUrl: 'word_search_game.html?v=1', tab: 'words' },
+            { name: 'Crossword', thumbnailUrl: 'crosswordcap.webp?v=1', embedUrl: 'crossword_game.html?v=1', tab: 'words' },
+            { name: 'True or False', thumbnailUrl: 'truefalsecap.webp?v=1', embedUrl: 'true_false_game.html?v=1', tab: 'quiz' },
+            { name: 'Balloon Pop', thumbnailUrl: 'balloonpopcap.webp?v=1', embedUrl: 'balloon_pop_game.html?v=1', tab: 'quiz' },
+            { name: 'Who Am I?', thumbnailUrl: 'whoamicap.webp?v=1', embedUrl: 'who_am_i_game.html?v=1', tab: 'quiz' },
+            { name: 'Bingo', thumbnailUrl: 'bingocap.webp?v=1', embedUrl: 'bingo_game.html?v=1', tab: 'quiz' },
+            { name: 'Word Rush', thumbnailUrl: 'wordrushcap.webp?v=1', embedUrl: 'word_rush_game.html?v=1', tab: 'quiz' },
+            { name: 'Sort It Out', thumbnailUrl: 'sortitoutcap.webp?v=1', embedUrl: 'sort_it_out_game.html?v=1', tab: 'sort' },
+            { name: 'Dress for the Weather', thumbnailUrl: 'packsuitcasecap.webp?v=1', embedUrl: 'dress_weather_game.html?v=1', tab: 'sort' },
+            { name: 'Healthy Food Order Game', thumbnailUrl: 'restaurantcap.webp?v=1', embedUrl: 'healthy_food_order_game.html?v=1', tab: 'sort' },
+            { name: "Must or Mustn't Sign Game", thumbnailUrl: 'mustmustntcap.webp?v=1', embedUrl: 'must_mustnt_game.html?v=1', tab: 'sort' },
+            { name: 'Make the Sentence', thumbnailUrl: 'makesentencecap.webp?v=1', embedUrl: 'make_sentence_game.html?v=1', tab: 'talk' },
+            { name: 'Complete the Dialogue', thumbnailUrl: 'dialoguecap.webp?v=1', embedUrl: 'complete_dialogue_game.html?v=1', tab: 'talk' },
+            { name: 'Speaking Wheel', thumbnailUrl: 'speakingwheelcap.webp?v=1', embedUrl: 'speaking_wheel_game.html?v=1', tab: 'talk' },
+            { name: 'Past Race', thumbnailUrl: 'animalracecap.webp?v=1', embedUrl: 'past_race_game.html?v=1', tab: 'talk' },
+            { name: 'Find Objects', thumbnailUrl: 'https://screens.cdn.wordwall.net/200/6b666df146c44dffa0391083fbe8ab11_2', embedUrl: 'https://wordwall.net/tr/embed/6b666df146c44dffa0391083fbe8ab11?themeId=2&templateId=10&fontStackId=0', tab: 'ww' },
+            { name: 'Classroom Instructions', thumbnailUrl: 'https://screens.cdn.wordwall.net/200/77504a042bf24bb8b9fb77e9653b47d1_2', embedUrl: 'https://wordwall.net/embed/77504a042bf24bb8b9fb77e9653b47d1?themeId=2&templateId=72&fontStackId=0', tab: 'ww' },
+            { name: 'Jobs Spell the Word', thumbnailUrl: 'https://screens.cdn.wordwall.net/200/e463b556e5e942f5b445a79690e54582_41', embedUrl: 'https://wordwall.net/embed/e463b556e5e942f5b445a79690e54582?themeId=41&templateId=79&fontStackId=0', tab: 'ww' },
+            { name: 'Where Am I?', thumbnailUrl: 'https://screens.cdn.wordwall.net/200/234b7a42cd7844d8a3dfdb219c34ecf1_49', embedUrl: 'https://wordwall.net/embed/234b7a42cd7844d8a3dfdb219c34ecf1?themeId=49&templateId=89&fontStackId=0', tab: 'ww' },
+            { name: 'Healthy and Unhealthy Food', thumbnailUrl: 'https://screens.cdn.wordwall.net/200/17cab43ff57d402797544e7fe8b02335_52', embedUrl: 'https://wordwall.net/embed/17cab43ff57d402797544e7fe8b02335?themeId=52&templateId=81&fontStackId=0', tab: 'ww' }
         ];
+
+        var TABS = [
+            { id: 'all', label: 'All Games' },
+            { id: 'words', label: 'Words & Memory' },
+            { id: 'quiz', label: 'Quiz & Challenge' },
+            { id: 'sort', label: 'Sort & Choose' },
+            { id: 'talk', label: 'Sentences & Speaking' },
+            { id: 'ww', label: 'Wordwall' }
+        ];
+        var currentTab = 'all';
+        try { var st = sessionStorage.getItem('g5revTab'); if (st) currentTab = st; } catch (e) {}
+        if (!TABS.some(function (t) { return t.id === currentTab; })) currentTab = 'all';
+        var tabsEl = document.getElementById('tabs');
+        function renderTabs() {
+            tabsEl.innerHTML = '';
+            TABS.forEach(function (t) {
+                var n = t.id === 'all' ? games.length : games.filter(function (g) { return g.tab === t.id; }).length;
+                var b = document.createElement('button');
+                b.className = 'tab-btn' + (t.id === currentTab ? ' active' : '');
+                b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', t.id === currentTab ? 'true' : 'false');
+                b.innerHTML = t.label + '<span class="n">(' + n + ')</span>';
+                b.addEventListener('click', function () {
+                    currentTab = t.id;
+                    try { sessionStorage.setItem('g5revTab', t.id); } catch (e) {}
+                    renderTabs(); renderGames();
+                });
+                tabsEl.appendChild(b);
+            });
+        }
 
         var gamesGrid = document.getElementById('gamesGrid');
         var modal = document.getElementById('gameModal');
@@ -284,7 +254,7 @@
 
         function renderGames() {
             gamesGrid.innerHTML = '';
-            games.forEach(function (game) {
+            games.filter(function (g) { return currentTab === 'all' || g.tab === currentTab; }).forEach(function (game) {
                 var card = document.createElement('div');
                 card.className = 'game-card';
                 card.tabIndex = 0;
@@ -345,6 +315,7 @@
             if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
         });
 
+        renderTabs();
         renderGames();
     })();
     </script>

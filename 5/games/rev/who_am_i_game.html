@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who Am I?</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 4px 12px 12px; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #left { flex: 1.1 1 0; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
+  #card { flex: 1; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 20px; padding: 8px 14px; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; }
+  #qmark { text-align: center; font-weight: 900; font-size: clamp(2rem, 8vh, 4.5rem); line-height: 1; color: #D62828; }
+  .cl { border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 12px; background: #FFF3B0; }
+  .cl .en { font-weight: 900; font-size: clamp(1.1rem, 2.8vw, 2.1rem); line-height: 1.2; }
+  .cl .trl { font-weight: 800; font-size: clamp(.8rem, 1.6vw, 1.2rem); color: #0B5C56; }
+  #ctl { flex: 0 0 auto; display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
+  #nc { font-size: clamp(1rem, 2.4vw, 1.7rem); }
+  #nc:disabled { opacity: .45; cursor: default; }
+  #fb { font-weight: 900; font-size: clamp(1rem, 2.2vw, 1.6rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; text-align: center; min-height: 1.3em; }
+  #right { flex: 1 1 0; min-width: 0; min-height: 0; display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); }
+  .tile { container-type: size; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0B2F2C; }
+  .tile .e { font-size: 40cqmin; line-height: 1.1; }
+  .tile .p { font-weight: 900; font-size: 13cqmin; line-height: 1.1; }
+  .tile .t { font-weight: 800; font-size: 9.5cqmin; color: #0B5C56; }
+  .tile.bad { background: #FFD6D6; border-color: #D62828; }
+  .tile.good { background: #C8F7D4; border-color: #0A7A2F; border-width: 8px; }
+  #nxt { display: none; font-size: clamp(1.1rem, 2.6vw, 1.7rem); }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Who Am I?</h1>
+  <p class="subtitle">Read the clues. Guess who or what I am!</p>
+  <div class="preview">❓ 🐬 🧤 🥦</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Round: <span id="rn">1</span>/10</div>
+  <div class="stat">Points: <span id="sc">0</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="left">
+    <div id="card"><div id="qmark">?</div><div id="cls"></div></div>
+    <div id="ctl"><button class="restart-btn" id="nc" onclick="moreClue()">Next clue</button><button class="big-btn" id="nxt" onclick="nextR()">Next</button></div>
+    <div id="fb"></div>
+  </div>
+  <div id="right"></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  function toggleTR() { var off = document.body.classList.toggle('no-tr'); document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On'); }
+
+  var R = [{"k": "dolphin", "en": ["I live in the sea.", "I am a very clever animal.", "I can jump out of the water.", "I swim in groups and I make funny sounds."], "tr": ["Denizde yaşarım.", "Çok zeki bir hayvanım.", "Sudan dışarı zıplayabilirim.", "Gruplar hâlinde yüzerim ve komik sesler çıkarırım."], "opts": [["dolphin", "🐬", "dolphin", "yunus"], ["shark", "🦈", "shark", "köpek balığı"], ["crab", "🦀", "crab", "yengeç"], ["turtle", "🐢", "sea turtle", "deniz kaplumbağası"]]}, {"k": "octopus", "en": ["I live in the sea.", "I have got no bones.", "I have got eight arms.", "I can change my colour."], "tr": ["Denizde yaşarım.", "Kemiklerim yok.", "Sekiz kolum var.", "Rengimi değiştirebilirim."], "opts": [["octopus", "🐙", "octopus", "ahtapot"], ["dolphin", "🐬", "dolphin", "yunus"], ["whale", "🐋", "whale", "balina"], ["crab", "🦀", "crab", "yengeç"]]}, {"k": "turtle", "en": ["I swim in the sea.", "I am a slow animal.", "I have got a hard shell.", "I come to the beach to lay my eggs."], "tr": ["Denizde yüzerim.", "Yavaş bir hayvanım.", "Sert bir kabuğum var.", "Yumurtalarımı bırakmak için kıyıya gelirim."], "opts": [["turtle", "🐢", "sea turtle", "deniz kaplumbağası"], ["dolphin", "🐬", "dolphin", "yunus"], ["octopus", "🐙", "octopus", "ahtapot"], ["shark", "🦈", "shark", "köpek balığı"]]}, {"k": "crab", "en": ["I live near the sea.", "I crawl on the rocks.", "I have got two claws.", "I walk sideways."], "tr": ["Denizin yakınında yaşarım.", "Kayaların üstünde yürürüm.", "İki kıskacım var.", "Yan yan yürürüm."], "opts": [["crab", "🦀", "crab", "yengeç"], ["turtle", "🐢", "sea turtle", "deniz kaplumbağası"], ["octopus", "🐙", "octopus", "ahtapot"], ["whale", "🐋", "whale", "balina"]]}, {"k": "shark", "en": ["I live in the sea.", "I am a big fish.", "I have got sharp teeth.", "People are afraid of me."], "tr": ["Denizde yaşarım.", "Büyük bir balığım.", "Keskin dişlerim var.", "İnsanlar benden korkar."], "opts": [["shark", "🦈", "shark", "köpek balığı"], ["dolphin", "🐬", "dolphin", "yunus"], ["crab", "🦀", "crab", "yengeç"], ["whale", "🐋", "whale", "balina"]]}, {"k": "whale", "en": ["I live in the ocean.", "I am not a fish.", "I am the biggest animal in the sea.", "I breathe air through the top of my head."], "tr": ["Okyanusta yaşarım.", "Ben bir balık değilim.", "Denizdeki en büyük hayvanım.", "Başımın üstünden hava solurum."], "opts": [["whale", "🐋", "whale", "balina"], ["shark", "🦈", "shark", "köpek balığı"], ["dolphin", "🐬", "dolphin", "yunus"], ["turtle", "🐢", "sea turtle", "deniz kaplumbağası"]]}, {"k": "projector", "en": ["You can find me in a classroom.", "I need electricity.", "I show a big picture on the wall.", "The teacher uses me for presentations."], "tr": ["Beni bir sınıfta bulabilirsin.", "Elektriğe ihtiyacım var.", "Duvarda büyük bir görüntü gösteririm.", "Öğretmen beni sunumlar için kullanır."], "opts": [["projector", "📽️", "projector", "projeksiyon"], ["printer", "🖨️", "printer", "yazıcı"], ["speaker", "🔊", "speaker", "hoparlör"], ["folder", "📁", "folder", "dosya"]]}, {"k": "headphones", "en": ["You wear me.", "I go on your head.", "I have got two small speakers.", "You can listen to music with me."], "tr": ["Beni takarsın.", "Başına takılırım.", "İki küçük hoparlörüm var.", "Benimle müzik dinleyebilirsin."], "opts": [["headphones", "🎧", "headphones", "kulaklık"], ["speaker", "🔊", "speaker", "hoparlör"], ["printer", "🖨️", "printer", "yazıcı"], ["folder", "📁", "folder", "dosya"]]}, {"k": "umbrella", "en": ["I open and close.", "You hold me in your hand.", "I have got a handle.", "You use me when it rains."], "tr": ["Açılır ve kapanırım.", "Beni elinde tutarsın.", "Bir sapım var.", "Yağmur yağınca beni kullanırsın."], "opts": [["umbrella", "☂️", "umbrella", "şemsiye"], ["sunglasses", "🕶️", "sunglasses", "güneş gözlüğü"], ["scarf", "🧣", "scarf", "atkı"], ["boots", "🥾", "boots", "bot"]]}, {"k": "gloves", "en": ["We come in pairs.", "You wear us on your hands.", "We keep your fingers warm.", "You wear us in winter."], "tr": ["Çift olarak geliriz.", "Bizi ellerine takarsın.", "Parmaklarını sıcak tutarız.", "Bizi kışın takarsın."], "opts": [["gloves", "🧤", "gloves", "eldiven"], ["sandals", "👡", "sandals", "sandalet"], ["sunglasses", "🕶️", "sunglasses", "güneş gözlüğü"], ["boots", "🥾", "boots", "bot"]]}, {"k": "snowman", "en": ["I am made of snow.", "I have got a carrot nose.", "I wear a scarf.", "I melt when the weather is hot."], "tr": ["Karlan yapılmışım.", "Havuç burnum var.", "Atkı takarım.", "Hava sıcak olunca eririm."], "opts": [["snowman", "⛄", "snowman", "kardan adam"], ["whale", "🐋", "whale", "balina"], ["dolphin", "🐬", "dolphin", "yunus"], ["umbrella", "☂️", "umbrella", "şemsiye"]]}, {"k": "bakery", "en": ["I am a place.", "I smell so good in the morning.", "People buy things from me.", "I sell fresh bread."], "tr": ["Bir yerim.", "Sabahları çok güzel kokarım.", "İnsanlar benden bir şeyler alır.", "Taze ekmek satarım."], "opts": [["bakery", "🥖", "bakery", "fırın"], ["museum", "🏛️", "museum", "müze"], ["cinema", "🎬", "cinema", "sinema"], ["park", "🌳", "park", "park"]]}, {"k": "museum", "en": ["I am a place.", "I have got a lot of old things.", "People learn about history in me.", "You look at ancient objects here."], "tr": ["Bir yerim.", "Çok sayıda eski eşyam var.", "İnsanlar bende tarih öğrenir.", "Burada eski eşyalara bakarsın."], "opts": [["museum", "🏛️", "museum", "müze"], ["bakery", "🥖", "bakery", "fırın"], ["cinema", "🎬", "cinema", "sinema"], ["park", "🌳", "park", "park"]]}, {"k": "broccoli", "en": ["I am a vegetable.", "I am green.", "I look like a small tree.", "I am very healthy."], "tr": ["Bir sebzeyim.", "Yeşilim.", "Küçük bir ağaca benzerim.", "Çok sağlıklıyım."], "opts": [["broccoli", "🥦", "broccoli", "brokoli"], ["chips", "🍟", "chips", "patates kızartması"], ["hamburger", "🍔", "hamburger", "hamburger"], ["icecream", "🍦", "ice cream", "dondurma"]]}], ROUNDS = 10;
+  var order, qi, shown, wrong, score, locked;
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    order = shuffle(R.slice()).slice(0, ROUNDS); qi = 0; score = 0;
+    document.getElementById('sc').textContent = 0;
+    showR();
+  }
+  function addClue() {
+    var q = order[qi], i = shown;
+    var d = document.createElement('div'); d.className = 'cl';
+    d.innerHTML = '<div class="en">' + (i + 1) + '. ' + q.en[i] + '</div><div class="trl tr">' + q.tr[i] + '</div>';
+    document.getElementById('cls').appendChild(d);
+    shown++;
+    document.getElementById('nc').disabled = (shown >= q.en.length);
+    if (d.scrollIntoView) d.scrollIntoView({ block: 'nearest' });
+  }
+  function showR() {
+    var q = order[qi]; shown = 0; wrong = 0; locked = false;
+    document.getElementById('rn').textContent = qi + 1;
+    document.getElementById('cls').innerHTML = ''; document.getElementById('qmark').textContent = '?';
+    document.getElementById('fb').textContent = ''; document.getElementById('nxt').style.display = 'none';
+    document.getElementById('nc').style.display = ''; document.getElementById('nc').disabled = false;
+    addClue();
+    var box = document.getElementById('right'); box.innerHTML = '';
+    shuffle(q.opts.slice()).forEach(function (o) {
+      var b = document.createElement('button'); b.className = 'tile';
+      b.innerHTML = '<div class="e">' + o[1] + '</div><div class="p">' + o[2] + '</div><div class="t tr">' + o[3] + '</div>';
+      b.addEventListener('click', function () { guess(b, o[0]); });
+      box.appendChild(b);
+    });
+  }
+  function moreClue() { if (locked) return; if (shown < order[qi].en.length) addClue(); }
+  function guess(btn, k) {
+    if (locked || btn.classList.contains('bad')) return;
+    var q = order[qi];
+    if (k === q.k) {
+      locked = true;
+      var pts = Math.max(0, (q.en.length - shown + 1) - wrong); score += pts;
+      document.getElementById('sc').textContent = score;
+      btn.classList.add('good');
+      var o = q.opts[0]; document.getElementById('qmark').textContent = o[1];
+      document.getElementById('fb').textContent = '✔ I am ' + (/^[aeiou]/.test(o[2]) ? 'an ' : 'a ') + o[2] + '!  +' + pts + (pts === 1 ? ' point' : ' points');
+      document.getElementById('nc').style.display = 'none';
+      var nx = document.getElementById('nxt'); nx.textContent = (qi === order.length - 1) ? 'Finish' : 'Next'; nx.style.display = 'inline-block';
+    } else {
+      wrong++; btn.classList.add('bad', 'shake');
+      document.getElementById('fb').textContent = 'Not this one. Try again!';
+    }
+  }
+  function nextR() {
+    qi++;
+    if (qi >= order.length) {
+      var max = ROUNDS * 4;
+      document.getElementById('win-title').textContent = score >= 32 ? 'Super Detective!' : (score >= 22 ? 'Well Done!' : 'Good Try!');
+      document.getElementById('win-stats').textContent = 'Points: ' + score + ' / ' + max;
+      document.getElementById('win-screen').style.display = 'flex'; return;
+    }
+    showR();
+  }
+</script>
+</body>
+</html>

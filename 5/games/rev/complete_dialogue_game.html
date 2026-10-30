@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete the Dialogue</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 4px 14px 12px; }
+  #dtitle { text-align: center; font-weight: 900; font-size: clamp(1.2rem, 3vw, 2.2rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #chat { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: #fff; border: 5px solid #0B2F2C; border-radius: 20px; padding: 10px 12px; }
+  .row { display: flex; align-items: center; gap: 10px; }
+  .row.r { flex-direction: row-reverse; }
+  .av { flex: 0 0 auto; width: clamp(38px, 6vh, 56px); height: clamp(38px, 6vh, 56px); border-radius: 50%; border: 4px solid #0B2F2C; color: #fff; font-weight: 900;
+    font-size: clamp(1.1rem, 2.6vh, 1.7rem); display: flex; align-items: center; justify-content: center; }
+  .who { flex: 0 0 auto; font-weight: 900; font-size: clamp(.7rem, 1.3vw, 1rem); color: #0B5C56; text-align: center; max-width: 7em; }
+  .bub { max-width: 78%; border: 4px solid #0B2F2C; border-radius: 18px; padding: 4px 14px; background: #fff; }
+  .bub .en { font-weight: 900; font-size: clamp(1.05rem, 2.5vw, 1.9rem); line-height: 1.2; }
+  .bub .trl { font-weight: 800; font-size: clamp(.8rem, 1.6vw, 1.2rem); color: #0B5C56; }
+  .bub.blank { border-style: dashed; background: #FFF3B0; border-color: #D62828; }
+  .bub.blank .en { color: #D62828; }
+  .bub.done { border-color: #0A7A2F; background: #C8F7D4; }
+  #opts { flex: 0 0 auto; display: flex; flex-direction: column; gap: 8px; }
+  .opt { text-align: left; font-size: clamp(1rem, 2.4vw, 1.8rem); font-weight: 900; padding: .2em .8em; background: #fff; color: #0B2F2C; border: 5px solid #0B2F2C; border-radius: 14px; box-shadow: 0 4px 0 #0B2F2C; }
+  .opt:active { transform: translateY(3px); box-shadow: 0 1px 0 #0B2F2C; }
+  .opt.bad { background: #FFD6D6; border-color: #D62828; text-decoration: line-through; }
+  #nbox { flex: 0 0 auto; display: none; text-align: center; }
+  #nbox .big-btn { font-size: clamp(1.1rem, 2.6vw, 1.8rem); }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Complete<br>the Dialogue</h1>
+  <p class="subtitle">Choose the best answer!</p>
+  <div class="preview">💬 💬</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Dialogue: <span id="rn">1</span>/5</div>
+  <div class="stat">Stars: <span id="st">0</span> ⭐</div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="dtitle"></div>
+  <div id="chat"></div>
+  <div id="opts"></div>
+  <div id="nbox"><button class="big-btn" id="nbtn" onclick="nextD()">Next</button></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  function toggleTR() { var off = document.body.classList.toggle('no-tr'); document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On'); }
+
+  var D = [["🎤 School Newspaper", [["Tom", "Hi! I am from the school newspaper. What is your favourite school activity?", "Merhaba! Okul gazetesindenim. En sevdiğin okul etkinliği nedir?"], ["Emily", ["I love club meetings. I am in the Art Club.", "It is half past ten.", "My favourite colour is red."], "Kulüp toplantılarını seviyorum. Resim Kulübü'ndeyim."], ["Tom", "What do you do at school on Tuesdays?", "Salı günleri okulda ne yaparsın?"], ["Emily", ["I have a Drama lesson on Tuesdays.", "I like basketball the most.", "I get up at seven."], "Salı günleri Drama dersim var."], ["Tom", "Thank you for the interview!", "Röportaj için teşekkürler!"]]], ["🌧️ A Rainy Day", [["Ella", "Look! It is raining cats and dogs!", "Bak! Bardaktan boşanırcasına yağmur yağıyor!"], ["Ella", ["But I do not have an umbrella.", "I like my new sandals.", "The bakery is open today."], "Ama şemsiyem yok."], ["Ben", "Do not worry! You can use my umbrella.", "Merak etme! Benim şemsiyemi kullanabilirsin."], ["Ella", ["Thank you. That is great!", "No, it is a cat.", "I am wearing a hat."], "Teşekkürler. Bu harika!"], ["Ben", "Go ahead!", "Buyur!"]]], ["🐱 A Sad Day", [["Mia", "My cat ran away yesterday.", "Kedim dün kaçtı."], ["Leo", ["I am sorry to hear that.", "I am glad to hear that.", "It fits like a glove."], "Bunu duyduğuma üzüldüm."], ["Mia", "We are looking for it everywhere.", "Onu her yerde arıyoruz."], ["Leo", ["Let me help you. We can look in the park.", "Yes, it is a big hamburger.", "The film is at six."], "Sana yardım edeyim. Parkta bakabiliriz."], ["Mia", "Thank you, Leo!", "Teşekkürler, Leo!"]]], ["🧥 In a Clothes Shop", [["Ayşe", "I really like this jacket.", "Bu ceketi gerçekten beğendim."], ["Shop assistant", ["Try it on. Does it fit?", "The cinema is next to the park.", "It is made of fish."], "Dene. Üstüne oldu mu?"], ["Ayşe", "Yes, it fits like a glove!", "Evet, tam üstüme göre!"], ["Shop assistant", ["That is great! It is a nice colour too.", "I am sorry to hear that.", "No, it is on the table."], "Harika! Rengi de güzel."], ["Ayşe", "I will take it, please.", "Bunu alacağım, lütfen."]]], ["🤝 A New Classmate", [["Teacher", "This is our new classmate, Zeynep.", "Bu bizim yeni sınıf arkadaşımız Zeynep."], ["Can", ["Hello, Zeynep! Let us break the ice. What is your favourite lesson?", "I am sorry to hear that.", "It is raining cats and dogs."], "Merhaba Zeynep! Buzları eritelim. En sevdiğin ders hangisi?"], ["Zeynep", "My favourite lesson is Art. I like drawing pictures.", "En sevdiğim ders Resim. Resim çizmeyi severim."], ["Can", ["Great! I like Art too. Feel free to sit next to me.", "No, I do not have a stapler.", "The bus is yellow."], "Harika! Ben de Resim'i severim. Yanıma oturabilirsin."], ["Zeynep", "Thank you!", "Teşekkürler!"]]], ["🥗 Healthy Lunch", [["Mum", "What would you like for lunch today?", "Bugün öğle yemeğinde ne istersin?"], ["Deniz", ["I would like grilled fish and a green salad.", "I am wearing blue boots.", "It is half past ten."], "Izgara balık ve yeşil salata istiyorum."], ["Mum", "That is a healthy lunch! Do you want some fruit?", "Bu sağlıklı bir öğle yemeği! Biraz meyve ister misin?"], ["Deniz", ["Yes, please. I love grapes.", "No, the museum is closed.", "My sister is a doctor."], "Evet, lütfen. Üzümü çok severim."], ["Mum", "Here you are!", "Buyur!"]]], ["🏙️ In the Neighbourhood", [["Tourist", "Excuse me. Where can I buy fresh bread?", "Affedersiniz. Taze ekmeği nereden alabilirim?"], ["Murat", ["You can buy it at the bakery. It is next to the park.", "You can watch a film there.", "It is a rainy day."], "Fırından alabilirsiniz. Parkın yanında."], ["Tourist", "Thank you. Is there a museum near here?", "Teşekkürler. Buraya yakın bir müze var mı?"], ["Murat", ["Yes, there is. It is opposite the cinema.", "No, I do not like sweets.", "I am a singer."], "Evet, var. Sinemanın karşısında."], ["Tourist", "Great. Thank you very much!", "Harika. Çok teşekkür ederim!"]]], ["🐬 A Day at the Seaside", [["Linda", "Dad, look! There are some plastic bags in the water.", "Baba, bak! Suda bazı plastik poşetler var."], ["Dad", ["Oh no! A jellyfish is in one of the bags. Let us help it.", "Yes, I like pizza.", "It is a cold winter day."], "Eyvah! Poşetlerden birinin içinde bir denizanası var. Ona yardım edelim."], ["Linda", "We must keep the sea clean.", "Denizi temiz tutmalıyız."], ["Dad", ["You are right. We shouldn't throw rubbish into the sea.", "I am sorry to hear that.", "The scarf is in my bag."], "Haklısın. Denize çöp atmamalıyız."], ["Linda", "Amazing! We did a good job.", "Harika! İyi bir iş yaptık."]]]], ROUNDS = 5, COLORS = ['#1F5FBF', '#D62828', '#0A7A2F', '#7B2CBF', '#B35C00'];
+  var order, di, bi, stars, total, tried, locked, spk, blanks;
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    order = shuffle(D.slice()).slice(0, ROUNDS); di = 0; stars = 0; total = 0;
+    document.getElementById('st').textContent = 0;
+    showD();
+  }
+  function showD() {
+    var d = order[di]; bi = 0; locked = false; tried = false;
+    document.getElementById('rn').textContent = di + 1;
+    document.getElementById('dtitle').textContent = d[0];
+    document.getElementById('nbox').style.display = 'none';
+    spk = []; blanks = [];
+    var chat = document.getElementById('chat'); chat.innerHTML = '';
+    d[1].forEach(function (ln, i) {
+      if (spk.indexOf(ln[0]) < 0) spk.push(ln[0]);
+      var right = spk.indexOf(ln[0]) % 2 === 1, isBlank = Array.isArray(ln[1]);
+      var row = document.createElement('div'); row.className = 'row' + (right ? ' r' : ''); row.id = 'ln' + i;
+      var av = '<div style="display:flex;flex-direction:column;align-items:center"><div class="av" style="background:' + COLORS[spk.indexOf(ln[0]) % COLORS.length] + '">' + ln[0].charAt(0) + '</div><div class="who">' + ln[0] + '</div></div>';
+      var text = isBlank ? '<div class="en">?</div>' : '<div class="en">' + ln[1] + '</div><div class="trl tr">' + ln[2] + '</div>';
+      row.innerHTML = av + '<div class="bub' + (isBlank ? ' blank' : '') + '" id="bub' + i + '">' + text + '</div>';
+      chat.appendChild(row);
+      if (isBlank) blanks.push(i);
+    });
+    showOpts();
+  }
+  function showOpts() {
+    var d = order[di], i = blanks[bi], ln = d[1][i];
+    tried = false; locked = false;
+    var box = document.getElementById('opts'); box.innerHTML = '';
+    document.getElementById('ln' + i).scrollIntoView({ block: 'nearest' });
+    shuffle(ln[1].map(function (t, k) { return { t: t, k: k }; })).forEach(function (o) {
+      var b = document.createElement('button'); b.className = 'opt'; b.textContent = o.t;
+      b.addEventListener('click', function () { pick(b, o.k); });
+      box.appendChild(b);
+    });
+  }
+  function pick(btn, k) {
+    if (locked || btn.classList.contains('bad')) return;
+    var d = order[di], i = blanks[bi], ln = d[1][i];
+    if (k === 0) {
+      locked = true; if (!tried) { stars++; document.getElementById('st').textContent = stars; }
+      total++;
+      var bub = document.getElementById('bub' + i); bub.className = 'bub done';
+      bub.innerHTML = '<div class="en">' + ln[1][0] + '</div><div class="trl tr">' + ln[2] + '</div>';
+      document.getElementById('opts').innerHTML = '';
+      bi++;
+      if (bi < blanks.length) { setTimeout(showOpts, 900); }
+      else {
+        var nx = document.getElementById('nbtn'); nx.textContent = (di === order.length - 1) ? 'Finish' : 'Next dialogue';
+        document.getElementById('nbox').style.display = 'block';
+      }
+    } else {
+      tried = true; btn.classList.add('bad', 'shake');
+    }
+  }
+  function nextD() {
+    di++;
+    if (di >= order.length) {
+      document.getElementById('win-title').textContent = stars >= 9 ? 'Great Talker!' : (stars >= 6 ? 'Well Done!' : 'Good Try!');
+      document.getElementById('win-stats').textContent = 'Stars: ' + stars + ' / ' + total;
+      document.getElementById('win-screen').style.display = 'flex'; return;
+    }
+    showD();
+  }
+</script>
+</body>
+</html>
