@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Match - Wild Animals</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body {
+    height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif;
+    background: #0E8F86; color: #0B2F2C;
+  }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* ---------- Fullscreen button ---------- */
+  #fs-btn {
+    position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px;
+    border-radius: 50%; border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C;
+    display: flex; align-items: center; justify-content: center; padding: 0;
+  }
+  #fs-btn svg { width: 26px; height: 26px; }
+
+  /* ---------- Start screen ---------- */
+  #start-screen, #win-screen {
+    position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px;
+    background: #0E8F86;
+  }
+  #win-screen { display: none; background: rgba(11,47,44,.88); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn {
+    font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em;
+    border: 5px solid #0B2F2C; border-radius: 999px; background: #FFD23F; color: #0B2F2C;
+    box-shadow: 0 6px 0 #0B2F2C;
+  }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+
+  /* ---------- Top bar ---------- */
+  #topbar {
+    flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px;
+    padding: 8px 70px 4px 12px; flex-wrap: wrap;
+  }
+  .stat {
+    background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap;
+  }
+  .restart-btn {
+    background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C;
+  }
+
+  /* ---------- Board ---------- */
+  #board-wrap { flex: 1; min-height: 0; padding: 8px 12px 12px; display: flex; }
+  #board {
+    flex: 1; min-width: 0; min-height: 0; display: grid; gap: clamp(6px, 1.2vmin, 14px);
+    grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr));
+  }
+  @media (orientation: portrait) {
+    #board { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(5, minmax(0, 1fr)); }
+  }
+  .card { position: relative; padding: 0; border: 0; background: none; perspective: 900px; container-type: size; min-width: 0; min-height: 0; }
+  .inner { position: absolute; inset: 0; transition: transform .45s; transform-style: preserve-3d; }
+  .card.open .inner, .card.done .inner { transform: rotateY(180deg); }
+  .face {
+    position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border: 5px solid #0B2F2C; border-radius: 18px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; overflow: hidden;
+  }
+  .back { background: #0B2F2C; color: #FFD23F; font-weight: 900; font-size: 42cqmin; }
+  .front { transform: rotateY(180deg); background: #fff; }
+  .card.done .front { background: #C8F7D4; border-color: #0A7A2F; }
+  .pic { font-size: 52cqmin; line-height: 1; }
+  .pic img { height: 78cqh; max-width: 90cqw; width: auto; display: block; object-fit: contain; }
+  .word { font-weight: 900; font-size: 15cqmin; line-height: 1.05; padding: 0 6px; }
+  .tr { font-weight: 800; font-size: 10cqmin; color: #0B5C56; margin-top: 4px; }
+  body.no-tr .tr { display: none; }
+  .card.shake .inner { animation: shake .4s; }
+  @keyframes shake { 0%,100% { margin-left: 0; } 25% { margin-left: -6px; } 75% { margin-left: 6px; } }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+</style>
+</head>
+<body>
+
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+
+<div id="start-screen">
+  <h1 class="title">Memory Match<br>Wild Animals</h1>
+  <p class="subtitle">Find the picture and its word!</p>
+  <div class="preview">🦁 🐘 🦒 🦜</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+</div>
+
+<div id="win-screen">
+  <h2 class="win-title">🎉 You Win! 🎉</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+
+<div id="topbar">
+  <div class="stat">Moves: <span id="moves">0</span></div>
+  <div class="stat">Pairs: <span id="pairs">0</span>/10</div>
+  <div class="stat">Time: <span id="time">0:00</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="board-wrap"><div id="board"></div></div>
+
+<script>
+  var CLUBS = [
+    { id: 'bear', en: 'Bear', tr: 'Ayı', pic: '🐻' },
+    { id: 'deer', en: 'Deer', tr: 'Geyik', pic: '🦌' },
+    { id: 'elephant', en: 'Elephant', tr: 'Fil', pic: '🐘' },
+    { id: 'lion', en: 'Lion', tr: 'Aslan', pic: '🦁' },
+    { id: 'tiger', en: 'Tiger', tr: 'Kaplan', pic: '🐯' },
+    { id: 'parrot', en: 'Parrot', tr: 'Papağan', pic: '🦜' },
+    { id: 'owl', en: 'Owl', tr: 'Baykuş', pic: '🦉' },
+    { id: 'monkey', en: 'Monkey', tr: 'Maymun', pic: '🐒' },
+    { id: 'kangaroo', en: 'Kangaroo', tr: 'Kanguru', pic: '🦘' },
+    { id: 'giraffe', en: 'Giraffe', tr: 'Zürafa', pic: '🦒' }
+  ];
+
+  var board = document.getElementById('board');
+  var first = null, lock = false, moves = 0, pairs = 0, seconds = 0, timer = null;
+
+  function shuffle(a) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function toggleTR() {
+    var off = document.body.classList.toggle('no-tr');
+    document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On');
+  }
+
+  function fmt(s) { return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    clearInterval(timer);
+    first = null; lock = false; moves = 0; pairs = 0; seconds = 0;
+    document.getElementById('moves').textContent = 0;
+    document.getElementById('pairs').textContent = 0;
+    document.getElementById('time').textContent = '0:00';
+    var cards = [];
+    CLUBS.forEach(function (c) {
+      cards.push({ id: c.id, kind: 'pic', c: c });
+      cards.push({ id: c.id, kind: 'word', c: c });
+    });
+    shuffle(cards);
+    board.innerHTML = '';
+    cards.forEach(function (d) {
+      var b = document.createElement('button');
+      b.className = 'card';
+      b.setAttribute('aria-label', 'Card');
+      b.dataset.id = d.id;
+      var front = d.kind === 'pic'
+        ? '<div class="pic">' + d.c.pic + '</div>'
+        : '<div class="word">' + d.c.en + '</div><div class="tr">' + d.c.tr + '</div>';
+      b.innerHTML = '<div class="inner"><div class="face back">?</div><div class="face front">' + front + '</div></div>';
+      b.addEventListener('click', function () { flip(b); });
+      board.appendChild(b);
+    });
+    timer = setInterval(function () {
+      seconds++; document.getElementById('time').textContent = fmt(seconds);
+    }, 1000);
+  }
+
+  function flip(card) {
+    if (lock || card.classList.contains('open') || card.classList.contains('done')) return;
+    card.classList.add('open');
+    if (!first) { first = card; return; }
+    moves++;
+    document.getElementById('moves').textContent = moves;
+    var a = first, b = card;
+    first = null;
+    // a picture card and a word card of the same club are a pair
+    var samePair = a.dataset.id === b.dataset.id;
+    lock = true;
+    if (samePair) {
+      setTimeout(function () {
+        a.classList.remove('open'); b.classList.remove('open');
+        a.classList.add('done'); b.classList.add('done');
+        pairs++;
+        document.getElementById('pairs').textContent = pairs;
+        lock = false;
+        if (pairs === CLUBS.length) win();
+      }, 500);
+    } else {
+      setTimeout(function () { a.classList.add('shake'); b.classList.add('shake'); }, 450);
+      setTimeout(function () {
+        a.classList.remove('open', 'shake'); b.classList.remove('open', 'shake');
+        lock = false;
+      }, 1100);
+    }
+  }
+
+  function win() {
+    clearInterval(timer);
+    document.getElementById('win-stats').textContent = 'Moves: ' + moves + '   |   Time: ' + fmt(seconds);
+    setTimeout(function () { document.getElementById('win-screen').style.display = 'flex'; }, 500);
+  }
+
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement;
+      (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else {
+      (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document);
+    }
+  }
+</script>
+</body>
+</html>

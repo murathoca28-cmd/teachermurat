@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bingo</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 6px 12px 12px; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #cluebox { flex: 0 0 34%; min-width: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 20px; padding: 12px 16px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; text-align: center; }
+  @media (orientation: portrait) { #cluebox { flex: 0 0 25%; padding: 6px 14px; gap: 6px; } }
+  #cl-label { font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.7rem); color: #0B5C56; }
+  #cl-en { font-weight: 900; font-size: clamp(1.4rem, 3.4vw, 2.8rem); line-height: 1.2; }
+  #cl-tr { font-weight: 800; font-size: clamp(1rem, 2vw, 1.5rem); color: #0B5C56; }
+  #skip { font-size: clamp(1rem, 2.2vw, 1.5rem); padding: .1em 1em; }
+  #board { flex: 1; min-width: 0; min-height: 0; display: grid; gap: 8px; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)); }
+  .cell { container-type: size; position: relative; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 14px; padding: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0B2F2C; }
+  .cell .e { font-size: 36cqmin; line-height: 1.1; }
+  .cell .p { font-weight: 900; font-size: 13cqmin; line-height: 1.1; padding: 0 3px; }
+  .cell .t { font-weight: 800; font-size: 9.5cqmin; color: #0B5C56; }
+  .cell.on { background: #C8F7D4; border-color: #0A7A2F; }
+  .cell.on::after { content: '✔'; position: absolute; top: 2px; right: 8px; font-size: 20cqmin; line-height: 1; color: #0A7A2F; font-weight: 900; }
+  .cell.line { background: #FFD23F; border-color: #D62828; border-width: 7px; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Bingo</h1>
+  <p class="subtitle">Listen to the clue. Find the picture!</p>
+  <div class="preview">🧢 🐘 🍕 ⛺</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Found: <span id="fo">0</span>/16</div>
+  <div class="stat">Mistakes: <span id="mi">0</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="cluebox">
+    <div id="cl-label">Clue</div>
+    <div id="cl-en"></div>
+    <div id="cl-tr" class="tr"></div>
+    <button class="restart-btn" id="skip" onclick="skipClue()">Skip</button>
+  </div>
+  <div id="board"></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  function toggleTR() { var off = document.body.classList.toggle('no-tr'); document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On'); }
+
+  var POOL = [["cap", "🧢", "cap", "kasket", "You wear it on your head on a sunny day.", "Güneşli bir günde onu başına takarsın."], ["gloves", "🧤", "gloves", "eldiven", "You wear them on your hands in winter.", "Onları kışın ellerine takarsın."], ["sunglasses", "🕶️", "sunglasses", "güneş gözlüğü", "They protect your eyes from the sun.", "Gözlerini güneşten korurlar."], ["sneakers", "👟", "sneakers", "spor ayakkabı", "You wear them on your feet to run and play sports.", "Koşmak ve spor yapmak için onları ayaklarına giyersin."], ["umbrella", "☂️", "umbrella", "şemsiye", "You open it when it rains.", "Yağmur yağınca onu açarsın."], ["boots", "🥾", "boots", "bot", "You wear them in the snow or in the mud.", "Onları karda ya da çamurda giyersin."], ["scarf", "🧣", "scarf", "atkı", "You wear it around your neck in cold weather.", "Soğuk havada onu boynuna dolarsın."], ["pizza", "🍕", "pizza", "pizza", "It is round and it has cheese on it.", "Yuvarlaktır ve üstünde peynir vardır."], ["soup", "🍲", "soup", "çorba", "You eat it with a spoon. It is usually hot.", "Onu kaşıkla yersin. Genellikle sıcaktır."], ["salad", "🥗", "salad", "salata", "It has lettuce, tomatoes and cucumbers.", "İçinde marul, domates ve salatalık vardır."], ["cake", "🍰", "cake", "kek", "You eat it on your birthday.", "Onu doğum gününde yersin."], ["cheese", "🧀", "cheese", "peynir", "It is made from milk. Mice like it.", "Sütten yapılır. Fareler onu sever."], ["icecream", "🍦", "ice cream", "dondurma", "It is a cold and sweet dessert.", "Soğuk ve tatlı bir tatlıdır."], ["elephant", "🐘", "elephant", "fil", "It is the biggest animal on land.", "Karadaki en büyük hayvandır."], ["lion", "🦁", "lion", "aslan", "It is a big cat. People call it the king of the jungle.", "Büyük bir kedidir. İnsanlar ona ormanların kralı der."], ["giraffe", "🦒", "giraffe", "zürafa", "It is the tallest animal in the world.", "Dünyadaki en uzun hayvandır."], ["parrot", "🦜", "parrot", "papağan", "It is a colourful bird. It can copy words.", "Renkli bir kuştur. Kelimeleri taklit edebilir."], ["owl", "🦉", "owl", "baykuş", "It is a bird. It hunts at night.", "Bir kuştur. Geceleri avlanır."], ["turtle", "🐢", "turtle", "kaplumbağa", "It is a slow animal with a hard shell.", "Sert kabuklu, yavaş bir hayvandır."], ["tent", "⛺", "tent", "çadır", "You sleep in it when you go camping.", "Kampa gittiğinde içinde uyursun."], ["guitar", "🎸", "guitar", "gitar", "You play it in the music club. It has strings.", "Onu müzik kulübünde çalarsın. Telleri vardır."], ["football", "⚽", "football", "futbol topu", "You kick it with your foot.", "Ona ayağınla vurursun."], ["microscope", "🔬", "microscope", "mikroskop", "You use it in the science lab to see tiny things.", "Onu fen laboratuvarında çok küçük şeyleri görmek için kullanırsın."], ["backpack", "🎒", "backpack", "sırt çantası", "You carry your books in it.", "Kitaplarını onun içinde taşırsın."]];
+  var board, marked, calls, mistakes, found, over, LINES = [];
+  for (var i = 0; i < 4; i++) { LINES.push([0,1,2,3].map(function (k) { return i*4+k; })); LINES.push([0,1,2,3].map(function (k) { return k*4+i; })); }
+  LINES.push([0,5,10,15]); LINES.push([3,6,9,12]);
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    var pick = shuffle(POOL.slice()).slice(0, 16);
+    board = shuffle(pick.slice()); calls = shuffle(pick.slice());
+    marked = []; for (var i = 0; i < 16; i++) marked.push(false);
+    mistakes = 0; found = 0; over = false;
+    document.getElementById('mi').textContent = 0; document.getElementById('fo').textContent = 0;
+    var b = document.getElementById('board'); b.innerHTML = '';
+    board.forEach(function (w, i) {
+      var c = document.createElement('button'); c.className = 'cell'; c.id = 'c' + i;
+      c.innerHTML = '<div class="e">' + w[1] + '</div><div class="p">' + w[2] + '</div><div class="t tr">' + w[3] + '</div>';
+      c.addEventListener('click', function () { tap(i); });
+      b.appendChild(c);
+    });
+    showClue();
+  }
+  function showClue() {
+    var w = calls[0];
+    document.getElementById('cl-en').textContent = w[4];
+    document.getElementById('cl-tr').textContent = w[5];
+    document.getElementById('skip').style.visibility = calls.length > 1 ? 'visible' : 'hidden';
+  }
+  function skipClue() { if (over || calls.length < 2) return; calls.push(calls.shift()); showClue(); }
+  function tap(i) {
+    if (over || marked[i]) return;
+    var cell = document.getElementById('c' + i);
+    if (board[i][0] === calls[0][0]) {
+      marked[i] = true; cell.classList.add('on'); found++; document.getElementById('fo').textContent = found;
+      calls.shift();
+      var ln = null;
+      LINES.forEach(function (L) { if (!ln && L.every(function (k) { return marked[k]; })) ln = L; });
+      if (ln) { over = true; ln.forEach(function (k) { document.getElementById('c' + k).classList.add('line'); }); setTimeout(function () { win(); }, 1600); return; }
+      if (!calls.length) { over = true; setTimeout(function () { win(); }, 800); return; }
+      showClue();
+    } else {
+      mistakes++; document.getElementById('mi').textContent = mistakes;
+      cell.classList.remove('shake'); void cell.offsetWidth; cell.classList.add('shake');
+    }
+  }
+  function win() {
+    document.getElementById('win-title').textContent = 'BINGO!';
+    document.getElementById('win-stats').textContent = 'Found: ' + found + '  |  Mistakes: ' + mistakes;
+    document.getElementById('win-screen').style.display = 'flex';
+  }
+</script>
+</body>
+</html>

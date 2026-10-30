@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dress for the Weather</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 8px 12px 12px; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #left { flex: 0 0 40%; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
+  @media (orientation: portrait) { #left { flex: 0 0 46%; } }
+  #trip { flex: 1 1 auto; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 22px; padding: 8px 16px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; }
+  #scene { font-size: clamp(2.4rem, 10vh, 5.5rem); line-height: 1; }
+  #t-en { font-weight: 900; font-size: clamp(1.1rem, 2.5vw, 2rem); line-height: 1.2; }
+  #t-tr { font-weight: 800; font-size: clamp(.9rem, 1.8vw, 1.35rem); color: #0B5C56; }
+  #ask { font-weight: 900; font-size: clamp(1rem, 2.2vw, 1.6rem); color: #D62828; }
+  #case { position: relative; flex: 0 0 auto; display: flex; gap: 10px; background: #C9772B; border: 5px solid #0B2F2C; border-radius: 20px; padding: 14px 12px 12px; margin-top: 14px; }
+  #case::before { content: ''; position: absolute; left: 50%; top: -22px; width: 90px; height: 24px; transform: translateX(-50%);
+    border: 5px solid #0B2F2C; border-bottom: 0; border-radius: 14px 14px 0 0; background: #fff; }
+  .slot { flex: 1; min-height: clamp(70px, 14vh, 130px); background: #fff; border: 4px dashed #0B2F2C; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .slot .e { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1; }
+  .slot .e svg { width: clamp(2.4rem, 8vh, 4.4rem); height: clamp(2.4rem, 8vh, 4.4rem); display: block; }
+  #check { font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 900; padding: .25em 1em; border: 5px solid #0B2F2C; border-radius: 16px; background: #1F5FBF; color: #fff; box-shadow: 0 5px 0 #0B2F2C; }
+  #check:disabled { background: #B8C2C1; color: #5B6B69; cursor: not-allowed; }
+  #fb { min-height: 1.3em; text-align: center; font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.7rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #items { flex: 1; min-width: 0; min-height: 0; display: grid; gap: 10px; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); }
+  @media (orientation: portrait) { #items { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .tile { container-type: size; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0B2F2C; }
+  .tile .e { font-size: 38cqmin; line-height: 1.05; }
+  .tile .e svg { width: 46cqmin; height: 46cqmin; display: block; }
+  .tile .p { font-weight: 900; font-size: 12cqmin; line-height: 1.1; padding: 0 4px; }
+  .tile .t { font-weight: 800; font-size: 9cqmin; color: #0B5C56; }
+  .tile.sel { background: #FFF3B0; border-color: #D62828; border-width: 7px; }
+  .tile.good { background: #C8F7D4; border-color: #0A7A2F; border-width: 7px; }
+  .tile.bad { background: #FFD6D6; border-color: #D62828; border-width: 7px; }
+  #next { display: none; font-size: clamp(1.1rem, 2.6vw, 1.7rem); }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Dress for<br>the Weather</h1>
+  <p class="subtitle">Choose the right clothes!</p>
+  <div class="preview">🕶️ 🧣 ☂️ 🧥</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Trip: <span id="rn">1</span>/6</div>
+  <div class="stat">Score: <span id="sc">0</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="left">
+    <div id="trip"><div id="scene"></div><div id="t-en"></div><div id="t-tr" class="tr"></div><div id="ask"></div></div>
+    <div id="case"><div class="slot" data-i="0"></div><div class="slot" data-i="1"></div><div class="slot" data-i="2"></div></div>
+    <button id="check" disabled>Check my clothes</button>
+    <div id="fb"></div>
+    <button class="big-btn" id="next" onclick="nextTrip()">Next</button>
+  </div>
+  <div id="items"></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  var TR = true, fbParts = null;
+  function setFb(p, tr) { fbParts = [p, tr]; renderFb(); }
+  function renderFb() { var f = document.getElementById('fb'); if (f) f.textContent = fbParts ? fbParts[0] + (TR && fbParts[1] ? ' ' + fbParts[1] : '') : ''; }
+  function toggleTR() { TR = !TR; document.body.classList.toggle('no-tr', !TR); document.getElementById('trbtn').textContent = 'Turkish: ' + (TR ? 'On' : 'Off'); renderFb(); }
+  var ITEMS = {"sunglasses": ["🕶️", "sunglasses", "güneş gözlüğü"], "hat": ["👒", "hat", "şapka"], "sandals": ["👡", "sandals", "sandalet"], "gloves": ["🧤", "gloves", "eldiven"], "scarf": ["🧣", "scarf", "atkı"], "coat": ["🧥", "coat", "mont"], "boots": ["🥾", "boots", "bot"], "raincoat": ["<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"raincoat\"><path d=\"M30 32 L7 72 L21 79 L37 50 Z\" fill=\"#FFC400\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M70 32 L93 72 L79 79 L63 50 Z\" fill=\"#FFC400\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M30 28 Q50 38 70 28 L75 94 L25 94 Z\" fill=\"#FFC400\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M31 30 Q50 2 69 30 Q50 42 31 30 Z\" fill=\"#F29900\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M50 38 V94\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"43\" cy=\"54\" r=\"3\" fill=\"#0B2F2C\"/><circle cx=\"43\" cy=\"68\" r=\"3\" fill=\"#0B2F2C\"/><circle cx=\"43\" cy=\"82\" r=\"3\" fill=\"#0B2F2C\"/><rect x=\"55\" y=\"70\" width=\"14\" height=\"12\" rx=\"2\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></svg>", "raincoat", "yağmurluk"], "umbrella": ["☂️", "umbrella", "şemsiye"], "tshirt": ["👕", "T-shirt", "tişört"], "dress": ["👗", "dress", "elbise"], "necklace": ["<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"necklace\"><path d=\"M16 20 Q50 104 84 20\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linecap=\"round\"/><circle cx=\"16.0\" cy=\"20.0\" r=\"4.2\" fill=\"#FFD23F\" stroke=\"#0B2F2C\" stroke-width=\"2.5\"/><circle cx=\"22.8\" cy=\"35.1\" r=\"4.2\" fill=\"#FFD23F\" stroke=\"#0B2F2C\" stroke-width=\"2.5\"/><circle cx=\"29.6\" cy=\"46.9\" r=\"4.2\" fill=\"#FFD23F\" stroke=\"#0B2F2C\" stroke-width=\"2.5\"/><circle cx=\"36.4\" cy=\"55.3\" r=\"4.2\" fill=\"#FFD23F\" stroke=\"#0B2F2C\" stroke-width=\"2.5\"/><circle cx=\"43.2\" cy=\"60.3\" r=\"4.2\" fill=\"#FFD23F\" stroke=\"#0B2F2C\" stroke-width=\"2.5\"/><circle cx=\"56.8\" cy=\"60.3\" r=\"4.2\" fill=\"#FFD23F\" stroke=\"#0B2F2C\" stroke-width=\"2.5\"/><circle cx=\"63.6\" cy=\"55.3\" r=\"4.2\" fill=\"#FFD23F\" stroke=\"#0B2F2C\" stroke-width=\"2.5\"/><circle cx=\"70.4\" cy=\"46.9\" r=\"4.2\" fill=\"#FFD23F\" stroke=\"#0B2F2C\" stroke-width=\"2.5\"/><circle cx=\"77.2\" cy=\"35.1\" r=\"4.2\" fill=\"#FFD23F\" stroke=\"#0B2F2C\" stroke-width=\"2.5\"/><circle cx=\"84.0\" cy=\"20.0\" r=\"4.2\" fill=\"#FFD23F\" stroke=\"#0B2F2C\" stroke-width=\"2.5\"/><polygon points=\"50,60 62,72 50,92 38,72\" fill=\"#D62828\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\"/><polygon points=\"50,60 56,72 50,80 44,72\" fill=\"#FF8A8A\" stroke=\"none\"/></svg>", "necklace", "kolye"], "trainers": ["👟", "trainers", "spor ayakkabı"], "handbag": ["👜", "handbag", "el çantası"], "jeans": ["👖", "jeans", "kot pantolon"]};
+  var TRIPS = [{"scene": "☀️", "en": "It is summer. The weather is hot and sunny.", "tr": "Mevsim yaz. Hava sıcak ve güneşli.", "good": ["sunglasses", "hat", "sandals"], "bad": ["gloves", "scarf", "coat", "boots", "raincoat"]}, {"scene": "⛄", "en": "It is winter. The weather is cold and snowy. We want to make a snowman.", "tr": "Mevsim kış. Hava soğuk ve karlı. Kardan adam yapmak istiyoruz.", "good": ["coat", "gloves", "boots"], "bad": ["sandals", "tshirt", "dress", "sunglasses"]}, {"scene": "🌧️", "en": "It is a rainy day. We are going to walk to school.", "tr": "Yağmurlu bir gün. Okula yürüyerek gideceğiz.", "good": ["umbrella", "raincoat", "boots"], "bad": ["sunglasses", "sandals", "necklace", "dress", "tshirt"]}, {"scene": "⚽", "en": "We have a Physical Education lesson today. It is warm.", "tr": "Bugün Beden Eğitimi dersimiz var. Hava ılık.", "good": ["trainers", "tshirt", "hat"], "bad": ["dress", "boots", "coat", "necklace", "gloves"]}, {"scene": "🎉", "en": "It is a school party. We want to look fancy.", "tr": "Okul partisi var. Şık görünmek istiyoruz.", "good": ["dress", "necklace", "handbag"], "bad": ["boots", "gloves", "raincoat", "coat", "hat"]}, {"scene": "🍂", "en": "It is autumn. The weather is cool and windy.", "tr": "Mevsim sonbahar. Hava serin ve rüzgârlı.", "good": ["coat", "scarf", "jeans"], "bad": ["sandals", "sunglasses", "tshirt", "necklace", "handbag"]}];
+  var ASK = ["Choose 3 things to wear!", "Giymek için 3 şey seç!"];
+  var order, ti, sel, score, locked;
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    order = shuffle(TRIPS.slice()); ti = 0; score = 0;
+    document.getElementById('sc').textContent = 0;
+    showTrip();
+  }
+  function showTrip() {
+    var t = order[ti]; sel = []; locked = false;
+    document.getElementById('rn').textContent = ti + 1;
+    document.getElementById('scene').textContent = t.scene;
+    document.getElementById('t-en').textContent = t.en;
+    document.getElementById('t-tr').textContent = t.tr;
+    document.getElementById('ask').textContent = ASK[0];
+    fbParts = null; renderFb();
+    document.getElementById('next').style.display = 'none';
+    document.getElementById('check').style.display = '';
+    var box = document.getElementById('items'); box.innerHTML = '';
+    shuffle(t.good.concat(t.bad)).forEach(function (id) {
+      var it = ITEMS[id], b = document.createElement('button');
+      b.className = 'tile'; b.dataset.id = id;
+      b.innerHTML = '<div class="e">' + it[0] + '</div><div class="p">' + it[1] + '</div><div class="t tr">' + it[2] + '</div>';
+      b.addEventListener('click', function () { toggleItem(id); });
+      box.appendChild(b);
+    });
+    renderCase();
+  }
+  function toggleItem(id) {
+    if (locked) return;
+    var k = sel.indexOf(id);
+    if (k >= 0) sel.splice(k, 1); else if (sel.length < 3) sel.push(id);
+    renderCase();
+  }
+  function renderCase() {
+    Array.prototype.forEach.call(document.querySelectorAll('.slot'), function (s, i) {
+      s.innerHTML = sel[i] ? '<div class="e">' + ITEMS[sel[i]][0] + '</div>' : '';
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.tile'), function (b) { b.classList.toggle('sel', sel.indexOf(b.dataset.id) >= 0); });
+    document.getElementById('check').disabled = (sel.length !== 3);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.slot'), function (s) {
+    s.addEventListener('click', function () { if (!locked && sel[+s.dataset.i]) { sel.splice(+s.dataset.i, 1); renderCase(); } });
+  });
+  document.getElementById('check').addEventListener('click', function () {
+    if (locked || sel.length !== 3) return; locked = true;
+    var t = order[ti], right = 0;
+    sel.forEach(function (id) { if (t.good.indexOf(id) >= 0) right++; });
+    score += right; document.getElementById('sc').textContent = score;
+    Array.prototype.forEach.call(document.querySelectorAll('.tile'), function (b) {
+      b.classList.remove('sel');
+      var good = t.good.indexOf(b.dataset.id) >= 0, chosen = sel.indexOf(b.dataset.id) >= 0;
+      if (good) b.classList.add('good'); else if (chosen) b.classList.add('bad', 'shake');
+    });
+    if (right === 3) setFb('✔ Perfect packing!', 'Harika bir valiz!');
+    else setFb('✘ ' + right + ' / 3. The green ones are right.', 'Yeşil olanlar doğru.');
+    document.getElementById('check').style.display = 'none';
+    var nx = document.getElementById('next'); nx.textContent = (ti === order.length - 1) ? 'Finish' : 'Next'; nx.style.display = 'inline-block';
+  });
+  function nextTrip() {
+    ti++;
+    if (ti >= order.length) {
+      var total = order.length * 3;
+      document.getElementById('win-title').textContent = score >= total - 2 ? 'Super Stylist!' : (score >= total * 0.65 ? 'Well Done!' : 'Good Try!');
+      document.getElementById('win-stats').textContent = 'Score: ' + score + ' / ' + total;
+      document.getElementById('win-screen').style.display = 'flex'; return;
+    }
+    showTrip();
+  }
+</script>
+</body>
+</html>

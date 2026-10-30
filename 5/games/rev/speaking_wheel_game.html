@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speaking Wheel</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 14px; padding: 8px 14px 12px; align-items: stretch; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #wheelbox { position: relative; flex: 0 0 46%; min-width: 0; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  @media (orientation: portrait) { #wheelbox { flex: 0 0 50%; } }
+  #wheelwrap { position: relative; flex: 1; min-height: 0; aspect-ratio: 1; max-width: 100%; }
+  #wheel { position: absolute; inset: 0; pointer-events: none; transition: transform 4.2s cubic-bezier(.12, .7, .1, 1); }
+  #wheel svg { width: 100%; height: 100%; display: block; }
+  #pointer { position: absolute; left: 50%; top: -2%; width: 11%; transform: translateX(-50%); z-index: 3; }
+  #pointer svg { width: 100%; display: block; }
+  #spin { font-size: clamp(1.4rem, 3.4vw, 2.6rem); padding: .15em 1.2em; }
+  #spin:disabled { background: #B8C2C1; color: #5B6B69; cursor: not-allowed; box-shadow: 0 6px 0 #5B6B69; }
+  #card { flex: 1; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 22px; padding: 10px 20px; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+  #cat { align-self: flex-start; color: #fff; font-weight: 900; font-size: clamp(1.1rem, 2.6vw, 2rem); padding: 0 20px; border-radius: 999px; border: 4px solid #0B2F2C; }
+  #q-en { font-weight: 900; font-size: clamp(1.5rem, 4vw, 3.4rem); line-height: 1.15; }
+  #q-tr { font-weight: 800; font-size: clamp(1rem, 2.2vw, 1.7rem); color: #0B5C56; }
+  #start { font-weight: 800; font-size: clamp(1.1rem, 2.6vw, 2rem); color: #0B2F2C; background: #FFF3B0; border: 4px solid #0B2F2C; border-radius: 14px; padding: 6px 14px; }
+  #start b { color: #D62828; }
+  #qbox { flex-direction: column; gap: clamp(10px, 2vh, 18px); }
+  #q-en { margin: 2px 0 0; }
+  #showans { align-self: flex-start; font-size: clamp(1rem, 2.4vw, 1.8rem); }
+  #ans { display: none; background: #C8F7D4; border: 4px solid #0A7A2F; border-radius: 14px; padding: 8px 14px; }
+  #ans b { color: #0A7A2F; }
+  #a-en { font-weight: 900; font-size: clamp(1.2rem, 3vw, 2.4rem); line-height: 1.2; }
+  #a-tr { font-weight: 800; font-size: clamp(.95rem, 2vw, 1.5rem); color: #0B5C56; }
+  #idle { font-weight: 900; font-size: clamp(1.6rem, 4.4vw, 3.6rem); text-align: center; line-height: 1.2; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Speaking<br>Wheel</h1>
+  <p class="subtitle">Spin, ask and answer in pairs!</p>
+  <div class="preview">🎡 🗣️ 💬</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Spins: <span id="sp">0</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="wheelbox">
+    <div id="wheelwrap">
+      <div id="wheel"><svg viewBox="-250 -250 500 500" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L0.0 -240.0 A240 240 0 0 1 169.7 -169.7 Z" fill="#D62828" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(22.5)"><text x="0" y="-198" text-anchor="middle" font-size="46">🏫</text><text transform="translate(9,-100) rotate(-90)" text-anchor="middle" font-size="27" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" font-family="Segoe UI, Verdana, Arial, sans-serif">School</text></g><path d="M0 0 L169.7 -169.7 A240 240 0 0 1 240.0 -0.0 Z" fill="#1F5FBF" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(67.5)"><text x="0" y="-198" text-anchor="middle" font-size="46">🎒</text><text transform="translate(9,-100) rotate(-90)" text-anchor="middle" font-size="27" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" font-family="Segoe UI, Verdana, Arial, sans-serif">Classroom</text></g><path d="M0 0 L240.0 -0.0 A240 240 0 0 1 169.7 169.7 Z" fill="#0A7A2F" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(112.5)"><text x="0" y="-198" text-anchor="middle" font-size="46">🙂</text><text transform="translate(9,-100) rotate(-90)" text-anchor="middle" font-size="27" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" font-family="Segoe UI, Verdana, Arial, sans-serif">Appearance</text></g><path d="M0 0 L169.7 169.7 A240 240 0 0 1 0.0 240.0 Z" fill="#E8710A" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(157.5)"><text x="0" y="-198" text-anchor="middle" font-size="46">👕</text><text transform="translate(9,-100) rotate(-90)" text-anchor="middle" font-size="27" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" font-family="Segoe UI, Verdana, Arial, sans-serif">Clothes</text></g><path d="M0 0 L0.0 240.0 A240 240 0 0 1 -169.7 169.7 Z" fill="#7B2CBF" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(202.5)"><text x="0" y="-198" text-anchor="middle" font-size="46">💼</text><text transform="translate(9,-100) rotate(-90)" text-anchor="middle" font-size="27" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" font-family="Segoe UI, Verdana, Arial, sans-serif">Jobs</text></g><path d="M0 0 L-169.7 169.7 A240 240 0 0 1 -240.0 0.0 Z" fill="#0B7285" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(247.5)"><text x="0" y="-198" text-anchor="middle" font-size="46">🏙️</text><text transform="translate(9,-100) rotate(-90)" text-anchor="middle" font-size="27" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" font-family="Segoe UI, Verdana, Arial, sans-serif">My Neighbourhood</text></g><path d="M0 0 L-240.0 0.0 A240 240 0 0 1 -169.7 -169.7 Z" fill="#B5179E" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(292.5)"><text x="0" y="-198" text-anchor="middle" font-size="46">🐬</text><text transform="translate(9,-100) rotate(-90)" text-anchor="middle" font-size="27" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" font-family="Segoe UI, Verdana, Arial, sans-serif">Seaside</text></g><path d="M0 0 L-169.7 -169.7 A240 240 0 0 1 -0.0 -240.0 Z" fill="#C2410C" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(337.5)"><text x="0" y="-198" text-anchor="middle" font-size="46">🥗</text><text transform="translate(9,-100) rotate(-90)" text-anchor="middle" font-size="27" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" font-family="Segoe UI, Verdana, Arial, sans-serif">Healthy Food</text></g><circle r="34" fill="#FFD23F" stroke="#0B2F2C" stroke-width="7"/></svg></div>
+      <div id="pointer"><svg viewBox="0 0 60 80"><path d="M6 6 H54 L30 74 Z" fill="#D62828" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/></svg></div>
+    </div>
+    <button class="big-btn" id="spin" onclick="spin()">SPIN</button>
+  </div>
+  <div id="card">
+    <div id="idle">Spin the wheel!<div class="tr" style="font-size:.5em;color:#0B5C56;font-weight:800">Çarkı çevir!</div></div>
+    <div id="qbox" style="display:none">
+      <div id="cat"></div>
+      <div id="q-en"></div>
+      <div id="q-tr" class="tr"></div>
+      <div id="start"></div>
+      <button class="restart-btn" id="showans" onclick="toggleAns()">Show answer</button>
+      <div id="ans"><b>Sample answer:</b><div id="a-en"></div><div id="a-tr" class="tr"></div></div>
+    </div>
+  </div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  var TR = true, fbParts = null;
+  function setFb(p, tr) { fbParts = [p, tr]; renderFb(); }
+  function renderFb() { var f = document.getElementById('fb'); if (f) f.textContent = fbParts ? fbParts[0] + (TR && fbParts[1] ? ' ' + fbParts[1] : '') : ''; }
+  function toggleTR() { TR = !TR; document.body.classList.toggle('no-tr', !TR); document.getElementById('trbtn').textContent = 'Turkish: ' + (TR ? 'On' : 'Off'); renderFb(); }
+  var WHEEL = [["🏫", "School", "#D62828", [["What is your favourite lesson?", "En sevdiğin ders hangisi?", "My favourite lesson is …", "My favourite lesson is Science.", "En sevdiğim ders Fen Bilimleri."], ["What do you do at school on Tuesdays?", "Salı günleri okulda ne yaparsın?", "I have … on Tuesdays.", "I have a Drama lesson on Tuesdays.", "Salı günleri Drama dersim var."], ["What is your favourite school activity?", "En sevdiğin okul etkinliği nedir?", "I like …", "I like the school plays.", "Okul oyunlarını severim."], ["What do you like doing in English lessons?", "İngilizce derslerinde ne yapmayı seversin?", "I like …", "I like learning new words.", "Yeni kelimeler öğrenmeyi severim."], ["What time do you get up on school days?", "Okul günlerinde saat kaçta kalkarsın?", "I get up at …", "I get up at seven o'clock.", "Saat yedide kalkarım."], ["What is the time now?", "Saat kaç?", "It is …", "It is half past ten.", "Saat on buçuk."]]], ["🎒", "Classroom", "#1F5FBF", [["What is in your school bag?", "Okul çantanda ne var?", "There is … in my bag.", "There is a folder and a pencil in my bag.", "Çantamda bir dosya ve bir kalem var."], ["What do we use to show a presentation?", "Sunum göstermek için neyi kullanırız?", "We use a …", "We use a projector.", "Projeksiyon kullanırız."], ["Ask your friend to listen carefully.", "Arkadaşından dikkatli dinlemesini iste.", "Please …", "Please listen carefully.", "Lütfen dikkatli dinle."], ["Ask your friend to look at the screen.", "Arkadaşından ekrana bakmasını iste.", "Please …", "Please look at the screen.", "Lütfen ekrana bak."], ["What do you put in the rubbish bin?", "Çöp kutusuna ne atarsın?", "I put … in the rubbish bin.", "I put paper in the rubbish bin.", "Çöp kutusuna kâğıt atarım."], ["What do you use a calculator for?", "Hesap makinesini ne için kullanırsın?", "I use it for …", "I use it for Maths.", "Onu Matematik için kullanırım."]]], ["🙂", "Appearance", "#0A7A2F", [["What do you look like?", "Neye benziyorsun? (Dış görünüşün nasıl?)", "I am … and I have got … hair.", "I am tall and thin. I have got short black hair.", "Uzun boyluyum ve zayıfım. Kısa siyah saçlarım var."], ["What colour are your eyes?", "Gözlerinin rengi ne?", "My eyes are …", "My eyes are brown.", "Gözlerim kahverengi."], ["What are you like?", "Nasıl biri olduğunu anlat.", "I am … and …", "I am kind and friendly.", "Nazik ve arkadaş canlısıyım."], ["What does your best friend look like?", "En iyi arkadaşın nasıl görünüyor?", "He/She is … and has got …", "She is short and has got long wavy hair.", "O kısa boylu ve uzun dalgalı saçları var."], ["Who is the kindest person in your family?", "Ailendeki en nazik kişi kim?", "The kindest person is …", "The kindest person is my grandmother.", "En nazik kişi büyükannem."], ["Is your hair long or short?", "Saçların uzun mu, kısa mı?", "My hair is …", "My hair is long.", "Saçlarım uzun."]]], ["👕", "Clothes", "#E8710A", [["What are you wearing today?", "Bugün ne giyiyorsun?", "I'm wearing …", "I'm wearing a blue hoodie and jeans.", "Mavi bir kapüşonlu üst ve kot pantolon giyiyorum."], ["What do you prefer wearing in summer?", "Yazın ne giymeyi tercih edersin?", "I prefer wearing …", "I prefer wearing shorts and flip-flops.", "Şort ve parmak arası terlik giymeyi tercih ederim."], ["What do you dislike wearing in winter?", "Kışın ne giymekten hoşlanmazsın?", "I dislike wearing …", "I dislike wearing gloves.", "Eldiven giymekten hoşlanmam."], ["What did you wear last winter?", "Geçen kış ne giymiştin?", "I wore …", "I wore a coat, boots and gloves.", "Mont, bot ve eldiven giymiştim."], ["What do you hate wearing?", "Ne giymekten nefret edersin?", "I hate wearing …", "I hate wearing a scarf.", "Atkı takmaktan nefret ederim."], ["What do you love wearing at a party?", "Partide ne giymeyi seversin?", "I love wearing …", "I love wearing a dress.", "Elbise giymeyi severim."]]], ["💼", "Jobs", "#7B2CBF", [["What does your mother do for a living?", "Annen ne iş yapıyor?", "She is a …", "She is a teacher.", "O bir öğretmen."], ["What does a doctor do?", "Doktor ne yapar?", "A doctor helps …", "A doctor helps sick people.", "Doktor hasta insanlara yardım eder."], ["What does a farmer do?", "Çiftçi ne yapar?", "A farmer grows …", "A farmer grows fruit and vegetables.", "Çiftçi meyve ve sebze yetiştirir."], ["What does a police officer do?", "Polis memuru ne yapar?", "A police officer keeps …", "A police officer keeps the city safe.", "Polis memuru şehri güvende tutar."], ["What job do you want to do?", "Hangi mesleği yapmak istiyorsun?", "I want to be a …", "I want to be a singer.", "Şarkıcı olmak istiyorum."], ["What does a teacher do?", "Öğretmen ne yapar?", "A teacher teaches …", "A teacher teaches English to students.", "Öğretmen öğrencilere İngilizce öğretir."]]], ["🏙️", "My Neighbourhood", "#0B7285", [["Where do you buy fresh bread?", "Taze ekmeği nereden alırsın?", "I buy it at the …", "I buy it at the bakery.", "Onu fırından alırım."], ["Where do you buy medicine?", "İlacı nereden alırsın?", "I buy it at the …", "I buy it at the chemist's.", "Onu eczaneden alırım."], ["Where can you watch a film?", "Film izlemek için nereye gidebilirsin?", "I can go to the …", "I can go to the cinema.", "Sinemaya gidebilirim."], ["What can you see at a museum?", "Müzede neler görebilirsin?", "I can see …", "I can see ancient objects.", "Eski eşyalar görebilirim."], ["What do you do at the park?", "Parkta ne yaparsın?", "I … at the park.", "I play with my friends and ride my bike.", "Arkadaşlarımla oynarım ve bisiklete binerim."], ["What do you like doing at the weekend?", "Hafta sonu ne yapmayı seversin?", "I like …", "I like going for a walk.", "Yürüyüşe çıkmayı severim."]]], ["🐬", "Seaside", "#B5179E", [["Which sea animals do you know?", "Hangi deniz hayvanlarını biliyorsun?", "I know …", "I know dolphins, crabs and sea turtles.", "Yunusları, yengeçleri ve deniz kaplumbağalarını biliyorum."], ["Where did you stay last summer?", "Geçen yaz nerede kaldın?", "I stayed in …", "I stayed in a small beach house.", "Küçük bir plaj evinde kaldım."], ["What did Linda see in the sea?", "Linda denizde ne gördü?", "She saw …", "She saw a dolphin and a crab.", "Bir yunus ve bir yengeç gördü."], ["What is dangerous for sea animals?", "Deniz hayvanları için ne tehlikelidir?", "… is dangerous.", "Plastic bags are dangerous.", "Plastik poşetler tehlikelidir."], ["What shouldn't we throw into the sea?", "Denize ne atmamalıyız?", "We shouldn't throw … into the sea.", "We shouldn't throw rubbish into the sea.", "Denize çöp atmamalıyız."], ["How can we protect sea animals?", "Deniz hayvanlarını nasıl koruyabiliriz?", "We must …", "We must keep the sea clean.", "Denizi temiz tutmalıyız."]]], ["🥗", "Healthy Food", "#C2410C", [["What healthy food do you like?", "Hangi sağlıklı yiyeceği seversin?", "I like …", "I like broccoli and fish.", "Brokoli ve balık severim."], ["Which food is unhealthy?", "Hangi yiyecek sağlıksızdır?", "… is unhealthy.", "Chips and sweets are unhealthy.", "Cips ve şekerlemeler sağlıksızdır."], ["What did you eat for lunch yesterday?", "Dün öğle yemeğinde ne yedin?", "I ate …", "I ate rice and chicken.", "Pilav ve tavuk yedim."], ["What should we eat every day?", "Her gün ne yemeliyiz?", "We should eat …", "We should eat fruit and vegetables.", "Meyve ve sebze yemeliyiz."], ["What is your favourite fruit?", "En sevdiğin meyve nedir?", "My favourite fruit is …", "My favourite fruit is the grape.", "En sevdiğim meyve üzüm."], ["Do you eat breakfast every day?", "Her gün kahvaltı yapar mısın?", "Yes, I do. / No, I don't.", "Yes, I do. I eat eggs and bread.", "Evet, yaparım. Yumurta ve ekmek yerim."]]]];
+  var rot = 0, spinning = false, spins = 0, queues = [];
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    spins = 0; document.getElementById('sp').textContent = 0;
+    queues = WHEEL.map(function () { return []; });
+    document.getElementById('qbox').style.display = 'none';
+    document.getElementById('idle').style.display = '';
+  }
+  function spin() {
+    if (spinning) return; spinning = true;
+    document.getElementById('spin').disabled = true;
+    var n = WHEEL.length, step = 360 / n, idx = Math.floor(Math.random() * n);
+    var target = ((360 - (idx * step + step / 2) + (Math.random() * 2 - 1) * step * 0.3) % 360 + 360) % 360;
+    var cur = ((rot % 360) + 360) % 360;
+    rot += 1800 + ((target - cur) + 360) % 360;
+    var w = document.getElementById('wheel');
+    w.style.transform = 'rotate(' + rot + 'deg)';
+    var done = false;
+    function finish() { if (done) return; done = true; w.removeEventListener('transitionend', finish); show(idx); }
+    w.addEventListener('transitionend', finish);
+    setTimeout(finish, 4600);
+  }
+  function toggleAns() {
+    var a = document.getElementById('ans'), open = a.style.display !== 'block';
+    a.style.display = open ? 'block' : 'none';
+    document.getElementById('showans').textContent = open ? 'Hide answer' : 'Show answer';
+  }
+  function show(idx) {
+    var c = WHEEL[idx];
+    if (!queues[idx].length) queues[idx] = shuffle(c[3].slice());
+    var q = queues[idx].pop();
+    spins++; document.getElementById('sp').textContent = spins;
+    document.getElementById('idle').style.display = 'none';
+    document.getElementById('qbox').style.display = 'flex';
+    var cat = document.getElementById('cat'); cat.textContent = c[0] + ' ' + c[1]; cat.style.background = c[2];
+    document.getElementById('q-en').textContent = q[0];
+    document.getElementById('q-tr').textContent = q[1];
+    document.getElementById('start').innerHTML = '<b>Start:</b> ' + q[2].replace(/</g, '&lt;');
+    document.getElementById('a-en').textContent = q[3]; document.getElementById('a-tr').textContent = q[4];
+    document.getElementById('ans').style.display = 'none'; document.getElementById('showans').textContent = 'Show answer';
+    spinning = false; document.getElementById('spin').disabled = false;
+  }
+</script>
+</body>
+</html>

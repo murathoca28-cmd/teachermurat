@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sort It Out</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; padding: 6px 12px 12px; }
+  #head { text-align: center; background: #fff; border: 5px solid #0B2F2C; border-radius: 18px; padding: 2px 14px; }
+  #h-en { font-weight: 900; font-size: clamp(1.2rem, 3vw, 2.2rem); }
+  #h-tr { font-weight: 800; font-size: clamp(.9rem, 1.8vw, 1.3rem); color: #0B5C56; }
+  #pool { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-content: center; min-height: 28%; }
+  .word { background: #fff; border: 5px solid #0B2F2C; border-radius: 14px; padding: 2px 12px; display: flex; flex-direction: column; align-items: center; min-width: clamp(84px, 11vw, 150px); }
+  .word .e { font-size: clamp(1.6rem, 6vh, 3rem); line-height: 1.1; }
+  .word .e svg { width: clamp(1.8rem, 6.5vh, 3.2rem); height: clamp(1.8rem, 6.5vh, 3.2rem); display: block; }
+  .word .p { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.6rem); line-height: 1.1; }
+  .word .t { font-weight: 800; font-size: clamp(.7rem, 1.4vw, 1rem); color: #0B5C56; }
+  .word.sel { background: #FFF3B0; border-color: #D62828; border-width: 7px; }
+  .word.gone { display: none; }
+  #bins { flex: 1; min-height: 0; display: flex; gap: 12px; }
+  @media (orientation: portrait) { #bins { flex-direction: column; } }
+  .bin { flex: 1; min-width: 0; min-height: 0; background: #fff; border: 6px solid #0B2F2C; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; cursor: pointer; }
+  .bin .bh { color: #fff; text-align: center; padding: 4px 8px; border-bottom: 6px solid #0B2F2C; }
+  .bin .bh .be { font-size: clamp(1.6rem, 5vh, 2.8rem); line-height: 1.1; }
+  .bin .bh .bn { font-weight: 900; font-size: clamp(1.1rem, 2.8vw, 2.2rem); line-height: 1.1; text-shadow: 2px 2px 0 #0B2F2C; }
+  .bin .bh .bt { font-weight: 800; font-size: clamp(.8rem, 1.6vw, 1.2rem); }
+  .bin .chips { flex: 1; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; padding: 8px; }
+  .chip { background: #C8F7D4; border: 4px solid #0A7A2F; border-radius: 12px; padding: 0 10px; font-weight: 900; font-size: clamp(.9rem, 2vw, 1.5rem); display: flex; align-items: center; gap: 6px; }
+  .chip svg { width: 1.4em; height: 1.4em; }
+  #fb { min-height: 1.3em; text-align: center; font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.8rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #next { display: none; align-self: center; font-size: clamp(1.1rem, 2.6vw, 1.7rem); }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Sort<br>It Out</h1>
+  <p class="subtitle">Put each word in the right box!</p>
+  <div class="preview">🥛 ☀️ 🐬</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Round: <span id="rn">1</span>/3</div>
+  <div class="stat">Mistakes: <span id="mi">0</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="head"><div id="h-en"></div><div id="h-tr" class="tr"></div></div>
+  <div id="pool"></div>
+  <div id="bins"></div>
+  <div id="fb"></div>
+  <button class="big-btn" id="next" onclick="nextRound()">Next</button>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  var TR = true, fbParts = null;
+  function setFb(p, tr) { fbParts = [p, tr]; renderFb(); }
+  function renderFb() { var f = document.getElementById('fb'); if (f) f.textContent = fbParts ? fbParts[0] + (TR && fbParts[1] ? ' ' + fbParts[1] : '') : ''; }
+  function toggleTR() { TR = !TR; document.body.classList.toggle('no-tr', !TR); document.getElementById('trbtn').textContent = 'Turkish: ' + (TR ? 'On' : 'Off'); renderFb(); }
+  var ROUNDS = [["Glass, slice or bowl?", "Bardak, dilim ya da kase?", [["glass", "a glass of", "bir bardak", "🥛", "#1F5FBF"], ["slice", "a slice of", "bir dilim", "🍕", "#D62828"], ["bowl", "a bowl of", "bir kase", "🥣", "#0A7A2F"]], [["glass", "🥛", "milk", "süt"], ["glass", "💧", "water", "su"], ["glass", "🥤", "juice", "meyve suyu"], ["glass", "🍋", "lemonade", "limonata"], ["slice", "🍕", "pizza", "pizza"], ["slice", "🍰", "cake", "kek"], ["slice", "🧀", "cheese", "peynir"], ["slice", "🍞", "bread", "ekmek"], ["bowl", "🍲", "soup", "çorba"], ["bowl", "🥗", "salad", "salata"], ["bowl", "🍝", "pasta", "makarna"], ["bowl", "🍨", "ice cream", "dondurma"]]], ["What is the weather like?", "Hava nasıl?", [["hot", "Hot and sunny", "Sıcak ve güneşli", "☀️", "#E8710A"], ["cold", "Cold and snowy", "Soğuk ve karlı", "❄️", "#1F5FBF"], ["rainy", "Rainy", "Yağmurlu", "🌧️", "#7B2CBF"]], [["hot", "🕶️", "sunglasses", "güneş gözlüğü"], ["hot", "🧢", "cap", "kasket"], ["hot", "👡", "sandals", "sandalet"], ["cold", "🧤", "gloves", "eldiven"], ["cold", "🧣", "scarf", "atkı"], ["cold", "🧥", "coat", "mont"], ["rainy", "☂️", "umbrella", "şemsiye"], ["rainy", "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"raincoat\"><path d=\"M30 32 L7 72 L21 79 L37 50 Z\" fill=\"#FFC400\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M70 32 L93 72 L79 79 L63 50 Z\" fill=\"#FFC400\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M30 28 Q50 38 70 28 L75 94 L25 94 Z\" fill=\"#FFC400\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M31 30 Q50 2 69 30 Q50 42 31 30 Z\" fill=\"#F29900\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M50 38 V94\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"43\" cy=\"54\" r=\"3\" fill=\"#0B2F2C\"/><circle cx=\"43\" cy=\"68\" r=\"3\" fill=\"#0B2F2C\"/><circle cx=\"43\" cy=\"82\" r=\"3\" fill=\"#0B2F2C\"/><rect x=\"55\" y=\"70\" width=\"14\" height=\"12\" rx=\"2\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></svg>", "raincoat", "yağmurluk"]]], ["Where do they live?", "Nerede yaşarlar?", [["land", "On land", "Karada", "🌳", "#0A7A2F"], ["air", "In the air", "Havada", "☁️", "#1F5FBF"], ["water", "In water", "Suda", "🌊", "#0B7285"]], [["land", "🐻", "bear", "ayı"], ["land", "🦌", "deer", "geyik"], ["land", "🦁", "lion", "aslan"], ["air", "🦜", "parrot", "papağan"], ["air", "🦉", "owl", "baykuş"], ["air", "🦋", "butterfly", "kelebek"], ["water", "🐟", "fish", "balık"], ["water", "🐬", "dolphin", "yunus"], ["water", "🐋", "whale", "balina"]]]];
+  var ri, sel, left, mistakes;
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    ri = 0; mistakes = 0; document.getElementById('mi').textContent = 0; showRound();
+  }
+  function showRound() {
+    var r = ROUNDS[ri]; sel = null; left = r[3].length;
+    document.getElementById('rn').textContent = ri + 1;
+    document.getElementById('h-en').textContent = r[0]; document.getElementById('h-tr').textContent = r[1];
+    fbParts = null; renderFb(); document.getElementById('next').style.display = 'none';
+    var bins = document.getElementById('bins'); bins.innerHTML = '';
+    r[2].forEach(function (b) {
+      var d = document.createElement('div'); d.className = 'bin'; d.dataset.id = b[0];
+      d.innerHTML = '<div class="bh" style="background:' + b[4] + '"><div class="be">' + b[3] + '</div><div class="bn">' + b[1] + '</div><div class="bt tr">' + b[2] + '</div></div><div class="chips"></div>';
+      d.addEventListener('click', function () { dropIn(d); });
+      bins.appendChild(d);
+    });
+    var pool = document.getElementById('pool'); pool.innerHTML = '';
+    shuffle(r[3].slice()).forEach(function (w) {
+      var b = document.createElement('button'); b.className = 'word'; b.dataset.bin = w[0];
+      b.innerHTML = '<div class="e">' + w[1] + '</div><div class="p">' + w[2] + '</div><div class="t tr">' + w[3] + '</div>';
+      b.addEventListener('click', function () { if (sel) sel.classList.remove('sel'); sel = (sel === b) ? null : b; if (sel) sel.classList.add('sel'); });
+      b._w = w; pool.appendChild(b);
+    });
+  }
+  function dropIn(bin) {
+    if (!sel) { setFb('👆 Tap a word first.', 'Önce bir kelimeye dokun.'); return; }
+    var w = sel._w;
+    if (sel.dataset.bin === bin.dataset.id) {
+      var c = document.createElement('span'); c.className = 'chip'; c.innerHTML = w[1] + ' ' + w[2];
+      bin.querySelector('.chips').appendChild(c);
+      sel.classList.add('gone'); sel = null; left--; fbParts = null; renderFb();
+      if (left === 0) {
+        setFb('✔ All sorted!', 'Hepsi doğru yerde!');
+        var nx = document.getElementById('next'); nx.textContent = (ri === ROUNDS.length - 1) ? 'Finish' : 'Next'; nx.style.display = 'inline-block';
+      }
+    } else {
+      mistakes++; document.getElementById('mi').textContent = mistakes;
+      sel.classList.add('shake'); var s = sel; setTimeout(function () { s.classList.remove('shake'); }, 450);
+      setFb('✘ Not this box. Try again!', 'Bu kutu değil. Tekrar dene!');
+    }
+  }
+  function nextRound() {
+    ri++;
+    if (ri >= ROUNDS.length) {
+      document.getElementById('win-title').textContent = mistakes <= 2 ? 'Super Sorter!' : (mistakes <= 6 ? 'Well Done!' : 'Good Try!');
+      document.getElementById('win-stats').textContent = 'Mistakes: ' + mistakes;
+      document.getElementById('win-screen').style.display = 'flex'; return;
+    }
+    showRound();
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Search</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 14px; padding: 6px 14px 12px; align-items: stretch; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #gridbox { flex: 1 1 0; min-width: 0; min-height: 0; container-type: size; display: flex; align-items: center; justify-content: center; }
+  #grid { width: min(100cqw, 100cqh); height: min(100cqw, 100cqh); box-sizing: border-box; display: grid; grid-template: repeat(10, minmax(0, 1fr)) / repeat(10, minmax(0, 1fr)); gap: 3px; background: #0B2F2C; border: 6px solid #0B2F2C; border-radius: 16px; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .cell { background: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: calc(min(100cqw, 100cqh) * .056); color: #0B2F2C; border-radius: 6px; }
+  .cell.on { background: #FFD23F; }
+  .cell.anchor { background: #FFF3B0; outline: 4px solid #D62828; outline-offset: -4px; }
+  .cell.found { background: #7DDC9A; }
+  #side { flex: 0 0 34%; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 20px; padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; }
+  @media (orientation: portrait) { #side { flex: 0 0 34%; } }
+  #theme { font-weight: 900; font-size: clamp(1.1rem, 2.6vw, 2rem); text-align: center; color: #0B2F2C; border-bottom: 5px solid #0B2F2C; padding-bottom: 4px; }
+  #words { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr; grid-auto-rows: 1fr; gap: 4px; }
+  @media (orientation: portrait) { #words { grid-template-columns: 1fr 1fr; } }
+  .w { display: flex; align-items: center; gap: 8px; border: 4px solid #0B2F2C; border-radius: 12px; padding: 0 8px; background: #F4F8F8; min-height: 0; }
+  .w .e { font-size: clamp(1.1rem, 3.4vh, 2rem); line-height: 1; } .w .e svg { width: 1.4em; height: 1.4em; display: block; }
+  .w .p { font-weight: 900; font-size: clamp(.95rem, 2.4vh, 1.5rem); } .w .t { font-weight: 800; font-size: clamp(.7rem, 1.7vh, 1rem); color: #0B5C56; margin-left: auto; }
+  .w.ok { background: #C8F7D4; border-color: #0A7A2F; } .w.ok .p { text-decoration: line-through; }
+  #fb { min-height: 1.3em; text-align: center; font-weight: 900; font-size: clamp(.9rem, 2vw, 1.4rem); color: #0B5C56; }
+  #next { display: none; align-self: center; font-size: clamp(1rem, 2.2vw, 1.5rem); }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Word<br>Search</h1>
+  <p class="subtitle">Find all the hidden words!</p>
+  <div class="preview">🔍 🔤 🧩</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Puzzle: <span id="rn">1</span>/3</div>
+  <div class="stat">Found: <span id="fd">0</span>/8</div>
+  <div class="stat">Time: <span id="time">0:00</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="gridbox"><div id="grid"></div></div>
+  <div id="side"><div id="theme"></div><div id="words"></div><div id="fb"></div><button class="big-btn" id="next" onclick="nextPuzzle()">Next</button></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  var TR = true, fbParts = null;
+  function setFb(p, tr) { fbParts = [p, tr]; renderFb(); }
+  function renderFb() { var f = document.getElementById('fb'); if (f) f.textContent = fbParts ? fbParts[0] + (TR && fbParts[1] ? ' ' + fbParts[1] : '') : ''; }
+  function toggleTR() { TR = !TR; document.body.classList.toggle('no-tr', !TR); document.getElementById('trbtn').textContent = 'Turkish: ' + (TR ? 'On' : 'Off'); renderFb(); }
+  var PUZZLES = [["Clothes", "Kıyafetler", [["dress", "👗", "elbise"], ["boots", "🥾", "bot"], ["scarf", "🧣", "atkı"], ["jeans", "👖", "kot pantolon"], ["gloves", "🧤", "eldiven"], ["raincoat", "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"raincoat\"><path d=\"M30 32 L7 72 L21 79 L37 50 Z\" fill=\"#FFC400\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M70 32 L93 72 L79 79 L63 50 Z\" fill=\"#FFC400\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M30 28 Q50 38 70 28 L75 94 L25 94 Z\" fill=\"#FFC400\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M31 30 Q50 2 69 30 Q50 42 31 30 Z\" fill=\"#F29900\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M50 38 V94\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"43\" cy=\"54\" r=\"3\" fill=\"#0B2F2C\"/><circle cx=\"43\" cy=\"68\" r=\"3\" fill=\"#0B2F2C\"/><circle cx=\"43\" cy=\"82\" r=\"3\" fill=\"#0B2F2C\"/><rect x=\"55\" y=\"70\" width=\"14\" height=\"12\" rx=\"2\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></svg>", "yağmurluk"], ["umbrella", "☂️", "şemsiye"], ["sandals", "👡", "sandalet"]]], ["Animals", "Hayvanlar", [["monkey", "🐒", "maymun"], ["parrot", "🦜", "papağan"], ["rabbit", "🐇", "tavşan"], ["tiger", "🐯", "kaplan"], ["giraffe", "🦒", "zürafa"], ["kangaroo", "🦘", "kanguru"], ["turtle", "🐢", "kaplumbağa"], ["elephant", "🐘", "fil"]]], ["Food and Places", "Yiyecekler ve Yerler", [["pizza", "🍕", "pizza"], ["salad", "🥗", "salata"], ["cheese", "🧀", "peynir"], ["pasta", "🍝", "makarna"], ["lemonade", "🍋", "limonata"], ["library", "📚", "kütüphane"], ["museum", "🏛️", "müze"], ["bakery", "🥖", "fırın"]]]];
+  var N = 10, pi, cells, grid, placed, found, anchor, down, line, seconds = 0, timer = null;
+  function fmt(s) { return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    clearInterval(timer); seconds = 0; document.getElementById('time').textContent = '0:00';
+    timer = setInterval(function () { seconds++; document.getElementById('time').textContent = fmt(seconds); }, 1000);
+    pi = 0; showPuzzle();
+  }
+  function build(words) {
+    var dirs = [[0, 1], [1, 0], [1, 1]], g, pl;
+    for (var attempt = 0; attempt < 50; attempt++) {
+      g = []; for (var i = 0; i < N * N; i++) g.push(''); pl = []; var ok = true;
+      var list = words.slice().sort(function (a, b) { return b.length - a.length; });
+      for (var k = 0; k < list.length && ok; k++) {
+        var w = list[k], put = false;
+        for (var t = 0; t < 300 && !put; t++) {
+          var d = dirs[Math.floor(Math.random() * 3)], r = Math.floor(Math.random() * N), c = Math.floor(Math.random() * N);
+          var er = r + d[0] * (w.length - 1), ec = c + d[1] * (w.length - 1);
+          if (er >= N || ec >= N) continue;
+          var fit = true;
+          for (var j = 0; j < w.length; j++) { var v = g[(r + d[0] * j) * N + c + d[1] * j]; if (v && v !== w[j]) { fit = false; break; } }
+          if (!fit) continue;
+          var idx = [];
+          for (var j2 = 0; j2 < w.length; j2++) { var p = (r + d[0] * j2) * N + c + d[1] * j2; g[p] = w[j2]; idx.push(p); }
+          pl.push({ w: w, idx: idx }); put = true;
+        }
+        if (!put) ok = false;
+      }
+      if (ok) break;
+    }
+    var abc = 'abcdefghijklmnopqrstuvwxyz';
+    for (var m = 0; m < g.length; m++) if (!g[m]) g[m] = abc[Math.floor(Math.random() * 26)];
+    return { g: g, pl: pl };
+  }
+  function showPuzzle() {
+    var P = PUZZLES[pi]; found = 0; anchor = null; down = null;
+    document.getElementById('rn').textContent = pi + 1; document.getElementById('fd').textContent = 0;
+    document.getElementById('theme').textContent = P[0]; fbParts = null; renderFb(); document.getElementById('next').style.display = 'none';
+    var b = build(P[2].map(function (w) { return w[0]; })); grid = b.g; placed = b.pl;
+    var gr = document.getElementById('grid'); gr.innerHTML = ''; cells = [];
+    grid.forEach(function (ch, i) { var d = document.createElement('div'); d.className = 'cell'; d.textContent = ch.toUpperCase(); d.dataset.i = i; gr.appendChild(d); cells.push(d); });
+    var wl = document.getElementById('words'); wl.innerHTML = '';
+    P[2].forEach(function (w) {
+      var d = document.createElement('div'); d.className = 'w'; d.id = 'w-' + w[0];
+      d.innerHTML = '<span class="e">' + w[1] + '</span><span class="p">' + w[0] + '</span><span class="t tr">' + w[2] + '</span>'; wl.appendChild(d);
+    });
+  }
+  function cellAt(x, y) { var e = document.elementFromPoint(x, y); return (e && e.classList && e.classList.contains('cell')) ? +e.dataset.i : -1; }
+  function lineBetween(a, b) {
+    var r1 = Math.floor(a / N), c1 = a % N, r2 = Math.floor(b / N), c2 = b % N, dr = r2 - r1, dc = c2 - c1;
+    if (!(dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc))) return [a];
+    var n = Math.max(Math.abs(dr), Math.abs(dc)), sr = Math.sign(dr), sc = Math.sign(dc), out = [];
+    for (var i = 0; i <= n; i++) out.push((r1 + sr * i) * N + c1 + sc * i);
+    return out;
+  }
+  function show(l) {
+    cells.forEach(function (c) { c.classList.remove('on'); });
+    l.forEach(function (i) { cells[i].classList.add('on'); });
+  }
+  function clearAnchor() { if (anchor !== null) cells[anchor].classList.remove('anchor'); anchor = null; }
+  function tryLine(l) {
+    var s = l.map(function (i) { return grid[i]; }).join(''), r = s.split('').reverse().join(''), hit = null;
+    PUZZLES[pi][2].forEach(function (w) { if ((w[0] === s || w[0] === r) && !document.getElementById('w-' + w[0]).classList.contains('ok')) hit = w; });
+    if (hit) {
+      l.forEach(function (i) { cells[i].classList.add('found'); });
+      document.getElementById('w-' + hit[0]).classList.add('ok'); found++; document.getElementById('fd').textContent = found;
+      setFb('✔ ' + hit[0] + ' = ' + hit[2], '');
+      if (found === 8) {
+        var nx = document.getElementById('next'); nx.textContent = (pi === PUZZLES.length - 1) ? 'Finish' : 'Next'; nx.style.display = 'inline-block';
+      }
+    }
+    show([]);
+  }
+  var gridEl = document.getElementById('grid');
+  gridEl.addEventListener('pointerdown', function (e) {
+    var i = cellAt(e.clientX, e.clientY); if (i < 0) return; e.preventDefault();
+    if (anchor !== null) { var l = lineBetween(anchor, i); clearAnchor(); if (l.length > 1) { tryLine(l); down = null; return; } }
+    down = i; line = [i]; show(line);
+  });
+  gridEl.addEventListener('pointermove', function (e) {
+    if (down == null) return; var i = cellAt(e.clientX, e.clientY); if (i < 0) return;
+    line = lineBetween(down, i); show(line);
+  });
+  window.addEventListener('pointerup', function () {
+    if (down == null) return;
+    if (line.length > 1) { tryLine(line); }
+    else { show([]); clearAnchor(); anchor = down; cells[anchor].classList.add('anchor'); }
+    down = null;
+  });
+  function nextPuzzle() {
+    pi++;
+    if (pi >= PUZZLES.length) {
+      clearInterval(timer);
+      document.getElementById('win-title').textContent = 'All Words Found!';
+      document.getElementById('win-stats').textContent = 'Time: ' + fmt(seconds);
+      document.getElementById('win-screen').style.display = 'flex'; return;
+    }
+    showPuzzle();
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crossword</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 4px 12px 12px; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #gridbox { flex: 1 1 0; min-width: 0; min-height: 0; container-type: size; display: flex; align-items: center; justify-content: center; }
+  @media (orientation: portrait) { #gridbox { flex: 0 0 40%; } }
+  #grid { width: min(100cqw, 100cqh); height: min(100cqw, 100cqh); display: grid; }
+  .gc { position: relative; display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 0; }
+  .gc.fill { background: #fff; border: 3px solid #0B2F2C; cursor: pointer; font-weight: 900; color: #0B2F2C;
+    font-size: calc(min(100cqw, 100cqh) / var(--n) * .58); line-height: 1; }
+  .gc.inword { background: #FFE98A; }
+  .gc.cur { background: #FFD23F; outline: 4px solid #D62828; outline-offset: -4px; z-index: 2; }
+  .gc.wrong { color: #D62828; background: #FFD6D6; }
+  .gc .nm { position: absolute; top: 1px; left: 3px; font-size: calc(min(100cqw, 100cqh) / var(--n) * .22); font-weight: 900; line-height: 1; }
+  #side { flex: 1 1 0; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
+  #clues { flex: 1; min-height: 0; overflow-y: auto; background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 10px; }
+  #clues h3 { margin: 4px 0; font-size: clamp(1rem, 2.2vw, 1.5rem); color: #0B5C56; }
+  .clue { display: flex; gap: 8px; align-items: baseline; padding: 4px 6px; border-radius: 10px; cursor: pointer; border: 3px solid transparent; }
+  .clue.sel { background: #FFE98A; border-color: #0B2F2C; }
+  .clue .cn { font-weight: 900; font-size: clamp(1rem, 2.2vw, 1.5rem); min-width: 1.6em; }
+  .clue .ct { font-weight: 800; font-size: clamp(.9rem, 1.9vw, 1.35rem); line-height: 1.2; }
+  .clue .ctr { display: block; font-weight: 700; font-size: .85em; color: #0B5C56; }
+  .clue.done .cn::after { content: ' ✔'; color: #0A7A2F; }
+  #fb { flex: 0 0 auto; min-height: 1.3em; text-align: center; font-weight: 900; font-size: clamp(.9rem, 2vw, 1.4rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #kb { flex: 0 0 auto; display: flex; flex-direction: column; gap: 5px; align-items: center; }
+  .krow { display: flex; gap: 5px; justify-content: center; }
+  .key { width: clamp(26px, 4.1vw, 56px); height: clamp(34px, 6.6vh, 54px); font-weight: 900; font-size: clamp(1rem, 2.2vw, 1.6rem); background: #fff; color: #0B2F2C;
+    border: 4px solid #0B2F2C; border-radius: 10px; padding: 0; box-shadow: 0 3px 0 #0B2F2C; }
+  .key:active { transform: translateY(2px); box-shadow: 0 1px 0 #0B2F2C; }
+  .key.wide { width: clamp(44px, 6.6vw, 90px); background: #FFD23F; }
+  @media (orientation: portrait) { .key { width: 8.4vw; } .key.wide { width: 13vw; } }
+  .pbtn.act { background: #fff; }
+  #topbar .restart-btn { font-size: clamp(.8rem, 1.45vw, 1.3rem); padding: 2px 12px; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Crossword</h1>
+  <p class="subtitle">Read the clues. Fill in the words!</p>
+  <div class="preview">🧩 ✏️</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">Puzzle Solved!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" id="win-btn" onclick="nextPuzzle()">Next Puzzle</button>
+</div>
+<div id="topbar">
+  <button class="restart-btn pbtn" id="pb0" onclick="loadPuzzle(0)">Puzzle 1</button>
+  <button class="restart-btn pbtn" id="pb1" onclick="loadPuzzle(1)">Puzzle 2</button>
+  <button class="restart-btn pbtn" id="pb2" onclick="loadPuzzle(2)">Puzzle 3</button>
+  <button class="restart-btn" onclick="checkAll()">Check</button>
+  <button class="restart-btn" onclick="reveal()">Hint</button>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="loadPuzzle(cur)">Restart</button>
+</div>
+<div id="main">
+  <div id="gridbox"><div id="grid"></div></div>
+  <div id="side">
+    <div id="clues"></div>
+    <div id="fb"></div>
+    <div id="kb"></div>
+  </div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  function toggleTR() { var off = document.body.classList.toggle('no-tr'); document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On'); }
+
+  var P = [{"title": "Clothes", "n": 10, "entries": [{"w": "SNEAKERS", "r": 5, "c": 0, "d": 0, "num": 7, "emoji": "👟", "en": "You wear them to run and play sports.", "tr": "Koşmak ve spor yapmak için onları giyersin."}, {"w": "CAP", "r": 4, "c": 3, "d": 1, "num": 6, "emoji": "🧢", "en": "You wear it on your head in the sun.", "tr": "Güneşte onu başına takarsın."}, {"w": "DRESS", "r": 3, "c": 5, "d": 1, "num": 5, "emoji": "👗", "en": "A girl can wear it to a party.", "tr": "Bir kız onu partide giyebilir."}, {"w": "GLOVES", "r": 0, "c": 7, "d": 1, "num": 1, "emoji": "🧤", "en": "You wear them on your hands.", "tr": "Onları ellerine takarsın."}, {"w": "UMBRELLA", "r": 1, "c": 2, "d": 0, "num": 4, "emoji": "☂️", "en": "You open it when it rains.", "tr": "Yağmur yağınca onu açarsın."}, {"w": "SCARF", "r": 7, "c": 5, "d": 0, "num": 8, "emoji": "🧣", "en": "You wear it around your neck in winter.", "tr": "Kışın boynuna dolarsın."}, {"w": "JACKET", "r": 0, "c": 9, "d": 1, "num": 2, "emoji": "🧥", "en": "You wear it over your T-shirt when it is cool.", "tr": "Hava serinken tişörtünün üstüne giyersin."}, {"w": "BOOTS", "r": 1, "c": 0, "d": 1, "num": 3, "emoji": "🥾", "en": "You wear them in the snow.", "tr": "Onları karda giyersin."}]}, {"title": "Animals", "n": 10, "entries": [{"w": "ELEPHANT", "r": 5, "c": 0, "d": 0, "num": 7, "emoji": "🐘", "en": "It is the biggest animal on land.", "tr": "Karadaki en büyük hayvandır."}, {"w": "ZEBRA", "r": 4, "c": 0, "d": 1, "num": 4, "emoji": "🦓", "en": "It is a horse-like animal with black and white stripes.", "tr": "Siyah beyaz çizgileri olan, ata benzeyen bir hayvandır."}, {"w": "GIRAFFE", "r": 2, "c": 5, "d": 1, "num": 3, "emoji": "🦒", "en": "It has got a very long neck.", "tr": "Çok uzun bir boynu vardır."}, {"w": "PARROT", "r": 0, "c": 7, "d": 1, "num": 2, "emoji": "🦜", "en": "This colourful bird can copy words.", "tr": "Bu renkli kuş kelimeleri taklit edebilir."}, {"w": "OWL", "r": 4, "c": 7, "d": 0, "num": 5, "emoji": "🦉", "en": "This bird hunts at night.", "tr": "Bu kuş geceleri avlanır."}, {"w": "CHEETAH", "r": 8, "c": 2, "d": 0, "num": 8, "emoji": "🐆", "en": "It is the fastest animal on land.", "tr": "Karadaki en hızlı hayvandır."}, {"w": "LION", "r": 4, "c": 9, "d": 1, "num": 6, "emoji": "🦁", "en": "People call it the king of the jungle.", "tr": "İnsanlar ona ormanların kralı der."}, {"w": "TURTLE", "r": 0, "c": 2, "d": 1, "num": 1, "emoji": "🐢", "en": "It is slow and it has got a hard shell.", "tr": "Yavaştır ve sert bir kabuğu vardır."}]}, {"title": "Food and Holiday", "n": 10, "entries": [{"w": "LEMONADE", "r": 6, "c": 0, "d": 0, "num": 8, "emoji": "🍋", "en": "It is a cold, sour and sweet drink.", "tr": "Soğuk, ekşi ve tatlı bir içecektir."}, {"w": "SOUP", "r": 5, "c": 3, "d": 1, "num": 6, "emoji": "🍲", "en": "You eat it with a spoon.", "tr": "Onu kaşıkla yersin."}, {"w": "BEACH", "r": 5, "c": 7, "d": 1, "num": 7, "emoji": "🏖️", "en": "You build sandcastles here.", "tr": "Burada kumdan kaleler yaparsın."}, {"w": "TENT", "r": 5, "c": 1, "d": 1, "num": 5, "emoji": "⛺", "en": "You sleep in it when you go camping.", "tr": "Kampa gittiğinde içinde uyursun."}, {"w": "SUITCASE", "r": 1, "c": 5, "d": 1, "num": 3, "emoji": "🧳", "en": "You pack your clothes in it for a trip.", "tr": "Gezi için kıyafetlerini onun içine koyarsın."}, {"w": "PIZZA", "r": 3, "c": 4, "d": 0, "num": 4, "emoji": "🍕", "en": "It comes from Italy. You eat it in slices.", "tr": "İtalya'dan gelir. Onu dilim dilim yersin."}, {"w": "CHEESE", "r": 1, "c": 1, "d": 0, "num": 2, "emoji": "🧀", "en": "It is made from milk.", "tr": "Sütten yapılır."}, {"w": "SALAD", "r": 0, "c": 8, "d": 1, "num": 1, "emoji": "🥗", "en": "It has lettuce and tomatoes in it.", "tr": "İçinde marul ve domates vardır."}]}];
+  var cur = 0, N, cells, val, selE, selR, selC, solved = [false, false, false], hints = 0, fbt;
+  function startGame() { document.getElementById('start-screen').style.display = 'none'; document.getElementById('win-screen').style.display = 'none'; loadPuzzle(0); }
+  function nextPuzzle() { document.getElementById('win-screen').style.display = 'none'; loadPuzzle((cur + 1) % P.length); }
+  function setFb(t) { document.getElementById('fb').textContent = t; clearTimeout(fbt); if (t) fbt = setTimeout(function () { document.getElementById('fb').textContent = ''; }, 3500); }
+
+  function loadPuzzle(i) {
+    cur = i; var p = P[i]; N = p.n; hints = 0; setFb('');
+    document.getElementById('win-screen').style.display = 'none';
+    [0, 1, 2].forEach(function (k) { document.getElementById('pb' + k).classList.toggle('act', k === i); });
+    cells = []; val = [];
+    for (var r = 0; r < N; r++) { cells.push([]); val.push([]); for (var c = 0; c < N; c++) { cells[r].push({ ch: '', ents: [], num: 0 }); val[r].push(''); } }
+    p.entries.forEach(function (e, ei) {
+      for (var k = 0; k < e.w.length; k++) {
+        var r = e.r + (e.d ? k : 0), c = e.c + (e.d ? 0 : k);
+        cells[r][c].ch = e.w[k]; cells[r][c].ents.push(ei);
+        if (k === 0) cells[r][c].num = e.num;
+      }
+    });
+    var g = document.getElementById('grid'); g.innerHTML = '';
+    g.style.setProperty('--n', N); g.style.gridTemplateColumns = 'repeat(' + N + ', minmax(0, 1fr))'; g.style.gridTemplateRows = 'repeat(' + N + ', minmax(0, 1fr))';
+    for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) {
+      var d = document.createElement('div'); d.className = 'gc' + (cells[r][c].ch ? ' fill' : ''); d.id = 'g' + r + '_' + c;
+      if (cells[r][c].ch) {
+        if (cells[r][c].num) { var s = document.createElement('span'); s.className = 'nm'; s.textContent = cells[r][c].num; d.appendChild(s); }
+        var t = document.createElement('span'); t.className = 'lt'; d.appendChild(t);
+        (function (rr, cc) { d.addEventListener('click', function () { clickCell(rr, cc); }); })(r, c);
+      }
+      g.appendChild(d);
+    }
+    var cl = document.getElementById('clues'); cl.innerHTML = '';
+    [['Across', 0], ['Down', 1]].forEach(function (D) {
+      var h = document.createElement('h3'); h.textContent = D[0] + ' ' + (D[1] ? '⬇' : '➡'); cl.appendChild(h);
+      p.entries.map(function (e, ei) { return [e, ei]; }).filter(function (x) { return x[0].d === D[1]; }).sort(function (a, b) { return a[0].num - b[0].num; }).forEach(function (x) {
+        var e = x[0], div = document.createElement('div'); div.className = 'clue'; div.id = 'cl' + x[1];
+        div.innerHTML = '<span class="cn">' + e.num + '</span><span class="ct">' + e.emoji + ' ' + e.en + '<span class="ctr tr">' + e.tr + '</span></span>';
+        div.addEventListener('click', function () { selectEntry(x[1]); });
+        cl.appendChild(div);
+      });
+    });
+    var first = p.entries.map(function (e, ei) { return ei; }).filter(function (ei) { return p.entries[ei].d === 0; })[0];
+    selectEntry(first); drawAll();
+  }
+  function entCells(ei) {
+    var e = P[cur].entries[ei], a = [];
+    for (var k = 0; k < e.w.length; k++) a.push([e.r + (e.d ? k : 0), e.c + (e.d ? 0 : k)]);
+    return a;
+  }
+  function selectEntry(ei) {
+    selE = ei; var cs = entCells(ei), pick = cs[0];
+    for (var k = 0; k < cs.length; k++) if (!val[cs[k][0]][cs[k][1]]) { pick = cs[k]; break; }
+    selR = pick[0]; selC = pick[1]; drawAll();
+    var el = document.getElementById('cl' + ei); if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
+  }
+  function clickCell(r, c) {
+    var ents = cells[r][c].ents;
+    if (r === selR && c === selC && ents.length > 1) { selE = ents[(ents.indexOf(selE) + 1) % ents.length]; }
+    else if (ents.indexOf(selE) < 0) { selE = ents[0]; }
+    selR = r; selC = c; drawAll();
+  }
+  function drawAll() {
+    var inw = {}; entCells(selE).forEach(function (x) { inw[x[0] + '_' + x[1]] = 1; });
+    for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) {
+      if (!cells[r][c].ch) continue;
+      var d = document.getElementById('g' + r + '_' + c), wrong = d.classList.contains('wrong');
+      d.className = 'gc fill' + (inw[r + '_' + c] ? ' inword' : '') + ((r === selR && c === selC) ? ' cur' : '') + (wrong ? ' wrong' : '');
+      d.querySelector('.lt').textContent = val[r][c];
+    }
+    P[cur].entries.forEach(function (e, ei) {
+      var done = entCells(ei).every(function (x) { return val[x[0]][x[1]] === cells[x[0]][x[1]].ch; });
+      var el = document.getElementById('cl' + ei); el.classList.toggle('done', done); el.classList.toggle('sel', ei === selE);
+    });
+  }
+  function typeLetter(ch) {
+    if (document.getElementById('start-screen').style.display !== 'none' || document.getElementById('win-screen').style.display === 'flex') return;
+    var d = document.getElementById('g' + selR + '_' + selC); d.classList.remove('wrong');
+    val[selR][selC] = ch;
+    var cs = entCells(selE), idx = -1;
+    cs.forEach(function (x, k) { if (x[0] === selR && x[1] === selC) idx = k; });
+    if (idx >= 0 && idx < cs.length - 1) { selR = cs[idx + 1][0]; selC = cs[idx + 1][1]; }
+    drawAll(); checkSolved();
+  }
+  function backspace() {
+    var cs = entCells(selE), idx = -1;
+    cs.forEach(function (x, k) { if (x[0] === selR && x[1] === selC) idx = k; });
+    if (!val[selR][selC] && idx > 0) { selR = cs[idx - 1][0]; selC = cs[idx - 1][1]; }
+    document.getElementById('g' + selR + '_' + selC).classList.remove('wrong');
+    val[selR][selC] = ''; drawAll();
+  }
+  function checkAll() {
+    var bad = 0, empty = 0;
+    for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) {
+      if (!cells[r][c].ch) continue;
+      var d = document.getElementById('g' + r + '_' + c);
+      if (!val[r][c]) empty++; else if (val[r][c] !== cells[r][c].ch) { bad++; d.classList.add('wrong'); } else d.classList.remove('wrong');
+    }
+    setFb(bad ? bad + (bad === 1 ? ' letter is' : ' letters are') + ' wrong (red).' : (empty ? 'So far so good! Keep going.' : 'All correct!'));
+  }
+  function reveal() {
+    if (val[selR][selC] === cells[selR][selC].ch) { setFb('This letter is already correct.'); return; }
+    hints++; document.getElementById('g' + selR + '_' + selC).classList.remove('wrong');
+    typeLetter(cells[selR][selC].ch);
+  }
+  function checkSolved() {
+    for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) if (cells[r][c].ch && val[r][c] !== cells[r][c].ch) return;
+    solved[cur] = true;
+    document.getElementById('win-title').textContent = 'Puzzle Solved!';
+    document.getElementById('win-stats').textContent = P[cur].title + ' | Hints used: ' + hints;
+    document.getElementById('win-btn').textContent = (cur === P.length - 1) ? 'Play Again' : 'Next Puzzle';
+    setTimeout(function () { document.getElementById('win-screen').style.display = 'flex'; }, 700);
+  }
+  (function buildKb() {
+    var kb = document.getElementById('kb'), rows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+    rows.forEach(function (row, ri) {
+      var d = document.createElement('div'); d.className = 'krow';
+      row.split('').forEach(function (ch) { var b = document.createElement('button'); b.className = 'key'; b.textContent = ch; b.addEventListener('click', function () { typeLetter(ch); }); d.appendChild(b); });
+      if (ri === 2) { var bs = document.createElement('button'); bs.className = 'key wide'; bs.textContent = '⌫'; bs.addEventListener('click', backspace); d.appendChild(bs); }
+      kb.appendChild(d);
+    });
+  })();
+  document.addEventListener('keydown', function (e) {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (/^[a-z]$/i.test(e.key)) typeLetter(e.key.toUpperCase());
+    else if (e.key === 'Backspace') backspace();
+  });
+</script>
+</body>
+</html>
