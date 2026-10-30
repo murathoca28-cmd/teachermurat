@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurant Order Game</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 8px 12px 12px; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #left { flex: 0 0 38%; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
+  @media (orientation: portrait) { #left { flex: 0 0 44%; } }
+  #bubble { flex: 1 1 auto; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 22px; padding: 10px 16px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+  #who { font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.7rem); color: #0B5C56; }
+  #order-en { font-weight: 900; font-size: clamp(1.2rem, 3vw, 2.4rem); line-height: 1.2; }
+  #order-tr { font-weight: 800; font-size: clamp(.9rem, 1.9vw, 1.4rem); color: #0B5C56; }
+  #tray { flex: 0 0 auto; display: flex; gap: 10px; background: #FFD23F; border: 5px solid #0B2F2C; border-radius: 18px; padding: 8px; }
+  .slot { flex: 1; min-height: clamp(70px, 14vh, 130px); background: #fff; border: 4px dashed #0B2F2C; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; font-size: clamp(.8rem, 1.7vw, 1.2rem); text-align: center; padding: 2px; cursor: pointer; }
+  .slot .e { font-size: clamp(1.6rem, 5vh, 3rem); line-height: 1.1; }
+  #serve { font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 900; padding: .25em 1em; border: 5px solid #0B2F2C; border-radius: 16px; background: #1F5FBF; color: #fff; box-shadow: 0 5px 0 #0B2F2C; }
+  #serve:disabled { background: #B8C2C1; color: #5B6B69; cursor: not-allowed; }
+  #fb { min-height: 1.3em; text-align: center; font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.8rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #menu { flex: 1; min-width: 0; min-height: 0; display: grid; gap: 10px; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); }
+  @media (orientation: portrait) { #menu { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)); } }
+  .tile { container-type: size; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0B2F2C; }
+  .tile .e { font-size: 40cqmin; line-height: 1.05; }
+  .tile .p { font-weight: 900; font-size: 11cqmin; line-height: 1.1; padding: 0 4px; }
+  .tile .t { font-weight: 800; font-size: 8.5cqmin; color: #0B5C56; }
+  .tile.sel { background: #FFF3B0; border-color: #D62828; border-width: 7px; }
+  body.no-tr .tile .t, body.no-tr #order-tr { display: none; }
+  body.no-en .tile .p, body.no-en .slot .w { display: none; }
+  body.no-en .tile .e { font-size: 44cqmin; line-height: 1.25; }
+  .tile .e svg { width: 50cqmin; height: 50cqmin; display: block; }
+  body.no-en .tile .e svg { width: 52cqmin; height: 52cqmin; }
+  .slot .e svg { width: clamp(2rem, 8vh, 4.4rem); height: clamp(2rem, 8vh, 4.4rem); display: block; }
+</style>
+</head>
+<body class="no-tr">
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Restaurant<br>Order Game</h1>
+  <p class="subtitle">Serve the right food and drinks!</p>
+  <div class="preview">🍕 🍲 🥛 🍰</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Order: <span id="no">1</span>/8</div>
+  <div class="stat">Stars: <span id="stars">0</span> ⭐</div>
+  <button class="restart-btn" id="enbtn" onclick="toggleEN()">English Labels: Off</button>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: Off</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="left">
+    <div id="bubble"><div id="who"></div><div id="order-en"></div><div id="order-tr"></div></div>
+    <div id="tray"><div class="slot" onclick="removeAt(0)"></div><div class="slot" onclick="removeAt(1)"></div></div>
+    <button id="serve" onclick="serve()" disabled>Serve</button>
+    <div id="fb"></div>
+  </div>
+  <div id="menu"></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  var ITEMS = {
+    soup: ['🍲', 'a bowl of soup', 'bir kase çorba'], salad: ['🥗', 'a bowl of salad', 'bir kase salata'],
+    pasta: ['🍝', 'a bowl of pasta', 'bir kase makarna'], icecream: ['🍨', 'a bowl of ice cream', 'bir kase dondurma'],
+    milk: ['<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="glass"><path d="M24 14 H76 L69 88 Q68.6 93 63 93 H37 Q31.4 93 31 88 Z" fill="#FFFFFF" stroke="#0B2F2C" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M27.5 36 H72.5 L66.6 86 Q66.4 89.5 62.5 89.5 H37.5 Q33.6 89.5 33.4 86 Z" fill="#F2EEE4" stroke="none"/><path d="M24 14 H76 L69 88 Q68.6 93 63 93 H37 Q31.4 93 31 88 Z" fill="none" stroke="#0B2F2C" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/></svg>', 'a glass of milk', 'bir bardak süt'], juice: ['<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="glass"><path d="M24 14 H76 L69 88 Q68.6 93 63 93 H37 Q31.4 93 31 88 Z" fill="#FFFFFF" stroke="#0B2F2C" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M27.5 36 H72.5 L66.6 86 Q66.4 89.5 62.5 89.5 H37.5 Q33.6 89.5 33.4 86 Z" fill="#FF9F1C" stroke="none"/><path d="M24 14 H76 L69 88 Q68.6 93 63 93 H37 Q31.4 93 31 88 Z" fill="none" stroke="#0B2F2C" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="77" cy="20" r="13" fill="#FF7A00" stroke="#0B2F2C" stroke-width="3.5"/><line x1="77.0" y1="20.0" x2="86.0" y2="20.0" stroke="#FFE0B0" stroke-width="2"/><line x1="77.0" y1="20.0" x2="81.5" y2="27.8" stroke="#FFE0B0" stroke-width="2"/><line x1="77.0" y1="20.0" x2="72.5" y2="27.8" stroke="#FFE0B0" stroke-width="2"/><line x1="77.0" y1="20.0" x2="68.0" y2="20.0" stroke="#FFE0B0" stroke-width="2"/><line x1="77.0" y1="20.0" x2="72.5" y2="12.2" stroke="#FFE0B0" stroke-width="2"/><line x1="77.0" y1="20.0" x2="81.5" y2="12.2" stroke="#FFE0B0" stroke-width="2"/><path d="M58 36 L70 4" stroke="#0B2F2C" stroke-width="4" stroke-linecap="round" fill="none"/></svg>', 'a glass of juice', 'bir bardak meyve suyu'],
+    lemonade: ['<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="glass"><path d="M24 14 H76 L69 88 Q68.6 93 63 93 H37 Q31.4 93 31 88 Z" fill="#FFFFFF" stroke="#0B2F2C" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M27.5 36 H72.5 L66.6 86 Q66.4 89.5 62.5 89.5 H37.5 Q33.6 89.5 33.4 86 Z" fill="#FFF07A" stroke="none"/><path d="M24 14 H76 L69 88 Q68.6 93 63 93 H37 Q31.4 93 31 88 Z" fill="none" stroke="#0B2F2C" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="77" cy="20" r="13" fill="#F9D423" stroke="#0B2F2C" stroke-width="3.5"/><line x1="77.0" y1="20.0" x2="86.0" y2="20.0" stroke="#FFFBD0" stroke-width="2"/><line x1="77.0" y1="20.0" x2="81.5" y2="27.8" stroke="#FFFBD0" stroke-width="2"/><line x1="77.0" y1="20.0" x2="72.5" y2="27.8" stroke="#FFFBD0" stroke-width="2"/><line x1="77.0" y1="20.0" x2="68.0" y2="20.0" stroke="#FFFBD0" stroke-width="2"/><line x1="77.0" y1="20.0" x2="72.5" y2="12.2" stroke="#FFFBD0" stroke-width="2"/><line x1="77.0" y1="20.0" x2="81.5" y2="12.2" stroke="#FFFBD0" stroke-width="2"/></svg>', 'a glass of lemonade', 'bir bardak limonata'], water: ['<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="glass"><path d="M24 14 H76 L69 88 Q68.6 93 63 93 H37 Q31.4 93 31 88 Z" fill="#FFFFFF" stroke="#0B2F2C" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M27.5 36 H72.5 L66.6 86 Q66.4 89.5 62.5 89.5 H37.5 Q33.6 89.5 33.4 86 Z" fill="#8ED1F7" stroke="none"/><path d="M24 14 H76 L69 88 Q68.6 93 63 93 H37 Q31.4 93 31 88 Z" fill="none" stroke="#0B2F2C" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="46" cy="60" r="3" fill="#FFFFFF"/><circle cx="56" cy="72" r="2.5" fill="#FFFFFF"/><circle cx="52" cy="50" r="2" fill="#FFFFFF"/></svg>', 'a glass of water', 'bir bardak su'],
+    pizza: ['🍕', 'a slice of pizza', 'bir dilim pizza'], cake: ['🍰', 'a slice of cake', 'bir dilim kek'],
+    cheese: ['🧀', 'a slice of cheese', 'bir dilim peynir'], bread: ['🍞', 'a slice of bread', 'bir dilim ekmek']
+  };
+  var ORDERS = [
+    { en: 'Can I have a slice of pizza and a glass of lemonade, please?', tr: 'Bir dilim pizza ve bir bardak limonata alabilir miyim, lütfen?', w: ['pizza', 'lemonade'] },
+    { en: "I'd like a bowl of soup and a slice of bread, please.", tr: 'Bir kase çorba ve bir dilim ekmek istiyorum, lütfen.', w: ['soup', 'bread'] },
+    { en: 'Can I have a glass of milk and a slice of cake, please?', tr: 'Bir bardak süt ve bir dilim kek alabilir miyim, lütfen?', w: ['milk', 'cake'] },
+    { en: 'I want a bowl of pasta and a glass of water, please.', tr: 'Bir kase makarna ve bir bardak su istiyorum, lütfen.', w: ['pasta', 'water'] },
+    { en: 'Can I have a bowl of salad and a glass of juice, please?', tr: 'Bir kase salata ve bir bardak meyve suyu alabilir miyim, lütfen?', w: ['salad', 'juice'] },
+    { en: "I'd like a slice of cheese and a glass of milk, please.", tr: 'Bir dilim peynir ve bir bardak süt istiyorum, lütfen.', w: ['cheese', 'milk'] },
+    { en: 'Can I have a bowl of ice cream and a glass of water, please?', tr: 'Bir kase dondurma ve bir bardak su alabilir miyim, lütfen?', w: ['icecream', 'water'] },
+    { en: 'I want a bowl of soup and a slice of pizza, please.', tr: 'Bir kase çorba ve bir dilim pizza istiyorum, lütfen.', w: ['soup', 'pizza'] }
+  ];
+  var oi, sel, stars, tried, lock;
+  document.body.classList.add('no-en');
+
+  function toggleEN() {
+    var off = document.body.classList.toggle('no-en');
+    document.getElementById('enbtn').textContent = 'English Labels: ' + (off ? 'Off' : 'On');
+  }
+  function toggleTR() {
+    var off = document.body.classList.toggle('no-tr');
+    document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On');
+  }
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    oi = 0; stars = 0; document.getElementById('stars').textContent = 0;
+    var m = document.getElementById('menu'); m.innerHTML = '';
+    shuffle(Object.keys(ITEMS)).forEach(function (k) {
+      var it = ITEMS[k], b = document.createElement('button'); b.className = 'tile'; b.dataset.k = k;
+      b.innerHTML = '<div class="e">' + it[0] + '</div><div class="p">' + it[1] + '</div><div class="t">' + it[2] + '</div>';
+      b.addEventListener('click', function () { pick(k); });
+      m.appendChild(b);
+    });
+    showOrder();
+  }
+  function showOrder() {
+    var o = ORDERS[oi]; sel = []; tried = false; lock = false;
+    document.getElementById('no').textContent = oi + 1;
+    document.getElementById('who').textContent = '🍽️ Table ' + (oi + 1) + ' says:';
+    document.getElementById('order-en').textContent = '"' + o.en + '"';
+    document.getElementById('order-tr').textContent = o.tr;
+    document.getElementById('fb').textContent = '';
+    draw();
+  }
+  function pick(k) {
+    if (lock) return;
+    var i = sel.indexOf(k);
+    if (i >= 0) sel.splice(i, 1); else if (sel.length < 2) sel.push(k);
+    draw();
+  }
+  function removeAt(i) { if (lock || !sel[i]) return; sel.splice(i, 1); draw(); }
+  function draw() {
+    var slots = document.querySelectorAll('.slot');
+    for (var i = 0; i < 2; i++) {
+      slots[i].innerHTML = sel[i] ? '<div class="e">' + ITEMS[sel[i]][0] + '</div><div class="w">' + ITEMS[sel[i]][1] + '</div>' : '?';
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('.tile'), function (t) { t.classList.toggle('sel', sel.indexOf(t.dataset.k) >= 0); });
+    document.getElementById('serve').disabled = (sel.length !== 2);
+  }
+  function serve() {
+    if (lock || sel.length !== 2) return;
+    var w = ORDERS[oi].w, ok = sel.every(function (k) { return w.indexOf(k) >= 0; });
+    var fb = document.getElementById('fb');
+    if (ok) {
+      lock = true;
+      if (!tried) { stars++; document.getElementById('stars').textContent = stars; }
+      fb.textContent = '🎉 Thank you! Enjoy your meal!';
+      setTimeout(function () { oi++; if (oi >= ORDERS.length) finish(); else showOrder(); }, 1500);
+    } else {
+      tried = true; fb.textContent = 'Oops! Read the order again.';
+      var tr = document.getElementById('tray'); tr.classList.remove('shake'); void tr.offsetWidth; tr.classList.add('shake');
+      sel = []; draw();
+    }
+  }
+  function finish() {
+    document.getElementById('win-title').textContent = stars >= 7 ? 'Super Waiter!' : (stars >= 4 ? 'Well Done!' : 'Good Try!');
+    document.getElementById('win-stats').textContent = 'Stars: ' + stars + ' / ' + ORDERS.length + ' (first try)';
+    document.getElementById('win-screen').style.display = 'flex';
+  }
+</script>
+</body>
+</html>
