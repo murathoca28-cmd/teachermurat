@@ -196,6 +196,15 @@
             font-weight: 800;
         }
 
+        /* Hazır olan ünite kartları: turkuaz vurgu */
+        .unit-card:not(.locked) {
+            background: #CCFBF1;
+            border-color: #0F766E;
+            box-shadow: 0 5px 0 #0F766E;
+        }
+        .unit-card:not(.locked):hover { box-shadow: 0 9px 0 #0F766E; }
+        .unit-card:not(.locked):active { box-shadow: 0 2px 0 #0F766E; }
+
         /* Units that are not ready yet */
         .unit-card.locked {
             background: #EEF2F6;
@@ -327,7 +336,7 @@
 
         <div class="page-title">
             <h1>GRADE <span>6</span></h1>
-            <p class="sub-desc">Choose your activity below</p>
+            <p class="sub-desc" id="subDesc">Choose your activity below</p>
         </div>
 
         <!-- STEP 1: MAIN MENU -->
@@ -499,11 +508,13 @@
         function displayUnits(type) {
             document.getElementById('menuContainer').style.display = 'none';
             document.getElementById('unitContainer').style.display = 'flex';
+            document.getElementById('subDesc').textContent = 'Choose a unit below';
             renderUnits(type);
         }
 
         function displayMenu() {
             document.getElementById('menuContainer').style.display = 'flex';
+            document.getElementById('subDesc').textContent = 'Choose your activity below';
             document.getElementById('unitContainer').style.display = 'none';
         }
 
