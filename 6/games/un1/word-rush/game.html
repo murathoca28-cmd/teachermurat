@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Rush</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+
+  body.no-tr .tr { display: none; }
+  #tabs { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 8px 64px 4px 12px; flex-wrap: wrap; }
+  .tab { font-size: clamp(1.1rem, 2.6vw, 1.9rem); font-weight: 900; padding: .1em 1.1em; border: 5px solid #0B2F2C; border-radius: 16px 16px 0 0; background: #B9E4E0; color: #0B2F2C; }
+  .tab.act { background: #FFD23F; box-shadow: 0 5px 0 #FFD23F; position: relative; z-index: 2; }
+  .mini { font-size: clamp(.85rem, 1.7vw, 1.3rem); }
+  #panelwrap { flex: 1; min-height: 0; display: flex; flex-direction: column; background: #FFD23F; border-top: 5px solid #0B2F2C; }
+  .panel { flex: 1; min-height: 0; display: none; flex-direction: column; gap: 8px; padding: 8px 12px 12px; background: #0E8F86; }
+  .panel.on { display: flex; }
+
+  /* ---- LEARN ---- */
+  #chips, #setchips { flex: 0 0 auto; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .chipb { font-size: clamp(.9rem, 2vw, 1.5rem); font-weight: 900; padding: .05em .8em; background: #fff; color: #0B2F2C; border: 4px solid #0B2F2C; border-radius: 999px; }
+  .chipb.act { background: #FFD23F; box-shadow: 0 4px 0 #0B2F2C; }
+  #note { flex: 0 0 auto; background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 14px; text-align: center; }
+  #note .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.7rem); }
+  #note .trl { font-weight: 800; font-size: clamp(.85rem, 1.7vw, 1.25rem); color: #0B5C56; }
+  #lgroups { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+  .lg { flex: 0 0 auto; background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; overflow: hidden; }
+  .lg .gh { padding: 2px 14px; color: #fff; font-weight: 900; font-size: clamp(1.1rem, 2.6vw, 2rem); text-shadow: 2px 2px 0 #0B2F2C; border-bottom: 5px solid #0B2F2C; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .lg .gh small { font-size: .6em; font-weight: 800; }
+  .lg .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(120px, 17vw, 190px), 1fr)); gap: 8px; padding: 8px; }
+  .wc { border: 4px solid #0B2F2C; border-radius: 12px; padding: 2px 6px; text-align: center; background: #FFFBE6; }
+  .wc .e { font-size: clamp(1.8rem, 5vh, 3rem); line-height: 1.15; }
+  .wc .p { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.7rem); line-height: 1.15; }
+  .wc .t { font-weight: 800; font-size: clamp(.8rem, 1.5vw, 1.15rem); color: #0B5C56; }
+  #learnplay { flex: 0 0 auto; align-self: center; font-size: clamp(1rem, 2.4vw, 1.7rem); }
+
+  /* ---- PLAY: SETUP ---- */
+  #setup { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; align-items: center; justify-content: center; text-align: center; }
+  .row { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+  .row .lbl { font-weight: 900; font-size: clamp(1.1rem, 2.4vw, 1.8rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  .opts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  #setup .big-btn { font-size: clamp(1.4rem, 3.4vw, 2.6rem); }
+
+  /* ---- PLAY: STAGE ---- */
+  #stage { flex: 1; min-height: 0; display: none; flex-direction: column; gap: 8px; }
+  #sb { flex: 0 0 auto; display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; }
+  .team { color: #fff; font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.6rem); padding: 0 14px; border: 4px solid #0B2F2C; border-radius: 12px; opacity: .72; }
+  .team.cur { opacity: 1; outline: 5px solid #FFD23F; outline-offset: 2px; transform: scale(1.06); }
+  .stat2 { background: #fff; border: 4px solid #0B2F2C; border-radius: 12px; padding: 0 12px; font-weight: 900; font-size: clamp(.9rem, 2vw, 1.5rem); }
+  #field { position: relative; flex: 1; min-height: 0; background: #14A89E; border: 5px solid #0B2F2C; border-radius: 16px; overflow: hidden; }
+  #field::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 10px; background: repeating-linear-gradient(90deg, #0B2F2C 0 18px, #FFD23F 18px 36px); }
+  #fb { flex: 0 0 auto; min-height: 1.35em; text-align: center; font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.8rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  .fw { position: absolute; top: 0; left: 0; display: flex; flex-direction: column; align-items: center; background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 2px 14px; font-weight: 900; font-size: clamp(1.3rem, 3.6vw, 2.7rem); line-height: 1.1; white-space: nowrap; cursor: pointer; user-select: none; will-change: transform; }
+  .fw .fe { font-size: 1.15em; line-height: 1.1; }
+  .fw { touch-action: none; }
+  .fw.drag-ghost { position: fixed; z-index: 60; pointer-events: none; transform: scale(1.1) rotate(-3deg); box-shadow: 0 10px 0 rgba(11,47,44,.55); background: #FFF3B0; border-color: #D62828; }
+  .bin.over { outline: 8px solid #FFD23F; outline-offset: 2px; transform: scale(1.03); }
+  .fw.sel { background: #FFF3B0; border-color: #D62828; border-width: 7px; }
+  .fw.good { background: #C8F7D4; border-color: #0A7A2F; }
+  .fw.bad { background: #FFD6D6; border-color: #D62828; }
+  #bins { flex: 0 0 auto; display: flex; gap: 10px; }
+  .bin { flex: 1; min-width: 0; min-height: clamp(84px, 20vh, 170px); border: 5px solid #0B2F2C; border-radius: 16px; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2px 6px; text-shadow: 2px 2px 0 #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .bin:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .bin .be { font-size: clamp(1.6rem, 5vh, 3rem); line-height: 1.1; text-shadow: none; }
+  .bin .bn { font-weight: 900; font-size: clamp(1rem, 2.6vw, 2rem); line-height: 1.1; }
+  .bin .bt { font-weight: 800; font-size: clamp(.75rem, 1.5vw, 1.15rem); }
+  .bin { position: relative; }
+  .bin .mark { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; font-size: clamp(3.5rem, 16vh, 8rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; background: inherit; border-radius: 12px; z-index: 3; }
+  .bin.ok, .bin.no { background: #0A7A2F !important; } .bin.no { background: #D62828 !important; }
+  .bin.ok .mark, .bin.no .mark { display: flex; }
+  .bin.hint { outline: 8px solid #FFD23F; outline-offset: 2px; }
+  .bin.flash { outline: 8px solid #FFD23F; outline-offset: 2px; }
+  .bin .key { font-size: .6em; opacity: .9; }
+
+  #turn-screen { position: fixed; inset: 0; z-index: 45; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 2vh; background: rgba(11,47,44,.92); color: #fff; text-align: center; padding: 20px; }
+  #turn-screen .tt { font-size: clamp(2.2rem, 8vw, 5.5rem); font-weight: 900; text-shadow: 3px 3px 0 #0B2F2C; }
+  #turn-screen .ts { font-size: clamp(1.1rem, 3vw, 2rem); font-weight: 800; }
+  .scorelist { display: flex; flex-direction: column; gap: 8px; }
+  .scorelist .team { opacity: 1; font-size: clamp(1.2rem, 3.4vw, 2.4rem); }
+</style>
+<style>.wc .e svg, .fe svg, .be svg, .ln-card svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Word Rush</h1>
+  <p class="subtitle">Sort the falling words into the right box!</p>
+  <div class="preview">🎓 📚 🎉</div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
+    <button class="big-btn" onclick="startGame('learn')">📚 Learn</button>
+    <button class="big-btn" onclick="startGame('play')">🎮 Play</button>
+  </div>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <div class="scorelist" id="win-list"></div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
+    <button class="big-btn" onclick="beginRun()">Play Again</button>
+    <button class="big-btn" style="background:#fff" onclick="document.getElementById('win-screen').style.display='none';showTab('play');showSetup()">Change Topic</button>
+  </div>
+</div>
+<div id="turn-screen"><div class="tt" id="tt"></div><div class="ts" id="ts"></div><button class="big-btn" onclick="goTurn()">Go!</button></div>
+
+<div id="tabs">
+  <button class="tab act" id="tab-learn" onclick="showTab('learn')">📚 Learn</button>
+  <button class="tab" id="tab-play" onclick="showTab('play')">🎮 Play</button>
+  <button class="restart-btn mini" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+</div>
+<div id="panelwrap">
+  <div class="panel on" id="p-learn">
+    <div id="chips"></div>
+    <div id="note"><div class="en" id="note-en"></div><div class="trl tr" id="note-tr"></div></div>
+    <div id="lgroups"></div>
+    <button class="big-btn" id="learnplay" onclick="playThis()">🎮 Play this topic</button>
+  </div>
+  <div class="panel" id="p-play">
+    <div id="setup">
+      <div class="row"><div class="lbl">Topic <span class="tr" style="font-size:.7em">(Konu)</span></div><div class="opts" id="o-set"></div></div>
+      <div class="row"><div class="lbl">Mode <span class="tr" style="font-size:.7em">(Mod)</span></div><div class="opts" id="o-mode"></div></div>
+      <div class="row"><div class="lbl">Teams <span class="tr" style="font-size:.7em">(Takım)</span></div><div class="opts" id="o-teams"></div></div>
+      <div class="row"><div class="lbl">Rounds <span class="tr" style="font-size:.7em">(Tur)</span></div><div class="opts" id="o-rounds"></div></div>
+      <div class="row"><div class="lbl">Speed <span class="tr" style="font-size:.7em">(Hız)</span></div><div class="opts" id="o-speed"></div></div>
+      <div class="row"><div class="lbl">Pictures <span class="tr" style="font-size:.7em">(Resim)</span></div><div class="opts" id="o-pics"></div></div>
+      <button class="big-btn" onclick="beginRun()">Start!</button>
+    </div>
+    <div id="stage">
+      <div id="sb"></div>
+      <div id="fb"></div>
+      <div id="field"></div>
+      <div id="bins"></div>
+    </div>
+  </div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  var SETS = [{"id": "school", "title": "People, Places and Events", "tr": "Kişiler, Yerler ve Etkinlikler", "emoji": "🏫", "pics": true, "note": "Sort the words: people, places and events at school.", "note_tr": "Kelimeleri ayır: okuldaki kişiler, yerler ve etkinlikler.", "groups": [{"n": "People", "e": "👥", "t": "Kişiler", "w": [{"en": "headmaster", "tr": "okul müdürü", "e": "🎓"}, {"en": "coach", "tr": "antrenör", "e": "📣"}, {"en": "cook", "tr": "aşçı", "e": "👩‍🍳"}, {"en": "secretary", "tr": "sekreter", "e": "📋"}, {"en": "student", "tr": "öğrenci", "e": "🎒"}]}, {"n": "Places", "e": "🏫", "t": "Yerler", "w": [{"en": "library", "tr": "kütüphane", "e": "📚"}, {"en": "science lab", "tr": "fen laboratuvarı", "e": "🔬"}, {"en": "sports field", "tr": "spor sahası", "e": "⚽"}, {"en": "lunch hall", "tr": "yemekhane", "e": "🍽️"}, {"en": "school garden", "tr": "okul bahçesi", "e": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"school garden\"><image href=\"data:image/webp;base64,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\" x=\"0\" y=\"0\" width=\"100\" height=\"100\" preserveAspectRatio=\"xMidYMid slice\"/></svg>"}]}, {"n": "Events", "e": "🎉", "t": "Etkinlikler", "w": [{"en": "parade", "tr": "geçit töreni", "e": "🥁"}, {"en": "assembly", "tr": "okul toplantısı", "e": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" width=\"1em\" height=\"1em\" style=\"vertical-align:-0.12em\" role=\"img\" aria-label=\"assembly\"><rect x=\"12\" y=\"28\" width=\"76\" height=\"9\" fill=\"#9A6B3B\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M38 26 L42 8 H58 L62 26 Z\" fill=\"#FFC53D\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"50\" cy=\"12\" r=\"0\" /><rect x=\"14\" y=\"46\" width=\"12\" height=\"8\" rx=\"2\" fill=\"#3E86F5\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"13\" y=\"56\" width=\"14\" height=\"5\" rx=\"2\" fill=\"#2F6FDE\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"15\" y1=\"61\" x2=\"15\" y2=\"66\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"25\" y1=\"61\" x2=\"25\" y2=\"66\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"34\" y=\"46\" width=\"12\" height=\"8\" rx=\"2\" fill=\"#3E86F5\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"33\" y=\"56\" width=\"14\" height=\"5\" rx=\"2\" fill=\"#2F6FDE\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"35\" y1=\"61\" x2=\"35\" y2=\"66\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"45\" y1=\"61\" x2=\"45\" y2=\"66\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"54\" y=\"46\" width=\"12\" height=\"8\" rx=\"2\" fill=\"#3E86F5\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"53\" y=\"56\" width=\"14\" height=\"5\" rx=\"2\" fill=\"#2F6FDE\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"55\" y1=\"61\" x2=\"55\" y2=\"66\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"65\" y1=\"61\" x2=\"65\" y2=\"66\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"74\" y=\"46\" width=\"12\" height=\"8\" rx=\"2\" fill=\"#3E86F5\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"73\" y=\"56\" width=\"14\" height=\"5\" rx=\"2\" fill=\"#2F6FDE\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"75\" y1=\"61\" x2=\"75\" y2=\"66\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"85\" y1=\"61\" x2=\"85\" y2=\"66\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"14\" y=\"70\" width=\"12\" height=\"8\" rx=\"2\" fill=\"#3E86F5\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"13\" y=\"80\" width=\"14\" height=\"5\" rx=\"2\" fill=\"#2F6FDE\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"15\" y1=\"85\" x2=\"15\" y2=\"90\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"25\" y1=\"85\" x2=\"25\" y2=\"90\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"34\" y=\"70\" width=\"12\" height=\"8\" rx=\"2\" fill=\"#3E86F5\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"33\" y=\"80\" width=\"14\" height=\"5\" rx=\"2\" fill=\"#2F6FDE\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"35\" y1=\"85\" x2=\"35\" y2=\"90\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"45\" y1=\"85\" x2=\"45\" y2=\"90\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"54\" y=\"70\" width=\"12\" height=\"8\" rx=\"2\" fill=\"#3E86F5\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"53\" y=\"80\" width=\"14\" height=\"5\" rx=\"2\" fill=\"#2F6FDE\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"55\" y1=\"85\" x2=\"55\" y2=\"90\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"65\" y1=\"85\" x2=\"65\" y2=\"90\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"74\" y=\"70\" width=\"12\" height=\"8\" rx=\"2\" fill=\"#3E86F5\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"73\" y=\"80\" width=\"14\" height=\"5\" rx=\"2\" fill=\"#2F6FDE\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"75\" y1=\"85\" x2=\"75\" y2=\"90\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"85\" y1=\"85\" x2=\"85\" y2=\"90\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>"}, {"en": "talent show", "tr": "yetenek gösterisi", "e": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" width=\"1em\" height=\"1em\" style=\"vertical-align:-0.12em\" role=\"img\" aria-label=\"talent show\"><rect x=\"6\" y=\"6\" width=\"88\" height=\"88\" rx=\"8\" fill=\"#1B1B3A\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><polygon points=\"38,8 62,8 80,86 20,86\" fill=\"#FFE98A\" opacity=\"0.85\"/><path d=\"M6 8 H34 Q22 44 30 86 H6 Z\" fill=\"#C8102E\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M94 8 H66 Q78 44 70 86 H94 Z\" fill=\"#C8102E\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"6\" y=\"84\" width=\"88\" height=\"10\" fill=\"#9A6B3B\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><polygon points=\"50.0,32.0 55.4,46.5 70.9,47.2 58.8,56.9 62.9,71.8 50.0,63.2 37.1,71.8 41.2,56.9 29.1,47.2 44.6,46.5\" fill=\"#FFD43B\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></svg>"}, {"en": "school ceremony", "tr": "okul töreni", "e": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" width=\"1em\" height=\"1em\" style=\"vertical-align:-0.12em\" role=\"img\" aria-label=\"ceremony\"><polygon points=\"10,92 90,92 66,60 34,60\" fill=\"#C8102E\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"10\" y=\"38\" width=\"8\" height=\"38\" fill=\"#FFC53D\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"14\" cy=\"32\" r=\"5.5\" fill=\"#FFC53D\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"82\" y=\"38\" width=\"8\" height=\"38\" fill=\"#FFC53D\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"86\" cy=\"32\" r=\"5.5\" fill=\"#FFC53D\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"18\" y1=\"46\" x2=\"44\" y2=\"49\" stroke=\"#E30A17\" stroke-width=\"7\" stroke-linecap=\"round\"/><line x1=\"56\" y1=\"49\" x2=\"82\" y2=\"46\" stroke=\"#E30A17\" stroke-width=\"7\" stroke-linecap=\"round\"/><polygon points=\"50,49 39,41 39,57\" fill=\"#E30A17\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><polygon points=\"50,49 61,41 61,57\" fill=\"#E30A17\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"50\" cy=\"49\" r=\"4.5\" fill=\"#FFC53D\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"41\" y1=\"14\" x2=\"62\" y2=\"38\" stroke=\"#8A9199\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"59\" y1=\"14\" x2=\"38\" y2=\"38\" stroke=\"#8A9199\" stroke-width=\"5\" stroke-linecap=\"round\"/><circle cx=\"37\" cy=\"9\" r=\"6\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"63\" cy=\"9\" r=\"6\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></svg>"}, {"en": "celebration", "tr": "kutlama", "e": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" width=\"1em\" height=\"1em\" style=\"vertical-align:-0.12em\" role=\"img\" aria-label=\"celebration\"><rect x=\"4\" y=\"4\" width=\"92\" height=\"92\" rx=\"10\" fill=\"#12214F\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><line x1=\"37.9\" y1=\"37.2\" x2=\"46.7\" y2=\"39.0\" stroke=\"#FFD43B\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"52.6\" cy=\"40.2\" r=\"2\" fill=\"#FFD43B\"/><line x1=\"35.3\" y1=\"41.0\" x2=\"40.3\" y2=\"48.5\" stroke=\"#FFD43B\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"43.6\" cy=\"53.5\" r=\"2\" fill=\"#FFD43B\"/><line x1=\"30.8\" y1=\"41.9\" x2=\"29.0\" y2=\"50.7\" stroke=\"#FFD43B\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"27.8\" cy=\"56.6\" r=\"2\" fill=\"#FFD43B\"/><line x1=\"27.0\" y1=\"39.3\" x2=\"19.5\" y2=\"44.3\" stroke=\"#FFD43B\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"14.5\" cy=\"47.6\" r=\"2\" fill=\"#FFD43B\"/><line x1=\"26.1\" y1=\"34.8\" x2=\"17.3\" y2=\"33.0\" stroke=\"#FFD43B\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"11.4\" cy=\"31.8\" r=\"2\" fill=\"#FFD43B\"/><line x1=\"28.7\" y1=\"31.0\" x2=\"23.7\" y2=\"23.5\" stroke=\"#FFD43B\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"20.4\" cy=\"18.5\" r=\"2\" fill=\"#FFD43B\"/><line x1=\"33.2\" y1=\"30.1\" x2=\"35.0\" y2=\"21.3\" stroke=\"#FFD43B\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"36.2\" cy=\"15.4\" r=\"2\" fill=\"#FFD43B\"/><line x1=\"37.0\" y1=\"32.7\" x2=\"44.5\" y2=\"27.7\" stroke=\"#FFD43B\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"49.5\" cy=\"24.4\" r=\"2\" fill=\"#FFD43B\"/><circle cx=\"32\" cy=\"36\" r=\"3\" fill=\"#FFD43B\"/><line x1=\"74.9\" y1=\"31.0\" x2=\"82.7\" y2=\"32.6\" stroke=\"#FF6B9A\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"88.6\" cy=\"33.8\" r=\"2\" fill=\"#FF6B9A\"/><line x1=\"72.8\" y1=\"34.2\" x2=\"77.2\" y2=\"40.8\" stroke=\"#FF6B9A\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"80.5\" cy=\"45.8\" r=\"2\" fill=\"#FF6B9A\"/><line x1=\"69.0\" y1=\"34.9\" x2=\"67.4\" y2=\"42.7\" stroke=\"#FF6B9A\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"66.2\" cy=\"48.6\" r=\"2\" fill=\"#FF6B9A\"/><line x1=\"65.8\" y1=\"32.8\" x2=\"59.2\" y2=\"37.2\" stroke=\"#FF6B9A\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"54.2\" cy=\"40.5\" r=\"2\" fill=\"#FF6B9A\"/><line x1=\"65.1\" y1=\"29.0\" x2=\"57.3\" y2=\"27.4\" stroke=\"#FF6B9A\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"51.4\" cy=\"26.2\" r=\"2\" fill=\"#FF6B9A\"/><line x1=\"67.2\" y1=\"25.8\" x2=\"62.8\" y2=\"19.2\" stroke=\"#FF6B9A\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"59.5\" cy=\"14.2\" r=\"2\" fill=\"#FF6B9A\"/><line x1=\"71.0\" y1=\"25.1\" x2=\"72.6\" y2=\"17.3\" stroke=\"#FF6B9A\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"73.8\" cy=\"11.4\" r=\"2\" fill=\"#FF6B9A\"/><line x1=\"74.2\" y1=\"27.2\" x2=\"80.8\" y2=\"22.8\" stroke=\"#FF6B9A\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"85.8\" cy=\"19.5\" r=\"2\" fill=\"#FF6B9A\"/><circle cx=\"70\" cy=\"30\" r=\"3\" fill=\"#FF6B9A\"/><line x1=\"60.9\" y1=\"69.4\" x2=\"70.7\" y2=\"71.4\" stroke=\"#3DDC97\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"76.5\" cy=\"72.6\" r=\"2\" fill=\"#3DDC97\"/><line x1=\"58.7\" y1=\"73.2\" x2=\"65.5\" y2=\"80.5\" stroke=\"#3DDC97\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"69.6\" cy=\"84.9\" r=\"2\" fill=\"#3DDC97\"/><line x1=\"54.8\" y1=\"75.0\" x2=\"55.9\" y2=\"84.9\" stroke=\"#3DDC97\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"56.6\" cy=\"90.9\" r=\"2\" fill=\"#3DDC97\"/><line x1=\"50.6\" y1=\"74.1\" x2=\"45.6\" y2=\"82.8\" stroke=\"#3DDC97\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"42.7\" cy=\"88.0\" r=\"2\" fill=\"#3DDC97\"/><line x1=\"47.6\" y1=\"70.9\" x2=\"38.5\" y2=\"75.1\" stroke=\"#3DDC97\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"33.1\" cy=\"77.6\" r=\"2\" fill=\"#3DDC97\"/><line x1=\"47.1\" y1=\"66.6\" x2=\"37.3\" y2=\"64.6\" stroke=\"#3DDC97\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"31.5\" cy=\"63.4\" r=\"2\" fill=\"#3DDC97\"/><line x1=\"49.3\" y1=\"62.8\" x2=\"42.5\" y2=\"55.5\" stroke=\"#3DDC97\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"38.4\" cy=\"51.1\" r=\"2\" fill=\"#3DDC97\"/><line x1=\"53.2\" y1=\"61.0\" x2=\"52.1\" y2=\"51.1\" stroke=\"#3DDC97\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"51.4\" cy=\"45.1\" r=\"2\" fill=\"#3DDC97\"/><line x1=\"57.4\" y1=\"61.9\" x2=\"62.4\" y2=\"53.2\" stroke=\"#3DDC97\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"65.3\" cy=\"48.0\" r=\"2\" fill=\"#3DDC97\"/><line x1=\"60.4\" y1=\"65.1\" x2=\"69.5\" y2=\"60.9\" stroke=\"#3DDC97\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"74.9\" cy=\"58.4\" r=\"2\" fill=\"#3DDC97\"/><circle cx=\"54\" cy=\"68\" r=\"3\" fill=\"#3DDC97\"/><rect x=\"12\" y=\"76\" width=\"6\" height=\"6\" fill=\"#FFD43B\" transform=\"rotate(25 15 79)\"/><rect x=\"82\" y=\"72\" width=\"6\" height=\"6\" fill=\"#FF6B9A\" transform=\"rotate(-20 85 75)\"/><rect x=\"20\" y=\"58\" width=\"5\" height=\"5\" fill=\"#6CC4FF\" transform=\"rotate(40 22 60)\"/></svg>"}]}]}, {"id": "verbs", "title": "Verbs and Nouns", "tr": "Fiiller ve İsimler", "emoji": "🏃", "pics": true, "note": "Is it an action (verb) or a thing (noun)?", "note_tr": "Bir eylem (fiil) mi, bir şey (isim) mi?", "groups": [{"n": "Verbs", "e": "🏃", "t": "Fiiller", "w": [{"en": "greet", "tr": "selamlamak", "e": "👋"}, {"en": "follow", "tr": "takip etmek", "e": "🚶"}, {"en": "borrow", "tr": "ödünç almak", "e": "📖"}, {"en": "organise", "tr": "düzenlemek", "e": "🗂️"}, {"en": "celebrate", "tr": "kutlamak", "e": "🎉"}, {"en": "solve", "tr": "çözmek", "e": "🧩"}]}, {"n": "Nouns", "e": "📦", "t": "İsimler", "w": [{"en": "speech", "tr": "konuşma", "e": "🗣️"}, {"en": "choir", "tr": "koro", "e": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" width=\"1em\" height=\"1em\" style=\"vertical-align:-0.12em\" role=\"img\" aria-label=\"choir\"><rect x=\"8\" y=\"70\" width=\"84\" height=\"22\" fill=\"#2F6FDE\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"22\" y=\"52\" width=\"56\" height=\"18\" fill=\"#5B97F5\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"36\" y=\"34\" width=\"28\" height=\"18\" fill=\"#9CC5FF\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"16\" cy=\"60\" rx=\"6\" ry=\"4.5\" transform=\"rotate(-20 16 60)\" fill=\"#0B2F2C\"/><line x1=\"21.5\" y1=\"59\" x2=\"21.5\" y2=\"34\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M21.5 34 q9 4 7.2 15\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><ellipse cx=\"84\" cy=\"60\" rx=\"6\" ry=\"4.5\" transform=\"rotate(-20 84 60)\" fill=\"#0B2F2C\"/><line x1=\"78.5\" y1=\"59\" x2=\"78.5\" y2=\"34\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M78.5 34 q9 4 7.2 15\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><ellipse cx=\"42\" cy=\"27\" rx=\"6\" ry=\"4.5\" transform=\"rotate(-20 42 27)\" fill=\"#0B2F2C\"/><ellipse cx=\"58\" cy=\"25\" rx=\"6\" ry=\"4.5\" transform=\"rotate(-20 58 25)\" fill=\"#0B2F2C\"/><line x1=\"47.5\" y1=\"26\" x2=\"47.5\" y2=\"8\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"63.5\" y1=\"24\" x2=\"63.5\" y2=\"6\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><polygon points=\"47.5,8 63.5,6 63.5,12 47.5,14\" fill=\"#0B2F2C\"/></svg>"}, {"en": "flag", "tr": "bayrak", "e": "🚩"}, {"en": "poem", "tr": "şiir", "e": "📜"}, {"en": "routine", "tr": "rutin", "e": "⏰"}, {"en": "anthem", "tr": "marş", "e": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" width=\"1em\" height=\"1em\" style=\"vertical-align:-0.12em\" role=\"img\" aria-label=\"national anthem\"><rect x=\"18\" y=\"8\" width=\"64\" height=\"84\" rx=\"6\" fill=\"#fff\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M18 34 V14 a6 6 0 0 1 6 -6 H76 a6 6 0 0 1 6 6 V34 Z\" fill=\"#E30A17\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"41\" cy=\"21\" r=\"9\" fill=\"#fff\"/><circle cx=\"44.5\" cy=\"21\" r=\"7.4\" fill=\"#E30A17\"/><polygon points=\"57.0,16.0 58.2,19.3 61.8,19.5 59.0,21.6 59.9,25.0 57.0,23.1 54.1,25.0 55.0,21.6 52.2,19.5 55.8,19.3\" fill=\"#fff\"/><line x1=\"26\" y1=\"50\" x2=\"74\" y2=\"50\" stroke=\"#0B2F2C\" stroke-width=\"1.8\"/><line x1=\"26\" y1=\"58\" x2=\"74\" y2=\"58\" stroke=\"#0B2F2C\" stroke-width=\"1.8\"/><line x1=\"26\" y1=\"66\" x2=\"74\" y2=\"66\" stroke=\"#0B2F2C\" stroke-width=\"1.8\"/><line x1=\"26\" y1=\"74\" x2=\"74\" y2=\"74\" stroke=\"#0B2F2C\" stroke-width=\"1.8\"/><line x1=\"26\" y1=\"82\" x2=\"74\" y2=\"82\" stroke=\"#0B2F2C\" stroke-width=\"1.8\"/><ellipse cx=\"36\" cy=\"74\" rx=\"5.5\" ry=\"4\" transform=\"rotate(-20 36 74)\" fill=\"#0B2F2C\"/><line x1=\"41\" y1=\"73\" x2=\"41\" y2=\"52\" stroke=\"#0B2F2C\" stroke-width=\"2.6\"/><ellipse cx=\"50\" cy=\"66\" rx=\"5.5\" ry=\"4\" transform=\"rotate(-20 50 66)\" fill=\"#0B2F2C\"/><line x1=\"55\" y1=\"65\" x2=\"55\" y2=\"44\" stroke=\"#0B2F2C\" stroke-width=\"2.6\"/><ellipse cx=\"64\" cy=\"58\" rx=\"5.5\" ry=\"4\" transform=\"rotate(-20 64 58)\" fill=\"#0B2F2C\"/><line x1=\"69\" y1=\"57\" x2=\"69\" y2=\"46\" stroke=\"#0B2F2C\" stroke-width=\"2.6\"/></svg>"}]}]}, {"id": "pron", "title": "Subject and Object Pronouns", "tr": "Özne ve Nesne Zamirleri", "emoji": "🎯", "pics": false, "note": "I, he, we are subjects. Me, him, us are objects.", "note_tr": "I, he, we özne zamiridir. Me, him, us nesne zamiridir.", "groups": [{"n": "Subject pronouns", "e": "🙋", "t": "Özne zamirleri", "w": [{"en": "I", "tr": "ben", "e": ""}, {"en": "he", "tr": "o (erkek)", "e": ""}, {"en": "she", "tr": "o (kadın)", "e": ""}, {"en": "we", "tr": "biz", "e": ""}, {"en": "they", "tr": "onlar", "e": ""}]}, {"n": "Object pronouns", "e": "🎯", "t": "Nesne zamirleri", "w": [{"en": "me", "tr": "beni, bana", "e": ""}, {"en": "him", "tr": "onu (erkek)", "e": ""}, {"en": "her", "tr": "onu (kadın)", "e": ""}, {"en": "us", "tr": "bizi, bize", "e": ""}, {"en": "them", "tr": "onları, onlara", "e": ""}]}]}, {"id": "habits", "title": "Good and Bad School Habits", "tr": "İyi ve Kötü Okul Alışkanlıkları", "emoji": "🌟", "pics": false, "note": "Which habits are good for school life?", "note_tr": "Hangi alışkanlıklar okul hayatı için iyidir?", "groups": [{"n": "Good habits", "e": "👍", "t": "İyi alışkanlıklar", "w": [{"en": "listen to the teacher", "tr": "öğretmeni dinlemek", "e": ""}, {"en": "help a friend", "tr": "bir arkadaşa yardım etmek", "e": ""}, {"en": "do your homework", "tr": "ödevini yapmak", "e": ""}, {"en": "follow the rules", "tr": "kurallara uymak", "e": ""}, {"en": "arrive on time", "tr": "zamanında gelmek", "e": ""}, {"en": "say hello", "tr": "selam vermek", "e": ""}]}, {"n": "Bad habits", "e": "👎", "t": "Kötü alışkanlıklar", "w": [{"en": "shout in class", "tr": "sınıfta bağırmak", "e": ""}, {"en": "run in the corridor", "tr": "koridorda koşmak", "e": ""}, {"en": "forget your homework", "tr": "ödevini unutmak", "e": ""}, {"en": "arrive late", "tr": "geç gelmek", "e": ""}, {"en": "copy from a friend", "tr": "arkadaşından kopya çekmek", "e": ""}, {"en": "throw rubbish on the floor", "tr": "yere çöp atmak", "e": ""}]}]}];
+  var BIN_COLORS = ['#7B2CBF', '#C45A00', '#B0136B'], TEAM_COLORS = ['#D62828', '#1F5FBF', '#0A7A2F'], WORDS_PER_TURN = 8;
+  var TR = true;
+  var cfg = { set: 0, teams: 2, rounds: 2, speed: 1, pics: true, mode: 'tap' };
+  var run = null, raf = 0, last = 0, learnSet = 0;
+
+  function toggleTR() { TR = !TR; document.body.classList.toggle('no-tr', !TR); document.getElementById('trbtn').textContent = 'Turkish: ' + (TR ? 'On' : 'Off'); }
+  function startGame(tab) {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    showTab(tab || 'learn'); if (tab === 'play') showSetup();
+  }
+  function showTab(t) {
+    ['learn', 'play'].forEach(function (k) { document.getElementById('p-' + k).classList.toggle('on', k === t); document.getElementById('tab-' + k).classList.toggle('act', k === t); });
+    if (t === 'learn' && run && run.live) pauseRun(true);
+  }
+
+  /* ---------------- LEARN ---------------- */
+  function buildChips(boxId, cur, fn) {
+    var box = document.getElementById(boxId); box.innerHTML = '';
+    SETS.forEach(function (s, i) {
+      var b = document.createElement('button'); b.className = 'chipb' + (i === cur ? ' act' : ''); b.innerHTML = s.emoji + ' ' + s.title;
+      b.addEventListener('click', function () { fn(i); }); box.appendChild(b);
+    });
+  }
+  function showLearn(i) {
+    learnSet = i; var s = SETS[i];
+    buildChips('chips', i, showLearn);
+    document.getElementById('note-en').textContent = s.note; document.getElementById('note-tr').textContent = s.note_tr;
+    var box = document.getElementById('lgroups'); box.innerHTML = '';
+    s.groups.forEach(function (g, gi) {
+      var d = document.createElement('div'); d.className = 'lg';
+      var h = '<div class="gh" style="background:' + BIN_COLORS[gi] + '">' + g.e + ' ' + g.n + ' <small class="tr">' + g.t + '</small></div><div class="cards">';
+      g.w.forEach(function (w) {
+        h += '<div class="wc">' + (s.pics && w.e ? '<div class="e">' + w.e + '</div>' : '') + '<div class="p">' + w.en + '</div><div class="t tr">' + w.tr + '</div></div>';
+      });
+      d.innerHTML = h + '</div>'; box.appendChild(d);
+    });
+    box.scrollTop = 0;
+  }
+  function playThis() { cfg.set = learnSet; cfg.pics = SETS[learnSet].pics; showTab('play'); showSetup(); }
+
+  /* ---------------- SETUP ---------------- */
+  function opts(boxId, items, cur, fn) {
+    var box = document.getElementById(boxId); box.innerHTML = '';
+    items.forEach(function (it, i) {
+      var b = document.createElement('button'); b.className = 'chipb' + (it[1] === cur ? ' act' : ''); b.innerHTML = it[0];
+      b.addEventListener('click', function () { fn(it[1]); showSetup(true); }); box.appendChild(b);
+    });
+  }
+  function showSetup(keep) {
+    if (!keep) stopRun();
+    document.getElementById('setup').style.display = 'flex'; document.getElementById('stage').style.display = 'none';
+    opts('o-set', SETS.map(function (s, i) { return [s.emoji + ' ' + s.title, i]; }), cfg.set, function (v) { cfg.set = v; cfg.pics = SETS[v].pics; });
+    opts('o-mode', [['👆 Tap', 'tap'], ['✋ Drag', 'drag']], cfg.mode, function (v) { cfg.mode = v; });
+    opts('o-teams', [['1 (Class)', 1], ['2 Teams', 2], ['3 Teams', 3]], cfg.teams, function (v) { cfg.teams = v; });
+    opts('o-rounds', [['1', 1], ['2', 2], ['3', 3]], cfg.rounds, function (v) { cfg.rounds = v; });
+    opts('o-speed', [['🐢 Slow', 0], ['🚶 Normal', 1], ['🚀 Fast', 2]], cfg.speed, function (v) { cfg.speed = v; });
+    opts('o-pics', SETS[cfg.set].pics ? [['On', true], ['Off', false]] : [['No pictures for this topic', false]], cfg.pics, function (v) { cfg.pics = v; });
+  }
+
+  /* ---------------- RUN ---------------- */
+  function stopRun() { if (run) run.live = false; cancelAnimationFrame(raf); raf = 0; var f = document.getElementById('field'); Array.prototype.forEach.call(f.querySelectorAll('.fw'), function (e) { e.remove(); }); }
+  function makeDeck(s) { var a = []; s.groups.forEach(function (g, gi) { g.w.forEach(function (w) { a.push({ en: w.en, tr: w.tr, e: w.e, g: gi }); }); }); return shuffle(a); }
+  function beginRun() {
+    document.getElementById('win-screen').style.display = 'none';
+    stopRun();
+    var s = SETS[cfg.set];
+    run = { s: s, deck: makeDeck(s), di: 0, scores: [], streak: 0, turn: 0, turns: cfg.teams * cfg.rounds, words: [], live: false, paused: false, spawned: 0, resolved: 0, t: 0, nextSpawn: 0, sel: null };
+    for (var i = 0; i < cfg.teams; i++) run.scores.push(0);
+    document.getElementById('setup').style.display = 'none'; document.getElementById('stage').style.display = 'flex';
+    var bins = document.getElementById('bins'); bins.innerHTML = '';
+    s.groups.forEach(function (g, gi) {
+      var b = document.createElement('button'); b.className = 'bin'; b.id = 'bin' + gi; b.style.background = BIN_COLORS[gi];
+      b.innerHTML = '<div class="be">' + g.e + '</div><div class="bn">' + g.n + '</div><div class="bt tr">' + g.t + '</div><div class="key">[' + (gi + 1) + ']</div><div class="mark"></div>';
+      b.addEventListener('click', function () { tapBin(gi); }); bins.appendChild(b);
+    });
+    drawScore(); announce();
+  }
+  function drawScore() {
+    var sb = document.getElementById('sb'); sb.innerHTML = '';
+    var cur = run.turn % cfg.teams;
+    run.scores.forEach(function (sc, i) {
+      var d = document.createElement('div'); d.className = 'team' + (i === cur ? ' cur' : ''); d.style.background = TEAM_COLORS[i];
+      d.textContent = (cfg.teams === 1 ? 'Score' : 'Team ' + (i + 1)) + ': ' + sc; sb.appendChild(d);
+    });
+    var t = document.createElement('div'); t.className = 'stat2'; t.textContent = 'Turn ' + (run.turn + 1) + '/' + run.turns; sb.appendChild(t);
+    var p = document.createElement('button'); p.className = 'restart-btn mini'; p.id = 'pausebtn'; p.textContent = '⏸ Pause'; p.onclick = function () { pauseRun(!run.paused); }; sb.appendChild(p);
+    var r = document.createElement('button'); r.className = 'restart-btn mini'; r.textContent = 'Restart'; r.onclick = function () { showSetup(); }; sb.appendChild(r);
+  }
+  function announce() {
+    var cur = run.turn % cfg.teams, ts = document.getElementById('turn-screen');
+    document.getElementById('tt').textContent = cfg.teams === 1 ? 'Round ' + (run.turn + 1) : 'Team ' + (cur + 1) + ', get ready!';
+    document.getElementById('tt').style.color = cfg.teams === 1 ? '#FFD23F' : '#fff';
+    document.getElementById('ts').textContent = cfg.mode === 'drag' ? 'Drag each word into the right box before it hits the floor!' : 'Tap the right box before the word hits the floor!';
+    ts.style.display = 'flex'; run.live = false; cancelAnimationFrame(raf);
+    ts.style.background = cfg.teams === 1 ? 'rgba(11,47,44,.92)' : 'rgba(11,47,44,.92)';
+  }
+  function goTurn() {
+    document.getElementById('turn-screen').style.display = 'none';
+    run.spawned = 0; run.resolved = 0; run.t = 0; run.nextSpawn = 0.4; run.streak = 0; run.live = true; run.paused = false; run.sel = null;
+    drawScore(); last = performance.now(); raf = requestAnimationFrame(loop);
+  }
+  function pauseRun(p) {
+    if (!run || !run.live) return; run.paused = p;
+    var b = document.getElementById('pausebtn'); if (b) b.textContent = p ? '▶ Resume' : '⏸ Pause';
+    if (!p) { last = performance.now(); raf = requestAnimationFrame(loop); }
+  }
+  function dur() { return [11, 8, 5.5][cfg.speed]; }
+  function spawn() {
+    var w = run.deck[run.di % run.deck.length]; run.di++;
+    if (run.di % run.deck.length === 0) run.deck = shuffle(run.deck.slice());
+    var el = document.createElement('div'); el.className = 'fw';
+    el.innerHTML = (cfg.pics && w.e ? '<div class="fe">' + w.e + '</div>' : '') + '<div>' + w.en + '</div>';
+    var o = { w: w, el: el, y: 0, x: 4 + Math.random() * 52, done: false };
+    el.style.left = o.x + '%';
+    el.addEventListener('click', function () { if (!o.done && cfg.mode !== 'drag') { select(o); } });
+    el.addEventListener('pointerdown', function (e) { if (cfg.mode === 'drag') startDrag(o, e); });
+    document.getElementById('field').appendChild(el);
+    run.words.push(o); run.spawned++;
+    if (!run.sel) autoSel();
+  }
+  function autoSel() {
+    var best = null; run.words.forEach(function (o) { if (!o.done && (!best || o.y > best.y)) best = o; });
+    run.sel = best; run.words.forEach(function (o) { o.el.classList.toggle('sel', o === best); });
+  }
+  function select(o) { run.sel = o; run.words.forEach(function (x) { x.el.classList.toggle('sel', x === o); }); }
+  function loop(now) {
+    if (!run || !run.live || run.paused) return;
+    var dt = Math.min(.1, (now - last) / 1000); last = now; run.t += dt;
+    var f = document.getElementById('field'), H = f.clientHeight - 10;
+    if (run.spawned < WORDS_PER_TURN && run.t >= run.nextSpawn) { spawn(); run.nextSpawn = run.t + dur() * .34; }
+    run.words.slice().forEach(function (o) {
+      if (o.done) return;
+      o.y += dt / dur();
+      var maxY = H - o.el.offsetHeight;
+      var py = Math.min(1, o.y) * maxY;
+      o.el.style.transform = 'translateY(' + py + 'px)';
+      if (o.y >= 1) resolve(o, -1);
+    });
+    if (run.live) raf = requestAnimationFrame(loop);
+  }
+  function binAt(x, y) {
+    for (var i = 0; i < run.s.groups.length; i++) { var r = document.getElementById('bin' + i).getBoundingClientRect(); if (x >= r.left && x <= r.right && y >= r.top - 12 && y <= r.bottom) return i; }
+    return -1;
+  }
+  function startDrag(o, e) {
+    if (!run || !run.live || run.paused || o.done || o.drag) return;
+    e.preventDefault();
+    var r = o.el.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top, pid = e.pointerId, over = -1;
+    var ghost = o.el.cloneNode(true); ghost.classList.add('drag-ghost'); ghost.style.transform = ''; ghost.style.left = r.left + 'px'; ghost.style.top = r.top + 'px';
+    document.body.appendChild(ghost); o.drag = true; o.el.style.visibility = 'hidden';
+    function mv(ev) {
+      if (ev.pointerId !== pid) return;
+      ghost.style.left = (ev.clientX - dx) + 'px'; ghost.style.top = (ev.clientY - dy) + 'px';
+      var b = binAt(ev.clientX, ev.clientY);
+      if (b !== over) { if (over >= 0) document.getElementById('bin' + over).classList.remove('over'); if (b >= 0) document.getElementById('bin' + b).classList.add('over'); over = b; }
+    }
+    function cleanup() {
+      document.removeEventListener('pointermove', mv); document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', up);
+      if (over >= 0) document.getElementById('bin' + over).classList.remove('over');
+      ghost.remove(); o.drag = false; o.cancelDrag = null;
+    }
+    function up(ev) {
+      if (ev.pointerId !== pid) return;
+      var b = binAt(ev.clientX, ev.clientY);
+      cleanup();
+      if (o.done || !run || !run.live) return;
+      if (b >= 0) { resolve(o, b); return; }
+      o.el.style.visibility = '';
+    }
+    o.cancelDrag = cleanup;
+    document.addEventListener('pointermove', mv); document.addEventListener('pointerup', up); document.addEventListener('pointercancel', up);
+  }
+  function setFb(t) { document.getElementById('fb').textContent = t; }
+  function tapBin(gi) {
+    if (!run || !run.live || run.paused || cfg.mode === 'drag') return;
+    if (!run.sel) return;
+    resolve(run.sel, gi);
+  }
+  function resolve(o, gi) {
+    if (o.done) return; o.done = true;
+    var w = o.w, cur = run.turn % cfg.teams, g = run.s.groups[w.g];
+    var ok = (gi === w.g);
+    if (ok) {
+      run.streak++; var pts = 10 + (run.streak % 3 === 0 ? 5 : 0); run.scores[cur] += pts;
+      o.el.classList.add('good'); setFb('✔ ' + w.en + ' → ' + g.n + '  +' + pts + (run.streak >= 3 ? '  🔥' + run.streak : ''));
+    } else {
+      run.streak = 0; o.el.classList.add('bad');
+      setFb((gi < 0 ? '⏰ ' : '✘ ') + w.en + ' → ' + g.n + (TR ? '  (' + w.tr + ')' : ''));
+    }
+    if (o.cancelDrag) o.cancelDrag();
+    o.el.remove(); run.words = run.words.filter(function (x) { return x !== o; });
+    if (ok) markBin(gi, 'ok'); else { if (gi >= 0) markBin(gi, 'no'); markBin(w.g, 'hint'); }
+    run.resolved++; drawScoreOnly();
+    run.sel = null; autoSel();
+    if (run.resolved >= WORDS_PER_TURN) endTurn();
+  }
+  function markBin(i, kind) {
+    var b = document.getElementById('bin' + i); if (!b) return;
+    clearTimeout(b._t); b.classList.remove('ok', 'no', 'hint'); b.classList.add(kind);
+    b.querySelector('.mark').textContent = kind === 'ok' ? '✔' : '✘';
+    b._t = setTimeout(function () { b.classList.remove(kind); }, 750);
+  }
+  function drawScoreOnly() {
+    var cur = run.turn % cfg.teams, els = document.querySelectorAll('#sb .team');
+    run.scores.forEach(function (sc, i) { if (els[i]) els[i].textContent = (cfg.teams === 1 ? 'Score' : 'Team ' + (i + 1)) + ': ' + sc; });
+  }
+  function endTurn() {
+    run.live = false; cancelAnimationFrame(raf);
+    setTimeout(function () {
+      run.turn++;
+      if (run.turn >= run.turns) { finish(); } else { setFb(''); announce(); drawScore(); }
+    }, 900);
+  }
+  function finish() {
+    var best = Math.max.apply(null, run.scores), win = [];
+    run.scores.forEach(function (s, i) { if (s === best) win.push(i); });
+    var t = cfg.teams === 1 ? (best >= WORDS_PER_TURN * cfg.rounds * 10 * .8 ? 'Word Master!' : (best >= WORDS_PER_TURN * cfg.rounds * 10 * .5 ? 'Well Done!' : 'Good Try!')) : (win.length > 1 ? "It's a Draw!" : 'Team ' + (win[0] + 1) + ' Wins!');
+    document.getElementById('win-title').textContent = t;
+    var l = document.getElementById('win-list'); l.innerHTML = '';
+    run.scores.forEach(function (s, i) { var d = document.createElement('div'); d.className = 'team'; d.style.background = TEAM_COLORS[i]; d.textContent = (cfg.teams === 1 ? 'Score' : 'Team ' + (i + 1)) + ': ' + s; l.appendChild(d); });
+    document.getElementById('win-screen').style.display = 'flex'; setFb('');
+  }
+  document.addEventListener('keydown', function (e) { if (/^[1-3]$/.test(e.key)) tapBin(+e.key - 1); });
+  showLearn(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help the Teacher</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 8px 12px 12px; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #left { flex: 0 0 38%; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
+  @media (orientation: portrait) { #left { flex: 0 0 44%; } }
+  #bubble { flex: 1 1 auto; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 22px; padding: 10px 16px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+  #who { font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.7rem); color: #0B5C56; }
+  #order-en { font-weight: 900; font-size: clamp(1.2rem, 3vw, 2.4rem); line-height: 1.2; }
+  #order-tr { font-weight: 800; font-size: clamp(.9rem, 1.9vw, 1.4rem); color: #0B5C56; }
+  #tray { flex: 0 0 auto; display: flex; gap: 10px; background: #FFD23F; border: 5px solid #0B2F2C; border-radius: 18px; padding: 8px; }
+  .slot { flex: 1; min-height: clamp(70px, 14vh, 130px); background: #fff; border: 4px dashed #0B2F2C; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; font-size: clamp(.8rem, 1.7vw, 1.2rem); text-align: center; padding: 2px; cursor: pointer; }
+  .slot .e { font-size: clamp(1.6rem, 5vh, 3rem); line-height: 1.1; }
+  #serve { font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 900; padding: .25em 1em; border: 5px solid #0B2F2C; border-radius: 16px; background: #1F5FBF; color: #fff; box-shadow: 0 5px 0 #0B2F2C; }
+  #serve:disabled { background: #B8C2C1; color: #5B6B69; cursor: not-allowed; }
+  #fb { min-height: 1.3em; text-align: center; font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.8rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #menu { flex: 1; min-width: 0; min-height: 0; display: grid; gap: 10px; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); }
+  @media (orientation: portrait) { #menu { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)); } }
+  .tile { container-type: size; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0B2F2C; }
+  .tile .e { font-size: 40cqmin; line-height: 1.05; }
+  .tile .p { font-weight: 900; font-size: 11cqmin; line-height: 1.1; padding: 0 4px; }
+  .tile .t { font-weight: 800; font-size: 8.5cqmin; color: #0B5C56; }
+  .tile.sel { background: #FFF3B0; border-color: #D62828; border-width: 7px; }
+  body.no-tr .tile .t, body.no-tr #order-tr { display: none; }
+  body.no-en .tile .p, body.no-en .slot .w { display: none; }
+  body.no-en .tile .e { font-size: 44cqmin; line-height: 1.25; }
+  .tile .e svg { width: 50cqmin; height: 50cqmin; display: block; }
+  body.no-en .tile .e svg { width: 52cqmin; height: 52cqmin; }
+  .slot .e svg { width: clamp(2rem, 8vh, 4.4rem); height: clamp(2rem, 8vh, 4.4rem); display: block; }
+</style>
+<style id="ln-css">
+.ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
+:where(.tile .e, .cell .e, .wc .e, .fe, .ct, #qmark, .w .e, .word .e, #pic) svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+#ln-screen { display: none; position: fixed; inset: 0; z-index: 70; background: #0E8F86; flex-direction: column; gap: 8px; padding: 8px 10px 10px; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; color: #0B2F2C; }
+#ln-top { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#ln-title { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.4rem); color: #fff; text-shadow: 3px 3px 0 #0B2F2C; margin-right: 6px; }
+#ln-tabs { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.ln-tab { font-weight: 900; font-size: clamp(.9rem, 2.1vw, 1.5rem); padding: .05em .8em; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; cursor: pointer; font-family: inherit; }
+.ln-tab.act { background: #FFD23F; border-color: #D62828; }
+#ln-close { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.5rem); padding: .05em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #D62828; color: #fff; cursor: pointer; font-family: inherit; }
+#ln-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 17vw, 240px), 1fr)); gap: 10px; align-content: start; padding: 2px; }
+.ln-card { background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ln-card.wide { grid-column: span 2; }
+.ln-card .le { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1.1; }
+.ln-card .le svg { width: clamp(2.4rem, 8vh, 4rem); height: clamp(2.4rem, 8vh, 4rem); display: block; }
+.ln-card .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.6rem); line-height: 1.15; }
+.ln-card .trl { font-weight: 800; font-size: clamp(.8rem, 1.7vw, 1.15rem); color: #0B5C56; }
+</style>
+</head>
+<body class="no-tr">
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Help the<br>Teacher</h1>
+  <p class="subtitle">Give the teacher the right things!</p>
+  <div class="preview">📏 ✂️ 🗺️ 🎤</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Request: <span id="no">1</span>/8</div>
+  <div class="stat">Stars: <span id="stars">0</span> ⭐</div>
+  <button class="restart-btn" id="enbtn" onclick="toggleEN()">English Labels: Off</button>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: Off</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="left">
+    <div id="bubble"><div id="who"></div><div id="order-en"></div><div id="order-tr"></div></div>
+    <div id="tray"><div class="slot" onclick="removeAt(0)"></div><div class="slot" onclick="removeAt(1)"></div></div>
+    <button id="serve" onclick="serve()" disabled>Give</button>
+    <div id="fb"></div>
+  </div>
+  <div id="menu"></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  var ITEMS = {
+    ruler: ["📏", "a ruler", "bir cetvel"],
+    scissors: ["✂️", "a pair of scissors", "bir makas"],
+    notebook: ["📓", "a notebook", "bir defter"],
+    pencil: ["✏️", "a pencil", "bir kurşun kalem"],
+    book: ["📖", "a book", "bir kitap"],
+    map: ["🗺️", "a map", "bir harita"],
+    globe: ["🌍", "a globe", "bir küre"],
+    markers: ["🖍️", "some markers", "birkaç keçeli kalem"],
+    paper: ["📄", "some paper", "biraz kâğıt"],
+    bag: ["🎒", "a school bag", "bir okul çantası"],
+    microphone: ["🎤", "a microphone", "bir mikrofon"],
+    medal: ["🏅", "a medal", "bir madalya"]
+  };
+  var ORDERS = [
+    { en: "Can you give me a ruler and some paper, please?", tr: "Bana bir cetvel ve biraz kâğıt verebilir misin, lütfen?", w: ["ruler", "paper"] },
+    { en: "Please bring me a map and a globe.", tr: "Lütfen bana bir harita ve bir küre getir.", w: ["map", "globe"] },
+    { en: "I need a pencil and a notebook for the writing activity, please.", tr: "Yazma etkinliği için bir kurşun kaleme ve bir deftere ihtiyacım var, lütfen.", w: ["pencil", "notebook"] },
+    { en: "Can you pass me the scissors and the markers, please?", tr: "Bana makası ve keçeli kalemleri uzatabilir misin, lütfen?", w: ["scissors", "markers"] },
+    { en: "We need a microphone and a medal for the ceremony, please.", tr: "Tören için bir mikrofona ve bir madalyaya ihtiyacımız var, lütfen.", w: ["microphone", "medal"] },
+    { en: "Can you give us a map and some markers, please?", tr: "Bize bir harita ve birkaç keçeli kalem verebilir misin, lütfen?", w: ["map", "markers"] },
+    { en: "Please help me. I need a ruler and a pencil.", tr: "Lütfen bana yardım et. Bir cetvele ve bir kurşun kaleme ihtiyacım var.", w: ["ruler", "pencil"] },
+    { en: "Can you put a school bag and a book on my desk, please?", tr: "Masama bir okul çantası ve bir kitap koyabilir misin, lütfen?", w: ["bag", "book"] }
+  ];
+  var oi, sel, stars, tried, lock;
+  document.body.classList.add('no-en');
+
+  function toggleEN() {
+    var off = document.body.classList.toggle('no-en');
+    document.getElementById('enbtn').textContent = 'English Labels: ' + (off ? 'Off' : 'On');
+  }
+  function toggleTR() {
+    var off = document.body.classList.toggle('no-tr');
+    document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On');
+  }
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    oi = 0; stars = 0; document.getElementById('stars').textContent = 0;
+    var m = document.getElementById('menu'); m.innerHTML = '';
+    shuffle(Object.keys(ITEMS)).forEach(function (k) {
+      var it = ITEMS[k], b = document.createElement('button'); b.className = 'tile'; b.dataset.k = k;
+      b.innerHTML = '<div class="e">' + it[0] + '</div><div class="p">' + it[1] + '</div><div class="t">' + it[2] + '</div>';
+      b.addEventListener('click', function () { pick(k); });
+      m.appendChild(b);
+    });
+    showOrder();
+  }
+  function showOrder() {
+    var o = ORDERS[oi]; sel = []; tried = false; lock = false;
+    document.getElementById('no').textContent = oi + 1;
+    document.getElementById('who').textContent = '👩‍🏫 The teacher says:';
+    document.getElementById('order-en').textContent = '"' + o.en + '"';
+    document.getElementById('order-tr').textContent = o.tr;
+    document.getElementById('fb').textContent = '';
+    draw();
+  }
+  function pick(k) {
+    if (lock) return;
+    var i = sel.indexOf(k);
+    if (i >= 0) sel.splice(i, 1); else if (sel.length < 2) sel.push(k);
+    draw();
+  }
+  function removeAt(i) { if (lock || !sel[i]) return; sel.splice(i, 1); draw(); }
+  function draw() {
+    var slots = document.querySelectorAll('.slot');
+    for (var i = 0; i < 2; i++) {
+      slots[i].innerHTML = sel[i] ? '<div class="e">' + ITEMS[sel[i]][0] + '</div><div class="w">' + ITEMS[sel[i]][1] + '</div>' : '?';
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('.tile'), function (t) { t.classList.toggle('sel', sel.indexOf(t.dataset.k) >= 0); });
+    document.getElementById('serve').disabled = (sel.length !== 2);
+  }
+  function serve() {
+    if (lock || sel.length !== 2) return;
+    var w = ORDERS[oi].w, ok = sel.every(function (k) { return w.indexOf(k) >= 0; });
+    var fb = document.getElementById('fb');
+    if (ok) {
+      lock = true;
+      if (!tried) { stars++; document.getElementById('stars').textContent = stars; }
+      fb.textContent = '🎉 Thank you! You are very helpful!';
+      setTimeout(function () { oi++; if (oi >= ORDERS.length) finish(); else showOrder(); }, 1500);
+    } else {
+      tried = true; fb.textContent = 'Oops! Read the request again.';
+      var tr = document.getElementById('tray'); tr.classList.remove('shake'); void tr.offsetWidth; tr.classList.add('shake');
+      sel = []; draw();
+    }
+  }
+  function finish() {
+    document.getElementById('win-title').textContent = stars >= 7 ? 'Super Helper!' : (stars >= 4 ? 'Well Done!' : 'Good Try!');
+    document.getElementById('win-stats').textContent = 'Stars: ' + stars + ' / ' + ORDERS.length + ' (first try)';
+    document.getElementById('win-screen').style.display = 'flex';
+  }
+</script>
+<div id="ln-screen">
+  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-grid"></div>
+</div>
+<script>
+(function () {
+  var LN = [["Object Pronouns", "Nesne Zamirleri", [["🙋", "me: The teacher helps me.", "beni/bana: Öğretmen bana yardım eder."], ["👉", "you: I can see you.", "seni/sana: Seni görebiliyorum."], ["👦", "him: I know him.", "onu (erkek): Onu tanıyorum."], ["👧", "her: We greet her.", "onu (kadın): Onu selamlıyoruz."], ["📘", "it: I need it.", "onu (nesne): Ona ihtiyacım var."], ["👥", "us: Mum drives us.", "bizi/bize: Annem bizi götürür."], ["👪", "them: I help them.", "onları/onlara: Onlara yardım ederim."]]], ["School Rules", "Okul Kuralları", [["🤫", "You must be quiet in the library.", "Kütüphanede sessiz olmalısın."], ["🏃", "You mustn’t run in the corridor.", "Koridorda koşmamalısın."], ["🥼", "You must wear a lab coat in the lab.", "Laboratuvarda önlük giymelisin."], ["📱", "You mustn’t use your phone in class.", "Derste telefonunu kullanmamalısın."], ["🚶", "Follow the school rules.", "Okul kurallarına uy."], ["🙋", "Raise your hand to speak.", "Konuşmak için elini kaldır."]]]];
+  function lnShow(i) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
+    document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
+      var wide = it[1].length > 26 && it[0].indexOf('<svg') < 0;
+      return '<div class="ln-card' + (wide ? ' wide' : '') + '"><div class="le">' + it[0] + '</div><div class="en">' + it[1] + '</div><div class="trl">' + it[2] + '</div></div>';
+    }).join('');
+    document.getElementById('ln-grid').scrollTop = 0;
+  }
+  window.lnOpen = function () {
+    var tabs = document.getElementById('ln-tabs'); tabs.innerHTML = '';
+    LN.forEach(function (s, i) { var b = document.createElement('button'); b.className = 'ln-tab'; b.textContent = s[0]; b.onclick = function () { lnShow(i); }; tabs.appendChild(b); });
+    document.getElementById('ln-screen').style.display = 'flex'; lnShow(0);
+  };
+  window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+</body>
+</html>
