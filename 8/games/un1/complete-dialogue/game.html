@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete the Dialogue</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 4px 14px 12px; }
+  #dtitle { text-align: center; font-weight: 900; font-size: clamp(1.2rem, 3vw, 2.2rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #chat { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: #fff; border: 5px solid #0B2F2C; border-radius: 20px; padding: 10px 12px; }
+  .row { display: flex; align-items: center; gap: 10px; }
+  .row.r { flex-direction: row-reverse; }
+  .av { flex: 0 0 auto; width: clamp(38px, 6vh, 56px); height: clamp(38px, 6vh, 56px); border-radius: 50%; border: 4px solid #0B2F2C; color: #fff; font-weight: 900;
+    font-size: clamp(1.1rem, 2.6vh, 1.7rem); display: flex; align-items: center; justify-content: center; }
+  .who { flex: 0 0 auto; font-weight: 900; font-size: clamp(.7rem, 1.3vw, 1rem); color: #0B5C56; text-align: center; max-width: 7em; }
+  .bub { max-width: 78%; border: 4px solid #0B2F2C; border-radius: 18px; padding: 4px 14px; background: #fff; }
+  .bub .en { font-weight: 900; font-size: clamp(1.05rem, 2.5vw, 1.9rem); line-height: 1.2; }
+  .bub .trl { font-weight: 800; font-size: clamp(.8rem, 1.6vw, 1.2rem); color: #0B5C56; }
+  .bub.blank { border-style: dashed; background: #FFF3B0; border-color: #D62828; }
+  .bub.blank .en { color: #D62828; }
+  .bub.done { border-color: #0A7A2F; background: #C8F7D4; }
+  #opts { flex: 0 0 auto; display: flex; flex-direction: column; gap: 8px; }
+  .opt { text-align: left; font-size: clamp(1rem, 2.4vw, 1.8rem); font-weight: 900; padding: .2em .8em; background: #fff; color: #0B2F2C; border: 5px solid #0B2F2C; border-radius: 14px; box-shadow: 0 4px 0 #0B2F2C; }
+  .opt:active { transform: translateY(3px); box-shadow: 0 1px 0 #0B2F2C; }
+  .opt.bad { background: #FFD6D6; border-color: #D62828; text-decoration: line-through; }
+  #nbox { flex: 0 0 auto; display: none; text-align: center; }
+  #nbox .big-btn { font-size: clamp(1.1rem, 2.6vw, 1.8rem); }
+</style>
+<style id="ln-css">
+.ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
+:where(.tile .e, .cell .e, .wc .e, .fe, .ct, #qmark, .w .e, .word .e, #pic) svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+#ln-screen { display: none; position: fixed; inset: 0; z-index: 70; background: #0E8F86; flex-direction: column; gap: 8px; padding: 8px 10px 10px; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; color: #0B2F2C; }
+#ln-top { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#ln-title { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.4rem); color: #fff; text-shadow: 3px 3px 0 #0B2F2C; margin-right: 6px; }
+#ln-tabs { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.ln-tab { font-weight: 900; font-size: clamp(.9rem, 2.1vw, 1.5rem); padding: .05em .8em; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; cursor: pointer; font-family: inherit; }
+.ln-tab.act { background: #FFD23F; border-color: #D62828; }
+#ln-close { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.5rem); padding: .05em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #D62828; color: #fff; cursor: pointer; font-family: inherit; }
+#ln-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 17vw, 240px), 1fr)); gap: 10px; align-content: start; padding: 2px; }
+.ln-card { background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ln-card.wide { grid-column: span 2; }
+.ln-card .le { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1.1; }
+.ln-card .le svg { width: clamp(2.4rem, 8vh, 4rem); height: clamp(2.4rem, 8vh, 4rem); display: block; }
+.ln-card .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.6rem); line-height: 1.15; }
+.ln-card .trl { font-weight: 800; font-size: clamp(.8rem, 1.7vw, 1.15rem); color: #0B5C56; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Complete<br>the Dialogue</h1>
+  <p class="subtitle">Choose the best answer!</p>
+  <div class="preview">💬 💬</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Dialogue: <span id="rn">1</span>/5</div>
+  <div class="stat">Stars: <span id="st">0</span> ⭐</div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="dtitle"></div>
+  <div id="chat"></div>
+  <div id="opts"></div>
+  <div id="nbox"><button class="big-btn" id="nbtn" onclick="nextD()">Next</button></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  function toggleTR() { var off = document.body.classList.toggle('no-tr'); document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On'); }
+
+  var D = [["🎬 Cinema", [["Ece", "How about going to the cinema tomorrow evening?", "Yarın akşam sinemaya gitmeye ne dersin?"], ["Kaan", ["Sounds great! What time?", "I have a red bag.", "He is my uncle."], "Kulağa harika geliyor! Saat kaçta?"], ["Ece", "At seven o’clock in front of the cinema.", "Saat yedide sinemanın önünde."], ["Kaan", ["Okay, I will be there on time.", "It is in my pocket.", "She likes green apples."], "Tamam, orada zamanında olacağım."], ["Ece", "Great. See you tomorrow!", "Harika. Yarın görüşürüz!"]]], ["🍕 Pizza Party", [["Sude", "Would you like to come to my pizza party on Friday?", "Cuma günü pizza partime gelmek ister misin?"], ["Burak", ["I’m sorry, but I can’t.", "It is on the table.", "They are very tall."], "Üzgünüm ama gelemem."], ["Sude", "Oh, why not?", "Ah, neden olmasın?"], ["Burak", ["I’m going to the dentist.", "I like orange juice.", "It is a big city."], "Dişçiye gidiyorum."], ["Sude", "I see. Maybe next time!", "Anladım. Belki bir dahaki sefere!"]]], ["🍰 Cake", [["Mert", "Would you like some chocolate cake?", "Biraz çikolatalı pasta ister misin?"], ["Lara", ["Yes, I’d love some.", "It is Monday today.", "My shoes are new."], "Evet, çok isterim."], ["Mert", "Here you are. Would you like some juice, too?", "Buyur. Biraz meyve suyu da ister misin?"], ["Lara", ["No, thanks. I’m full.", "He is a pilot.", "The bus is late."], "Hayır, teşekkürler. Doydum."], ["Mert", "Okay. Enjoy your cake!", "Tamam. Pastanın tadını çıkar!"]]], ["📝 Homework", [["Ali", "Do you want to come over to play online games?", "Çevrimiçi oyun oynamak için bize gelmek ister misin?"], ["Pelin", ["Sorry, I can’t. I have to do my homework.", "They are in the garden.", "It has four legs."], "Üzgünüm, gelemem. Ödevimi yapmam gerekiyor."], ["Ali", "Okay. What about tomorrow?", "Tamam. Peki ya yarın?"], ["Pelin", ["Yes, that sounds good.", "I am eleven years old.", "She is in the kitchen."], "Evet, kulağa güzel geliyor."], ["Ali", "Great. I will call you in the morning.", "Harika. Seni sabah ararım."]]], ["🧺 Picnic", [["Defne", "How about going on a picnic this weekend?", "Bu hafta sonu pikniğe gitmeye ne dersin?"], ["Cem", ["Sure, why not? Who is coming?", "I never eat fish.", "It is under the chair."], "Tabii, neden olmasın? Kim geliyor?"], ["Defne", "Our friends Aslı and Tarık are coming.", "Arkadaşlarımız Aslı ve Tarık geliyor."], ["Cem", ["Wonderful! I will bring some sandwiches.", "He is wearing a blue hat.", "The film starts at nine."], "Harika! Birkaç sandviç getireceğim."], ["Defne", "Perfect. See you on Saturday!", "Mükemmel. Cumartesi görüşürüz!"]]], ["🎂 Birthday", [["Nehir", "Are you coming to my birthday party on Sunday?", "Pazar günü doğum günü partime geliyor musun?"], ["Emre", ["I’m sorry, but I’m visiting my grandmother.", "It is a sweet cake.", "I can swim very well."], "Üzgünüm ama büyükannemi ziyaret ediyorum."], ["Nehir", "That’s okay. Thanks for telling me.", "Sorun değil. Bana söylediğin için teşekkürler."], ["Emre", ["I promise I will be with you next time.", "My bike is broken.", "There are twelve months."], "Bir dahaki sefere seninle olacağıma söz veriyorum."], ["Nehir", "Great! Have a nice trip.", "Harika! İyi yolculuklar."]]], ["🤝 Best Friend", [["Zeynep", "Who is your best friend?", "En yakın arkadaşın kim?"], ["Can", ["It is Bora. We always help each other.", "I’m reading a book now.", "It is a big yellow bus."], "Bora. Birbirimize her zaman yardım ederiz."], ["Zeynep", "Why do you like him?", "Neden onu seviyorsun?"], ["Can", ["Because he is honest and loyal.", "Because it is cold today.", "Because the bag is heavy."], "Çünkü o dürüst ve sadık."], ["Zeynep", "He is a true friend!", "O gerçek bir arkadaş!"]]], ["📞 Phone Call", [["Selin", "Hello, Murat. What are you doing?", "Merhaba Murat. Ne yapıyorsun?"], ["Murat", ["I’m at home. Why?", "It is a red car.", "She is my teacher."], "Evdeyim. Neden?"], ["Selin", "Would you like to come over and watch a film?", "Bize gelip film izlemek ister misin?"], ["Murat", ["Yeah, that would be great!", "The bus is late.", "My pen is blue."], "Evet, harika olur!"], ["Selin", "Awesome! Come at six.", "Süper! Altıda gel."]]]], ROUNDS = 5, COLORS = ['#1F5FBF', '#D62828', '#0A7A2F', '#7B2CBF', '#B35C00'];
+  var order, di, bi, stars, total, tried, locked, spk, blanks;
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    order = shuffle(D.slice()).slice(0, ROUNDS); di = 0; stars = 0; total = 0;
+    document.getElementById('st').textContent = 0;
+    showD();
+  }
+  function showD() {
+    var d = order[di]; bi = 0; locked = false; tried = false;
+    document.getElementById('rn').textContent = di + 1;
+    document.getElementById('dtitle').textContent = d[0];
+    document.getElementById('nbox').style.display = 'none';
+    spk = []; blanks = [];
+    var chat = document.getElementById('chat'); chat.innerHTML = '';
+    d[1].forEach(function (ln, i) {
+      if (spk.indexOf(ln[0]) < 0) spk.push(ln[0]);
+      var right = spk.indexOf(ln[0]) % 2 === 1, isBlank = Array.isArray(ln[1]);
+      var row = document.createElement('div'); row.className = 'row' + (right ? ' r' : ''); row.id = 'ln' + i;
+      var av = '<div style="display:flex;flex-direction:column;align-items:center"><div class="av" style="background:' + COLORS[spk.indexOf(ln[0]) % COLORS.length] + '">' + ln[0].charAt(0) + '</div><div class="who">' + ln[0] + '</div></div>';
+      var text = isBlank ? '<div class="en">?</div>' : '<div class="en">' + ln[1] + '</div><div class="trl tr">' + ln[2] + '</div>';
+      row.innerHTML = av + '<div class="bub' + (isBlank ? ' blank' : '') + '" id="bub' + i + '">' + text + '</div>';
+      chat.appendChild(row);
+      if (isBlank) blanks.push(i);
+    });
+    showOpts();
+  }
+  function showOpts() {
+    var d = order[di], i = blanks[bi], ln = d[1][i];
+    tried = false; locked = false;
+    var box = document.getElementById('opts'); box.innerHTML = '';
+    document.getElementById('ln' + i).scrollIntoView({ block: 'nearest' });
+    shuffle(ln[1].map(function (t, k) { return { t: t, k: k }; })).forEach(function (o) {
+      var b = document.createElement('button'); b.className = 'opt'; b.textContent = o.t;
+      b.addEventListener('click', function () { pick(b, o.k); });
+      box.appendChild(b);
+    });
+  }
+  function pick(btn, k) {
+    if (locked || btn.classList.contains('bad')) return;
+    var d = order[di], i = blanks[bi], ln = d[1][i];
+    if (k === 0) {
+      locked = true; if (!tried) { stars++; document.getElementById('st').textContent = stars; }
+      total++;
+      var bub = document.getElementById('bub' + i); bub.className = 'bub done';
+      bub.innerHTML = '<div class="en">' + ln[1][0] + '</div><div class="trl tr">' + ln[2] + '</div>';
+      document.getElementById('opts').innerHTML = '';
+      bi++;
+      if (bi < blanks.length) { setTimeout(showOpts, 900); }
+      else {
+        var nx = document.getElementById('nbtn'); nx.textContent = (di === order.length - 1) ? 'Finish' : 'Next dialogue';
+        document.getElementById('nbox').style.display = 'block';
+      }
+    } else {
+      tried = true; btn.classList.add('bad', 'shake');
+    }
+  }
+  function nextD() {
+    di++;
+    if (di >= order.length) {
+      document.getElementById('win-title').textContent = stars >= 9 ? 'Great Talker!' : (stars >= 6 ? 'Well Done!' : 'Good Try!');
+      document.getElementById('win-stats').textContent = 'Stars: ' + stars + ' / ' + total;
+      document.getElementById('win-screen').style.display = 'flex'; return;
+    }
+    showD();
+  }
+</script>
+<div id="ln-screen">
+  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-grid"></div>
+</div>
+<script>
+(function () {
+  var LN = [["Inviting and Offering", "Davet Etme ve İkram", [["✉️", "Would you like to come over?", "Bize gelmek ister misin?"], ["🍕", "How about having a pizza party?", "Pizza partisi yapmaya ne dersin?"], ["🎬", "What about going to the cinema?", "Sinemaya gitmeye ne dersin?"], ["📅", "Are you busy tomorrow evening?", "Yarın akşam meşgul müsün?"], ["🏠", "Do you want to come over to watch a film?", "Film izlemek için bize gelmek ister misin?"], ["☕", "Why don’t you join us?", "Neden bize katılmıyorsun?"], ["🍰", "Would you like some cake?", "Biraz pasta ister misin?"]]], ["Accepting and Refusing", "Kabul Etme ve Reddetme", [["✅", "Sure! / Of course.", "Tabii! / Elbette."], ["✅", "It sounds great / awesome / good.", "Kulağa harika / çok güzel / güzel geliyor."], ["✅", "Yeah, that would be great.", "Evet, harika olur."], ["✅", "I’d love to.", "Çok isterim."], ["✅", "Yes, I’d love some.", "Evet, çok isterim."], ["❌", "I’m sorry, but I can’t.", "Üzgünüm ama gelemem / yapamam."], ["❌", "I’m afraid I can’t.", "Korkarım yapamam."], ["❌", "I’d love to, but I have other plans.", "Çok isterdim ama başka planlarım var."], ["❌", "No, thanks. I’m full.", "Hayır, teşekkürler. Doydum."], ["❌", "No, thanks. I’m stuffed.", "Hayır, teşekkürler. Tıka basa doydum."]]], ["Giving Reasons", "Neden ve Mazeret Bildirme", [["🦷", "I’m going to the dentist.", "Dişçiye gidiyorum."], ["📝", "I have to do my homework.", "Ödevimi yapmam gerekiyor."], ["👵", "I’m visiting my grandmother.", "Büyükannemi ziyaret ediyorum."], ["🏋️", "I have a training session.", "Antrenmanım var."], ["🎹", "I have a piano lesson.", "Piyano dersim var."], ["🤒", "I’m not feeling well.", "Kendimi iyi hissetmiyorum."], ["👪", "My cousin is coming to our house.", "Kuzenim bize geliyor."], ["🤞", "I promised to help my brother.", "Erkek kardeşime yardım etmeye söz verdim."], ["🧹", "I’m helping my mother at home.", "Evde anneme yardım ediyorum."]]]];
+  function lnShow(i) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
+    document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
+      var wide = it[1].length > 26 && it[0].indexOf('<svg') < 0;
+      return '<div class="ln-card' + (wide ? ' wide' : '') + '"><div class="le">' + it[0] + '</div><div class="en">' + it[1] + '</div><div class="trl">' + it[2] + '</div></div>';
+    }).join('');
+    document.getElementById('ln-grid').scrollTop = 0;
+  }
+  window.lnOpen = function () {
+    var tabs = document.getElementById('ln-tabs'); tabs.innerHTML = '';
+    LN.forEach(function (s, i) { var b = document.createElement('button'); b.className = 'ln-tab'; b.textContent = s[0]; b.onclick = function () { lnShow(i); }; tabs.appendChild(b); });
+    document.getElementById('ln-screen').style.display = 'flex'; lnShow(0);
+  };
+  window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+</body>
+</html>

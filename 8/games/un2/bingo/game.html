@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bingo</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 6px 12px 12px; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #cluebox { flex: 0 0 34%; min-width: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 20px; padding: 12px 16px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; text-align: center; }
+  @media (orientation: portrait) { #cluebox { flex: 0 0 25%; padding: 6px 14px; gap: 6px; } }
+  #cl-label { font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.7rem); color: #0B5C56; }
+  #cl-en { font-weight: 900; font-size: clamp(1.4rem, 3.4vw, 2.8rem); line-height: 1.2; }
+  #cl-tr { font-weight: 800; font-size: clamp(1rem, 2vw, 1.5rem); color: #0B5C56; }
+  #skip { font-size: clamp(1rem, 2.2vw, 1.5rem); padding: .1em 1em; }
+  #board { flex: 1; min-width: 0; min-height: 0; display: grid; gap: 8px; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)); }
+  .cell { container-type: size; position: relative; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 14px; padding: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0B2F2C; }
+  .cell .e { font-size: 36cqmin; line-height: 1.1; }
+  .cell .p { font-weight: 900; font-size: 13cqmin; line-height: 1.1; padding: 0 3px; }
+  .cell .t { font-weight: 800; font-size: 9.5cqmin; color: #0B5C56; }
+  .cell.on { background: #C8F7D4; border-color: #0A7A2F; }
+  .cell.on::after { content: '✔'; position: absolute; top: 2px; right: 8px; font-size: 20cqmin; line-height: 1; color: #0A7A2F; font-weight: 900; }
+  .cell.line { background: #FFD23F; border-color: #D62828; border-width: 7px; }
+</style>
+<style id="ln-css">
+.ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
+:where(.tile .e, .cell .e, .wc .e, .fe, .ct, #qmark, .w .e, .word .e, #pic) svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+#ln-screen { display: none; position: fixed; inset: 0; z-index: 70; background: #0E8F86; flex-direction: column; gap: 8px; padding: 8px 10px 10px; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; color: #0B2F2C; }
+#ln-top { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#ln-title { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.4rem); color: #fff; text-shadow: 3px 3px 0 #0B2F2C; margin-right: 6px; }
+#ln-tabs { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.ln-tab { font-weight: 900; font-size: clamp(.9rem, 2.1vw, 1.5rem); padding: .05em .8em; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; cursor: pointer; font-family: inherit; }
+.ln-tab.act { background: #FFD23F; border-color: #D62828; }
+#ln-close { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.5rem); padding: .05em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #D62828; color: #fff; cursor: pointer; font-family: inherit; }
+#ln-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 17vw, 240px), 1fr)); gap: 10px; align-content: start; padding: 2px; }
+.ln-card { background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ln-card.wide { grid-column: span 2; }
+.ln-card .le { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1.1; }
+.ln-card .le svg { width: clamp(2.4rem, 8vh, 4rem); height: clamp(2.4rem, 8vh, 4rem); display: block; }
+.ln-card .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.6rem); line-height: 1.15; }
+.ln-card .trl { font-weight: 800; font-size: clamp(.8rem, 1.7vw, 1.15rem); color: #0B5C56; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Bingo</h1>
+  <p class="subtitle">Listen to the clue. Find the picture!</p>
+  <div class="preview">🎸 🥾 🎬 🛍️</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Found: <span id="fo">0</span>/16</div>
+  <div class="stat">Mistakes: <span id="mi">0</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="cluebox">
+    <div id="cl-label">Clue</div>
+    <div id="cl-en"></div>
+    <div id="cl-tr" class="tr"></div>
+    <button class="restart-btn" id="skip" onclick="skipClue()">Skip</button>
+  </div>
+  <div id="board"></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  function toggleTR() { var off = document.body.classList.toggle('no-tr'); document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On'); }
+
+  var POOL = [["hiking", "🥾", "hiking", "doğa yürüyüşü", "You walk a long way in nature with strong boots.", "Sağlam botlarla doğada uzun bir yol yürürsün."], ["camping", "⛺", "camping", "kamp yapma", "You sleep in a tent in the forest.", "Ormanda bir çadırda uyursun."], ["fishing", "🎣", "fishing", "balık tutma", "You wait for a fish near the water.", "Suyun yanında bir balık beklersin."], ["shopping", "🛍️", "shopping", "alışveriş", "You buy clothes and other things in shops.", "Mağazalardan kıyafet ve başka şeyler satın alırsın."], ["cinema", "🎬", "cinema", "sinema", "You watch a film on a big screen here.", "Burada büyük bir ekranda film izlersin."], ["concert", "🎤", "concert", "konser", "A singer performs live for many people.", "Bir şarkıcı birçok insan için canlı performans yapar."], ["reading", "📚", "reading", "kitap okuma", "You do this with a book in your hands.", "Bunu elinde bir kitapla yaparsın."], ["gaming", "🎮", "online games", "çevrimiçi oyunlar", "You play these on a computer with friends from far away.", "Bunları bilgisayarda uzaktaki arkadaşlarınla oynarsın."], ["guitar", "🎸", "guitar", "gitar", "It has six strings and a long neck.", "Altı teli ve uzun bir sapı vardır."], ["piano", "🎹", "piano", "piyano", "It has black and white keys.", "Siyah ve beyaz tuşları vardır."], ["violin", "🎻", "violin", "keman", "You play it with a bow under your chin.", "Onu çenenin altında bir yayla çalarsın."], ["drums", "🥁", "drums", "davul", "You hit them with two sticks.", "Onlara iki çubukla vurursun."], ["headphones", "🎧", "headphones", "kulaklık", "You wear them on your ears to listen to music.", "Müzik dinlemek için onları kulaklarına takarsın."], ["camera", "📷", "camera", "fotoğraf makinesi", "You take pictures with it.", "Onunla resim çekersin."], ["dancing", "💃", "dancing", "dans etme", "You move your body to the music.", "Müzikle birlikte vücudunu hareket ettirirsin."], ["painting", "🎨", "painting", "resim yapma", "You use brushes and colours to make a picture.", "Bir resim yapmak için fırça ve renkler kullanırsın."], ["cycling", "🚲", "cycling", "bisiklet sürme", "You pedal a bike on the road.", "Yolda bisiklet pedallarsın."], ["swimming", "🏊", "swimming", "yüzme", "You move in the water with your arms and legs.", "Suda kollarınla ve bacaklarınla ilerlersin."], ["popcorn", "🍿", "popcorn", "patlamış mısır", "People eat this snack at the cinema.", "İnsanlar bu atıştırmalığı sinemada yer."], ["laptop", "💻", "laptop", "dizüstü bilgisayar", "You can carry this computer in your bag.", "Bu bilgisayarı çantanda taşıyabilirsin."], ["tv", "📺", "television", "televizyon", "You watch programmes and sports on this screen at home.", "Evde bu ekranda programlar ve spor izlersin."], ["ticket", "🎟️", "ticket", "bilet", "You need this paper to go into a concert.", "Bir konsere girmek için bu kâğıda ihtiyacın var."], ["football", "⚽", "football", "futbol", "Two teams play with a round ball and goals.", "İki takım yuvarlak bir top ve kalelerle oynar."], ["family", "👪", "family time", "aile zamanı", "You spend time with your mother, father and brothers or sisters.", "Annenle, baban ve kardeşlerinle zaman geçirirsin."]];
+  var board, marked, calls, mistakes, found, over, LINES = [];
+  for (var i = 0; i < 4; i++) { LINES.push([0,1,2,3].map(function (k) { return i*4+k; })); LINES.push([0,1,2,3].map(function (k) { return k*4+i; })); }
+  LINES.push([0,5,10,15]); LINES.push([3,6,9,12]);
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    var pick = shuffle(POOL.slice()).slice(0, 16);
+    board = shuffle(pick.slice()); calls = shuffle(pick.slice());
+    marked = []; for (var i = 0; i < 16; i++) marked.push(false);
+    mistakes = 0; found = 0; over = false;
+    document.getElementById('mi').textContent = 0; document.getElementById('fo').textContent = 0;
+    var b = document.getElementById('board'); b.innerHTML = '';
+    board.forEach(function (w, i) {
+      var c = document.createElement('button'); c.className = 'cell'; c.id = 'c' + i;
+      c.innerHTML = '<div class="e">' + w[1] + '</div><div class="p">' + w[2] + '</div><div class="t tr">' + w[3] + '</div>';
+      c.addEventListener('click', function () { tap(i); });
+      b.appendChild(c);
+    });
+    showClue();
+  }
+  function showClue() {
+    var w = calls[0];
+    document.getElementById('cl-en').textContent = w[4];
+    document.getElementById('cl-tr').textContent = w[5];
+    document.getElementById('skip').style.visibility = calls.length > 1 ? 'visible' : 'hidden';
+  }
+  function skipClue() { if (over || calls.length < 2) return; calls.push(calls.shift()); showClue(); }
+  function tap(i) {
+    if (over || marked[i]) return;
+    var cell = document.getElementById('c' + i);
+    if (board[i][0] === calls[0][0]) {
+      marked[i] = true; cell.classList.add('on'); found++; document.getElementById('fo').textContent = found;
+      calls.shift();
+      var ln = null;
+      LINES.forEach(function (L) { if (!ln && L.every(function (k) { return marked[k]; })) ln = L; });
+      if (ln) { over = true; ln.forEach(function (k) { document.getElementById('c' + k).classList.add('line'); }); setTimeout(function () { win(); }, 1600); return; }
+      if (!calls.length) { over = true; setTimeout(function () { win(); }, 800); return; }
+      showClue();
+    } else {
+      mistakes++; document.getElementById('mi').textContent = mistakes;
+      cell.classList.remove('shake'); void cell.offsetWidth; cell.classList.add('shake');
+    }
+  }
+  function win() {
+    document.getElementById('win-title').textContent = 'BINGO!';
+    document.getElementById('win-stats').textContent = 'Found: ' + found + '  |  Mistakes: ' + mistakes;
+    document.getElementById('win-screen').style.display = 'flex';
+  }
+</script>
+<div id="ln-screen">
+  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-grid"></div>
+</div>
+<script>
+(function () {
+  var LN = [["Free-Time Activities", "Boş Zaman Etkinlikleri", [["🛍️", "go shopping", "alışverişe gitmek"], ["🥾", "go hiking", "doğa yürüyüşüne gitmek"], ["⛺", "go camping", "kampa gitmek"], ["🎣", "go fishing", "balık tutmaya gitmek"], ["🎬", "go to the cinema", "sinemaya gitmek"], ["🎤", "go to a concert", "konsere gitmek"], ["🎧", "listen to music", "müzik dinlemek"], ["📚", "read books", "kitap okumak"], ["🎮", "play online games", "çevrimiçi oyun oynamak"], ["💻", "surf the Internet", "internette gezinmek"], ["👪", "spend time with family", "ailemle zaman geçirmek"], ["📺", "watch sports programmes", "spor programları izlemek"], ["🧹", "tidy your room", "odanı toplamak"], ["🚶", "hang around", "boş boş gezmek, takılmak"]]], ["Music and Things", "Müzik ve Eşyalar", [["🎸", "rock music", "rock müziği"], ["🎤", "pop music", "pop müziği"], ["🎧", "hip-hop", "hip-hop müziği"], ["🎻", "classical music", "klasik müzik"], ["🎷", "jazz", "caz müziği"], ["🤘", "heavy metal", "heavy metal müziği"], ["🎹", "piano", "piyano"], ["🥁", "drums", "davul"], ["🎟️", "concert ticket", "konser bileti"], ["🎥", "documentary", "belgesel"], ["📷", "camera", "fotoğraf makinesi"]]]];
+  function lnShow(i) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
+    document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
+      var wide = it[1].length > 26 && it[0].indexOf('<svg') < 0;
+      return '<div class="ln-card' + (wide ? ' wide' : '') + '"><div class="le">' + it[0] + '</div><div class="en">' + it[1] + '</div><div class="trl">' + it[2] + '</div></div>';
+    }).join('');
+    document.getElementById('ln-grid').scrollTop = 0;
+  }
+  window.lnOpen = function () {
+    var tabs = document.getElementById('ln-tabs'); tabs.innerHTML = '';
+    LN.forEach(function (s, i) { var b = document.createElement('button'); b.className = 'ln-tab'; b.textContent = s[0]; b.onclick = function () { lnShow(i); }; tabs.appendChild(b); });
+    document.getElementById('ln-screen').style.display = 'flex'; lnShow(0);
+  };
+  window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+</body>
+</html>
