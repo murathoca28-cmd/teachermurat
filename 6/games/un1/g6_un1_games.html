@@ -37,6 +37,14 @@
 
         .game-card:focus-visible, .close-btn:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
 
+        .tabs { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 1000px; margin: 0 auto; padding: 4px 20px 14px; }
+        .tab-btn { font-family: inherit; font-size: 1.05rem; font-weight: 800; padding: 8px 18px; border: 3px solid #334155; border-radius: 999px; background: #FFFFFF; color: #0B4F4A; box-shadow: 0 4px 0 #94A3B8; cursor: pointer; }
+        .tab-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #94A3B8; }
+        .tab-btn.active { background: #FFD23F; color: #0B2F2C; }
+        .tab-btn .n { opacity: .7; font-weight: 700; margin-left: 4px; }
+        .tab-btn:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
+        @media (max-width: 600px) { .tabs { gap: 8px; padding: 4px 12px 12px; } .tab-btn { font-size: .95rem; padding: 6px 12px; } }
+
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
@@ -161,6 +169,7 @@
         <h1>Games</h1>
     </div>
 
+    <div class="tabs" id="tabs" role="tablist"></div>
     <div class="games-grid" id="gamesGrid"></div>
 
     <div id="gameModal" class="modal-overlay" style="display: none;">
@@ -182,12 +191,155 @@
         // ============================================================
         var games = [
             {
-                name: 'Jeopardy Word Game',
-                thumbnailUrl: 'jeopardy/cover.webp',
-                embedUrl: 'jeopardy/game.html'
+                name: "School Places Memory Match",
+                thumbnailUrl: 'memory-places/cover.webp?v=1',
+                embedUrl: 'memory-places/game.html?v=4',
+                tab: 'words'
             },
-            
+            {
+                name: "Celebrations Memory Match",
+                thumbnailUrl: 'memory-celebrations/cover.webp?v=1',
+                embedUrl: 'memory-celebrations/game.html?v=4',
+                tab: 'words'
+            },
+            {
+                name: "Anagram Race",
+                thumbnailUrl: 'anagram-race/cover.webp?v=1',
+                embedUrl: 'anagram-race/game.html?v=4',
+                tab: 'words'
+            },
+            {
+                name: "Guess the Word",
+                thumbnailUrl: 'guess-the-word/cover.webp?v=1',
+                embedUrl: 'guess-the-word/game.html?v=4',
+                tab: 'words'
+            },
+            {
+                name: "Word Search",
+                thumbnailUrl: 'word-search/cover.webp?v=1',
+                embedUrl: 'word-search/game.html?v=4',
+                tab: 'words'
+            },
+            {
+                name: "Crossword",
+                thumbnailUrl: 'crossword/cover.webp?v=1',
+                embedUrl: 'crossword/game.html?v=4',
+                tab: 'words'
+            },
+            {
+                name: "Jeopardy Word Game",
+                thumbnailUrl: 'jeopardy/cover.webp?v=2',
+                embedUrl: 'jeopardy/game.html?v=4',
+                tab: 'quiz'
+            },
+            {
+                name: "True or False",
+                thumbnailUrl: 'true-false/cover.webp?v=1',
+                embedUrl: 'true-false/game.html?v=4',
+                tab: 'quiz'
+            },
+            {
+                name: "Balloon Pop",
+                thumbnailUrl: 'balloon-pop/cover.webp?v=1',
+                embedUrl: 'balloon-pop/game.html?v=4',
+                tab: 'quiz'
+            },
+            {
+                name: "Who Am I?",
+                thumbnailUrl: 'who-am-i/cover.webp?v=1',
+                embedUrl: 'who-am-i/game.html?v=4',
+                tab: 'quiz'
+            },
+            {
+                name: "Bingo",
+                thumbnailUrl: 'bingo/cover.webp?v=1',
+                embedUrl: 'bingo/game.html?v=4',
+                tab: 'quiz'
+            },
+            {
+                name: "Word Rush",
+                thumbnailUrl: 'word-rush/cover.webp?v=1',
+                embedUrl: 'word-rush/game.html?v=4',
+                tab: 'quiz'
+            },
+            {
+                name: "Sort It Out",
+                thumbnailUrl: 'sort-it-out/cover.webp?v=1',
+                embedUrl: 'sort-it-out/game.html?v=4',
+                tab: 'sort'
+            },
+            {
+                name: "Must or Mustn't School Rules",
+                thumbnailUrl: 'must-mustnt/cover.webp?v=1',
+                embedUrl: 'must-mustnt/game.html?v=4',
+                tab: 'sort'
+            },
+            {
+                name: "Pack the School Bag",
+                thumbnailUrl: 'pack-school-bag/cover.webp?v=1',
+                embedUrl: 'pack-school-bag/game.html?v=4',
+                tab: 'sort'
+            },
+            {
+                name: "Help the Teacher",
+                thumbnailUrl: 'help-the-teacher/cover.webp?v=1',
+                embedUrl: 'help-the-teacher/game.html?v=4',
+                tab: 'sort'
+            },
+            {
+                name: "Routine Race",
+                thumbnailUrl: 'routine-race/cover.webp?v=1',
+                embedUrl: 'routine-race/game.html?v=4',
+                tab: 'talk'
+            },
+            {
+                name: "Make the Sentence",
+                thumbnailUrl: 'make-sentence/cover.webp?v=1',
+                embedUrl: 'make-sentence/game.html?v=4',
+                tab: 'talk'
+            },
+            {
+                name: "Complete the Dialogue",
+                thumbnailUrl: 'complete-dialogue/cover.webp?v=1',
+                embedUrl: 'complete-dialogue/game.html?v=4',
+                tab: 'talk'
+            },
+            {
+                name: "Speaking Wheel",
+                thumbnailUrl: 'speaking-wheel/cover.webp?v=1',
+                embedUrl: 'speaking-wheel/game.html?v=4',
+                tab: 'talk'
+            }
         ];
+
+        var TABS = [
+            { id: 'all', label: 'All Games' },
+            { id: 'words', label: 'Words & Memory' },
+            { id: 'quiz', label: 'Quiz & Challenge' },
+            { id: 'sort', label: 'Sort & Choose' },
+            { id: 'talk', label: 'Sentences & Speaking' }
+        ];
+        var currentTab = 'all';
+        try { var st = sessionStorage.getItem('g6un1Tab'); if (st) currentTab = st; } catch (e) {}
+        if (!TABS.some(function (t) { return t.id === currentTab; })) currentTab = 'all';
+        var tabsEl = document.getElementById('tabs');
+        function renderTabs() {
+            tabsEl.innerHTML = '';
+            TABS.forEach(function (t) {
+                var n = t.id === 'all' ? games.length : games.filter(function (g) { return g.tab === t.id; }).length;
+                if (n === 0) return;
+                var b = document.createElement('button');
+                b.className = 'tab-btn' + (t.id === currentTab ? ' active' : '');
+                b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', t.id === currentTab ? 'true' : 'false');
+                b.innerHTML = t.label + '<span class="n">(' + n + ')</span>';
+                b.addEventListener('click', function () {
+                    currentTab = t.id;
+                    try { sessionStorage.setItem('g6un1Tab', t.id); } catch (e) {}
+                    renderTabs(); renderGames();
+                });
+                tabsEl.appendChild(b);
+            });
+        }
 
         var gamesGrid = document.getElementById('gamesGrid');
         var modal = document.getElementById('gameModal');
@@ -196,7 +348,7 @@
 
         function renderGames() {
             gamesGrid.innerHTML = '';
-            games.forEach(function (game) {
+            games.filter(function (g) { return currentTab === 'all' || g.tab === currentTab; }).forEach(function (game) {
                 var card = document.createElement('div');
                 card.className = 'game-card';
                 card.tabIndex = 0;
@@ -257,6 +409,7 @@
             if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
         });
 
+        renderTabs();
         renderGames();
     })();
     </script>

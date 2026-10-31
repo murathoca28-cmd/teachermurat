@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Routine Race</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+
+  #game { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 8px 12px 12px; }
+  #lanes { flex: 0 0 40%; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+  .lane { position: relative; flex: 1; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; overflow: hidden; }
+  .lane .tag { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); z-index: 2; color: #fff; font-weight: 900;
+    font-size: clamp(.9rem, 2.2vw, 1.6rem); padding: 0 14px; border-radius: 10px; border: 3px solid #0B2F2C; }
+  .lane .road { position: absolute; left: 14%; right: 14%; top: 50%; border-top: 6px dashed #9AA5A4; }
+  .lane .flag { position: absolute; right: 8%; top: 50%; transform: translateY(-50%); font-size: clamp(1.6rem, 6vh, 3.4rem); }
+  .runner { position: absolute; top: 50%; transform: translateY(-50%) scaleX(-1); font-size: clamp(1.6rem, 6.5vh, 4rem); transition: left .9s ease; z-index: 3; }
+  #r2 { transform: translateY(-50%); }
+  #panel { position: relative; flex: 1; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 18px; display: flex; flex-direction: column;
+    align-items: center; justify-content: space-evenly; padding: 6px 12px; text-align: center; }
+  #turn { color: #fff; font-weight: 900; font-size: clamp(1rem, 2.6vw, 1.9rem); padding: 0 22px; border-radius: 999px; border: 4px solid #0B2F2C; }
+  #animals { font-size: clamp(2rem, 7vh, 4rem); line-height: 1; letter-spacing: .12em; }
+  #sentence { font-weight: 900; font-size: clamp(1.3rem, 3.6vw, 2.8rem); line-height: 1.15; }
+  .blank { display: inline-block; min-width: 3.5em; border-bottom: 6px solid #0B2F2C; color: #0A7A2F; }
+  .blank.bad { color: #D62828; }
+  #opts { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .opt { font-size: clamp(1.1rem, 2.8vw, 2.1rem); font-weight: 900; padding: .2em .9em; background: #fff; color: #0B2F2C;
+    border: 5px solid #0B2F2C; border-radius: 16px; box-shadow: 0 5px 0 #0B2F2C; }
+  .opt:active { transform: translateY(3px); box-shadow: 0 2px 0 #0B2F2C; }
+  .opt.good { background: #C8F7D4; border-color: #0A7A2F; }
+  .opt.bad { background: #FFD6D6; border-color: #D62828; }
+  #fb { min-height: 1.4em; font-size: clamp(1rem, 2.6vw, 1.9rem); font-weight: 800; color: #0B5C56; }
+  #next { display: none; }
+</style>
+<style id="ln-css">
+.ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
+:where(.tile .e, .cell .e, .wc .e, .fe, .ct, #qmark, .w .e, .word .e, #pic) svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+#ln-screen { display: none; position: fixed; inset: 0; z-index: 70; background: #0E8F86; flex-direction: column; gap: 8px; padding: 8px 10px 10px; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; color: #0B2F2C; }
+#ln-top { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#ln-title { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.4rem); color: #fff; text-shadow: 3px 3px 0 #0B2F2C; margin-right: 6px; }
+#ln-tabs { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.ln-tab { font-weight: 900; font-size: clamp(.9rem, 2.1vw, 1.5rem); padding: .05em .8em; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; cursor: pointer; font-family: inherit; }
+.ln-tab.act { background: #FFD23F; border-color: #D62828; }
+#ln-close { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.5rem); padding: .05em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #D62828; color: #fff; cursor: pointer; font-family: inherit; }
+#ln-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 17vw, 240px), 1fr)); gap: 10px; align-content: start; padding: 2px; }
+.ln-card { background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ln-card.wide { grid-column: span 2; }
+.ln-card .le { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1.1; }
+.ln-card .le svg { width: clamp(2.4rem, 8vh, 4rem); height: clamp(2.4rem, 8vh, 4rem); display: block; }
+.ln-card .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.6rem); line-height: 1.15; }
+.ln-card .trl { font-weight: 800; font-size: clamp(.8rem, 1.7vw, 1.15rem); color: #0B5C56; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Routine Race</h1>
+  <p class="subtitle">Routines, Frequency and Pronouns</p>
+  <div class="preview">🚌 ⏰ 🎒 📚</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="game">
+  <div id="lanes">
+    <div class="lane"><div class="tag" style="background:#D62828">Team 1</div><div class="road"></div><div class="flag">🏁</div><div class="runner" id="r0">🚌</div></div>
+    <div class="lane"><div class="tag" style="background:#1F5FBF">Team 2</div><div class="road"></div><div class="flag">🏁</div><div class="runner" id="r1">🚲</div></div>
+    <div class="lane"><div class="tag" style="background:#0A7A2F">Team 3</div><div class="road"></div><div class="flag">🏁</div><div class="runner" id="r2">🏃</div></div>
+  </div>
+  <div id="panel">
+    <button class="restart-btn" id="trbtn" onclick="toggleTR()" style="position:absolute;top:8px;left:10px;font-size:clamp(.8rem,1.8vw,1.3rem)">Turkish: On</button>
+    <div id="turn"></div>
+    <div id="animals"></div>
+    <div id="sentence"></div>
+    <div id="opts"></div>
+    <div id="fb"></div>
+    <button class="big-btn" id="next" onclick="nextQ()" style="font-size:clamp(1.1rem,2.6vw,1.7rem)">Next</button>
+  </div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  var TR = true, fbParts = null;
+  function setFb(p, tr) { fbParts = [p, tr]; renderFb(); }
+  function renderFb() { document.getElementById('fb').textContent = fbParts ? fbParts[0] + (TR ? ' ' + fbParts[1] : '') : ''; }
+  function toggleTR() { TR = !TR; document.getElementById('trbtn').textContent = 'Turkish: ' + (TR ? 'On' : 'Off'); renderFb(); }
+  var Q = [
+    { a: "🍳", s: "My mum ___ breakfast every morning.", o: ["make", "makes", "making"], c: 1, tr: "Annem her sabah kahvaltı hazırlar." },
+    { a: "🚌", s: "We ___ to school by bus.", o: ["go", "goes", "going"], c: 0, tr: "Okula otobüsle gideriz." },
+    { a: "📓", s: "Ada ___ her homework after school.", o: ["do", "does", "doing"], c: 1, tr: "Ada okuldan sonra ödevini yapar." },
+    { a: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" width=\"1em\" height=\"1em\" style=\"vertical-align:-0.12em\" role=\"img\" aria-label=\"national anthem\"><rect x=\"18\" y=\"8\" width=\"64\" height=\"84\" rx=\"6\" fill=\"#fff\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M18 34 V14 a6 6 0 0 1 6 -6 H76 a6 6 0 0 1 6 6 V34 Z\" fill=\"#E30A17\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"41\" cy=\"21\" r=\"9\" fill=\"#fff\"/><circle cx=\"44.5\" cy=\"21\" r=\"7.4\" fill=\"#E30A17\"/><polygon points=\"57.0,16.0 58.2,19.3 61.8,19.5 59.0,21.6 59.9,25.0 57.0,23.1 54.1,25.0 55.0,21.6 52.2,19.5 55.8,19.3\" fill=\"#fff\"/><line x1=\"26\" y1=\"50\" x2=\"74\" y2=\"50\" stroke=\"#0B2F2C\" stroke-width=\"1.8\"/><line x1=\"26\" y1=\"58\" x2=\"74\" y2=\"58\" stroke=\"#0B2F2C\" stroke-width=\"1.8\"/><line x1=\"26\" y1=\"66\" x2=\"74\" y2=\"66\" stroke=\"#0B2F2C\" stroke-width=\"1.8\"/><line x1=\"26\" y1=\"74\" x2=\"74\" y2=\"74\" stroke=\"#0B2F2C\" stroke-width=\"1.8\"/><line x1=\"26\" y1=\"82\" x2=\"74\" y2=\"82\" stroke=\"#0B2F2C\" stroke-width=\"1.8\"/><ellipse cx=\"36\" cy=\"74\" rx=\"5.5\" ry=\"4\" transform=\"rotate(-20 36 74)\" fill=\"#0B2F2C\"/><line x1=\"41\" y1=\"73\" x2=\"41\" y2=\"52\" stroke=\"#0B2F2C\" stroke-width=\"2.6\"/><ellipse cx=\"50\" cy=\"66\" rx=\"5.5\" ry=\"4\" transform=\"rotate(-20 50 66)\" fill=\"#0B2F2C\"/><line x1=\"55\" y1=\"65\" x2=\"55\" y2=\"44\" stroke=\"#0B2F2C\" stroke-width=\"2.6\"/><ellipse cx=\"64\" cy=\"58\" rx=\"5.5\" ry=\"4\" transform=\"rotate(-20 64 58)\" fill=\"#0B2F2C\"/><line x1=\"69\" y1=\"57\" x2=\"69\" y2=\"46\" stroke=\"#0B2F2C\" stroke-width=\"2.6\"/></svg>", s: "The students ___ the national anthem.", o: ["sings", "sing", "singing"], c: 1, tr: "Öğrenciler milli marşı söyler." },
+    { a: "⚽", s: "My brother ___ football on Fridays.", o: ["plays", "play", "playing"], c: 0, tr: "Erkek kardeşim cuma günleri futbol oynar." },
+    { a: "📚", s: "I ___ books from the library.", o: ["borrows", "borrow", "borrowing"], c: 1, tr: "Kütüphaneden kitap ödünç alırım." },
+    { a: "🗣️", s: "The headmaster ___ a speech at the ceremony.", o: ["give", "gives", "giving"], c: 1, tr: "Müdür törende bir konuşma yapar." },
+    { a: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" width=\"1em\" height=\"1em\" style=\"vertical-align:-0.12em\" role=\"img\" aria-label=\"choir\"><rect x=\"8\" y=\"70\" width=\"84\" height=\"22\" fill=\"#2F6FDE\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"22\" y=\"52\" width=\"56\" height=\"18\" fill=\"#5B97F5\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"36\" y=\"34\" width=\"28\" height=\"18\" fill=\"#9CC5FF\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"16\" cy=\"60\" rx=\"6\" ry=\"4.5\" transform=\"rotate(-20 16 60)\" fill=\"#0B2F2C\"/><line x1=\"21.5\" y1=\"59\" x2=\"21.5\" y2=\"34\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M21.5 34 q9 4 7.2 15\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><ellipse cx=\"84\" cy=\"60\" rx=\"6\" ry=\"4.5\" transform=\"rotate(-20 84 60)\" fill=\"#0B2F2C\"/><line x1=\"78.5\" y1=\"59\" x2=\"78.5\" y2=\"34\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M78.5 34 q9 4 7.2 15\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><ellipse cx=\"42\" cy=\"27\" rx=\"6\" ry=\"4.5\" transform=\"rotate(-20 42 27)\" fill=\"#0B2F2C\"/><ellipse cx=\"58\" cy=\"25\" rx=\"6\" ry=\"4.5\" transform=\"rotate(-20 58 25)\" fill=\"#0B2F2C\"/><line x1=\"47.5\" y1=\"26\" x2=\"47.5\" y2=\"8\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"63.5\" y1=\"24\" x2=\"63.5\" y2=\"6\" stroke=\"#0B2F2C\" stroke-width=\"3\" stroke-linecap=\"round\"/><polygon points=\"47.5,8 63.5,6 63.5,12 47.5,14\" fill=\"#0B2F2C\"/></svg>", s: "They ___ in the school choir.", o: ["sing", "sings", "singing"], c: 0, tr: "Okul korosunda şarkı söylerler." },
+    { a: "🗓️", s: "We go to school from Monday to Friday. We ___ go to school on Sunday.", o: ["always", "never", "usually"], c: 1, tr: "Pazartesiden cumaya okula gideriz. Pazar günü asla okula gitmeyiz." },
+    { a: "🚶", s: "Eren walks to school every single day. He ___ walks to school.", o: ["always", "never", "sometimes"], c: 0, tr: "Eren her gün okula yürür. O her zaman okula yürür." },
+    { a: "🍽️", s: "I eat lunch at school on most days. I ___ eat lunch at school.", o: ["never", "usually", "always"], c: 1, tr: "Çoğu gün okulda öğle yemeği yerim. Genellikle okulda öğle yemeği yerim." },
+    { a: "🌧️", s: "It rains once or twice a month. It ___ rains.", o: ["always", "sometimes", "never"], c: 1, tr: "Ayda bir iki kez yağmur yağar. Bazen yağmur yağar." },
+    { a: "🌞", s: "The sun ___ rises in the morning.", o: ["always", "never", "sometimes"], c: 0, tr: "Güneş her zaman sabah doğar." },
+    { a: "♟️", s: "Mina plays chess two or three times a week. She ___ plays chess.", o: ["often", "never", "always"], c: 0, tr: "Mina haftada iki üç kez satranç oynar. Sık sık satranç oynar." },
+    { a: "⏰", s: "My teacher is ___ late. She always arrives on time.", o: ["never", "always", "often"], c: 0, tr: "Öğretmenim asla geç kalmaz. Her zaman zamanında gelir." },
+    { a: "🤫", s: "Students ___ talk during the exam. It is a rule.", o: ["never", "always", "usually"], c: 0, tr: "Öğrenciler sınav sırasında asla konuşmaz. Bu bir kuraldır." },
+    { a: "👩‍🏫", s: "The teacher helps ___ with my homework.", o: ["me", "I", "my"], c: 0, tr: "Öğretmen ödevimde bana yardım eder." },
+    { a: "👦", s: "Ali is my friend. I help ___ every day.", o: ["him", "he", "his"], c: 0, tr: "Ali arkadaşım. Ona her gün yardım ederim." },
+    { a: "👧", s: "Zeynep is new. We greet ___ at the door.", o: ["her", "she", "hers"], c: 0, tr: "Zeynep yeni. Onu kapıda selamlarız." },
+    { a: "👪", s: "My parents are at school. I can see ___ in the hall.", o: ["them", "they", "their"], c: 0, tr: "Annemle babam okulda. Onları salonda görebiliyorum." },
+    { a: "🚌", s: "Mum and I are late. The teacher waits for ___.", o: ["us", "we", "our"], c: 0, tr: "Annemle ben geç kaldık. Öğretmen bizi bekler." },
+    { a: "📖", s: "This is my book. Can you give it to ___?", o: ["I", "me", "my"], c: 1, tr: "Bu benim kitabım. Onu bana verebilir misin?" },
+    { a: "🤫", s: "The students are noisy. The teacher calls ___.", o: ["they", "them", "their"], c: 1, tr: "Öğrenciler gürültülü. Öğretmen onları çağırır." },
+    { a: "✏️", s: "Where is my pen? I can’t find ___.", o: ["it", "he", "them"], c: 0, tr: "Kalemim nerede? Onu bulamıyorum." }
+  ];
+  var GOAL = 5, TEAMS = ['Team 1', 'Team 2', 'Team 3'], COLORS = ['#D62828', '#1F5FBF', '#0A7A2F'];
+  var order, qi, turn, steps, locked;
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    order = shuffle(Q.slice()); qi = 0; turn = 0; steps = [0, 0, 0]; locked = false;
+    place(); showQ();
+  }
+  function place() {
+    for (var t = 0; t < 3; t++) document.getElementById('r' + t).style.left = (14 + steps[t] / GOAL * 68) + '%';
+  }
+  function showQ() {
+    var q = order[qi];
+    locked = false;
+    var tn = document.getElementById('turn');
+    tn.textContent = TEAMS[turn] + ' - your turn!'; tn.style.background = COLORS[turn];
+    document.getElementById('animals').textContent = q.a;
+    document.getElementById('sentence').innerHTML = q.s.replace('___', '<span class="blank" id="blank">&nbsp;</span>');
+    fbParts = null; renderFb();
+    document.getElementById('next').style.display = 'none';
+    var box = document.getElementById('opts'); box.innerHTML = '';
+    shuffle(q.o.map(function (t, i) { return { t: t, i: i }; })).forEach(function (o) {
+      var b = document.createElement('button'); b.className = 'opt'; b.textContent = o.t;
+      b.addEventListener('click', function () { answer(b, o.i); });
+      box.appendChild(b);
+    });
+  }
+  function answer(btn, i) {
+    if (locked) return; locked = true;
+    var q = order[qi], ok = (i === q.c);
+    var blank = document.getElementById('blank'); blank.textContent = q.o[q.c];
+    Array.prototype.forEach.call(document.querySelectorAll('.opt'), function (b) { if (b.textContent === q.o[q.c]) b.classList.add('good'); });
+    if (ok) { steps[turn]++; place(); setFb('✔ Great!', q.tr); }
+    else { btn.classList.add('bad', 'shake'); setFb('✘ Not this time.', q.tr); }
+    var nx = document.getElementById('next');
+    if (steps[turn] >= GOAL) { var w = turn; setTimeout(function () { finish(w); }, 1800); return; }
+    nx.textContent = 'Next'; nx.style.display = 'inline-block';
+  }
+  function nextQ() {
+    qi++; turn = (turn + 1) % 3;
+    if (qi >= order.length) {
+      var mx = Math.max.apply(null, steps), lead = [];
+      steps.forEach(function (v, i) { if (v === mx) lead.push(i); });
+      finish(lead.length === 1 ? lead[0] : -1); return;
+    }
+    showQ();
+  }
+  function finish(w) {
+    document.getElementById('win-title').textContent = w < 0 ? "It's a Draw!" : TEAMS[w] + ' Wins!';
+    document.getElementById('win-stats').textContent = 'Team 1: ' + steps[0] + '  |  Team 2: ' + steps[1] + '  |  Team 3: ' + steps[2];
+    document.getElementById('win-screen').style.display = 'flex';
+  }
+</script>
+<div id="ln-screen">
+  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-grid"></div>
+</div>
+<script>
+(function () {
+  var LN = [["How Often?", "Ne Sıklıkla?", [["●●●●", "always", "her zaman"], ["●●●○", "usually", "genellikle"], ["●●○○", "often", "sık sık"], ["●○○○", "sometimes", "bazen"], ["○○○○", "never", "asla"]]], ["Object Pronouns", "Nesne Zamirleri", [["🙋", "me: The teacher helps me.", "beni/bana: Öğretmen bana yardım eder."], ["👉", "you: I can see you.", "seni/sana: Seni görebiliyorum."], ["👦", "him: I know him.", "onu (erkek): Onu tanıyorum."], ["👧", "her: We greet her.", "onu (kadın): Onu selamlıyoruz."], ["📘", "it: I need it.", "onu (nesne): Ona ihtiyacım var."], ["👥", "us: Mum drives us.", "bizi/bize: Annem bizi götürür."], ["👪", "them: I help them.", "onları/onlara: Onlara yardım ederim."]]], ["School Verbs", "Okul Fiilleri", [["👋", "greet", "selamlamak"], ["🚶", "follow", "takip etmek, uymak"], ["🧭", "lead", "yönetmek"], ["🗂️", "organise", "düzenlemek"], ["🙋", "volunteer", "gönüllü olmak"], ["🤝", "support", "desteklemek"], ["✅", "pass", "(sınavı) geçmek"], ["❌", "fail", "(sınavdan) kalmak"], ["📖", "borrow", "ödünç almak"], ["🎒", "pack", "(çantayı) hazırlamak"], ["🧩", "solve", "çözmek"], ["🎉", "celebrate", "kutlamak"]]]];
+  function lnShow(i) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
+    document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
+      var wide = it[1].length > 26 && it[0].indexOf('<svg') < 0;
+      return '<div class="ln-card' + (wide ? ' wide' : '') + '"><div class="le">' + it[0] + '</div><div class="en">' + it[1] + '</div><div class="trl">' + it[2] + '</div></div>';
+    }).join('');
+    document.getElementById('ln-grid').scrollTop = 0;
+  }
+  window.lnOpen = function () {
+    var tabs = document.getElementById('ln-tabs'); tabs.innerHTML = '';
+    LN.forEach(function (s, i) { var b = document.createElement('button'); b.className = 'ln-tab'; b.textContent = s[0]; b.onclick = function () { lnShow(i); }; tabs.appendChild(b); });
+    document.getElementById('ln-screen').style.display = 'flex'; lnShow(0);
+  };
+  window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+</body>
+</html>
