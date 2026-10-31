@@ -37,6 +37,14 @@
 
         .game-card:focus-visible, .close-btn:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
 
+        .tabs { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 1000px; margin: 0 auto; padding: 4px 20px 14px; }
+        .tab-btn { font-family: inherit; font-size: 1.05rem; font-weight: 800; padding: 8px 18px; border: 3px solid #334155; border-radius: 999px; background: #FFFFFF; color: #0B4F4A; box-shadow: 0 4px 0 #94A3B8; cursor: pointer; }
+        .tab-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #94A3B8; }
+        .tab-btn.active { background: #FFD23F; color: #0B2F2C; }
+        .tab-btn .n { opacity: .7; font-weight: 700; margin-left: 4px; }
+        .tab-btn:focus-visible { outline: 4px solid #F0A500; outline-offset: 3px; }
+        @media (max-width: 600px) { .tabs { gap: 8px; padding: 4px 12px 12px; } .tab-btn { font-size: .95rem; padding: 6px 12px; } }
+
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
@@ -161,6 +169,7 @@
         <h1>Games</h1>
     </div>
 
+    <div class="tabs" id="tabs" role="tablist"></div>
     <div class="games-grid" id="gamesGrid"></div>
 
     <div id="gameModal" class="modal-overlay" style="display: none;">
@@ -183,105 +192,154 @@
         var games = [
             {
                 name: 'Jeopardy Word Game',
-                thumbnailUrl: 'jeopardycap.webp?v=6',
-                embedUrl: 'jeopardy_game.html'
+                thumbnailUrl: 'jeopardy/cover.webp?v=6',
+                embedUrl: 'jeopardy/game.html',
+                tab: 'quiz'
             },
             {
                 name: 'Clothes Memory Match',
-                thumbnailUrl: 'clothesmemorycap.webp?v=6',
-                embedUrl: 'memory_clothes_game.html'
+                thumbnailUrl: 'memory-clothes/cover.webp?v=6',
+                embedUrl: 'memory-clothes/game.html',
+                tab: 'words'
             },
             {
                 name: 'Animal Race - Comparatives and Superlatives',
-                thumbnailUrl: 'animalracecap.webp?v=6',
-                embedUrl: 'animal_race_game.html'
+                thumbnailUrl: 'animal-race/cover.webp?v=6',
+                embedUrl: 'animal-race/game.html',
+                tab: 'talk'
             },
             {
                 name: 'Restaurant Order Game',
-                thumbnailUrl: 'restaurantcap.webp?v=6',
-                embedUrl: 'restaurant_order_game.html'
+                thumbnailUrl: 'restaurant-order/cover.webp?v=6',
+                embedUrl: 'restaurant-order/game.html',
+                tab: 'sort'
             },
             {
                 name: 'Must or Mustn\'t Sign Game',
-                thumbnailUrl: 'mustmustntcap.webp?v=6',
-                embedUrl: 'must_mustnt_game.html'
+                thumbnailUrl: 'must-mustnt/cover.webp?v=6',
+                embedUrl: 'must-mustnt/game.html',
+                tab: 'sort'
             },
             {
                 name: 'Pack the Suitcase',
-                thumbnailUrl: 'packsuitcasecap.webp?v=1',
-                embedUrl: 'pack_suitcase_game.html'
+                thumbnailUrl: 'pack-suitcase/cover.webp?v=1',
+                embedUrl: 'pack-suitcase/game.html',
+                tab: 'sort'
             },
             {
                 name: 'Speaking Wheel',
-                thumbnailUrl: 'speakingwheelcap.webp?v=1',
-                embedUrl: 'speaking_wheel_game.html?v=3'
+                thumbnailUrl: 'speaking-wheel/cover.webp?v=1',
+                embedUrl: 'speaking-wheel/game.html?v=3',
+                tab: 'talk'
             },
             {
                 name: 'Anagram Race',
-                thumbnailUrl: 'anagramracecap.webp?v=1',
-                embedUrl: 'anagram_race_game.html'
+                thumbnailUrl: 'anagram-race/cover.webp?v=1',
+                embedUrl: 'anagram-race/game.html',
+                tab: 'words'
             },
             {
                 name: 'Memory Match - Wild Animals',
-                thumbnailUrl: 'memorywildcap.webp?v=1',
-                embedUrl: 'memory_wild_animals_game.html'
+                thumbnailUrl: 'memory-wild-animals/cover.webp?v=1',
+                embedUrl: 'memory-wild-animals/game.html',
+                tab: 'words'
             },
             {
                 name: 'Sort It Out',
-                thumbnailUrl: 'sortitoutcap.webp?v=1',
-                embedUrl: 'sort_it_out_game.html'
+                thumbnailUrl: 'sort-it-out/cover.webp?v=1',
+                embedUrl: 'sort-it-out/game.html',
+                tab: 'sort'
             },
             {
                 name: 'Balloon Pop',
-                thumbnailUrl: 'balloonpopcap.webp?v=1',
-                embedUrl: 'balloon_pop_game.html'
+                thumbnailUrl: 'balloon-pop/cover.webp?v=1',
+                embedUrl: 'balloon-pop/game.html',
+                tab: 'quiz'
             },
             {
                 name: 'Word Search',
-                thumbnailUrl: 'wordsearchcap.webp?v=1',
-                embedUrl: 'word_search_game.html'
+                thumbnailUrl: 'word-search/cover.webp?v=1',
+                embedUrl: 'word-search/game.html',
+                tab: 'words'
             },
             {
                 name: 'Guess the Word',
-                thumbnailUrl: 'guesswordcap.webp?v=1',
-                embedUrl: 'guess_the_word_game.html'
+                thumbnailUrl: 'guess-the-word/cover.webp?v=1',
+                embedUrl: 'guess-the-word/game.html',
+                tab: 'words'
             },
             {
                 name: 'Bingo',
-                thumbnailUrl: 'bingocap.webp?v=1',
-                embedUrl: 'bingo_game.html'
+                thumbnailUrl: 'bingo/cover.webp?v=1',
+                embedUrl: 'bingo/game.html',
+                tab: 'quiz'
             },
             {
                 name: 'Make the Sentence',
-                thumbnailUrl: 'makesentencecap.webp?v=1',
-                embedUrl: 'make_sentence_game.html'
+                thumbnailUrl: 'make-sentence/cover.webp?v=1',
+                embedUrl: 'make-sentence/game.html',
+                tab: 'talk'
             },
             {
                 name: 'True or False',
-                thumbnailUrl: 'truefalsecap.webp?v=1',
-                embedUrl: 'true_false_game.html'
+                thumbnailUrl: 'true-false/cover.webp?v=1',
+                embedUrl: 'true-false/game.html',
+                tab: 'quiz'
             },
             {
                 name: 'Crossword',
-                thumbnailUrl: 'crosswordcap.webp?v=1',
-                embedUrl: 'crossword_game.html'
+                thumbnailUrl: 'crossword/cover.webp?v=1',
+                embedUrl: 'crossword/game.html',
+                tab: 'words'
             },
             {
                 name: 'Complete the Dialogue',
-                thumbnailUrl: 'dialoguecap.webp?v=1',
-                embedUrl: 'complete_dialogue_game.html'
+                thumbnailUrl: 'complete-dialogue/cover.webp?v=1',
+                embedUrl: 'complete-dialogue/game.html',
+                tab: 'talk'
             },
             {
                 name: 'Who Am I?',
-                thumbnailUrl: 'whoamicap.webp?v=1',
-                embedUrl: 'who_am_i_game.html'
+                thumbnailUrl: 'who-am-i/cover.webp?v=1',
+                embedUrl: 'who-am-i/game.html',
+                tab: 'quiz'
             },
             {
                 name: 'Word Rush',
-                thumbnailUrl: 'wordrushcap.webp?v=1',
-                embedUrl: 'word_rush_game.html?v=3'
+                thumbnailUrl: 'word-rush/cover.webp?v=1',
+                embedUrl: 'word-rush/game.html?v=3',
+                tab: 'quiz'
             },
         ];
+
+        var TABS = [
+            { id: 'all', label: 'All Games' },
+            { id: 'words', label: 'Words & Memory' },
+            { id: 'quiz', label: 'Quiz & Challenge' },
+            { id: 'sort', label: 'Sort & Choose' },
+            { id: 'talk', label: 'Sentences & Speaking' }
+        ];
+        var currentTab = 'all';
+        try { var st = sessionStorage.getItem('g6revTab'); if (st) currentTab = st; } catch (e) {}
+        if (!TABS.some(function (t) { return t.id === currentTab; })) currentTab = 'all';
+        var tabsEl = document.getElementById('tabs');
+        function renderTabs() {
+            tabsEl.innerHTML = '';
+            TABS.forEach(function (t) {
+                var n = t.id === 'all' ? games.length : games.filter(function (g) { return g.tab === t.id; }).length;
+                if (n === 0) return;
+                var b = document.createElement('button');
+                b.className = 'tab-btn' + (t.id === currentTab ? ' active' : '');
+                b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', t.id === currentTab ? 'true' : 'false');
+                b.innerHTML = t.label + '<span class="n">(' + n + ')</span>';
+                b.addEventListener('click', function () {
+                    currentTab = t.id;
+                    try { sessionStorage.setItem('g6revTab', t.id); } catch (e) {}
+                    renderTabs(); renderGames();
+                });
+                tabsEl.appendChild(b);
+            });
+        }
 
         var gamesGrid = document.getElementById('gamesGrid');
         var modal = document.getElementById('gameModal');
@@ -290,7 +348,7 @@
 
         function renderGames() {
             gamesGrid.innerHTML = '';
-            games.forEach(function (game) {
+            games.filter(function (g) { return currentTab === 'all' || g.tab === currentTab; }).forEach(function (game) {
                 var card = document.createElement('div');
                 card.className = 'game-card';
                 card.tabIndex = 0;
@@ -351,6 +409,7 @@
             if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
         });
 
+        renderTabs();
         renderGames();
     })();
     </script>

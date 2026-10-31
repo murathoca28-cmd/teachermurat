@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Make the Sentence</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 6px 14px 14px; justify-content: space-evenly; }
+  #hint { text-align: center; background: #fff; border: 5px solid #0B2F2C; border-radius: 18px; padding: 6px 14px; font-weight: 900; font-size: clamp(1.1rem, 2.8vw, 2.1rem); }
+  #line { min-height: clamp(80px, 17vh, 150px); background: #fff; border: 6px dashed #0B2F2C; border-radius: 20px; padding: 10px; display: flex; flex-wrap: wrap;
+    gap: 8px; align-content: center; justify-content: center; }
+  #line.ok { border-style: solid; border-color: #0A7A2F; background: #C8F7D4; }
+  #bank { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-content: center; min-height: clamp(90px, 20vh, 200px); }
+  .chip { font-size: clamp(1.1rem, 3vw, 2.3rem); font-weight: 900; padding: .1em .6em; background: #FFD23F; color: #0B2F2C; border: 5px solid #0B2F2C; border-radius: 14px; box-shadow: 0 5px 0 #0B2F2C; }
+  .chip:active { transform: translateY(3px); box-shadow: 0 2px 0 #0B2F2C; }
+  #line .chip { background: #fff; }
+  .chip.used { visibility: hidden; }
+  #btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  #btns .big-btn { font-size: clamp(1.1rem, 2.8vw, 2rem); }
+  #fb { min-height: 1.4em; text-align: center; font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.8rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #next { display: none; }
+.modes { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Make the<br>Sentence</h1>
+  <p class="subtitle">Tap the words in the right order!</p>
+  <div class="preview">is she short and thin</div>
+  <div class="modes">
+    <button class="big-btn" onclick="startGame('s')">Sentences</button>
+    <button class="big-btn" onclick="startGame('ci')">Classroom Instructions</button>
+  </div>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <div class="modes">
+    <button class="big-btn" onclick="startGame()">Play Again</button>
+    <button class="big-btn" style="background:#fff" onclick="menu()">Menu</button>
+  </div>
+</div>
+<div id="topbar">
+  <div class="stat"><span id="lbl">Sentence</span>: <span id="rn">1</span>/<span id="rt">10</span></div>
+  <div class="stat">Stars: <span id="st">0</span> ⭐</div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="hint" class="tr"></div>
+  <div id="line"></div>
+  <div id="bank"></div>
+  <div id="fb"></div>
+  <div id="btns">
+    <button class="big-btn" id="check" onclick="check()">Check</button>
+    <button class="big-btn" id="clear" onclick="clearLine()" style="background:#fff">Clear</button>
+    <button class="big-btn" id="next" onclick="nextS()">Next</button>
+  </div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  function toggleTR() { var off = document.body.classList.toggle('no-tr'); document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On'); }
+
+  var S = [["I am short and thin.", "Ben kısa boylu ve zayıfım."], ["She has got long wavy hair.", "Onun uzun dalgalı saçları var."], ["He is kind and friendly.", "O nazik ve arkadaş canlısı."], ["My favourite lesson is Science.", "En sevdiğim ders Fen Bilimleri."], ["I have a Drama lesson on Tuesdays.", "Salı günleri Drama dersim var."], ["Please look at the screen.", "Lütfen ekrana bak."], ["Please listen to your teacher carefully.", "Lütfen öğretmenini dikkatle dinle."], ["It was cold and snowy last winter.", "Geçen kış hava soğuk ve karlıydı."], ["I could make a snowman then.", "O zaman kardan adam yapabiliyordum."], ["I prefer wearing shorts in summer.", "Yazın şort giymeyi tercih ederim."], ["I dislike wearing gloves in winter.", "Kışın eldiven giymekten hoşlanmam."], ["The farmer grows fruit and vegetables.", "Çiftçi meyve ve sebze yetiştirir."], ["The doctor helps sick people every day.", "Doktor her gün hasta insanlara yardım eder."], ["I buy fresh bread at the bakery.", "Taze ekmeği fırından alırım."], ["We watch films at the cinema.", "Sinemada film izleriz."], ["A dolphin jumped out of the water.", "Bir yunus sudan dışarı zıpladı."], ["We must keep the sea clean.", "Denizi temiz tutmalıyız."], ["We shouldn't throw rubbish into the sea.", "Denize çöp atmamalıyız."], ["Broccoli is healthy food.", "Brokoli sağlıklı bir yiyecektir."], ["Chips and sweets are unhealthy.", "Cips ve şekerlemeler sağlıksızdır."]], ROUNDS = 10, CI = [["Please look at the screen.", "Lütfen ekrana bak."], ["Please listen carefully.", "Lütfen dikkatle dinle."], ["Please talk with your partner.", "Lütfen partnerinle konuş."], ["Please write this down.", "Lütfen bunu yaz."], ["Please read this.", "Lütfen bunu oku."], ["Please open your books.", "Lütfen kitaplarını aç."], ["Please close the door.", "Lütfen kapıyı kapat."], ["Please raise your hand.", "Lütfen elini kaldır."], ["Please stand up.", "Lütfen ayağa kalk."], ["Please sit down and be quiet.", "Lütfen otur ve sessiz ol."], ["Please repeat after me.", "Lütfen benden sonra tekrar et."], ["Please work in pairs.", "Lütfen ikili çalış."]], CI_ROUNDS = 8, mode = "s", pool, total;
+  var order, qi, line, words, stars, tried, locked;
+
+  function startGame(m) {
+    if (m) mode = m;
+    pool = mode === 'ci' ? CI : S; total = mode === 'ci' ? CI_ROUNDS : ROUNDS;
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    order = shuffle(pool.slice()).slice(0, total); qi = 0; stars = 0;
+    document.getElementById('st').textContent = 0;
+    showS();
+  }
+  function menu() { document.getElementById('win-screen').style.display = 'none'; document.getElementById('start-screen').style.display = 'flex'; }
+  function showS() {
+    var s = order[qi][0];
+    words = s.split(' ').map(function (w, i) { return { w: w, id: i }; });
+    var bank; do { bank = shuffle(words.slice()); } while (bank.map(function (x) { return x.id; }).join() === words.map(function (x) { return x.id; }).join());
+    words = bank; line = []; tried = false; locked = false;
+    document.getElementById('rn').textContent = qi + 1; document.getElementById('rt').textContent = total; document.getElementById('lbl').textContent = mode === 'ci' ? 'Instruction' : 'Sentence';
+    document.getElementById('hint').textContent = order[qi][1];
+    document.getElementById('fb').textContent = '';
+    document.getElementById('line').className = '';
+    document.getElementById('next').style.display = 'none';
+    document.getElementById('check').style.display = ''; document.getElementById('clear').style.display = '';
+    draw();
+  }
+  function draw() {
+    var ln = document.getElementById('line'); ln.innerHTML = '';
+    line.forEach(function (id) {
+      var b = document.createElement('button'); b.className = 'chip'; b.textContent = words.filter(function (x) { return x.id === id; })[0].w;
+      b.addEventListener('click', function () { if (locked) return; line.splice(line.indexOf(id), 1); draw(); });
+      ln.appendChild(b);
+    });
+    var bk = document.getElementById('bank'); bk.innerHTML = '';
+    words.forEach(function (x) {
+      var b = document.createElement('button'); b.className = 'chip' + (line.indexOf(x.id) >= 0 ? ' used' : ''); b.textContent = x.w;
+      b.addEventListener('click', function () { if (locked || line.indexOf(x.id) >= 0) return; line.push(x.id); draw(); });
+      bk.appendChild(b);
+    });
+  }
+  function clearLine() { if (locked) return; line = []; draw(); document.getElementById('fb').textContent = ''; }
+  function check() {
+    if (locked) return;
+    var fb = document.getElementById('fb');
+    if (line.length < words.length) { fb.textContent = 'Use all the words!'; return; }
+    var got = line.map(function (id) { return words.filter(function (x) { return x.id === id; })[0].w; }).join(' ');
+    if (got === order[qi][0]) {
+      locked = true; if (!tried) { stars++; document.getElementById('st').textContent = stars; }
+      document.getElementById('line').className = 'ok'; fb.textContent = '✔ Great job!';
+      document.getElementById('check').style.display = 'none'; document.getElementById('clear').style.display = 'none';
+      var nx = document.getElementById('next'); nx.textContent = (qi === order.length - 1) ? 'Finish' : 'Next'; nx.style.display = 'inline-block';
+    } else {
+      tried = true; fb.textContent = 'Not yet. Try again!';
+      var l = document.getElementById('line'); l.classList.remove('shake'); void l.offsetWidth; l.classList.add('shake');
+    }
+  }
+  function nextS() {
+    qi++;
+    if (qi >= order.length) {
+      document.getElementById('win-title').textContent = stars >= total * 0.8 ? (mode === 'ci' ? 'Instruction Master!' : 'Sentence Master!') : (stars >= total * 0.5 ? 'Well Done!' : 'Good Try!');
+      document.getElementById('win-stats').textContent = 'Stars: ' + stars + ' / ' + order.length;
+      document.getElementById('win-screen').style.display = 'flex'; return;
+    }
+    showS();
+  }
+</script>
+</body>
+</html>
