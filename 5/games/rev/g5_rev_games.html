@@ -191,31 +191,26 @@
         // embedUrl:     the game address (the <iframe src="..."> part)
         // ============================================================
         var games = [
-            { name: 'Jeopardy Word Game', thumbnailUrl: 'jeopardycap.webp?v=1', embedUrl: 'jeopardy_game.html?v=1', tab: 'quiz' },
-            { name: 'Clothes Memory Match', thumbnailUrl: 'clothesmemorycap.webp?v=1', embedUrl: 'memory_clothes_game.html?v=1', tab: 'words' },
-            { name: 'Memory Match - Sea Animals', thumbnailUrl: 'memoryseacap.webp?v=1', embedUrl: 'memory_sea_animals_game.html?v=1', tab: 'words' },
-            { name: 'Anagram Race', thumbnailUrl: 'anagramracecap.webp?v=1', embedUrl: 'anagram_race_game.html?v=1', tab: 'words' },
-            { name: 'Guess the Word', thumbnailUrl: 'guesswordcap.webp?v=1', embedUrl: 'guess_the_word_game.html?v=1', tab: 'words' },
-            { name: 'Word Search', thumbnailUrl: 'wordsearchcap.webp?v=1', embedUrl: 'word_search_game.html?v=1', tab: 'words' },
-            { name: 'Crossword', thumbnailUrl: 'crosswordcap.webp?v=1', embedUrl: 'crossword_game.html?v=1', tab: 'words' },
-            { name: 'True or False', thumbnailUrl: 'truefalsecap.webp?v=1', embedUrl: 'true_false_game.html?v=1', tab: 'quiz' },
-            { name: 'Balloon Pop', thumbnailUrl: 'balloonpopcap.webp?v=1', embedUrl: 'balloon_pop_game.html?v=1', tab: 'quiz' },
-            { name: 'Who Am I?', thumbnailUrl: 'whoamicap.webp?v=1', embedUrl: 'who_am_i_game.html?v=1', tab: 'quiz' },
-            { name: 'Bingo', thumbnailUrl: 'bingocap.webp?v=1', embedUrl: 'bingo_game.html?v=1', tab: 'quiz' },
-            { name: 'Word Rush', thumbnailUrl: 'wordrushcap.webp?v=1', embedUrl: 'word_rush_game.html?v=1', tab: 'quiz' },
-            { name: 'Sort It Out', thumbnailUrl: 'sortitoutcap.webp?v=1', embedUrl: 'sort_it_out_game.html?v=1', tab: 'sort' },
-            { name: 'Dress for the Weather', thumbnailUrl: 'packsuitcasecap.webp?v=1', embedUrl: 'dress_weather_game.html?v=1', tab: 'sort' },
-            { name: 'Healthy Food Order Game', thumbnailUrl: 'restaurantcap.webp?v=1', embedUrl: 'healthy_food_order_game.html?v=1', tab: 'sort' },
-            { name: "Must or Mustn't Sign Game", thumbnailUrl: 'mustmustntcap.webp?v=1', embedUrl: 'must_mustnt_game.html?v=1', tab: 'sort' },
-            { name: 'Make the Sentence', thumbnailUrl: 'makesentencecap.webp?v=1', embedUrl: 'make_sentence_game.html?v=1', tab: 'talk' },
-            { name: 'Complete the Dialogue', thumbnailUrl: 'dialoguecap.webp?v=1', embedUrl: 'complete_dialogue_game.html?v=1', tab: 'talk' },
-            { name: 'Speaking Wheel', thumbnailUrl: 'speakingwheelcap.webp?v=1', embedUrl: 'speaking_wheel_game.html?v=1', tab: 'talk' },
-            { name: 'Past Race', thumbnailUrl: 'animalracecap.webp?v=1', embedUrl: 'past_race_game.html?v=1', tab: 'talk' },
-            { name: 'Find Objects', thumbnailUrl: 'https://screens.cdn.wordwall.net/200/6b666df146c44dffa0391083fbe8ab11_2', embedUrl: 'https://wordwall.net/tr/embed/6b666df146c44dffa0391083fbe8ab11?themeId=2&templateId=10&fontStackId=0', tab: 'ww' },
-            { name: 'Classroom Instructions', thumbnailUrl: 'https://screens.cdn.wordwall.net/200/77504a042bf24bb8b9fb77e9653b47d1_2', embedUrl: 'https://wordwall.net/embed/77504a042bf24bb8b9fb77e9653b47d1?themeId=2&templateId=72&fontStackId=0', tab: 'ww' },
-            { name: 'Jobs Spell the Word', thumbnailUrl: 'https://screens.cdn.wordwall.net/200/e463b556e5e942f5b445a79690e54582_41', embedUrl: 'https://wordwall.net/embed/e463b556e5e942f5b445a79690e54582?themeId=41&templateId=79&fontStackId=0', tab: 'ww' },
-            { name: 'Where Am I?', thumbnailUrl: 'https://screens.cdn.wordwall.net/200/234b7a42cd7844d8a3dfdb219c34ecf1_49', embedUrl: 'https://wordwall.net/embed/234b7a42cd7844d8a3dfdb219c34ecf1?themeId=49&templateId=89&fontStackId=0', tab: 'ww' },
-            { name: 'Healthy and Unhealthy Food', thumbnailUrl: 'https://screens.cdn.wordwall.net/200/17cab43ff57d402797544e7fe8b02335_52', embedUrl: 'https://wordwall.net/embed/17cab43ff57d402797544e7fe8b02335?themeId=52&templateId=81&fontStackId=0', tab: 'ww' }
+            { name: 'Jeopardy Word Game', thumbnailUrl: 'jeopardy/cover.webp?v=2', embedUrl: 'jeopardy/game.html?v=1', tab: 'quiz' },
+            { name: 'Clothes Memory Match', thumbnailUrl: 'memory-clothes/cover.webp?v=1', embedUrl: 'memory-clothes/game.html?v=1', tab: 'words' },
+            { name: 'Memory Match - Sea Animals', thumbnailUrl: 'memory-sea-animals/cover.webp?v=1', embedUrl: 'memory-sea-animals/game.html?v=1', tab: 'words' },
+            { name: 'Anagram Race', thumbnailUrl: 'anagram-race/cover.webp?v=1', embedUrl: 'anagram-race/game.html?v=1', tab: 'words' },
+            { name: 'Guess the Word', thumbnailUrl: 'guess-the-word/cover.webp?v=1', embedUrl: 'guess-the-word/game.html?v=1', tab: 'words' },
+            { name: 'Word Search', thumbnailUrl: 'word-search/cover.webp?v=1', embedUrl: 'word-search/game.html?v=1', tab: 'words' },
+            { name: 'Crossword', thumbnailUrl: 'crossword/cover.webp?v=1', embedUrl: 'crossword/game.html?v=1', tab: 'words' },
+            { name: 'True or False', thumbnailUrl: 'true-false/cover.webp?v=1', embedUrl: 'true-false/game.html?v=1', tab: 'quiz' },
+            { name: 'Balloon Pop', thumbnailUrl: 'balloon-pop/cover.webp?v=1', embedUrl: 'balloon-pop/game.html?v=1', tab: 'quiz' },
+            { name: 'Who Am I?', thumbnailUrl: 'who-am-i/cover.webp?v=1', embedUrl: 'who-am-i/game.html?v=1', tab: 'quiz' },
+            { name: 'Bingo', thumbnailUrl: 'bingo/cover.webp?v=1', embedUrl: 'bingo/game.html?v=1', tab: 'quiz' },
+            { name: 'Word Rush', thumbnailUrl: 'word-rush/cover.webp?v=1', embedUrl: 'word-rush/game.html?v=2', tab: 'quiz' },
+            { name: 'Sort It Out', thumbnailUrl: 'sort-it-out/cover.webp?v=1', embedUrl: 'sort-it-out/game.html?v=1', tab: 'sort' },
+            { name: 'Dress for the Weather', thumbnailUrl: 'dress-weather/cover.webp?v=1', embedUrl: 'dress-weather/game.html?v=1', tab: 'sort' },
+            { name: 'Healthy Food Order Game', thumbnailUrl: 'healthy-food-order/cover.webp?v=1', embedUrl: 'healthy-food-order/game.html?v=1', tab: 'sort' },
+            { name: "Must or Mustn't Sign Game", thumbnailUrl: 'must-mustnt/cover.webp?v=1', embedUrl: 'must-mustnt/game.html?v=1', tab: 'sort' },
+            { name: 'Make the Sentence', thumbnailUrl: 'make-sentence/cover.webp?v=1', embedUrl: 'make-sentence/game.html?v=2', tab: 'talk' },
+            { name: 'Complete the Dialogue', thumbnailUrl: 'complete-dialogue/cover.webp?v=1', embedUrl: 'complete-dialogue/game.html?v=1', tab: 'talk' },
+            { name: 'Speaking Wheel', thumbnailUrl: 'speaking-wheel/cover.webp?v=1', embedUrl: 'speaking-wheel/game.html?v=1', tab: 'talk' },
+            { name: 'Past Race', thumbnailUrl: 'past-race/cover.webp?v=1', embedUrl: 'past-race/game.html?v=1', tab: 'talk' },
         ];
 
         var TABS = [
@@ -223,8 +218,7 @@
             { id: 'words', label: 'Words & Memory' },
             { id: 'quiz', label: 'Quiz & Challenge' },
             { id: 'sort', label: 'Sort & Choose' },
-            { id: 'talk', label: 'Sentences & Speaking' },
-            { id: 'ww', label: 'Wordwall' }
+            { id: 'talk', label: 'Sentences & Speaking' }
         ];
         var currentTab = 'all';
         try { var st = sessionStorage.getItem('g5revTab'); if (st) currentTab = st; } catch (e) {}

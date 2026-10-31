@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bingo</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 6px 12px 12px; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #cluebox { flex: 0 0 34%; min-width: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 20px; padding: 12px 16px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; text-align: center; }
+  @media (orientation: portrait) { #cluebox { flex: 0 0 25%; padding: 6px 14px; gap: 6px; } }
+  #cl-label { font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.7rem); color: #0B5C56; }
+  #cl-en { font-weight: 900; font-size: clamp(1.4rem, 3.4vw, 2.8rem); line-height: 1.2; }
+  #cl-tr { font-weight: 800; font-size: clamp(1rem, 2vw, 1.5rem); color: #0B5C56; }
+  #skip { font-size: clamp(1rem, 2.2vw, 1.5rem); padding: .1em 1em; }
+  #board { flex: 1; min-width: 0; min-height: 0; display: grid; gap: 8px; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)); }
+  .cell { container-type: size; position: relative; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 14px; padding: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0B2F2C; }
+  .cell .e { font-size: 36cqmin; line-height: 1.1; }
+  .cell .p { font-weight: 900; font-size: 13cqmin; line-height: 1.1; padding: 0 3px; }
+  .cell .t { font-weight: 800; font-size: 9.5cqmin; color: #0B5C56; }
+  .cell.on { background: #C8F7D4; border-color: #0A7A2F; }
+  .cell.on::after { content: '✔'; position: absolute; top: 2px; right: 8px; font-size: 20cqmin; line-height: 1; color: #0A7A2F; font-weight: 900; }
+  .cell.line { background: #FFD23F; border-color: #D62828; border-width: 7px; }
+</style>
+<style id="ln-css">
+.ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
+:where(.tile .e, .cell .e, .wc .e, .fe, .ct, #qmark, .w .e, .word .e, #pic) svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+#ln-screen { display: none; position: fixed; inset: 0; z-index: 70; background: #0E8F86; flex-direction: column; gap: 8px; padding: 8px 10px 10px; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; color: #0B2F2C; }
+#ln-top { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#ln-title { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.4rem); color: #fff; text-shadow: 3px 3px 0 #0B2F2C; margin-right: 6px; }
+#ln-tabs { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.ln-tab { font-weight: 900; font-size: clamp(.9rem, 2.1vw, 1.5rem); padding: .05em .8em; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; cursor: pointer; font-family: inherit; }
+.ln-tab.act { background: #FFD23F; border-color: #D62828; }
+#ln-close { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.5rem); padding: .05em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #D62828; color: #fff; cursor: pointer; font-family: inherit; }
+#ln-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 17vw, 240px), 1fr)); gap: 10px; align-content: start; padding: 2px; }
+.ln-card { background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ln-card.wide { grid-column: span 2; }
+.ln-card .le { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1.1; }
+.ln-card .le svg { width: clamp(2.4rem, 8vh, 4rem); height: clamp(2.4rem, 8vh, 4rem); display: block; }
+.ln-card .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.6rem); line-height: 1.15; }
+.ln-card .trl { font-weight: 800; font-size: clamp(.8rem, 1.7vw, 1.15rem); color: #0B5C56; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Bingo</h1>
+  <p class="subtitle">Listen to the clue. Find the picture!</p>
+  <div class="preview">📽️ 🐬 🥖 🧥</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Found: <span id="fo">0</span>/16</div>
+  <div class="stat">Mistakes: <span id="mi">0</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="cluebox">
+    <div id="cl-label">Clue</div>
+    <div id="cl-en"></div>
+    <div id="cl-tr" class="tr"></div>
+    <button class="restart-btn" id="skip" onclick="skipClue()">Skip</button>
+  </div>
+  <div id="board"></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  function toggleTR() { var off = document.body.classList.toggle('no-tr'); document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On'); }
+
+  var POOL = [["music", "🎵", "music club", "müzik kulübü", "You sing songs and play instruments in this club.", "Bu kulüpte şarkı söyler ve enstrüman çalarsın."], ["art", "🎨", "art club", "resim kulübü", "You draw and paint pictures in this club.", "Bu kulüpte resim çizer ve boyarsın."], ["drama", "🎭", "drama club", "drama kulübü", "You act in plays in this club.", "Bu kulüpte oyunlarda rol alırsın."], ["chess", "♟️", "chess club", "satranç kulübü", "You play chess in this club.", "Bu kulüpte satranç oynarsın."], ["science", "🧪", "science club", "fen bilimleri kulübü", "You do experiments in this club.", "Bu kulüpte deney yaparsın."], ["maths", "➗", "maths club", "matematik kulübü", "You solve problems with numbers in this club.", "Bu kulüpte sayılarla problem çözersin."], ["technology", "💻", "technology club", "teknoloji kulübü", "You use computers and robots in this club.", "Bu kulüpte bilgisayar ve robot kullanırsın."], ["film", "🎬", "film club", "film kulübü", "You watch and talk about films in this club.", "Bu kulüpte film izler ve film hakkında konuşursun."], ["folk", "💃", "folk dance club", "halk oyunları kulübü", "You dance to traditional music in this club.", "Bu kulüpte geleneksel müzikle dans edersin."], ["environment", "♻️", "environment club", "çevre kulübü", "You learn how to protect nature in this club.", "Bu kulüpte doğayı korumayı öğrenirsin."], ["library", "📚", "library", "kütüphane", "You read and borrow books here.", "Burada kitap okur ve ödünç alırsın."], ["canteen", "🥪", "canteen", "kantin", "You buy snacks and eat lunch here.", "Burada atıştırmalık alır ve öğle yemeği yersin."], ["lab", "🔬", "science lab", "fen laboratuvarı", "You do experiments here. You wear a lab coat.", "Burada deney yaparsın. Laboratuvar önlüğü giyersin."], ["field", "⚽", "sports field", "spor sahası", "You run and play football here.", "Burada koşar ve futbol oynarsın."], ["hall", "🎤", "conference hall", "konferans salonu", "The headmaster speaks to everyone here.", "Müdür burada herkesle konuşur."], ["doctor", "👩‍⚕️", "doctor", "doktor", "This person helps you when you are ill.", "Bu kişi hasta olduğunda sana yardım eder."], ["cook", "👩‍🍳", "cook", "aşçı", "This person makes the food in the canteen.", "Bu kişi kantinde yemek yapar."], ["coach", "📣", "coach", "antrenör", "This person teaches sports.", "Bu kişi spor öğretir."], ["headmaster", "🎓", "headmaster", "okul müdürü", "This person is the head of the school.", "Bu kişi okulun başındaki kişidir."], ["secretary", "📋", "secretary", "sekreter", "This person works in the office and writes letters.", "Bu kişi ofiste çalışır ve mektup yazar."], ["spain", "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Spain\"><g transform=\"translate(6 22)\"><svg width=\"88\" height=\"56\" viewBox=\"0 0 88 56\" preserveAspectRatio=\"none\"><rect width=\"88\" height=\"56\" fill=\"#AA151B\"/><rect y=\"14\" width=\"88\" height=\"28\" fill=\"#F1BF00\"/><rect x=\"22\" y=\"22\" width=\"10\" height=\"13\" rx=\"2\" fill=\"#AA151B\" stroke=\"#7A4B12\" stroke-width=\"1.5\"/></svg><rect x=\"0\" y=\"0\" width=\"88\" height=\"56\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\"/></g></svg>", "Spain", "İspanya", "The flag of this country is red and yellow.", "Bu ülkenin bayrağı kırmızı ve sarı."], ["japan", "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Japan\"><g transform=\"translate(6 22)\"><svg width=\"88\" height=\"56\" viewBox=\"0 0 88 56\" preserveAspectRatio=\"none\"><rect width=\"88\" height=\"56\" fill=\"#fff\"/><circle cx=\"44\" cy=\"28\" r=\"16\" fill=\"#BC002D\"/></svg><rect x=\"0\" y=\"0\" width=\"88\" height=\"56\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\"/></g></svg>", "Japan", "Japonya", "The flag of this country has a red circle on white.", "Bu ülkenin bayrağında beyaz üzerinde kırmızı bir daire var."], ["italy", "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Italy\"><g transform=\"translate(6 22)\"><svg width=\"88\" height=\"56\" viewBox=\"0 0 88 56\" preserveAspectRatio=\"none\"><rect width=\"30\" height=\"56\" fill=\"#009246\"/><rect x=\"29\" width=\"30\" height=\"56\" fill=\"#fff\"/><rect x=\"58\" width=\"30\" height=\"56\" fill=\"#CE2B37\"/></svg><rect x=\"0\" y=\"0\" width=\"88\" height=\"56\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\"/></g></svg>", "Italy", "İtalya", "The flag of this country is green, white and red.", "Bu ülkenin bayrağı yeşil, beyaz ve kırmızı."], ["canada", "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Canada\"><g transform=\"translate(6 22)\"><svg width=\"88\" height=\"56\" viewBox=\"0 0 88 56\" preserveAspectRatio=\"none\"><rect width=\"88\" height=\"56\" fill=\"#fff\"/><rect width=\"22\" height=\"56\" fill=\"#D80621\"/><rect x=\"66\" width=\"22\" height=\"56\" fill=\"#D80621\"/><path d=\"M44 10 L48 20 L55 17 L53 29 L60 25 L57 33 L61 35 L45 40 L45 48 L43 48 L43 40 L27 35 L31 33 L28 25 L35 29 L33 17 L40 20 Z\" fill=\"#D80621\"/></svg><rect x=\"0\" y=\"0\" width=\"88\" height=\"56\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\"/></g></svg>", "Canada", "Kanada", "The flag of this country has a red maple leaf.", "Bu ülkenin bayrağında kırmızı bir akçaağaç yaprağı var."]];
+  var board, marked, calls, mistakes, found, over, LINES = [];
+  for (var i = 0; i < 4; i++) { LINES.push([0,1,2,3].map(function (k) { return i*4+k; })); LINES.push([0,1,2,3].map(function (k) { return k*4+i; })); }
+  LINES.push([0,5,10,15]); LINES.push([3,6,9,12]);
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    var pick = shuffle(POOL.slice()).slice(0, 16);
+    board = shuffle(pick.slice()); calls = shuffle(pick.slice());
+    marked = []; for (var i = 0; i < 16; i++) marked.push(false);
+    mistakes = 0; found = 0; over = false;
+    document.getElementById('mi').textContent = 0; document.getElementById('fo').textContent = 0;
+    var b = document.getElementById('board'); b.innerHTML = '';
+    board.forEach(function (w, i) {
+      var c = document.createElement('button'); c.className = 'cell'; c.id = 'c' + i;
+      c.innerHTML = '<div class="e">' + w[1] + '</div><div class="p">' + w[2] + '</div><div class="t tr">' + w[3] + '</div>';
+      c.addEventListener('click', function () { tap(i); });
+      b.appendChild(c);
+    });
+    showClue();
+  }
+  function showClue() {
+    var w = calls[0];
+    document.getElementById('cl-en').textContent = w[4];
+    document.getElementById('cl-tr').textContent = w[5];
+    document.getElementById('skip').style.visibility = calls.length > 1 ? 'visible' : 'hidden';
+  }
+  function skipClue() { if (over || calls.length < 2) return; calls.push(calls.shift()); showClue(); }
+  function tap(i) {
+    if (over || marked[i]) return;
+    var cell = document.getElementById('c' + i);
+    if (board[i][0] === calls[0][0]) {
+      marked[i] = true; cell.classList.add('on'); found++; document.getElementById('fo').textContent = found;
+      calls.shift();
+      var ln = null;
+      LINES.forEach(function (L) { if (!ln && L.every(function (k) { return marked[k]; })) ln = L; });
+      if (ln) { over = true; ln.forEach(function (k) { document.getElementById('c' + k).classList.add('line'); }); setTimeout(function () { win(); }, 1600); return; }
+      if (!calls.length) { over = true; setTimeout(function () { win(); }, 800); return; }
+      showClue();
+    } else {
+      mistakes++; document.getElementById('mi').textContent = mistakes;
+      cell.classList.remove('shake'); void cell.offsetWidth; cell.classList.add('shake');
+    }
+  }
+  function win() {
+    document.getElementById('win-title').textContent = 'BINGO!';
+    document.getElementById('win-stats').textContent = 'Found: ' + found + '  |  Mistakes: ' + mistakes;
+    document.getElementById('win-screen').style.display = 'flex';
+  }
+</script>
+<div id="ln-screen">
+  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-grid"></div>
+</div>
+<script>
+(function () {
+  var LN = [["School Clubs", "Okul Kulüpleri", [["🎵", "music club", "müzik kulübü"], ["💻", "technology club", "teknoloji kulübü"], ["➗", "maths club", "matematik kulübü"], ["🎭", "drama club", "drama kulübü"], ["🎨", "art club", "resim kulübü"], ["💃", "folk dance club", "halk oyunları kulübü"], ["♻️", "environment club", "çevre kulübü"], ["🧪", "science club", "fen bilimleri kulübü"], ["🎬", "film club", "film kulübü"], ["♟️", "chess club", "satranç kulübü"]]], ["Places at School", "Okuldaki Yerler", [["🥪", "canteen", "kantin"], ["🔬", "science lab", "fen laboratuvarı"], ["📚", "library", "kütüphane"], ["⚽", "sports field", "spor sahası"], ["🏢", "administration department", "idari bölüm"], ["🎤", "conference hall", "konferans salonu"], ["🏫", "classroom", "sınıf"]]], ["People at School", "Okuldaki Kişiler", [["🎓", "headmaster", "okul müdürü"], ["👔", "assistant to the headmaster", "müdür yardımcısı"], ["📣", "coach", "antrenör"], ["📋", "secretary", "sekreter"], ["👩‍🍳", "cook", "aşçı"], ["👩‍⚕️", "doctor", "doktor"], ["👩‍🏫", "teacher", "öğretmen"], ["🎒", "student", "öğrenci"]]], ["Countries", "Ülkeler", [["<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Türkiye\"><g transform=\"translate(6 22)\"><svg width=\"88\" height=\"56\" viewBox=\"0 0 88 56\" preserveAspectRatio=\"none\"><rect width=\"88\" height=\"56\" fill=\"#E30A17\"/><circle cx=\"31\" cy=\"28\" r=\"14\" fill=\"#fff\"/><circle cx=\"35\" cy=\"28\" r=\"11.2\" fill=\"#E30A17\"/><polygon points=\"47.0,21.0 48.6,25.7 53.7,25.8 49.7,28.9 51.1,33.7 47.0,30.8 42.9,33.7 44.3,28.9 40.3,25.8 45.4,25.7\" fill=\"#fff\"/></svg><rect x=\"0\" y=\"0\" width=\"88\" height=\"56\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\"/></g></svg>", "Türkiye", "Türkiye"], ["<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Azerbaijan\"><g transform=\"translate(6 22)\"><svg width=\"88\" height=\"56\" viewBox=\"0 0 88 56\" preserveAspectRatio=\"none\"><rect width=\"88\" height=\"19\" fill=\"#00B5E2\"/><rect y=\"19\" width=\"88\" height=\"18\" fill=\"#EF3340\"/><rect y=\"37\" width=\"88\" height=\"19\" fill=\"#509E2F\"/><circle cx=\"43\" cy=\"28\" r=\"7\" fill=\"#fff\"/><circle cx=\"45\" cy=\"28\" r=\"5.6\" fill=\"#EF3340\"/><polygon points=\"52.0,24.4 52.8,26.8 55.4,26.9 53.4,28.4 54.1,30.9 52.0,29.4 49.9,30.9 50.6,28.4 48.6,26.9 51.2,26.8\" fill=\"#fff\"/></svg><rect x=\"0\" y=\"0\" width=\"88\" height=\"56\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\"/></g></svg>", "Azerbaijan", "Azerbaycan"], ["<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Canada\"><g transform=\"translate(6 22)\"><svg width=\"88\" height=\"56\" viewBox=\"0 0 88 56\" preserveAspectRatio=\"none\"><rect width=\"88\" height=\"56\" fill=\"#fff\"/><rect width=\"22\" height=\"56\" fill=\"#D80621\"/><rect x=\"66\" width=\"22\" height=\"56\" fill=\"#D80621\"/><path d=\"M44 10 L48 20 L55 17 L53 29 L60 25 L57 33 L61 35 L45 40 L45 48 L43 48 L43 40 L27 35 L31 33 L28 25 L35 29 L33 17 L40 20 Z\" fill=\"#D80621\"/></svg><rect x=\"0\" y=\"0\" width=\"88\" height=\"56\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\"/></g></svg>", "Canada", "Kanada"], ["<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"The UK\"><g transform=\"translate(6 22)\"><svg width=\"88\" height=\"56\" viewBox=\"0 0 88 56\" preserveAspectRatio=\"none\"><rect width=\"88\" height=\"56\" fill=\"#012169\"/><path d=\"M0 0 L88 56 M88 0 L0 56\" stroke=\"#fff\" stroke-width=\"11\"/><path d=\"M0 0 L88 56 M88 0 L0 56\" stroke=\"#C8102E\" stroke-width=\"4\"/><path d=\"M44 0 V56 M0 28 H88\" stroke=\"#fff\" stroke-width=\"18\"/><path d=\"M44 0 V56 M0 28 H88\" stroke=\"#C8102E\" stroke-width=\"10\"/></svg><rect x=\"0\" y=\"0\" width=\"88\" height=\"56\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\"/></g></svg>", "The UK", "Birleşik Krallık"], ["<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Spain\"><g transform=\"translate(6 22)\"><svg width=\"88\" height=\"56\" viewBox=\"0 0 88 56\" preserveAspectRatio=\"none\"><rect width=\"88\" height=\"56\" fill=\"#AA151B\"/><rect y=\"14\" width=\"88\" height=\"28\" fill=\"#F1BF00\"/><rect x=\"22\" y=\"22\" width=\"10\" height=\"13\" rx=\"2\" fill=\"#AA151B\" stroke=\"#7A4B12\" stroke-width=\"1.5\"/></svg><rect x=\"0\" y=\"0\" width=\"88\" height=\"56\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\"/></g></svg>", "Spain", "İspanya"], ["<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Italy\"><g transform=\"translate(6 22)\"><svg width=\"88\" height=\"56\" viewBox=\"0 0 88 56\" preserveAspectRatio=\"none\"><rect width=\"30\" height=\"56\" fill=\"#009246\"/><rect x=\"29\" width=\"30\" height=\"56\" fill=\"#fff\"/><rect x=\"58\" width=\"30\" height=\"56\" fill=\"#CE2B37\"/></svg><rect x=\"0\" y=\"0\" width=\"88\" height=\"56\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\"/></g></svg>", "Italy", "İtalya"], ["<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"France\"><g transform=\"translate(6 22)\"><svg width=\"88\" height=\"56\" viewBox=\"0 0 88 56\" preserveAspectRatio=\"none\"><rect width=\"30\" height=\"56\" fill=\"#0055A4\"/><rect x=\"29\" width=\"30\" height=\"56\" fill=\"#fff\"/><rect x=\"58\" width=\"30\" height=\"56\" fill=\"#EF4135\"/></svg><rect x=\"0\" y=\"0\" width=\"88\" height=\"56\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\"/></g></svg>", "France", "Fransa"], ["<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Japan\"><g transform=\"translate(6 22)\"><svg width=\"88\" height=\"56\" viewBox=\"0 0 88 56\" preserveAspectRatio=\"none\"><rect width=\"88\" height=\"56\" fill=\"#fff\"/><circle cx=\"44\" cy=\"28\" r=\"16\" fill=\"#BC002D\"/></svg><rect x=\"0\" y=\"0\" width=\"88\" height=\"56\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\"/></g></svg>", "Japan", "Japonya"], ["<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Mexico\"><g transform=\"translate(6 22)\"><svg width=\"88\" height=\"56\" viewBox=\"0 0 88 56\" preserveAspectRatio=\"none\"><rect width=\"30\" height=\"56\" fill=\"#006847\"/><rect x=\"29\" width=\"30\" height=\"56\" fill=\"#fff\"/><rect x=\"58\" width=\"30\" height=\"56\" fill=\"#CE1126\"/><circle cx=\"44\" cy=\"28\" r=\"8\" fill=\"#8C5A2B\"/><circle cx=\"44\" cy=\"28\" r=\"4.5\" fill=\"#3E8E41\"/></svg><rect x=\"0\" y=\"0\" width=\"88\" height=\"56\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\"/></g></svg>", "Mexico", "Meksika"], ["<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Russia\"><g transform=\"translate(6 22)\"><svg width=\"88\" height=\"56\" viewBox=\"0 0 88 56\" preserveAspectRatio=\"none\"><rect width=\"88\" height=\"19\" fill=\"#fff\"/><rect y=\"19\" width=\"88\" height=\"18\" fill=\"#0039A6\"/><rect y=\"37\" width=\"88\" height=\"19\" fill=\"#D52B1E\"/></svg><rect x=\"0\" y=\"0\" width=\"88\" height=\"56\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"3.5\"/></g></svg>", "Russia", "Rusya"]]]];
+  function lnShow(i) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
+    document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
+      var wide = it[1].length > 26 && it[0].indexOf('<svg') < 0;
+      return '<div class="ln-card' + (wide ? ' wide' : '') + '"><div class="le">' + it[0] + '</div><div class="en">' + it[1] + '</div><div class="trl">' + it[2] + '</div></div>';
+    }).join('');
+    document.getElementById('ln-grid').scrollTop = 0;
+  }
+  window.lnOpen = function () {
+    var tabs = document.getElementById('ln-tabs'); tabs.innerHTML = '';
+    LN.forEach(function (s, i) { var b = document.createElement('button'); b.className = 'ln-tab'; b.textContent = s[0]; b.onclick = function () { lnShow(i); }; tabs.appendChild(b); });
+    document.getElementById('ln-screen').style.display = 'flex'; lnShow(0);
+  };
+  window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+</body>
+</html>
