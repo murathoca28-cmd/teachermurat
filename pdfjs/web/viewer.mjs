@@ -21219,7 +21219,11 @@ PDFViewerApplication.initializedPromise.then(() => {
   grid.hidden = true;
   const gridClose = el("button", "tm-pnav-gridclose", "Close &#10005;");
   panel.append(prev, label, next);
-  root.append(handle, panel, grid);
+  // Exit button for touch-only smartboards: PDF.js presentation mode normally ends only with the Esc key
+  const exitBtn = el("button", "tm-pnav-exit", "&#10005;");
+  exitBtn.setAttribute("aria-label", "Exit presentation");
+  exitBtn.title = "Exit presentation";
+  root.append(handle, exitBtn, panel, grid);
   container.append(root);
 
   // Keep clicks / touches / wheel on the overlay away from PDF.js's own "click = next page" handlers
@@ -21339,7 +21343,50 @@ PDFViewerApplication.initializedPromise.then(() => {
       show();
     }
   });
+  const exitPresentation = () => {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    }
+  };
+  exitBtn.addEventListener("click", () => {
+    exitBtn.blur();
+    exitPresentation();
+  });
+
+  // Long press (about 1 second, finger or mouse held still) anywhere on the slide also leaves presentation mode
+  const HOLD_MS = 1000;
+  const HOLD_SLOP = 15;
+  let holdTimer = null;
+  let holdX = 0;
+  let holdY = 0;
+  const cancelHold = () => {
+    clearTimeout(holdTimer);
+    holdTimer = null;
+  };
+  container.addEventListener("pointerdown", e => {
+    if (!inPresentation() || root.contains(e.target) || e.pointerType === "mouse" && e.button !== 0) {
+      return;
+    }
+    cancelHold();
+    holdX = e.clientX;
+    holdY = e.clientY;
+    holdTimer = setTimeout(() => {
+      holdTimer = null;
+      if (inPresentation()) {
+        exitPresentation();
+      }
+    }, HOLD_MS);
+  });
+  container.addEventListener("pointermove", e => {
+    if (holdTimer && Math.hypot(e.clientX - holdX, e.clientY - holdY) > HOLD_SLOP) {
+      cancelHold();
+    }
+  });
+  for (const type of ["pointerup", "pointercancel", "pointerleave"]) {
+    container.addEventListener(type, cancelHold);
+  }
   bus.on("presentationmodechanged", () => {
+    cancelHold();
     closeGrid();
     hide();
     update();

@@ -163,6 +163,24 @@
         header.appendChild(tools);
     }
 
+    /* ---------- open in fullscreen, close leaves fullscreen ---------- */
+    var overlay = box.parentNode;
+
+    // Card button (slides: .open-modal, worksheets: .worksheet-btn) -> modal opens, then goes fullscreen.
+    // This listener runs after the page's own click handler, so the modal is already visible.
+    document.addEventListener('click', function (e) {
+        var t = e.target && e.target.closest ? e.target.closest('.open-modal, .worksheet-btn') : null;
+        if (t && !isFullscreen()) enterFullscreen(box);
+    });
+
+    // Close button: leave fullscreen together with closing the modal.
+    if (closeBtn) closeBtn.addEventListener('click', function () { if (isFullscreen()) exitFullscreen(); });
+
+    // Any other way of closing (overlay hidden by the page): make sure fullscreen ends too.
+    new MutationObserver(function () {
+        if (!overlay.classList.contains('active') && isFullscreen()) exitFullscreen();
+    }).observe(overlay, { attributes: true, attributeFilter: ['class'] });
+
     /* ---------- extras ---------- */
     // Local preview (Live Server etc.): pages point to the live viewer on teachermurat.com.
     // On localhost use the viewer from the local folder instead, so unpublished changes can be tested.
