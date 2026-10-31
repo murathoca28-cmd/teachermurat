@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Routine Race</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+
+  #game { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 8px 12px 12px; }
+  #lanes { flex: 0 0 40%; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+  .lane { position: relative; flex: 1; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; overflow: hidden; }
+  .lane .tag { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); z-index: 2; color: #fff; font-weight: 900;
+    font-size: clamp(.9rem, 2.2vw, 1.6rem); padding: 0 14px; border-radius: 10px; border: 3px solid #0B2F2C; }
+  .lane .road { position: absolute; left: 14%; right: 14%; top: 50%; border-top: 6px dashed #9AA5A4; }
+  .lane .flag { position: absolute; right: 8%; top: 50%; transform: translateY(-50%); font-size: clamp(1.6rem, 6vh, 3.4rem); }
+  .runner { position: absolute; top: 50%; transform: translateY(-50%) scaleX(-1); font-size: clamp(1.6rem, 6.5vh, 4rem); transition: left .9s ease; z-index: 3; }
+  #r2 { transform: translateY(-50%); }
+  #panel { position: relative; flex: 1; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 18px; display: flex; flex-direction: column;
+    align-items: center; justify-content: space-evenly; padding: 6px 12px; text-align: center; }
+  #turn { color: #fff; font-weight: 900; font-size: clamp(1rem, 2.6vw, 1.9rem); padding: 0 22px; border-radius: 999px; border: 4px solid #0B2F2C; }
+  #animals { font-size: clamp(2rem, 7vh, 4rem); line-height: 1; letter-spacing: .12em; }
+  #sentence { font-weight: 900; font-size: clamp(1.3rem, 3.6vw, 2.8rem); line-height: 1.15; }
+  .blank { display: inline-block; min-width: 3.5em; border-bottom: 6px solid #0B2F2C; color: #0A7A2F; }
+  .blank.bad { color: #D62828; }
+  #opts { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .opt { font-size: clamp(1.1rem, 2.8vw, 2.1rem); font-weight: 900; padding: .2em .9em; background: #fff; color: #0B2F2C;
+    border: 5px solid #0B2F2C; border-radius: 16px; box-shadow: 0 5px 0 #0B2F2C; }
+  .opt:active { transform: translateY(3px); box-shadow: 0 2px 0 #0B2F2C; }
+  .opt.good { background: #C8F7D4; border-color: #0A7A2F; }
+  .opt.bad { background: #FFD6D6; border-color: #D62828; }
+  #fb { min-height: 1.4em; font-size: clamp(1rem, 2.6vw, 1.9rem); font-weight: 800; color: #0B5C56; }
+  #next { display: none; }
+</style>
+<style id="ln-css">
+.ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
+:where(.tile .e, .cell .e, .wc .e, .fe, .ct, #qmark, .w .e, .word .e, #pic) svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+#ln-screen { display: none; position: fixed; inset: 0; z-index: 70; background: #0E8F86; flex-direction: column; gap: 8px; padding: 8px 10px 10px; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; color: #0B2F2C; }
+#ln-top { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#ln-title { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.4rem); color: #fff; text-shadow: 3px 3px 0 #0B2F2C; margin-right: 6px; }
+#ln-tabs { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.ln-tab { font-weight: 900; font-size: clamp(.9rem, 2.1vw, 1.5rem); padding: .05em .8em; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; cursor: pointer; font-family: inherit; }
+.ln-tab.act { background: #FFD23F; border-color: #D62828; }
+#ln-close { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.5rem); padding: .05em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #D62828; color: #fff; cursor: pointer; font-family: inherit; }
+#ln-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 17vw, 240px), 1fr)); gap: 10px; align-content: start; padding: 2px; }
+.ln-card { background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ln-card.wide { grid-column: span 2; }
+.ln-card .le { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1.1; }
+.ln-card .le svg { width: clamp(2.4rem, 8vh, 4rem); height: clamp(2.4rem, 8vh, 4rem); display: block; }
+.ln-card .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.6rem); line-height: 1.15; }
+.ln-card .trl { font-weight: 800; font-size: clamp(.8rem, 1.7vw, 1.15rem); color: #0B5C56; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Routine<br>Race</h1>
+  <p class="subtitle">Read the routine and answer!</p>
+  <div class="preview">⏰ 🏃 📅 🏅</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="game">
+  <div id="lanes">
+    <div class="lane"><div class="tag" style="background:#D62828">Team 1</div><div class="road"></div><div class="flag">🏁</div><div class="runner" id="r0">⚽</div></div>
+    <div class="lane"><div class="tag" style="background:#1F5FBF">Team 2</div><div class="road"></div><div class="flag">🏁</div><div class="runner" id="r1">🏀</div></div>
+    <div class="lane"><div class="tag" style="background:#0A7A2F">Team 3</div><div class="road"></div><div class="flag">🏁</div><div class="runner" id="r2">🎾</div></div>
+  </div>
+  <div id="panel">
+    <button class="restart-btn" id="trbtn" onclick="toggleTR()" style="position:absolute;top:8px;left:10px;font-size:clamp(.8rem,1.8vw,1.3rem)">Turkish: On</button>
+    <div id="turn"></div>
+    <div id="animals"></div>
+    <div id="sentence"></div>
+    <div id="opts"></div>
+    <div id="fb"></div>
+    <button class="big-btn" id="next" onclick="nextQ()" style="font-size:clamp(1.1rem,2.6vw,1.7rem)">Next</button>
+  </div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  var TR = true, fbParts = null;
+  function setFb(p, tr) { fbParts = [p, tr]; renderFb(); }
+  function renderFb() { document.getElementById('fb').textContent = fbParts ? fbParts[0] + (TR ? ' ' + fbParts[1] : '') : ''; }
+  function toggleTR() { TR = !TR; document.getElementById('trbtn').textContent = 'Turkish: ' + (TR ? 'On' : 'Off'); renderFb(); }
+  var Q = [
+    { a: "🏊", s: "Ece swims on Monday and Thursday. How often does she swim? – ___.", o: ["Twice a week", "Every day", "Once a month"], c: 0, tr: "Ece pazartesi ve perşembe yüzer. Ne sıklıkla yüzer? – Haftada iki kez." },
+    { a: "👟", s: "Kaan goes jogging every morning. How often does he go jogging? – ___.", o: ["Every day", "Once a year", "Never"], c: 0, tr: "Kaan her sabah koşuya çıkar. Ne sıklıkla koşuya çıkar? – Her gün." },
+    { a: "🎿", s: "Nina goes skiing once every winter. How often does she go skiing? – ___.", o: ["Once a year", "Twice a week", "Every day"], c: 0, tr: "Nina her kış bir kez kayak yapar. Ne sıklıkla kayak yapar? – Yılda bir kez." },
+    { a: "🏟️", s: "My dad watches a match on the first Sunday of each month. How often does he watch a match? – ___.", o: ["Once a month", "Every day", "Three times a week"], c: 0, tr: "Babam her ayın ilk pazarı bir maç izler. Ne sıklıkla maç izler? – Ayda bir kez." },
+    { a: "🏋️", s: "Sude goes to the gym from Monday to Friday. How often does she go? – ___.", o: ["Five days a week", "Once a week", "Never"], c: 0, tr: "Sude pazartesiden cumaya spor salonuna gider. Ne sıklıkla gider? – Haftada beş gün." },
+    { a: "🍔", s: "Burak does not eat burgers at all. How often does he eat burgers? – ___.", o: ["Never", "Always", "Every day"], c: 0, tr: "Burak hiç hamburger yemez. Ne sıklıkla hamburger yer? – Asla." },
+    { a: "⏰", s: "Hale wakes up at six on school days and at nine on Sunday. When does she wake up late? – ___.", o: ["On Sunday", "On school days", "Every day"], c: 0, tr: "Hale okul günleri altıda, pazar günü dokuzda uyanır. Ne zaman geç uyanır? – Pazar günü." },
+    { a: "🏃", s: "Ali runs four times a week. Mert runs twice a week. Who runs more often? – ___.", o: ["Ali", "Mert", "Both of them"], c: 0, tr: "Ali haftada dört kez, Mert haftada iki kez koşar. Kim daha sık koşar? – Ali." },
+    { a: "🚲", s: "Defne rides her bike every day. Her sister rides it once a week. Who rides more often? – ___.", o: ["Defne", "Her sister", "Nobody"], c: 0, tr: "Defne her gün bisiklete biner. Kız kardeşi haftada bir kez biner. Kim daha sık biner? – Defne." },
+    { a: "🥗", s: "Emre eats fruit every day. How often does he eat fruit? – ___.", o: ["Every day", "Seldom", "Never"], c: 0, tr: "Emre her gün meyve yer. Ne sıklıkla meyve yer? – Her gün." },
+    { a: "🏀", s: "Our team plays basketball on Tuesday and Friday. How often does the team play? – ___.", o: ["Twice a week", "Once a year", "Every day"], c: 0, tr: "Takımımız salı ve cuma günü basketbol oynar. Takım ne sıklıkla oynar? – Haftada iki kez." },
+    { a: "🎾", s: "Mina plays tennis on Saturdays only. How often does she play? – ___.", o: ["Once a week", "Every day", "Never"], c: 0, tr: "Mina yalnızca cumartesi günleri tenis oynar. Ne sıklıkla oynar? – Haftada bir kez." },
+    { a: "😴", s: "Deniz goes to bed at ten every night. How often does he go to bed early? – ___.", o: ["Every night", "Once a month", "Never"], c: 0, tr: "Deniz her gece onda yatar. Ne sıklıkla erken yatar? – Her gece." },
+    { a: "🥊", s: "Our coach says: “Train three times a week.” How many days do we train? – ___.", o: ["Three days", "Seven days", "One day"], c: 0, tr: "Antrenörümüz “Haftada üç kez antrenman yapın.” diyor. Kaç gün antrenman yapıyoruz? – Üç gün." },
+    { a: "🏊", s: "Sema swims 30 minutes in the morning and 30 minutes in the evening. How long does she swim in a day? – ___.", o: ["One hour", "Ten minutes", "Five hours"], c: 0, tr: "Sema sabah 30, akşam 30 dakika yüzer. Günde ne kadar yüzer? – Bir saat." },
+    { a: "🎳", s: "Tom goes bowling on his birthday only. How often does he go bowling? – ___.", o: ["Once a year", "Every day", "Twice a week"], c: 0, tr: "Tom yalnızca doğum gününde bowlinge gider. Ne sıklıkla bowlinge gider? – Yılda bir kez." },
+    { a: "🥾", s: "Lara hikes in the mountains every Sunday. How often does she hike? – ___.", o: ["Once a week", "Once a year", "Every day"], c: 0, tr: "Lara her pazar dağlarda yürüyüş yapar. Ne sıklıkla yürüyüş yapar? – Haftada bir kez." },
+    { a: "📺", s: "Mert watches sports programmes seven days a week. How often does he watch them? – ___.", o: ["Every day", "Seldom", "Never"], c: 0, tr: "Mert haftanın yedi günü spor programı izler. Ne sıklıkla izler? – Her gün." },
+    { a: "🏐", s: "Our school plays volleyball in spring and autumn. How many times a year is that? – ___.", o: ["Twice a year", "Every day", "Once a week"], c: 0, tr: "Okulumuz ilkbahar ve sonbaharda voleybol oynar. Bu yılda kaç kez eder? – Yılda iki kez." },
+    { a: "🥋", s: "Aslı does judo on Wednesday, Friday and Sunday. How often does she do judo? – ___.", o: ["Three times a week", "Once a month", "Never"], c: 0, tr: "Aslı çarşamba, cuma ve pazar judo yapar. Ne sıklıkla judo yapar? – Haftada üç kez." },
+    { a: "🍬", s: "Jim eats sweets only on special days. How often does he eat sweets? – ___.", o: ["Seldom", "Always", "Every day"], c: 0, tr: "Jim yalnızca özel günlerde şekerleme yer. Ne sıklıkla yer? – Nadiren." },
+    { a: "⚽", s: "Eren plays football at school every day, but not at the weekend. How many days a week does he play? – ___.", o: ["Five days", "Seven days", "Two days"], c: 0, tr: "Eren okulda her gün futbol oynar ama hafta sonu oynamaz. Haftada kaç gün oynar? – Beş gün." },
+    { a: "💧", s: "Zeynep drinks water all day long. How often does she drink water? – ___.", o: ["Always", "Never", "Seldom"], c: 0, tr: "Zeynep gün boyu su içer. Ne sıklıkla su içer? – Her zaman." },
+    { a: "📅", s: "There is a school sports day on the last Friday of each month. How often is it? – ___.", o: ["Once a month", "Every day", "Once a year"], c: 0, tr: "Her ayın son cuması okul spor günü var. Ne sıklıkla yapılır? – Ayda bir kez." },
+    { a: "🛌", s: "Barış rests on Sunday and trains on the other six days. How many days does he train? – ___.", o: ["Six days", "One day", "Seven days"], c: 0, tr: "Barış pazar günü dinlenir, diğer altı gün antrenman yapar. Kaç gün antrenman yapar? – Altı gün." }
+  ];
+  var GOAL = 5, TEAMS = ['Team 1', 'Team 2', 'Team 3'], COLORS = ['#D62828', '#1F5FBF', '#0A7A2F'];
+  var order, qi, turn, steps, locked;
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    order = shuffle(Q.slice()); qi = 0; turn = 0; steps = [0, 0, 0]; locked = false;
+    place(); showQ();
+  }
+  function place() {
+    for (var t = 0; t < 3; t++) document.getElementById('r' + t).style.left = (14 + steps[t] / GOAL * 68) + '%';
+  }
+  function showQ() {
+    var q = order[qi];
+    locked = false;
+    var tn = document.getElementById('turn');
+    tn.textContent = TEAMS[turn] + ' - your turn!'; tn.style.background = COLORS[turn];
+    document.getElementById('animals').textContent = q.a;
+    document.getElementById('sentence').innerHTML = q.s.replace('___', '<span class="blank" id="blank">&nbsp;</span>');
+    fbParts = null; renderFb();
+    document.getElementById('next').style.display = 'none';
+    var box = document.getElementById('opts'); box.innerHTML = '';
+    shuffle(q.o.map(function (t, i) { return { t: t, i: i }; })).forEach(function (o) {
+      var b = document.createElement('button'); b.className = 'opt'; b.textContent = o.t;
+      b.addEventListener('click', function () { answer(b, o.i); });
+      box.appendChild(b);
+    });
+  }
+  function answer(btn, i) {
+    if (locked) return; locked = true;
+    var q = order[qi], ok = (i === q.c);
+    var blank = document.getElementById('blank'); blank.textContent = q.o[q.c];
+    Array.prototype.forEach.call(document.querySelectorAll('.opt'), function (b) { if (b.textContent === q.o[q.c]) b.classList.add('good'); });
+    if (ok) { steps[turn]++; place(); setFb('✔ Great!', q.tr); }
+    else { btn.classList.add('bad', 'shake'); setFb('✘ Not this time.', q.tr); }
+    var nx = document.getElementById('next');
+    if (steps[turn] >= GOAL) { var w = turn; setTimeout(function () { finish(w); }, 1800); return; }
+    nx.textContent = 'Next'; nx.style.display = 'inline-block';
+  }
+  function nextQ() {
+    qi++; turn = (turn + 1) % 3;
+    if (qi >= order.length) {
+      var mx = Math.max.apply(null, steps), lead = [];
+      steps.forEach(function (v, i) { if (v === mx) lead.push(i); });
+      finish(lead.length === 1 ? lead[0] : -1); return;
+    }
+    showQ();
+  }
+  function finish(w) {
+    document.getElementById('win-title').textContent = w < 0 ? "It's a Draw!" : TEAMS[w] + ' Wins!';
+    document.getElementById('win-stats').textContent = 'Team 1: ' + steps[0] + '  |  Team 2: ' + steps[1] + '  |  Team 3: ' + steps[2];
+    document.getElementById('win-screen').style.display = 'flex';
+  }
+</script>
+<div id="ln-screen">
+  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-grid"></div>
+</div>
+<script>
+(function () {
+  var LN = [["How Often?", "Ne Sıklıkla?", [["💯", "always", "her zaman (%100)"], ["🔼", "usually", "genellikle"], ["👍", "often", "sık sık"], ["🔄", "sometimes", "bazen"], ["🔽", "seldom", "nadiren"], ["🚫", "never", "asla (%0)"], ["📅", "every day", "her gün"], ["2️⃣", "twice a week", "haftada iki kez"], ["3️⃣", "three times a week", "haftada üç kez"], ["1️⃣", "once a month", "ayda bir kez"]]], ["Useful Sentences", "Faydalı Cümleler", [["❓", "How often do you swim? Twice a week.", "Ne sıklıkla yüzersin? Haftada iki kez."], ["❓", "How often does he go jogging? Every day.", "O ne sıklıkla koşuya çıkar? Her gün."], ["🏃", "I usually go running in the park.", "Genellikle parkta koşarım."], ["🥗", "She never eats junk food.", "O asla abur cubur yemez."], ["💪", "Why do you do sports? Because I want to keep fit.", "Neden spor yaparsın? Çünkü formda kalmak istiyorum."], ["🌳", "Do you prefer indoor or outdoor sports?", "Kapalı alan sporlarını mı, açık hava sporlarını mı tercih edersin?"]]], ["Sports", "Spor Dalları", [["⚽", "football", "futbol"], ["🏀", "basketball", "basketbol"], ["🎾", "tennis", "tenis"], ["🏐", "volleyball", "voleybol"], ["🏓", "table tennis", "masa tenisi"], ["🏸", "badminton", "badminton"], ["🥊", "boxing", "boks"], ["🥋", "judo", "judo"], ["⛸️", "ice skating", "buz pateni"], ["🎿", "skiing", "kayak"], ["🚲", "cycling", "bisiklet sürme"], ["🏊", "swimming", "yüzme"], ["👟", "jogging", "hafif tempolu koşu"], ["🥾", "hiking", "doğa yürüyüşü"], ["🎳", "bowling", "bowling"]]]];
+  function lnShow(i) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
+    document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
+      var wide = it[1].length > 26 && it[0].indexOf('<svg') < 0;
+      return '<div class="ln-card' + (wide ? ' wide' : '') + '"><div class="le">' + it[0] + '</div><div class="en">' + it[1] + '</div><div class="trl">' + it[2] + '</div></div>';
+    }).join('');
+    document.getElementById('ln-grid').scrollTop = 0;
+  }
+  window.lnOpen = function () {
+    var tabs = document.getElementById('ln-tabs'); tabs.innerHTML = '';
+    LN.forEach(function (s, i) { var b = document.createElement('button'); b.className = 'ln-tab'; b.textContent = s[0]; b.onclick = function () { lnShow(i); }; tabs.appendChild(b); });
+    document.getElementById('ln-screen').style.display = 'flex'; lnShow(0);
+  };
+  window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+</body>
+</html>
