@@ -1,0 +1,80 @@
+/* teachermurat.com - ORTAK DÜĞME STİLİ (menü kartları, oyun/test/worksheet/slayt düğmeleri)
+   Tüm menü sayfaları bu dosyayı en sonda yükler; değerleri BURADAN değiştirin.
+   --lift   : fareyle üzerine gelince düğmenin ne kadar yukarı kalkacağı
+   --shadow : yumuşak gölgenin koyuluğu (0.10 hafif ... 0.40 çok belirgin)
+   Küçük düğmeler (OPEN, Back) çok hafif, oyun kartları sadece kayarak (ağır görsel olduğu için)
+   hareket eder. Kilitli ("yapım aşamasında") düğmeler ve .soon kartlar düz kalır. */
+:root { --tm-shadow: .30; --tm-spring: cubic-bezier(.34, 1.56, .64, 1); --tm-smooth: cubic-bezier(.22, .8, .3, 1); }
+
+/* ---------- 1) BÜYÜK DÜĞMELER: menü kartları, test, worksheet, sekmeler ---------- */
+html a.card:not(.soon):not(.locked),
+html button.card:not(.soon):not(.locked),
+html .test-btn,
+html .card-btn:not(.is-locked),
+html .tab-btn {
+    --lift: 8px;
+    box-shadow: 0 var(--o) 0 var(--c), 0 calc(var(--o) + 8px) 16px rgba(15, 23, 42, calc(var(--tm-shadow) * .8));
+    transition: transform .38s var(--tm-spring), box-shadow .38s var(--tm-spring);
+    will-change: transform;
+}
+html a.card, html button.card, html .tab-btn { --c: #94A3B8; --o: 6px; }
+html .test-btn, html .card-btn:not(.is-locked) { --c: #0F766E; --o: 5px; }
+html .card-btn:not(.is-locked), html .tab-btn { --lift: 6px; --o: 4px; }
+
+/* ---------- 2) OYUN KARTLARI: görselli ve ağır; scale/filtre yok, yumuşak kayma ---------- */
+html .game-card {
+    --c: #94A3B8; --o: 6px; --lift: 8px;
+    box-shadow: 0 var(--o) 0 var(--c), 0 calc(var(--o) + 8px) 16px rgba(15, 23, 42, calc(var(--tm-shadow) * .8));
+    transition: transform .3s var(--tm-smooth), box-shadow .3s var(--tm-smooth);
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+}
+
+/* ---------- 3) KÜÇÜK DÜĞMELER: OPEN ve Back - çok hafif, titremesin ---------- */
+html .btn,
+html body .tm-back.tm-back {
+    --c: #7C2D12; --o: 4px; --lift: 2px;
+    transition: transform .15s ease-out, box-shadow .15s ease-out;
+}
+html body .tm-back.tm-back { --c: #94A3B8; }
+
+@media (hover: hover) {
+html a.card:not(.soon):not(.locked):hover,
+html button.card:not(.soon):not(.locked):hover,
+html .test-btn:hover,
+html .card-btn:not(.is-locked):hover,
+html .tab-btn:hover {
+        transform: translateY(calc(var(--lift) * -1)) scale(1.025);
+        box-shadow: 0 calc(var(--o) + var(--lift) + 3px) 0 var(--c), 0 calc(var(--o) + var(--lift) + 14px) 26px rgba(15, 23, 42, var(--tm-shadow));
+    }
+    html .game-card:hover {
+        transform: translateY(calc(var(--lift) * -1));
+        box-shadow: 0 calc(var(--o) + var(--lift) + 3px) 0 var(--c), 0 calc(var(--o) + var(--lift) + 12px) 22px rgba(15, 23, 42, var(--tm-shadow));
+    }
+html .btn:hover,
+html body .tm-back.tm-back:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 calc(var(--o) + 2px) 0 var(--c);
+    }
+}
+
+html a.card:not(.soon):not(.locked):active,
+html button.card:not(.soon):not(.locked):active,
+html .test-btn:active,
+html .card-btn:not(.is-locked):active,
+html .tab-btn:active,
+html .game-card:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 var(--c), 0 4px 8px rgba(15, 23, 42, .2);
+    transition-duration: .07s;
+}
+html .btn:active,
+html body .tm-back.tm-back:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--c);
+    transition-duration: .05s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html a.card, html button.card, html .game-card, html .test-btn, html .card-btn, html .tab-btn, html .btn, html body .tm-back.tm-back { transition: none; }
+}
