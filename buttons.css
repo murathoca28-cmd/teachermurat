@@ -78,3 +78,34 @@ html body .tm-back.tm-back:active {
 @media (prefers-reduced-motion: reduce) {
     html a.card, html button.card, html .game-card, html .test-btn, html .card-btn, html .tab-btn, html .btn, html body .tm-back.tm-back { transition: none; }
 }
+
+/* ---------- 4) ORTA BOYUTLU DÜĞMELER (Test 1/2/3, worksheet düğmeleri, sekmeler) ----------
+   Küçük oldukları için zıplamalı yay efekti "sıçrama" gibi hissettiriyordu:
+   daha uzun ve yumuşak, zıplamasız, büyümesiz kalkış. */
+html .test-btn,
+html .card-btn:not(.is-locked),
+html .tab-btn {
+    --lift: 6px;
+    transition: transform .32s var(--tm-smooth), box-shadow .32s var(--tm-smooth);
+}
+@media (hover: hover) {
+    html .test-btn:hover,
+    html .card-btn:not(.is-locked):hover,
+    html .tab-btn:hover {
+        transform: translateY(calc(var(--lift) * -1));
+        box-shadow: 0 calc(var(--o) + var(--lift) + 3px) 0 var(--c), 0 calc(var(--o) + var(--lift) + 12px) 22px rgba(15, 23, 42, var(--tm-shadow));
+    }
+}
+html .test-btn:active,
+html .card-btn:not(.is-locked):active,
+html .tab-btn:active { transition-duration: .08s; }
+
+/* ---------- 5) OYUN KARTLARI: test düğmeleriyle aynı yumuşak geçiş ----------
+   Daha az kalkış (imleç kartın alt kenarındayken kart kaçıp titremesin), ağır katman ayarları kaldırıldı. */
+html .game-card {
+    --lift: 6px;
+    will-change: transform;
+    backface-visibility: visible;
+    transition: transform .32s var(--tm-smooth), box-shadow .32s var(--tm-smooth);
+}
+html .game-card:active { transition-duration: .08s; }
