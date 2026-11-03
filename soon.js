@@ -8,6 +8,8 @@
  *       - PDFs tab (#worksheets): LINK is the PDF address (cdn.teachermurat.com/....pdf?v=1) or the
  *         full viewer address used on older pages -> opens in the PDF pop-up viewer
  *       - other tabs: LINK is the page address (e.g. ../../activities/un3/g5_un3_act_1.html)
+ *   Slide cards (slides pages): <button class="btn is-locked" data-soon="Slide 2" data-link="" data-slide-slot> inside a .card;
+ *       a filled link sets the card's data-embed / data-download and turns the button into OPEN.
  *   cdn.teachermurat.com links without ?v= get ?v=1 added automatically.
  *
  * Needs on the page: this script at the end of <body>, and (for PDF buttons) the PDF pop-up with a
@@ -61,6 +63,17 @@
             var el = list[i];
             var link = (el.getAttribute('data-link') || '').replace(/^\s+|\s+$/g, '');
             if (!link) continue;
+            if (el.hasAttribute('data-slide-slot') && el.closest && el.closest('.card')) {
+                var card = el.closest('.card');
+                var plain = link.indexOf(VIEWER) === 0 ? link.slice(VIEWER.length) : withVersion(link);
+                card.setAttribute('data-embed', VIEWER + plain);
+                card.setAttribute('data-download', plain);
+                el.className = 'btn open-modal';
+                el.removeAttribute('data-soon');
+                el.removeAttribute('data-link');
+                el.removeAttribute('data-slide-slot');
+                continue;
+            }
             var name = el.getAttribute('data-soon');
             var label = el.textContent;
             if (el.closest && el.closest('#worksheets')) {
