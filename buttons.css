@@ -109,3 +109,34 @@ html .game-card {
     transition: transform .32s var(--tm-smooth), box-shadow .32s var(--tm-smooth);
 }
 html .game-card:active { transition-duration: .08s; }
+
+/* ---------- 6) CANLILIK: sayfa açılışında kartlar sırayla belirir + simge hafifçe oynar ----------
+   Kapatmak için bu bölümün tamamını silmeniz yeterli. */
+@keyframes tm-in {
+    from { opacity: 0; translate: 0 14px; }
+    to   { opacity: 1; translate: 0 0; }
+}
+html a.card:not(.soon):not(.locked), html button.card:not(.soon):not(.locked),
+html .game-card, html .test-btn, html .card-btn, html .tab-btn {
+    animation: tm-in .5s var(--tm-smooth) backwards;
+    animation-delay: calc(var(--n, 0) * 70ms);
+}
+html :is(a.card, button.card, .card-grid > .card, .game-card, .test-btn, .card-btn, .tab-btn):nth-child(2) { --n: 1; }
+html :is(a.card, button.card, .card-grid > .card, .game-card, .test-btn, .card-btn, .tab-btn):nth-child(3) { --n: 2; }
+html :is(a.card, button.card, .card-grid > .card, .game-card, .test-btn, .card-btn, .tab-btn):nth-child(4) { --n: 3; }
+html :is(a.card, button.card, .card-grid > .card, .game-card, .test-btn, .card-btn, .tab-btn):nth-child(5) { --n: 4; }
+html :is(a.card, button.card, .card-grid > .card, .game-card, .test-btn, .card-btn, .tab-btn):nth-child(6) { --n: 5; }
+html :is(a.card, button.card, .card-grid > .card, .game-card, .test-btn, .card-btn, .tab-btn):nth-child(n+7) { --n: 6; }
+html .card-grid > .card { animation: tm-in .5s var(--tm-smooth) backwards; animation-delay: calc(var(--n, 0) * 70ms); }
+
+/* Menü kartlarındaki yuvarlak simge, üzerine gelince çok az büyür ve eğilir */
+html .card .badge, html .card .num { transition: transform .35s var(--tm-spring); }
+@media (hover: hover) {
+    html a.card:not(.soon):not(.locked):hover .badge, html button.card:not(.soon):not(.locked):hover .badge,
+    html a.card:not(.soon):hover .num { transform: scale(1.08) rotate(-4deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html a.card, html button.card, html .game-card, html .test-btn, html .card-btn, html .tab-btn, html .card-grid > .card { animation: none; }
+    html .card .badge, html .card .num { transition: none; }
+}
