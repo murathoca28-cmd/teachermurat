@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>5th Class – Unit 2 Test 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Nunito','Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#74ebd5,#9face6);color:#1f2937;padding:10px 12px 10px;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
+body.zoom,body.zoom.fsmode{padding:6px 8px}
+body.zoom #navbar-placeholder,body.fsmode #navbar-placeholder{display:none}
+#navbar-placeholder{flex:none}
+button{font:inherit;cursor:pointer}
+.hide{display:none !important}
+#splash{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center;color:#fff;background:linear-gradient(135deg,#075C69,#0E8A9B 55%,#14A89A)}
+#splash h1{text-transform:uppercase;font-size:clamp(28px,6vw,56px);font-weight:900;text-shadow:0 3px 8px rgba(0,0,0,.25)}
+#splash p{text-transform:uppercase;font-weight:700;max-width:460px;font-size:clamp(14px,2.4vw,20px);opacity:.92}
+.start{width:140px;height:140px;border:0;border-bottom:8px solid #0A2A33;border-radius:28px;background:#FFC21A;color:#1A1200;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 20px 40px rgba(0,0,0,.3);transition:transform .15s}
+.start:hover{transform:scale(1.05)}
+.start:active{transform:scale(.96)}
+.start span:first-child{font-size:52px;line-height:1}
+.start span:last-child{font-size:20px;font-weight:900;margin-top:4px}
+.fab{position:fixed;bottom:10px;width:42px;height:42px;border-radius:50%;border:2px solid #bfdbfe;background:rgba(255,255,255,.92);color:#1e3a8a;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+#menuBtn{left:10px;z-index:60;background:#171717;border-color:#525252;color:#fff;font-size:20px}
+#menu{position:fixed;inset:0;z-index:70}
+#menu div{position:absolute;bottom:60px;left:10px;width:240px;background:#171717;color:#fff;border-radius:12px;border:2px solid #525252;padding:10px}
+#menu small{display:block;color:#a3a3a3;font-weight:900;letter-spacing:.1em;padding-bottom:6px;margin-bottom:6px;border-bottom:2px solid #000}
+#menu button{display:block;width:100%;text-align:left;background:none;border:0;color:#fff;font-weight:900;font-size:17px;padding:8px 10px;border-radius:8px}
+#menu button:hover{background:#404040}
+.wrap{width:100%;max-width:2200px;margin:0 auto;flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;font-size:var(--fs,18px)}
+.top{flex:none;background:rgba(255,255,255,.9);border:3px solid #fff;border-radius:18px;padding:6px 14px;box-shadow:0 8px 20px rgba(0,0,0,.12);display:flex;align-items:center;gap:12px;font-weight:900;color:#6b21a8;font-size:16px}
+.bar{flex:1;height:12px;background:#e9d5ff;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#a855f7,#ec4899);transition:width .3s}
+.zbtn{border:0;border-bottom:4px solid #6d28d9;border-radius:12px;background:#8b5cf6;color:#fff;font-weight:900;font-size:clamp(15px,1.7vmin,30px);padding:.3em .9em;white-space:nowrap}
+.fbtn{background:#0ea5e9;border-bottom-color:#0369a1}
+.fbtn.on{background:#f59e0b;border-bottom-color:#b45309}
+.top .zbtn{margin-left:6px}
+.top span{white-space:nowrap}
+.top .bar{min-width:24px}
+@media (max-width:520px){.top .zbtn{font-size:12.5px;padding:5px 8px;margin-left:4px}
+.top{gap:6px}
+}
+.start2{margin-top:12px;border:0;border-bottom:4px solid #0369a1;border-radius:14px;background:#0ea5e9;color:#fff;font-weight:900;font-size:1.1rem;padding:10px 22px;cursor:pointer}
+.zbtn.on{background:#f59e0b;border-color:#b45309}
+.card{flex:1;min-height:0;display:flex;flex-direction:column;background:#fff;border:6px solid #60a5fa;border-radius:24px;padding:.7em .9em;box-shadow:0 12px 30px rgba(0,0,0,.2);overflow:hidden}
+body.zoom .intro{font-size:.75em}
+body.zoom .card{border-width:4px;border-radius:18px;padding:.5em .7em}
+.intro{flex:none;font-weight:900;color:#1e40af;font-size:1em;margin-bottom:.5em;line-height:1.25}
+.n{display:inline-block;background:#7e22ce;color:#fff;border-radius:.5em;padding:0 .5em;margin-right:.4em}
+.cols{flex:1;min-height:0;display:grid;gap:.8em;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+body.zoom .cols{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr)}
+@media (max-aspect-ratio:1/1){.cols,body.zoom .cols{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
+}
+.picbox{position:relative;min-height:0;min-width:0;background:#eff6ff;border:2px solid #bfdbfe;border-radius:14px;overflow:hidden}
+.pic{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:6px}
+.txt{min-height:0;min-width:0;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.qt{font-weight:900;font-size:1.15em;margin-bottom:.6em;line-height:1.25}
+.opts{display:grid;gap:.45em}
+.opt{text-align:left;padding:.45em .75em;border:3px solid #93c5fd;border-bottom-width:6px;border-radius:16px;background:#fff;font-weight:800;font-size:1em;line-height:1.2;color:#1e3a8a;transition:transform .12s}
+.opt:hover{transform:translateY(-2px)}
+.opt.sel{background:#fde047;border-color:#f59e0b}
+.opts.lo{grid-template-columns:repeat(2,1fr)}
+.lo .opt{text-align:center;font-size:1.5em}
+.nav{flex:none;padding:0 54px 0 54px;display:flex;justify-content:space-between;gap:10px}
+.btn{border:0;border-bottom:5px solid #0284c7;border-radius:16px;background:linear-gradient(#4facfe,#00f2fe);color:#fff;font-weight:900;font-size:18px;padding:8px 22px;text-shadow:1px 1px 2px rgba(0,0,0,.3)}
+a.btn{display:inline-block;text-decoration:none}
+.btn.g{background:linear-gradient(#4ade80,#16a34a);border-color:#166534}
+.btn:disabled{background:#cbd5e1;border-color:#94a3b8;cursor:default}
+.wrap.resmode{overflow:auto;font-size:18px}
+.wrap.resmode .card{flex:none;overflow:visible}
+.res{text-align:center}
+.res h2{font-size:clamp(26px,5vw,44px);font-weight:900;color:#7e22ce}
+.big{font-size:clamp(34px,7vw,64px);font-weight:900;color:#1e3a8a;margin:6px 0}
+.rv{text-align:left;margin-top:16px;display:grid;gap:8px}
+.rv div{padding:9px 12px;border-radius:12px;font-weight:800;font-size:15px;border:2px solid}
+.rv .ok{background:#dcfce7;border-color:#4ade80}
+.rv .no{background:#fee2e2;border-color:#f87171}
+.rv .bl{background:#f1f5f9;border-color:#cbd5e1}
+.rv small{display:block;font-weight:700;color:#475569}
+#splash .steps{text-align:left;display:inline-block;margin:14px 0 0;padding-left:1.4em;line-height:1.7;color:#fff;font-weight:700}
+  </style>
+  <link rel="stylesheet" href="/theme.css">
+</head>
+
+<body>
+  <div id="navbar-placeholder" style="min-height: 64px;"></div>
+  <script src="/navbar.js"></script>
+
+  <div id="splash">
+    <p>5th Class</p>
+    <h1 lang="en">5th Class – Unit 2 Test 2</h1>
+    <button class="start" onclick="begin()"><span>▶</span><span>BAŞLAT</span></button>
+    <ol class="steps">
+  <li>Soruları sırayla oku.</li>
+  <li>Doğru şıkkı işaretle.</li>
+  <li>Cevaplar en sonda açılır!</li>
+  <li>BAŞLAT tam ekranda ve büyütülmüş açılır.</li>
+</ol>
+  </div>
+  <button class="fab hide" id="menuBtn" onclick="menu(1)" title="Menü">☰</button>
+  <div id="menu" class="hide" onclick="menu(0)">
+    <div onclick="event.stopPropagation()"><small>UNIT 2 TEST 2</small><button onclick="restart()">Yeniden başlat</button></div>
+  </div>
+  <main class="wrap hide" id="game"></main>
+  <script>
+    const Q = [{"t": "Nehir asks Umut a question about the P.E. lessons. Read the conversation.", "c": "Nehir'in Umut'a beden eğitimi derslerini sorduğu konuşma", "q": "Which of the following completes the conversation above?", "o": ["How many P.E. lessons are there in a week?", "What time is the P.E. lesson on Tuesday?", "Is there a P.E. lesson on Thursday?", "Where is the P.E. lesson on Tuesday?"], "a": 0, "w": "Cevap “There are two.” bir sayı veriyor → soru “How many …?” (kaç tane?). “What time” saat, “Is there” evet/hayır, “Where” yer sorar. Tuzak: Tuesday/Thursday kelimeleri yüzünden C şıkkına kayma."}, {"t": "Ms Arda sent a message to her students. Read it.", "c": "Ms Arda'nın öğrencilerine yazdığı hafta planı mesajı", "q": "According to the message above, on which days are the English quiz and the Science project, in that order?", "o": ["Tuesday and Wednesday", "Tuesday and Thursday", "Wednesday and Thursday", "Tuesday and Friday"], "a": 1, "w": "Monday’den bir gün sonra = Tuesday (quiz); Friday’den bir gün önce = Thursday (proje). Tuzak: after/before yönü ve sıra (önce quiz, sonra proje)."}, {"t": "Pelin and Efe are making a plan for their homework. Read the conversation.", "c": "Pelin ve Efe'nin ödev için kütüphanede buluşma planı", "q": "What time are Pelin and Efe going to meet in the library?", "o": ["At ten to three.", "At ten past three.", "At twenty to three.", "At ten past two."], "a": 0, "w": "Ders 2.40’ta (twenty to three) bitiyor; 10 dakika sonrası 2.50 = ten to three. Tuzaklar: ten past three (3.10) “to/past” karışıklığı; twenty to three dersin bitiş saati."}, {"t": "Emir is free on Monday, Wednesday and Thursday. He wants clubs that start at half past three. Look at the school club timetable.", "c": "Okul kulüpleri: kulüp, gün ve saat", "q": "According to the timetable above, which two clubs can Emir join?", "o": ["Chess Club and Drama Club", "Chess Club and Art Club", "Drama Club and Music Club", "Art Club and Music Club"], "a": 1, "w": "Emir Pazartesi, Çarşamba, Perşembe müsait ve 15.30 (half past three) başlayan kulüp istiyor: Chess (Mon 15:30) ve Art (Thu 15:30). Drama Çarşamba ama 16:00’da; Music 15:30 ama Cuma günü (müsait değil)."}, {"t": "Read the exam notice and complete it.", "c": "İngilizce sınavının gününü, saatini ve gün bölümünü anlatan duyuru", "q": "Which of the following completes the notice above?", "o": ["at – on – in", "in – at – on", "on – in – at", "on – at – in"], "a": 3, "w": "Günlerin önünde on (on Tuesday), saatlerin önünde at (at ten past nine), günün bölümlerinin önünde in (in the morning) kullanılır."}, {"t": "Read Hira's text about her school week.", "c": "Hira'nın bilim dersi günleri hakkındaki yazısı", "q": "According to Hira's text, which of the following is correct?", "o": ["Hira has Science every day.", "Hira has Science on three days.", "Hira has Science on two days.", "Hira has Science on four days."], "a": 2, "w": "Science yalnızca Monday ve Wednesday günlerinde → iki gün. “every day” metinle çelişir; Tuesday, Thursday ve Friday günlerinde Science yok."}, {"t": "Ada invites Baran to a group. Read the conversation.", "c": "Ada'nın Baran'ı resim grubuna davet ettiği konuşma", "q": "Why does Baran say “Yes, I'd love to!” in the conversation above? To - - - -.", "o": ["ask for some help", "refuse an offer politely", "remind his friend of a rule", "accept an invitation"], "a": 3, "w": "“Would you like to join us?” bir davet; “Yes, I'd love to!” = “Evet, çok isterim!” → daveti kabul etme. Tuzak: refuse (reddetme) ile karıştırma; Baran saati sorarak katılmak istediğini gösteriyor."}, {"t": "Mira writes about her school library. Complete the text.", "c": "Mira'nın okul kütüphanesini anlatan cümlesi", "q": "Which of the following pairs completes the text above?", "o": ["are – is", "is – are", "is – is", "are – are"], "a": 1, "w": "“a bookshelf” tekil → there is; “two big tables” çoğul → there are. Tuzak: iki boşluğun biri tekil, diğeri çoğul."}, {"t": "Defne is playing a guessing game with her friends. Read her clues.", "c": "Defne'nin bir sınıf eşyası hakkında verdiği üç ipucu", "q": "Which classroom object is Defne talking about?", "o": ["a rubber", "a dictionary", "a ruler", "a board marker"], "a": 2, "w": "İpuçları: uzun ve ince, üzerinde sayılar var, ölçmek ve düz çizgi çizmek için kullanılıyor → ruler (cetvel). Board marker da uzun-incedir ama ölçmek için kullanılmaz."}, {"t": "Class 5-C is checking the things in the art box for a project. Look at the table.", "c": "5-C sınıfının sanat kutusu: gereken ve kutudaki eşya sayıları", "q": "According to the table above, which two things does the class need <u>more</u> of?", "o": ["rulers and rubbers", "scissors and sheets", "scissors and rubbers", "rulers and sheets"], "a": 3, "w": "Gereken sayı kutudakinden fazla olanlar: rulers (6 > 4) ve sheets (20 > 12). Scissors 3 = 3 yeterli; rubbers 4 < 5 yeterli (fazlası var)."}];
+    const IMG = ["img/g5_un2_test_2_q01.webp", "img/g5_un2_test_2_q02.webp", "img/g5_un2_test_2_q03.webp", "img/g5_un2_test_2_q04.webp", "img/g5_un2_test_2_q05.webp", "img/g5_un2_test_2_q06.webp", "img/g5_un2_test_2_q07.webp", "img/g5_un2_test_2_q08.webp", "img/g5_un2_test_2_q09.webp", "img/g5_un2_test_2_q10.webp"];
+    /* Tüm soru görsellerini sayfa açılır açılmaz arka planda indirir; "Sonraki" denince hazır bekler */
+    const PRE = IMG.map(src => { const im = new Image(); im.decoding = "async"; im.src = src; return im });
+    const LO = []; // sadece harf şıkkı olan sorular (şıklar görselin içinde)
+    const L = "ABCD", $ = s => document.getElementById(s), strip = h => h.replace(/<[^>]+>/g, ""), alt = d => d.c.replace(/"/g, "&quot;");
+    let i = 0, sel = [], zoom = false;
+
+    function begin() { if (!isFs()) { try { fullscr() } catch (e) { } } setZoom(true); $("splash").classList.add("hide"); $("menuBtn").classList.remove("hide"); restart() }
+    function restart() { sel = Array(Q.length).fill(null); i = 0; menu(0); $("game").classList.remove("hide"); render() }
+    function menu(f) { $("menu").classList.toggle("hide", !f) }
+    function isFs() { return !!(document.fullscreenElement || document.webkitFullscreenElement) }
+    function fullscr() { const d = document, e = d.documentElement; if (isFs()) (d.exitFullscreen || d.webkitExitFullscreen).call(d); else (e.requestFullscreen || e.webkitRequestFullscreen).call(e) }
+    function setZoom(v) { zoom = v; document.body.classList.toggle("zoom", zoom) }
+    function classMode() { if (isFs() && zoom) { setZoom(false); (document.exitFullscreen || document.webkitExitFullscreen).call(document) } else { if (!isFs()) fullscr(); setZoom(true) } const b = $("fb"); fsLabel(); const z = $("zb"); if (z) { z.classList.toggle("on", zoom); z.textContent = zoom ? "🔍 Küçült" : "🔍 Soruyu büyüt" } fit() }
+    function toggleZoom() { zoom = !zoom; document.body.classList.toggle("zoom", zoom); const b = $("zb"); if (b) { b.classList.toggle("on", zoom); b.textContent = zoom ? "🔍 Küçült" : "🔍 Soruyu büyüt" } fit() }
+
+    /* Yazıyı, mevcut ekrana kaydırma gerekmeden sığacak en büyük boyuta ayarlar */
+    function fit() {
+      const w = $("game"); if (!w || w.classList.contains("resmode") || w.classList.contains("hide")) return;
+      const txt = w.querySelector(".txt"), card = w.querySelector(".card"); if (!txt) return;
+      const vmin = Math.min(innerWidth, innerHeight);
+      const max = Math.max(16, Math.min(zoom ? vmin * 0.075 : vmin * 0.04, zoom ? 90 : 40)), min = 10;
+      let fs = max;
+      const pic = w.querySelector('.picbox'), stacked = matchMedia('(max-aspect-ratio: 1/1)').matches;
+      const over = () => (stacked && pic.clientHeight < card.clientHeight * 0.5) || txt.scrollHeight > txt.clientHeight + 1 || txt.scrollWidth > txt.clientWidth + 1 || w.scrollHeight > w.clientHeight + 1 || card.scrollHeight > card.clientHeight + 1 || document.documentElement.scrollHeight > innerHeight + 1;
+      w.style.setProperty("--fs", fs + "px");
+      while (fs > min && over()) { fs -= 0.5; w.style.setProperty("--fs", fs + "px") }
+    }
+
+    function render() {
+      const d = Q[i], lo = LO.includes(i), last = i == Q.length - 1;
+      const w = $("game"); w.classList.remove("resmode");
+      w.innerHTML = `<div class="top"><span>Soru ${i + 1} / ${Q.length}</span><div class="bar"><i style="width:${(i + 1) / Q.length * 100}%"></i></div><button id="fb" class="zbtn fbtn${isFs() ? " on" : ""}" onclick="classMode()">${isFs() ? "⛶ Tam Ekrandan Çık" : "⛶ Tam Ekran"}</button></div>
+  <div class="card"><p class="intro"><span class="n">${i + 1}</span>${d.t}</p><div class="cols"><div class="picbox"><img class="pic" src="${IMG[i]}" alt="${alt(d)}"></div>
+  <div class="txt"><p class="qt">${d.q}</p><div class="opts${lo ? " lo" : ""}">${d.o.map((t, j) => `<button class="opt${sel[i] === j ? " sel" : ""}" aria-label="${L[j]}) ${strip(t)}" onclick="pick(${j})"><b>${L[j]})</b>${lo ? "" : " " + t}</button>`).join("")}</div></div></div></div>
+  <div class="nav"><button class="btn" onclick="go(-1)" ${i ? "" : "disabled"}>◀ Önceki</button><button class="btn${last ? " g" : ""}" onclick="go(1)">${last ? "Bitir ✔" : "Sonraki ▶"}</button></div>`;
+      window.scrollTo(0, 0);
+      fit();
+    }
+    function pick(j) { sel[i] = sel[i] === j ? null : j; document.querySelectorAll(".opt").forEach((b, k) => b.classList.toggle("sel", k === sel[i])) }
+    function go(n) { if (i + n >= Q.length) finish(); else { i += n; render() } }
+    function finish() {
+      const ok = Q.filter((d, k) => sel[k] === d.a).length, b = sel.filter(s => s === null).length, ot = (d, j) => L[j] + ") " + (LO.includes(Q.indexOf(d)) ? "" : strip(d.o[j]));
+      const w = $("game"); w.classList.add("resmode");
+      w.innerHTML = `<div class="card res"><h2>🏆 Test bitti! 🏆</h2><div class="big">${ok} / ${Q.length}</div><p><b>${ok}</b> doğru • <b>${Q.length - ok - b}</b> yanlış • <b>${b}</b> boş</p>
+  <div class="nav" style="justify-content:center;margin-top:10px"><button class="btn g" onclick="restart()">🔄 Yeniden Başlat</button></div>
+  <div class="rv">${Q.map((d, k) => { const s = sel[k], c = s === d.a; return `<div class="${s === null ? "bl" : c ? "ok" : "no"}">${c ? "✅" : s === null ? "⬜" : "❌"} <b>${k + 1}.</b> ${s === null ? "Boş bırakıldı" : c ? "Doğru" : "Senin cevabın: " + L[s]}<small>Doğru cevap: ${ot(d, d.a)} — ${d.w}</small></div>` }).join("")}</div>
+  <div class="nav" style="justify-content:center;margin-top:10px"><a class="btn" href="https://cdn.teachermurat.com/5/un2_lgstests/g5_un2_test_2.pdf?v=1" download>📄 Testi indir (PDF)</a></div></div>`;
+      window.scrollTo(0, 0);
+    }
+
+    function fsLabel() { const b = $("fb"); if (b) { b.classList.toggle("on", isFs()); b.textContent = isFs() ? "⛶ Tam Ekrandan Çık" : "⛶ Tam Ekran" } }
+    /* tam ekran / yeniden boyutlama / yazı tipi yüklenmesi sonrası yeniden sığdir */
+    document.addEventListener("fullscreenchange", () => { document.body.classList.toggle("fsmode", isFs()); if (!isFs() && zoom) setZoom(false); fsLabel(); setTimeout(fit, 60) });
+    document.addEventListener("webkitfullscreenchange", () => { document.body.classList.toggle("fsmode", isFs()); if (!isFs() && zoom) setZoom(false); fsLabel(); setTimeout(fit, 60) });
+    addEventListener("resize", () => requestAnimationFrame(fit));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => fit());
+
+    /* klavye kısayolları: ← → gezinme, A-D şık, Z büyüt, F tam ekran */
+    addEventListener("keydown", e => {
+      if ($("game").classList.contains("hide") || $("game").classList.contains("resmode")) return;
+      const k = e.key.toLowerCase();
+      if (k === "arrowright") go(1); else if (k === "arrowleft") { if (i) go(-1) }
+      else if ("abcd".includes(k) && k.length === 1) { if (Q[i].o[L.toLowerCase().indexOf(k)] !== undefined) pick(L.toLowerCase().indexOf(k)) }
+      else if (k === "z") toggleZoom(); else if (k === "f") fullscr();
+    });
+  </script>
+<script src="/pdf-download.js"></script>
+<script src="/back.js"></script>
+</body>
+
+</html>
