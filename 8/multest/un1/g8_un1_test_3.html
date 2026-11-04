@@ -439,15 +439,26 @@
 .hint{flex:none;font-weight:800;color:#475569;font-size:.9em}
 .rgrid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:.5em}
 @media (max-aspect-ratio:1/1){.rgrid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(5,minmax(0,1fr))}}
-.tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1em;border:4px solid;border-radius:16px;font-weight:800;padding:.2em;overflow:hidden;min-height:0;line-height:1.15;font-size:1em;transition:transform .12s}
+.tile{display:flex;flex-direction:column;align-items:stretch;justify-content:stretch;gap:0;border:5px solid;border-radius:16px;background:#fff;font-weight:900;padding:0;overflow:hidden;min-height:0;line-height:1.1;font-size:1em;text-align:center;transition:transform .12s}
 .tile:hover{transform:translateY(-2px)}
-.tile .tn{font-size:1.5em;font-weight:900}
-.tile .ti{font-size:1.4em;line-height:1}
-.tile .tt{font-size:.9em}
-.tile small{font-size:.75em;font-weight:900;color:#991b1b}
-.tile.ok{background:#dcfce7;border-color:#4ade80;color:#14532d}
-.tile.no{background:#fee2e2;border-color:#ef4444;color:#7f1d1d;border-width:5px}
-.tile.bl{background:#f1f5f9;border-color:#94a3b8;color:#334155;border-width:5px}
+.tile .th{flex:none;display:flex;align-items:center;justify-content:center;gap:.45em;padding:.12em .3em;color:#fff}
+.tile .tn{font-size:1.6em;font-weight:900;line-height:1}
+.tile .ti{display:inline-flex;align-items:center;justify-content:center;width:1.5em;height:1.5em;border-radius:50%;background:#fff;font-size:1.1em;line-height:1}
+.tile .tb{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:.15em;padding:.15em .3em;color:#0f172a}
+.tile .ra{display:flex;align-items:center;justify-content:center;gap:.4em}
+.tile .ra i{font-style:normal;font-size:1em;font-weight:800;min-width:3.2em;text-align:right}
+.tile .ra b{font-size:1.7em;line-height:1;min-width:1.4em;border:3px solid;border-radius:.3em;padding:.02em .1em;background:#fff}
+.tile .ra b.mine{color:#b91c1c;border-color:#b91c1c}
+.tile .ra b.rt{color:#fff;background:#15803d;border-color:#15803d}
+.tile .tok{font-size:1.5em;color:#14532d}
+.tile .tgo{flex:none;background:#1e293b;color:#fff;font-size:.9em;padding:.25em .3em}
+.tile.ok{border-color:#15803d}
+.tile.ok .th{background:#15803d}
+.tile.no{border-color:#dc2626}
+.tile.no .th{background:#dc2626}
+.tile.bl{border-color:#475569}
+.tile.bl .th{background:#475569}
+@media (max-aspect-ratio:1/1){.tile .th{padding:.05em .2em}.tile .tn{font-size:1.3em}.tile .ra b{font-size:1.35em;border-width:2px}.tile .ra i{min-width:2.6em}.tile .tb{gap:.05em;padding:.05em .2em}.tile .tgo{font-size:.8em;padding:.15em .2em}}
 .opt.right{background:#bbf7d0;border-color:#16a34a;color:#14532d}
 .opt.wrong{background:#fecaca;border-color:#dc2626;color:#7f1d1d}
 .opt.dim{opacity:.55}
@@ -552,7 +563,7 @@
       const w = $("game"); w.classList.add("resmode");
       w.innerHTML = `<div class="card res"><div class="rhead"><h2>🏆 Test bitti!</h2><div class="big">${ok} / ${Q.length}</div><p class="cnt"><b>${ok}</b> doğru • <b>${Q.length - ok - b}</b> yanlış • <b>${b}</b> boş</p><div class="rbtns"><button class="btn g" onclick="restart()">🔄 Yeniden Başlat</button><a class="btn" href="https://cdn.teachermurat.com/8/un1_lgstests/g8_un1_test_3.pdf?v=1" download>📄 Testi indir (PDF)</a></div></div>
   <p class="hint">${nb ? "👆 Yanlış ve boş soruların üzerine tıkla: soruya dön, doğru cevabı ve açıklamayı gör." : "🎉 Hepsi doğru, tebrikler! İstersen herhangi bir soruya tıklayıp tekrar bakabilirsin."}</p>
-  <div class="rgrid">${Q.map((d, k) => { const s = sel[k], c = s === d.a; return `<button class="tile ${s === null ? "bl" : c ? "ok" : "no"}" onclick="review(${k})" aria-label="Soru ${k + 1}"><span class="tn">${k + 1}</span><span class="ti">${c ? "✅" : s === null ? "⬜" : "❌"}</span><span class="tt">${c ? "Doğru" : (s === null ? "Boş" : "Senin: " + L[s]) + " · Doğru: " + L[d.a]}</span>${c ? "" : "<small>🔍 Soruya dön</small>"}</button>` }).join("")}</div></div>`;
+  <div class="rgrid">${Q.map((d, k) => { const s = sel[k], c = s === d.a; return `<button class="tile ${s === null ? "bl" : c ? "ok" : "no"}" onclick="review(${k})" aria-label="Soru ${k + 1}"><span class="th"><span class="tn">${k + 1}</span><span class="ti">${c ? "✅" : s === null ? "➖" : "❌"}</span></span><span class="tb">${c ? "<span class=\"tok\">Doğru</span>" : "<span class=\"ra\"><i>Senin</i><b class=\"mine\">" + (s === null ? "–" : L[s]) + "</b></span><span class=\"ra\"><i>Doğru</i><b class=\"rt\">" + L[d.a] + "</b></span>"}</span>${c ? "" : "<span class=\"tgo\">🔍 Soruya dön</span>"}</button>` }).join("")}</div></div>`;
       window.scrollTo(0, 0); fitRes();
     }
     function fitRes() {
