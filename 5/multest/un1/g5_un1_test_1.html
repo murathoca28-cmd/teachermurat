@@ -99,7 +99,7 @@ a.btn{display:inline-block;text-decoration:none}
 .tile.no .th{background:#dc2626}
 .tile.bl{border-color:#475569}
 .tile.bl .th{background:#475569}
-@media (max-aspect-ratio:1/1){.tile .th{padding:.05em .2em}.tile .tn{font-size:1.3em}.tile .ra b{font-size:1.35em;border-width:2px}.tile .ra i{min-width:2.6em}.tile .tb{gap:.05em;padding:.05em .2em}.tile .tgo{font-size:.8em;padding:.15em .2em}}
+@media (max-aspect-ratio:1/1){.tile .th{padding:.05em .2em}.tile .tn{font-size:1.3em}.tile .tb{flex-direction:row;flex-wrap:wrap;align-content:center;justify-content:center;gap:.1em .5em;padding:.1em .2em}.tile .ra{gap:.25em}.tile .ra i{min-width:0;font-size:.85em}.tile .ra b{font-size:1.25em;min-width:1.3em;border-width:2px}.tile .tok{font-size:1.3em}.tile .tgo{font-size:.8em;padding:.15em .2em}}
 .opt.right{background:#bbf7d0;border-color:#16a34a;color:#14532d}
 .opt.wrong{background:#fecaca;border-color:#dc2626;color:#7f1d1d}
 .opt.dim{opacity:.55}
@@ -329,7 +329,7 @@ a.btn{display:inline-block;text-decoration:none}
     function fitRes() {
       const w = $("game"), card = w.querySelector(".card"); if (!card) return;
       const vmin = Math.min(innerWidth, innerHeight); let fs = Math.max(14, Math.min(vmin * 0.04, 36));
-      const over = () => card.scrollHeight > card.clientHeight + 1 || document.documentElement.scrollHeight > innerHeight + 1 || [...w.querySelectorAll(".tile")].some(t => t.scrollHeight > t.clientHeight + 1 || t.scrollWidth > t.clientWidth + 1);
+      const over = () => card.scrollHeight > card.clientHeight + 1 || document.documentElement.scrollHeight > innerHeight + 1 || [...w.querySelectorAll(".tile, .tile .tb")].some(t => t.scrollHeight > t.clientHeight + 1 || t.scrollWidth > t.clientWidth + 1);
       w.style.setProperty("--fs", fs + "px");
       while (fs > 9 && over()) { fs -= 0.5; w.style.setProperty("--fs", fs + "px") }
     }
