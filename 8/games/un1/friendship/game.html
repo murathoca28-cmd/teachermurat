@@ -263,6 +263,10 @@ button{font-family:inherit;color:inherit}
 .mpanel .ch{padding-right:calc(var(--u)*1.3);font-size:calc(var(--u)*1.12)}.mpanel .bubble{font-size:min(var(--fs,calc(var(--u)*1.45)),calc(var(--u)*1.45))}.mpanel .fb{font-size:calc(var(--u)*1.0)}.mpanel .tagrow{gap:calc(var(--u)*.4)}.mpanel .bubble{padding:.2em .6em;line-height:1.1}
 @media (max-width:700px) and (max-aspect-ratio:1/1){.cast{flex-wrap:wrap;justify-content:center;max-width:100%}}
 </style>
+<style id="mobil-duzeltme">
+/* Telefon (dar, dikey ekran): yazılar çok küçük kalıyordu. Yalnızca bu ekranlarda devreye girer; tahta ve bilgisayar etkilenmez. */
+@media (max-width:700px) and (max-aspect-ratio:1/1){:root{--u:max(min(1.55vw,2.5vh),2.6vw)}}
+</style>
 </head>
 <body>
 <button id="fsBtn" type="button" title="Tam ekran / Çıkış" aria-label="Tam ekran / Çıkış">
