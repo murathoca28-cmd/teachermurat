@@ -23,13 +23,6 @@ button{font:inherit;cursor:pointer}
 .start:active{transform:scale(.96)}
 .start span:first-child{font-size:52px;line-height:1}
 .start span:last-child{font-size:20px;font-weight:900;margin-top:4px}
-.fab{position:fixed;bottom:10px;width:42px;height:42px;border-radius:50%;border:2px solid #bfdbfe;background:rgba(255,255,255,.92);color:#1e3a8a;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.2)}
-#menuBtn{left:10px;z-index:60;background:#171717;border-color:#525252;color:#fff;font-size:20px}
-#menu{position:fixed;inset:0;z-index:70}
-#menu div{position:absolute;bottom:60px;left:10px;width:240px;background:#171717;color:#fff;border-radius:12px;border:2px solid #525252;padding:10px}
-#menu small{display:block;color:#a3a3a3;font-weight:900;letter-spacing:.1em;padding-bottom:6px;margin-bottom:6px;border-bottom:2px solid #000}
-#menu button{display:block;width:100%;text-align:left;background:none;border:0;color:#fff;font-weight:900;font-size:17px;padding:8px 10px;border-radius:8px}
-#menu button:hover{background:#404040}
 .wrap{width:100%;max-width:2200px;margin:0 auto;flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;font-size:var(--fs,18px)}
 .top{flex:none;background:rgba(255,255,255,.9);border:3px solid #fff;border-radius:18px;padding:6px 14px;box-shadow:0 8px 20px rgba(0,0,0,.12);display:flex;align-items:center;gap:12px;font-weight:900;color:#6b21a8;font-size:16px}
 .bar{flex:1;height:12px;background:#e9d5ff;border-radius:99px;overflow:hidden}
@@ -43,6 +36,12 @@ button{font:inherit;cursor:pointer}
 @media (max-width:520px){.top .zbtn{font-size:12.5px;padding:5px 8px;margin-left:4px}
 .top{gap:6px}
 }
+.qmap{flex:none;display:flex;align-items:center;justify-content:center;gap:clamp(4px,.9vmin,10px);flex-wrap:wrap}
+.qm{width:clamp(30px,5.2vmin,64px);height:clamp(30px,5.2vmin,64px);border:3px solid #6d28d9;border-radius:12px;background:#fff;color:#4c1d95;font-weight:900;font-size:clamp(14px,2.4vmin,30px);line-height:1;padding:0}
+.qm.done{background:#7e22ce;color:#fff}
+.qm.cur{background:#fde047;color:#1f2937;border-color:#b45309;box-shadow:0 0 0 3px #fff,0 0 0 6px #b45309}
+.qback{border:3px solid #475569;border-radius:12px;background:#fff;color:#1f2937;font-weight:900;font-size:clamp(13px,2.2vmin,26px);padding:0 .7em;height:clamp(30px,5.2vmin,64px);text-decoration:none;display:inline-flex;align-items:center;margin-right:.6em}
+@media (max-width:520px){.qmap{flex-wrap:nowrap;gap:3px}.qm{width:7vw;min-width:24px;height:7vw;min-height:24px;border-width:2px;border-radius:8px;font-size:13px}.qm.cur{box-shadow:0 0 0 2px #fff,0 0 0 4px #b45309}.qback{height:7vw;min-height:24px;border-width:2px;border-radius:8px;padding:0 .5em;margin-right:.2em}.qback span{display:none}.nv1{padding:0 6px}.nv1 .btn{white-space:nowrap;padding:8px 14px;font-size:16px}}
 .start2{margin-top:12px;border:0;border-bottom:4px solid #0369a1;border-radius:14px;background:#0ea5e9;color:#fff;font-weight:900;font-size:1.1rem;padding:10px 22px;cursor:pointer}
 .zbtn.on{background:#f59e0b;border-color:#b45309}
 .card{flex:1;min-height:0;display:flex;flex-direction:column;background:#fff;border:6px solid #60a5fa;border-radius:24px;padding:.7em .9em;box-shadow:0 12px 30px rgba(0,0,0,.2);overflow:hidden}
@@ -130,10 +129,6 @@ a.btn{display:inline-block;text-decoration:none}
   <li>BAŞLAT tam ekranda ve büyütülmüş açılır.</li>
 </ol>
   </div>
-  <button class="fab hide" id="menuBtn" onclick="menu(1)" title="Menü">☰</button>
-  <div id="menu" class="hide" onclick="menu(0)">
-    <div onclick="event.stopPropagation()"><small>UNIT 3 TEST 1</small><button onclick="restart()">Yeniden başlat</button></div>
-  </div>
   <main class="wrap hide" id="game"></main>
   <script>
     const Q = [{"t": "Elif wrote the important events in her grandmother's life in a table. Look at the table.", "c": "Elif'in büyükannesinin hayatındaki önemli olayların yıllarıyla verildiği tablo", "q": "According to the information above, which of the following is <u>NOT</u> correct?", "o": ["She moved to Ankara before she graduated from university.", "She got married four years after she graduated.", "She had a daughter three years after she got married.", "She won an award in the same year she had a daughter."], "a": 3, "w": "Tabloya göre ödül 1991'de, kızı 1987'de oldu; aynı yıl değil. Diğer şıklar doğru: 1974 < 1980 (A), 1984 − 1980 = 4 yıl (B), 1987 − 1984 = 3 yıl (C). Tuzak: yılları karşılaştırırken “same year” ifadesini kontrol etmek gerekir."}, {"t": "Four friends are talking about important years in their lives. Read the comments.", "c": "Dört arkadaşın hayatlarındaki önemli yıllar hakkındaki yorumları", "q": "According to the comments above, which two people talk about <u>their own</u> life events in the same year?", "o": ["Hasan and İrem", "Jale and Kerem", "Hasan and Kerem", "İrem and Jale"], "a": 0, "w": "Hasan ve İrem kendi hayatlarındaki olayları aynı yıl (2014) anlatıyor. Jale 2018'den söz eder ama bu olay kardeşinin mezuniyetidir, kendisinin değil; bu yüzden Jale ve Kerem doğru çift değildir. Diğer çiftlerde yıllar farklıdır."}, {"t": "Mr Çelik asked his students to write about a famous person. Each card must have three things: the year of birth, the place of birth and the job. Look at the students' cards.", "c": "Dört öğrencinin yazdığı, doğum yılı, doğum yeri ve meslek bilgilerinden bazılarını içeren kartlar", "q": "Which of the following students' cards includes all the information Mr Çelik asked for?", "o": ["Pelin's card", "Sinan's card", "Tuğçe's card", "Sude's card"], "a": 2, "w": "Üç bilgi gerekli: doğum yılı, doğum yeri, meslek. Pelin'in kartında yıl, Sinan'ın kartında meslek, Sude'nin kartında doğum yeri eksik. Yalnızca Tuğçe'nin kartında üçü de var (1950, Bursa, doctor)."}, {"t": "Four friends are talking about their family members on a school forum. Read the comments.", "c": "Dört arkadaşın aile üyeleri hakkındaki forum yorumları", "q": "According to the comments above, who is talking about a person who is no longer alive?", "o": ["Ali", "Bora", "Cem", "Dila"], "a": 1, "w": "Bora'nın büyük dedesi “died in 1990” (1990'da öldü). Ali'nin dedesi “is eighty years old now”, Cem'in amcası “is a young engineer now”, Dila'nın büyükannesi “still lives there”; yani üçü de hayatta."}, {"t": "Read the short biography of Hakan Tezel.", "c": "Hakan Tezel'in kısa biyografisi", "q": "Which of the following information is <u>NOT</u> in the text above?", "o": ["The place where he was born", "The year he started his own company", "What he did after high school", "The name of the person he married"], "a": 3, "w": "Metinde doğum yeri (Sinop), şirketini kurduğu yıl (2005) ve lise sonrası yaptıkları (İstanbul'a taşındı, fabrikada çalıştı) var. Evlendiği kişinin adı ise yazılmamış; “got married in 1990” yalnızca evlilik yılını verir."}, {"t": "Read the message Ms Karaca sent to her students.", "c": "Ms Karaca'nın öğrencilere Famous People Day için yazdığı mesaj", "q": "According to the message above, why did Ms Karaca write this message? To - - - -.", "o": ["invite students to a museum trip", "ask students about their favourite famous person", "tell students what to prepare for an event", "explain the life of a famous person"], "a": 2, "w": "“Please prepare a short biography… Write when and where he or she was born…” = öğrencilere etkinlik için ne hazırlayacaklarını söylüyor. Müze gezisi daveti (A) ya da favori kişi sorusu (B) yok; bir ünlünün hayatı da anlatılmıyor (D)."}, {"t": "Duru and Mert are talking about Duru's aunt. Read the conversation.", "c": "Duru'nun teyzesinin mesleği hakkında Duru ile Mert arasındaki konuşma", "q": "Which of the following completes the conversation above?", "o": ["When did she start working there?", "Why did she choose to work there?", "How long did she work there?", "Where did she study before she moved there?"], "a": 1, "w": "Cevap “Because she wanted to help…” nedeni bildirir, bu yüzden soru “Why …?” olmalıdır. A zaman, C süre, D yer sorar; hiçbiri “Because” ile başlayan bir cevaba uymaz."}, {"t": "Selin is calling her grandfather for her school project. The sentences in their phone conversation are mixed up.", "c": "Selin ile dedesinin okul projesi için yaptığı karışık telefon konuşması", "q": "Which of the following is the correct order of the sentences in the phone conversation above?", "o": ["III – II – V – I – IV", "III – V – II – I – IV", "III – II – I – V – IV", "III – II – V – IV – I"], "a": 0, "w": "Selam ve rica (III) → “Of course…” (II) → soru (V) → cevap (I) → teşekkür (IV). “In 1974.” cevabı “When did you graduate?” sorusundan, teşekkür ise cevaptan sonra gelir; “Of course” ancak yardım ricasına verilir."}, {"t": "Murat tells his life story: “I graduated from university first. Then I moved to another city, and finally I won an award.” The pictures below show three events in his life, but they are not in order.", "c": "Murat'ın hayatından üç olayı gösteren, karışık sıralanmış resimler (ödül, mezuniyet, taşınma)", "q": "According to Murat's words, which of the following is the correct order of the pictures above?", "o": ["I – II – III", "II – III – I", "III – II – I", "II – I – III"], "a": 1, "w": "Murat önce mezun oldu (II), sonra başka şehre taşındı (III), en son ödül kazandı (I). Doğru sıra II – III – I. Diğer sıralarda ödül ya da taşınma mezuniyetten önce gelir."}, {"t": "Defne can only go to the film club on Tuesdays and Thursdays after four o'clock. She wants to watch a film about an inventor. Look at the timetable.", "c": "Film kulübünün film adı, konu, gün ve saat bilgilerini gösteren tablo", "q": "According to the information above, which film should Defne watch?", "o": ["The Sky Maker", "The Sailor's Map", "The Light Maker", "The Little Genius"], "a": 2, "w": "Defne'nin üç şartı var: konu mucit (inventor), gün Salı ya da Perşembe, saat 4'ten sonra. The Sky Maker 3.30'da (çok erken), The Sailor's Map kâşif hakkında, The Little Genius Çarşamba günü. Yalnızca The Light Maker (inventor, Thursday, 4.30) uyar."}];
@@ -144,9 +139,8 @@ a.btn{display:inline-block;text-decoration:none}
     const L = "ABCD", $ = s => document.getElementById(s), strip = h => h.replace(/<[^>]+>/g, ""), alt = d => d.c.replace(/"/g, "&quot;");
     let i = 0, sel = [], zoom = false, rv = false;
 
-    function begin() { if (!isFs()) { try { fullscr() } catch (e) { } } setZoom(true); $("splash").classList.add("hide"); $("menuBtn").classList.remove("hide"); restart() }
-    function restart() { sel = Array(Q.length).fill(null); i = 0; menu(0); $("game").classList.remove("hide"); render() }
-    function menu(f) { $("menu").classList.toggle("hide", !f) }
+    function begin() { if (!isFs()) { try { fullscr() } catch (e) { } } setZoom(true); $("splash").classList.add("hide"); restart() }
+    function restart() { sel = Array(Q.length).fill(null); i = 0; $("game").classList.remove("hide"); render() }
     function isFs() { return !!(document.fullscreenElement || document.webkitFullscreenElement) }
     function fullscr() { const d = document, e = d.documentElement; if (isFs()) (d.exitFullscreen || d.webkitExitFullscreen).call(d); else (e.requestFullscreen || e.webkitRequestFullscreen).call(e) }
     function setZoom(v) { zoom = v; document.body.classList.toggle("zoom", zoom) }
@@ -169,14 +163,19 @@ a.btn{display:inline-block;text-decoration:none}
     function render() {
       const d = Q[i], lo = LO.includes(i), last = i == Q.length - 1; rv = false;
       const w = $("game"); w.classList.remove("resmode");
-      w.innerHTML = `<div class="top"><span>Soru ${i + 1} / ${Q.length}</span><div class="bar"><i style="width:${(i + 1) / Q.length * 100}%"></i></div><button id="fb" class="zbtn fbtn${isFs() ? " on" : ""}" onclick="classMode()">${isFs() ? "⛶ Tam Ekrandan Çık" : "⛶ Tam Ekran"}</button></div>
+      w.innerHTML = `<div class="top"><span>Soru ${i + 1} / ${Q.length}</span><span style="flex:1"></span><button id="fb" class="zbtn fbtn${isFs() ? " on" : ""}" onclick="classMode()">${isFs() ? "⛶ Tam Ekrandan Çık" : "⛶ Tam Ekran"}</button></div>
+  <div class="qmap" id="qmap">${mapHtml()}</div>
   <div class="card"><p class="intro"><span class="n">${i + 1}</span>${d.t}</p><div class="cols"><div class="picbox"><img class="pic" src="${IMG[i]}" alt="${alt(d)}"></div>
   <div class="txt"><p class="qt">${d.q}</p><div class="opts${lo ? " lo" : ""}">${d.o.map((t, j) => `<button class="opt${sel[i] === j ? " sel" : ""}" aria-label="${L[j]}) ${strip(t)}" onclick="pick(${j})"><b>${L[j]})</b>${lo ? "" : " " + t}</button>`).join("")}</div></div></div></div>
-  <div class="nav"><button class="btn" onclick="go(-1)" ${i ? "" : "disabled"}>◀ Önceki</button><button class="btn${last ? " g" : ""}" onclick="go(1)">${last ? "Bitir ✔" : "Sonraki ▶"}</button></div>`;
+  <div class="nav nv1"><button class="btn" onclick="go(-1)" ${i ? "" : "disabled"}>◀ Önceki</button><button class="btn${last ? " g" : ""}" onclick="go(1)">${last ? "Bitir ✔" : "Sonraki ▶"}</button></div>`;
       window.scrollTo(0, 0);
       fit();
     }
-    function pick(j) { sel[i] = sel[i] === j ? null : j; document.querySelectorAll(".opt").forEach((b, k) => b.classList.toggle("sel", k === sel[i])) }
+    const MENU = location.pathname.replace(/_test_\d+\.html$/, "_tests.html").split("/").pop();
+    function mapHtml() { return `<a class="qback" href="${MENU}" onclick="return leave()" title="Testler listesine dön">↩<span> Testler</span></a>` + Q.map((d, k) => `<button class="qm${k === i ? " cur" : sel[k] !== null ? " done" : ""}" onclick="jump(${k})" aria-label="Soru ${k + 1}${sel[k] !== null ? " (cevaplandı)" : ""}">${k + 1}</button>`).join("") }
+    function jump(k) { i = k; render() }
+    function leave() { return sel.every(s => s === null) || confirm("Testten çıkarsan cevapların silinir. Çıkmak istiyor musun?") }
+    function pick(j) { sel[i] = sel[i] === j ? null : j; document.querySelectorAll(".opt").forEach((b, k) => b.classList.toggle("sel", k === sel[i])); const m = $("qmap"); if (m) m.innerHTML = mapHtml() }
     function go(n) { if (i + n >= Q.length) finish(); else { i += n; render() } }
     function bad() { return Q.map((d, k) => k).filter(k => sel[k] !== Q[k].a) }
     function wrongNav(k) {

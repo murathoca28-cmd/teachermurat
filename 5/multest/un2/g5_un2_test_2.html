@@ -23,13 +23,6 @@ button{font:inherit;cursor:pointer}
 .start:active{transform:scale(.96)}
 .start span:first-child{font-size:52px;line-height:1}
 .start span:last-child{font-size:20px;font-weight:900;margin-top:4px}
-.fab{position:fixed;bottom:10px;width:42px;height:42px;border-radius:50%;border:2px solid #bfdbfe;background:rgba(255,255,255,.92);color:#1e3a8a;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.2)}
-#menuBtn{left:10px;z-index:60;background:#171717;border-color:#525252;color:#fff;font-size:20px}
-#menu{position:fixed;inset:0;z-index:70}
-#menu div{position:absolute;bottom:60px;left:10px;width:240px;background:#171717;color:#fff;border-radius:12px;border:2px solid #525252;padding:10px}
-#menu small{display:block;color:#a3a3a3;font-weight:900;letter-spacing:.1em;padding-bottom:6px;margin-bottom:6px;border-bottom:2px solid #000}
-#menu button{display:block;width:100%;text-align:left;background:none;border:0;color:#fff;font-weight:900;font-size:17px;padding:8px 10px;border-radius:8px}
-#menu button:hover{background:#404040}
 .wrap{width:100%;max-width:2200px;margin:0 auto;flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;font-size:var(--fs,18px)}
 .top{flex:none;background:rgba(255,255,255,.9);border:3px solid #fff;border-radius:18px;padding:6px 14px;box-shadow:0 8px 20px rgba(0,0,0,.12);display:flex;align-items:center;gap:12px;font-weight:900;color:#6b21a8;font-size:16px}
 .bar{flex:1;height:12px;background:#e9d5ff;border-radius:99px;overflow:hidden}
@@ -43,6 +36,12 @@ button{font:inherit;cursor:pointer}
 @media (max-width:520px){.top .zbtn{font-size:12.5px;padding:5px 8px;margin-left:4px}
 .top{gap:6px}
 }
+.qmap{flex:none;display:flex;align-items:center;justify-content:center;gap:clamp(4px,.9vmin,10px);flex-wrap:wrap}
+.qm{width:clamp(30px,5.2vmin,64px);height:clamp(30px,5.2vmin,64px);border:3px solid #6d28d9;border-radius:12px;background:#fff;color:#4c1d95;font-weight:900;font-size:clamp(14px,2.4vmin,30px);line-height:1;padding:0}
+.qm.done{background:#7e22ce;color:#fff}
+.qm.cur{background:#fde047;color:#1f2937;border-color:#b45309;box-shadow:0 0 0 3px #fff,0 0 0 6px #b45309}
+.qback{border:3px solid #475569;border-radius:12px;background:#fff;color:#1f2937;font-weight:900;font-size:clamp(13px,2.2vmin,26px);padding:0 .7em;height:clamp(30px,5.2vmin,64px);text-decoration:none;display:inline-flex;align-items:center;margin-right:.6em}
+@media (max-width:520px){.qmap{flex-wrap:nowrap;gap:3px}.qm{width:7vw;min-width:24px;height:7vw;min-height:24px;border-width:2px;border-radius:8px;font-size:13px}.qm.cur{box-shadow:0 0 0 2px #fff,0 0 0 4px #b45309}.qback{height:7vw;min-height:24px;border-width:2px;border-radius:8px;padding:0 .5em;margin-right:.2em}.qback span{display:none}.nv1{padding:0 6px}.nv1 .btn{white-space:nowrap;padding:8px 14px;font-size:16px}}
 .start2{margin-top:12px;border:0;border-bottom:4px solid #0369a1;border-radius:14px;background:#0ea5e9;color:#fff;font-weight:900;font-size:1.1rem;padding:10px 22px;cursor:pointer}
 .zbtn.on{background:#f59e0b;border-color:#b45309}
 .card{flex:1;min-height:0;display:flex;flex-direction:column;background:#fff;border:6px solid #60a5fa;border-radius:24px;padding:.7em .9em;box-shadow:0 12px 30px rgba(0,0,0,.2);overflow:hidden}
@@ -130,10 +129,6 @@ a.btn{display:inline-block;text-decoration:none}
   <li>BAŞLAT tam ekranda ve büyütülmüş açılır.</li>
 </ol>
   </div>
-  <button class="fab hide" id="menuBtn" onclick="menu(1)" title="Menü">☰</button>
-  <div id="menu" class="hide" onclick="menu(0)">
-    <div onclick="event.stopPropagation()"><small>UNIT 2 TEST 2</small><button onclick="restart()">Yeniden başlat</button></div>
-  </div>
   <main class="wrap hide" id="game"></main>
   <script>
     const Q = [{"t": "Nehir asks Umut a question about the P.E. lessons. Read the conversation.", "c": "Nehir'in Umut'a beden eğitimi derslerini sorduğu konuşma", "q": "Which of the following completes the conversation above?", "o": ["How many P.E. lessons are there in a week?", "What time is the P.E. lesson on Tuesday?", "Is there a P.E. lesson on Thursday?", "Where is the P.E. lesson on Tuesday?"], "a": 0, "w": "Cevap “There are two.” bir sayı veriyor → soru “How many …?” (kaç tane?). “What time” saat, “Is there” evet/hayır, “Where” yer sorar. Tuzak: Tuesday/Thursday kelimeleri yüzünden C şıkkına kayma."}, {"t": "Ms Arda sent a message to her students. Read it.", "c": "Ms Arda'nın öğrencilerine yazdığı hafta planı mesajı", "q": "According to the message above, on which days are the English quiz and the Science project, in that order?", "o": ["Tuesday and Wednesday", "Tuesday and Thursday", "Wednesday and Thursday", "Tuesday and Friday"], "a": 1, "w": "Monday’den bir gün sonra = Tuesday (quiz); Friday’den bir gün önce = Thursday (proje). Tuzak: after/before yönü ve sıra (önce quiz, sonra proje)."}, {"t": "Pelin and Efe are making a plan for their homework. Read the conversation.", "c": "Pelin ve Efe'nin ödev için kütüphanede buluşma planı", "q": "What time are Pelin and Efe going to meet in the library?", "o": ["At ten to three.", "At ten past three.", "At twenty to three.", "At ten past two."], "a": 0, "w": "Ders 2.40’ta (twenty to three) bitiyor; 10 dakika sonrası 2.50 = ten to three. Tuzaklar: ten past three (3.10) “to/past” karışıklığı; twenty to three dersin bitiş saati."}, {"t": "Emir is free on Monday, Wednesday and Thursday. He wants clubs that start at half past three. Look at the school club timetable.", "c": "Okul kulüpleri: kulüp, gün ve saat", "q": "According to the timetable above, which two clubs can Emir join?", "o": ["Chess Club and Drama Club", "Chess Club and Art Club", "Drama Club and Music Club", "Art Club and Music Club"], "a": 1, "w": "Emir Pazartesi, Çarşamba, Perşembe müsait ve 15.30 (half past three) başlayan kulüp istiyor: Chess (Mon 15:30) ve Art (Thu 15:30). Drama Çarşamba ama 16:00’da; Music 15:30 ama Cuma günü (müsait değil)."}, {"t": "Read the exam notice and complete it.", "c": "İngilizce sınavının gününü, saatini ve gün bölümünü anlatan duyuru", "q": "Which of the following completes the notice above?", "o": ["at – on – in", "in – at – on", "on – in – at", "on – at – in"], "a": 3, "w": "Günlerin önünde on (on Tuesday), saatlerin önünde at (at ten past nine), günün bölümlerinin önünde in (in the morning) kullanılır."}, {"t": "Read Hira's text about her school week.", "c": "Hira'nın bilim dersi günleri hakkındaki yazısı", "q": "According to Hira's text, which of the following is correct?", "o": ["Hira has Science every day.", "Hira has Science on three days.", "Hira has Science on two days.", "Hira has Science on four days."], "a": 2, "w": "Science yalnızca Monday ve Wednesday günlerinde → iki gün. “every day” metinle çelişir; Tuesday, Thursday ve Friday günlerinde Science yok."}, {"t": "Ada invites Baran to a group. Read the conversation.", "c": "Ada'nın Baran'ı resim grubuna davet ettiği konuşma", "q": "Why does Baran say “Yes, I'd love to!” in the conversation above? To - - - -.", "o": ["ask for some help", "refuse an offer politely", "remind his friend of a rule", "accept an invitation"], "a": 3, "w": "“Would you like to join us?” bir davet; “Yes, I'd love to!” = “Evet, çok isterim!” → daveti kabul etme. Tuzak: refuse (reddetme) ile karıştırma; Baran saati sorarak katılmak istediğini gösteriyor."}, {"t": "Mira writes about her school library. Complete the text.", "c": "Mira'nın okul kütüphanesini anlatan cümlesi", "q": "Which of the following pairs completes the text above?", "o": ["are – is", "is – are", "is – is", "are – are"], "a": 1, "w": "“a bookshelf” tekil → there is; “two big tables” çoğul → there are. Tuzak: iki boşluğun biri tekil, diğeri çoğul."}, {"t": "Defne is playing a guessing game with her friends. Read her clues.", "c": "Defne'nin bir sınıf eşyası hakkında verdiği üç ipucu", "q": "Which classroom object is Defne talking about?", "o": ["a rubber", "a dictionary", "a ruler", "a board marker"], "a": 2, "w": "İpuçları: uzun ve ince, üzerinde sayılar var, ölçmek ve düz çizgi çizmek için kullanılıyor → ruler (cetvel). Board marker da uzun-incedir ama ölçmek için kullanılmaz."}, {"t": "Class 5-C is checking the things in the art box for a project. Look at the table.", "c": "5-C sınıfının sanat kutusu: gereken ve kutudaki eşya sayıları", "q": "According to the table above, which two things does the class need <u>more</u> of?", "o": ["rulers and rubbers", "scissors and sheets", "scissors and rubbers", "rulers and sheets"], "a": 3, "w": "Gereken sayı kutudakinden fazla olanlar: rulers (6 > 4) ve sheets (20 > 12). Scissors 3 = 3 yeterli; rubbers 4 < 5 yeterli (fazlası var)."}];
@@ -144,9 +139,8 @@ a.btn{display:inline-block;text-decoration:none}
     const L = "ABCD", $ = s => document.getElementById(s), strip = h => h.replace(/<[^>]+>/g, ""), alt = d => d.c.replace(/"/g, "&quot;");
     let i = 0, sel = [], zoom = false, rv = false;
 
-    function begin() { if (!isFs()) { try { fullscr() } catch (e) { } } setZoom(true); $("splash").classList.add("hide"); $("menuBtn").classList.remove("hide"); restart() }
-    function restart() { sel = Array(Q.length).fill(null); i = 0; menu(0); $("game").classList.remove("hide"); render() }
-    function menu(f) { $("menu").classList.toggle("hide", !f) }
+    function begin() { if (!isFs()) { try { fullscr() } catch (e) { } } setZoom(true); $("splash").classList.add("hide"); restart() }
+    function restart() { sel = Array(Q.length).fill(null); i = 0; $("game").classList.remove("hide"); render() }
     function isFs() { return !!(document.fullscreenElement || document.webkitFullscreenElement) }
     function fullscr() { const d = document, e = d.documentElement; if (isFs()) (d.exitFullscreen || d.webkitExitFullscreen).call(d); else (e.requestFullscreen || e.webkitRequestFullscreen).call(e) }
     function setZoom(v) { zoom = v; document.body.classList.toggle("zoom", zoom) }
@@ -169,14 +163,19 @@ a.btn{display:inline-block;text-decoration:none}
     function render() {
       const d = Q[i], lo = LO.includes(i), last = i == Q.length - 1; rv = false;
       const w = $("game"); w.classList.remove("resmode");
-      w.innerHTML = `<div class="top"><span>Soru ${i + 1} / ${Q.length}</span><div class="bar"><i style="width:${(i + 1) / Q.length * 100}%"></i></div><button id="fb" class="zbtn fbtn${isFs() ? " on" : ""}" onclick="classMode()">${isFs() ? "⛶ Tam Ekrandan Çık" : "⛶ Tam Ekran"}</button></div>
+      w.innerHTML = `<div class="top"><span>Soru ${i + 1} / ${Q.length}</span><span style="flex:1"></span><button id="fb" class="zbtn fbtn${isFs() ? " on" : ""}" onclick="classMode()">${isFs() ? "⛶ Tam Ekrandan Çık" : "⛶ Tam Ekran"}</button></div>
+  <div class="qmap" id="qmap">${mapHtml()}</div>
   <div class="card"><p class="intro"><span class="n">${i + 1}</span>${d.t}</p><div class="cols"><div class="picbox"><img class="pic" src="${IMG[i]}" alt="${alt(d)}"></div>
   <div class="txt"><p class="qt">${d.q}</p><div class="opts${lo ? " lo" : ""}">${d.o.map((t, j) => `<button class="opt${sel[i] === j ? " sel" : ""}" aria-label="${L[j]}) ${strip(t)}" onclick="pick(${j})"><b>${L[j]})</b>${lo ? "" : " " + t}</button>`).join("")}</div></div></div></div>
-  <div class="nav"><button class="btn" onclick="go(-1)" ${i ? "" : "disabled"}>◀ Önceki</button><button class="btn${last ? " g" : ""}" onclick="go(1)">${last ? "Bitir ✔" : "Sonraki ▶"}</button></div>`;
+  <div class="nav nv1"><button class="btn" onclick="go(-1)" ${i ? "" : "disabled"}>◀ Önceki</button><button class="btn${last ? " g" : ""}" onclick="go(1)">${last ? "Bitir ✔" : "Sonraki ▶"}</button></div>`;
       window.scrollTo(0, 0);
       fit();
     }
-    function pick(j) { sel[i] = sel[i] === j ? null : j; document.querySelectorAll(".opt").forEach((b, k) => b.classList.toggle("sel", k === sel[i])) }
+    const MENU = location.pathname.replace(/_test_\d+\.html$/, "_tests.html").split("/").pop();
+    function mapHtml() { return `<a class="qback" href="${MENU}" onclick="return leave()" title="Testler listesine dön">↩<span> Testler</span></a>` + Q.map((d, k) => `<button class="qm${k === i ? " cur" : sel[k] !== null ? " done" : ""}" onclick="jump(${k})" aria-label="Soru ${k + 1}${sel[k] !== null ? " (cevaplandı)" : ""}">${k + 1}</button>`).join("") }
+    function jump(k) { i = k; render() }
+    function leave() { return sel.every(s => s === null) || confirm("Testten çıkarsan cevapların silinir. Çıkmak istiyor musun?") }
+    function pick(j) { sel[i] = sel[i] === j ? null : j; document.querySelectorAll(".opt").forEach((b, k) => b.classList.toggle("sel", k === sel[i])); const m = $("qmap"); if (m) m.innerHTML = mapHtml() }
     function go(n) { if (i + n >= Q.length) finish(); else { i += n; render() } }
     function bad() { return Q.map((d, k) => k).filter(k => sel[k] !== Q[k].a) }
     function wrongNav(k) {
