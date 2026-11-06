@@ -23,13 +23,6 @@ button{font:inherit;cursor:pointer}
 .start:active{transform:scale(.96)}
 .start span:first-child{font-size:52px;line-height:1}
 .start span:last-child{font-size:20px;font-weight:900;margin-top:4px}
-.fab{position:fixed;bottom:10px;width:42px;height:42px;border-radius:50%;border:2px solid #bfdbfe;background:rgba(255,255,255,.92);color:#1e3a8a;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.2)}
-#menuBtn{left:10px;z-index:60;background:#171717;border-color:#525252;color:#fff;font-size:20px}
-#menu{position:fixed;inset:0;z-index:70}
-#menu div{position:absolute;bottom:60px;left:10px;width:240px;background:#171717;color:#fff;border-radius:12px;border:2px solid #525252;padding:10px}
-#menu small{display:block;color:#a3a3a3;font-weight:900;letter-spacing:.1em;padding-bottom:6px;margin-bottom:6px;border-bottom:2px solid #000}
-#menu button{display:block;width:100%;text-align:left;background:none;border:0;color:#fff;font-weight:900;font-size:17px;padding:8px 10px;border-radius:8px}
-#menu button:hover{background:#404040}
 .wrap{width:100%;max-width:2200px;margin:0 auto;flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;font-size:var(--fs,18px)}
 .top{flex:none;background:rgba(255,255,255,.9);border:3px solid #fff;border-radius:18px;padding:6px 14px;box-shadow:0 8px 20px rgba(0,0,0,.12);display:flex;align-items:center;gap:12px;font-weight:900;color:#6b21a8;font-size:16px}
 .bar{flex:1;height:12px;background:#e9d5ff;border-radius:99px;overflow:hidden}
@@ -43,6 +36,12 @@ button{font:inherit;cursor:pointer}
 @media (max-width:520px){.top .zbtn{font-size:12.5px;padding:5px 8px;margin-left:4px}
 .top{gap:6px}
 }
+.qmap{flex:none;display:flex;align-items:center;justify-content:center;gap:clamp(4px,.9vmin,10px);flex-wrap:wrap}
+.qm{width:clamp(30px,5.2vmin,64px);height:clamp(30px,5.2vmin,64px);border:3px solid #6d28d9;border-radius:12px;background:#fff;color:#4c1d95;font-weight:900;font-size:clamp(14px,2.4vmin,30px);line-height:1;padding:0}
+.qm.done{background:#7e22ce;color:#fff}
+.qm.cur{background:#fde047;color:#1f2937;border-color:#b45309;box-shadow:0 0 0 3px #fff,0 0 0 6px #b45309}
+.qback{border:3px solid #475569;border-radius:12px;background:#fff;color:#1f2937;font-weight:900;font-size:clamp(13px,2.2vmin,26px);padding:0 .7em;height:clamp(30px,5.2vmin,64px);text-decoration:none;display:inline-flex;align-items:center;margin-right:.6em}
+@media (max-width:520px){.qmap{flex-wrap:nowrap;gap:3px}.qm{width:7vw;min-width:24px;height:7vw;min-height:24px;border-width:2px;border-radius:8px;font-size:13px}.qm.cur{box-shadow:0 0 0 2px #fff,0 0 0 4px #b45309}.qback{height:7vw;min-height:24px;border-width:2px;border-radius:8px;padding:0 .5em;margin-right:.2em}.qback span{display:none}.nv1{padding:0 6px}.nv1 .btn{white-space:nowrap;padding:8px 14px;font-size:16px}}
 .start2{margin-top:12px;border:0;border-bottom:4px solid #0369a1;border-radius:14px;background:#0ea5e9;color:#fff;font-weight:900;font-size:1.1rem;padding:10px 22px;cursor:pointer}
 .zbtn.on{background:#f59e0b;border-color:#b45309}
 .card{flex:1;min-height:0;display:flex;flex-direction:column;background:#fff;border:6px solid #60a5fa;border-radius:24px;padding:.7em .9em;box-shadow:0 12px 30px rgba(0,0,0,.2);overflow:hidden}
@@ -130,10 +129,6 @@ a.btn{display:inline-block;text-decoration:none}
   <li>BAŞLAT tam ekranda ve büyütülmüş açılır.</li>
 </ol>
   </div>
-  <button class="fab hide" id="menuBtn" onclick="menu(1)" title="Menü">☰</button>
-  <div id="menu" class="hide" onclick="menu(0)">
-    <div onclick="event.stopPropagation()"><small>UNIT 3 TEST 1</small><button onclick="restart()">Yeniden başlat</button></div>
-  </div>
   <main class="wrap hide" id="game"></main>
   <script>
     const Q = [{"t": "The steps of a cheese omelette recipe are given in the order below. Two of the steps are in the wrong places.", "c": "Peynirli omlet tarifinin beş adımı", "q": "Which of the following steps of the recipe should change places to get the correct order of the cooking process?", "o": ["I and III", "II and III", "III and IV", "IV and V"], "a": 1, "w": "Doğru sıra: I – III – II – IV – V. Karışım (mixture) önce karıştırılarak hazırlanmalı, sonra tavaya dökülmelidir; bu yüzden II ile III yer değiştirir. Diğer çiftler değişirse peynir karışımdan önce serpilir ya da servis peynirden önce yapılır."}, {"t": "Read the message Mr Arslan sent to his students.", "c": "Mr Arslan'ın öğrencilere yemek dersi için yazdığı mesaj", "q": "According to the message above, why did Mr Arslan write this message? To - - - -.", "o": ["invite students to a restaurant after school", "explain the process of making vegetable soup", "tell students what to bring for the lesson", "ask students about their favourite dishes"], "a": 2, "w": "“Please bring two potatoes, one carrot and an onion…” = öğrencilere derse ne getirmeleri gerektiğini söylüyor. Çorbanın yapılış süreci anlatılmıyor (B), restoran daveti ya da favori yemek sorusu yok (A, D)."}, {"t": "Defne wrote the recipe of her tomato soup in a table. Look at the table.", "c": "Defne'nin domates çorbası tarifinin malzeme ve miktar tablosu", "q": "According to the table above, which of the following is <u>NOT</u> correct?", "o": ["You need four tomatoes.", "You should use two teaspoons of oil.", "You should add a pinch of salt.", "You should cook the soup for twenty minutes."], "a": 1, "w": "Tabloya göre yağ miktarı two tablespoons (iki yemek kaşığı); B şıkkındaki two teaspoons (iki çay kaşığı) doğru değil. Tuzak: tablespoon ile teaspoon karıştırılır. Diğer şıklar tabloyla aynı."}, {"t": "Four friends are talking about cooking potatoes. Read the comments.", "c": "Dört arkadaşın patates pişirme tercihleri hakkındaki yorumları", "q": "According to the comments above, which two people prefer the <u>same</u> cooking method?", "o": ["Aslı and Ceren", "Aslı and Burak", "Burak and Doruk", "Ceren and Doruk"], "a": 0, "w": "Aslı (boiling) ve Ceren (boiling them in a pot) haşlamayı tercih ediyor. Burak kızartıyor (fry), Doruk fırında pişiriyor (baking). Diğer çiftlerde yöntemler farklıdır."}, {"t": "Ayça wants to cook dinner at home. She doesn't eat meat, and she doesn't like fried food. She has only thirty minutes. Look at the table.", "c": "Dört yemeğin ana malzemesini, pişirme yöntemini ve süresini gösteren tablo", "q": "According to the information above, which dish should Ayça choose?", "o": ["Chicken pie", "French fries", "Vegetable pizza", "Stuffed peppers"], "a": 2, "w": "Ayça'nın üç şartı var: et yok, kızartma (fry) yok, en fazla 30 dakika. Chicken pie'da et var, French fries kızartılıyor, Stuffed peppers 45 dakika sürüyor. Yalnızca Vegetable pizza üç şartı da karşılar."}, {"t": "Ela asks Barış a question about the school picnic. Read the conversation.", "c": "Ela'nın Barış'a piknik için ne yapmayı tercih ettiğini sorduğu konuşma", "q": "Which of the following <u>CANNOT</u> be Barış's answer?", "o": ["I love making a salad for a picnic.", "I usually prefer baking a cake.", "I prefer a salad because it is quick.", "Yes, I do. I like baking a cake."], "a": 3, "w": "“Do you prefer … or …?” sorusuna “Yes / No” ile cevap verilmez; tercih belirtilir (I love…, I usually prefer…, I prefer…). D şıkkı “Yes, I do.” ile başladığı için Barış'ın cevabı olamaz."}, {"t": "Kaan is at the cooking club. He asks Ilgın about the potatoes. Read the conversation.", "c": "Kaan'ın Ilgın'a patatesin pişme süresiyle ilgili sorduğu konuşma", "q": "Which of the following completes the conversation above?", "o": ["How long should I boil the potatoes?", "What can I use to slice the potatoes?", "Do you prefer boiling or frying them?", "How much butter should I use?"], "a": 0, "w": "Cevap “About twenty minutes.” bir süre bildirir, bu yüzden soru “How long …?” olmalıdır. B alet, C tercih, D miktar sorar; hiçbiri “yaklaşık yirmi dakika” cevabına uymaz."}, {"t": "Mia is making pancakes. The pictures show three steps of her recipe, but they are not in order.", "c": "Mia'nın krep yaparken üç adımını gösteren, karışık sıralanmış resimler", "q": "According to the pictures above, which of the following is the correct order of the process?", "o": ["I – III – II", "II – I – III", "III – II – I", "III – I – II"], "a": 3, "w": "Önce hamur kasede karıştırılır (III), sonra tavaya dökülür (I), en sonunda krepler servis edilir (II). Doğru sıra III – I – II. Diğer sıralarda servis ya da tavaya dökme karıştırmadan önce gelir."}, {"t": "Chef Sevil put the ingredients into two groups for her shopping list, but two words are in the wrong groups.", "c": "Sayılabilen ve sayılamayan malzemelerin yerleştirildiği iki sütunlu tablo", "q": "According to the information above, which two words should change places to be in the correct group?", "o": ["eggs and sugar", "onions and milk", "flour and carrots", "eggs and carrots"], "a": 2, "w": "Sayılabilen malzemeler “How many” (eggs, onions, carrots), sayılamayanlar “How much” (milk, sugar, flour) ile sorulur. Yanlış yerdeki kelimeler flour ve carrots'tır; yalnızca bu ikisi yer değiştirince iki grup da doğru olur."}, {"t": "Kerem is talking to his aunt on the phone. The sentences in their phone conversation are mixed up.", "c": "Kerem ile teyzesinin kurabiye tarifi hakkındaki karışık telefon konuşması", "q": "Which of the following is the correct order of the sentences in the phone conversation above?", "o": ["III – V – IV – I – II", "III – IV – V – I – II", "III – V – I – IV – II", "III – V – IV – II – I"], "a": 0, "w": "Selam ve rica (III) → “Of course! What do you need to know?” (V) → soru (IV) → cevap (I) → teşekkür (II). Cevap sorudan, teşekkür cevaptan sonra gelir; “Of course!” ise ancak yardım ricasına verilir."}];
@@ -144,9 +139,8 @@ a.btn{display:inline-block;text-decoration:none}
     const L = "ABCD", $ = s => document.getElementById(s), strip = h => h.replace(/<[^>]+>/g, ""), alt = d => d.c.replace(/"/g, "&quot;");
     let i = 0, sel = [], zoom = false, rv = false;
 
-    function begin() { if (!isFs()) { try { fullscr() } catch (e) { } } setZoom(true); $("splash").classList.add("hide"); $("menuBtn").classList.remove("hide"); restart() }
-    function restart() { sel = Array(Q.length).fill(null); i = 0; menu(0); $("game").classList.remove("hide"); render() }
-    function menu(f) { $("menu").classList.toggle("hide", !f) }
+    function begin() { if (!isFs()) { try { fullscr() } catch (e) { } } setZoom(true); $("splash").classList.add("hide"); restart() }
+    function restart() { sel = Array(Q.length).fill(null); i = 0; $("game").classList.remove("hide"); render() }
     function isFs() { return !!(document.fullscreenElement || document.webkitFullscreenElement) }
     function fullscr() { const d = document, e = d.documentElement; if (isFs()) (d.exitFullscreen || d.webkitExitFullscreen).call(d); else (e.requestFullscreen || e.webkitRequestFullscreen).call(e) }
     function setZoom(v) { zoom = v; document.body.classList.toggle("zoom", zoom) }
@@ -169,14 +163,19 @@ a.btn{display:inline-block;text-decoration:none}
     function render() {
       const d = Q[i], lo = LO.includes(i), last = i == Q.length - 1; rv = false;
       const w = $("game"); w.classList.remove("resmode");
-      w.innerHTML = `<div class="top"><span>Soru ${i + 1} / ${Q.length}</span><div class="bar"><i style="width:${(i + 1) / Q.length * 100}%"></i></div><button id="fb" class="zbtn fbtn${isFs() ? " on" : ""}" onclick="classMode()">${isFs() ? "⛶ Tam Ekrandan Çık" : "⛶ Tam Ekran"}</button></div>
+      w.innerHTML = `<div class="top"><span>Soru ${i + 1} / ${Q.length}</span><span style="flex:1"></span><button id="fb" class="zbtn fbtn${isFs() ? " on" : ""}" onclick="classMode()">${isFs() ? "⛶ Tam Ekrandan Çık" : "⛶ Tam Ekran"}</button></div>
+  <div class="qmap" id="qmap">${mapHtml()}</div>
   <div class="card"><p class="intro"><span class="n">${i + 1}</span>${d.t}</p><div class="cols"><div class="picbox"><img class="pic" src="${IMG[i]}" alt="${alt(d)}"></div>
   <div class="txt"><p class="qt">${d.q}</p><div class="opts${lo ? " lo" : ""}">${d.o.map((t, j) => `<button class="opt${sel[i] === j ? " sel" : ""}" aria-label="${L[j]}) ${strip(t)}" onclick="pick(${j})"><b>${L[j]})</b>${lo ? "" : " " + t}</button>`).join("")}</div></div></div></div>
-  <div class="nav"><button class="btn" onclick="go(-1)" ${i ? "" : "disabled"}>◀ Önceki</button><button class="btn${last ? " g" : ""}" onclick="go(1)">${last ? "Bitir ✔" : "Sonraki ▶"}</button></div>`;
+  <div class="nav nv1"><button class="btn" onclick="go(-1)" ${i ? "" : "disabled"}>◀ Önceki</button><button class="btn${last ? " g" : ""}" onclick="go(1)">${last ? "Bitir ✔" : "Sonraki ▶"}</button></div>`;
       window.scrollTo(0, 0);
       fit();
     }
-    function pick(j) { sel[i] = sel[i] === j ? null : j; document.querySelectorAll(".opt").forEach((b, k) => b.classList.toggle("sel", k === sel[i])) }
+    const MENU = location.pathname.replace(/_test_\d+\.html$/, "_tests.html").split("/").pop();
+    function mapHtml() { return `<a class="qback" href="${MENU}" onclick="return leave()" title="Testler listesine dön">↩<span> Testler</span></a>` + Q.map((d, k) => `<button class="qm${k === i ? " cur" : sel[k] !== null ? " done" : ""}" onclick="jump(${k})" aria-label="Soru ${k + 1}${sel[k] !== null ? " (cevaplandı)" : ""}">${k + 1}</button>`).join("") }
+    function jump(k) { i = k; render() }
+    function leave() { return sel.every(s => s === null) || confirm("Testten çıkarsan cevapların silinir. Çıkmak istiyor musun?") }
+    function pick(j) { sel[i] = sel[i] === j ? null : j; document.querySelectorAll(".opt").forEach((b, k) => b.classList.toggle("sel", k === sel[i])); const m = $("qmap"); if (m) m.innerHTML = mapHtml() }
     function go(n) { if (i + n >= Q.length) finish(); else { i += n; render() } }
     function bad() { return Q.map((d, k) => k).filter(k => sel[k] !== Q[k].a) }
     function wrongNav(k) {

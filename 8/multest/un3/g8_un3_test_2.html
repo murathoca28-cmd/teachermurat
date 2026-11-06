@@ -23,13 +23,6 @@ button{font:inherit;cursor:pointer}
 .start:active{transform:scale(.96)}
 .start span:first-child{font-size:52px;line-height:1}
 .start span:last-child{font-size:20px;font-weight:900;margin-top:4px}
-.fab{position:fixed;bottom:10px;width:42px;height:42px;border-radius:50%;border:2px solid #bfdbfe;background:rgba(255,255,255,.92);color:#1e3a8a;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.2)}
-#menuBtn{left:10px;z-index:60;background:#171717;border-color:#525252;color:#fff;font-size:20px}
-#menu{position:fixed;inset:0;z-index:70}
-#menu div{position:absolute;bottom:60px;left:10px;width:240px;background:#171717;color:#fff;border-radius:12px;border:2px solid #525252;padding:10px}
-#menu small{display:block;color:#a3a3a3;font-weight:900;letter-spacing:.1em;padding-bottom:6px;margin-bottom:6px;border-bottom:2px solid #000}
-#menu button{display:block;width:100%;text-align:left;background:none;border:0;color:#fff;font-weight:900;font-size:17px;padding:8px 10px;border-radius:8px}
-#menu button:hover{background:#404040}
 .wrap{width:100%;max-width:2200px;margin:0 auto;flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;font-size:var(--fs,18px)}
 .top{flex:none;background:rgba(255,255,255,.9);border:3px solid #fff;border-radius:18px;padding:6px 14px;box-shadow:0 8px 20px rgba(0,0,0,.12);display:flex;align-items:center;gap:12px;font-weight:900;color:#6b21a8;font-size:16px}
 .bar{flex:1;height:12px;background:#e9d5ff;border-radius:99px;overflow:hidden}
@@ -43,6 +36,12 @@ button{font:inherit;cursor:pointer}
 @media (max-width:520px){.top .zbtn{font-size:12.5px;padding:5px 8px;margin-left:4px}
 .top{gap:6px}
 }
+.qmap{flex:none;display:flex;align-items:center;justify-content:center;gap:clamp(4px,.9vmin,10px);flex-wrap:wrap}
+.qm{width:clamp(30px,5.2vmin,64px);height:clamp(30px,5.2vmin,64px);border:3px solid #6d28d9;border-radius:12px;background:#fff;color:#4c1d95;font-weight:900;font-size:clamp(14px,2.4vmin,30px);line-height:1;padding:0}
+.qm.done{background:#7e22ce;color:#fff}
+.qm.cur{background:#fde047;color:#1f2937;border-color:#b45309;box-shadow:0 0 0 3px #fff,0 0 0 6px #b45309}
+.qback{border:3px solid #475569;border-radius:12px;background:#fff;color:#1f2937;font-weight:900;font-size:clamp(13px,2.2vmin,26px);padding:0 .7em;height:clamp(30px,5.2vmin,64px);text-decoration:none;display:inline-flex;align-items:center;margin-right:.6em}
+@media (max-width:520px){.qmap{flex-wrap:nowrap;gap:3px}.qm{width:7vw;min-width:24px;height:7vw;min-height:24px;border-width:2px;border-radius:8px;font-size:13px}.qm.cur{box-shadow:0 0 0 2px #fff,0 0 0 4px #b45309}.qback{height:7vw;min-height:24px;border-width:2px;border-radius:8px;padding:0 .5em;margin-right:.2em}.qback span{display:none}.nv1{padding:0 6px}.nv1 .btn{white-space:nowrap;padding:8px 14px;font-size:16px}}
 .start2{margin-top:12px;border:0;border-bottom:4px solid #0369a1;border-radius:14px;background:#0ea5e9;color:#fff;font-weight:900;font-size:1.1rem;padding:10px 22px;cursor:pointer}
 .zbtn.on{background:#f59e0b;border-color:#b45309}
 .card{flex:1;min-height:0;display:flex;flex-direction:column;background:#fff;border:6px solid #60a5fa;border-radius:24px;padding:.7em .9em;box-shadow:0 12px 30px rgba(0,0,0,.2);overflow:hidden}
@@ -130,10 +129,6 @@ a.btn{display:inline-block;text-decoration:none}
   <li>BAŞLAT tam ekranda ve büyütülmüş açılır.</li>
 </ol>
   </div>
-  <button class="fab hide" id="menuBtn" onclick="menu(1)" title="Menü">☰</button>
-  <div id="menu" class="hide" onclick="menu(0)">
-    <div onclick="event.stopPropagation()"><small>UNIT 3 TEST 2</small><button onclick="restart()">Yeniden başlat</button></div>
-  </div>
   <main class="wrap hide" id="game"></main>
   <script>
     const Q = [{"t": "Four friends are talking about fruit salad in the cooking club. Read their comments.", "c": "Dört arkadaşın meyve salatası hakkındaki yorumları", "q": "According to the comments above, who says something about the process of making fruit salad?", "o": ["Emre", "Nehir", "Okan", "Pelin"], "a": 0, "w": "Süreci (adımları) yalnızca Emre anlatıyor: “First, I peel… Then, I mix…”. Nehir tercihini (cold), Okan sevdiği/sevmediği meyveleri, Pelin ise büyükannesini anlatıyor; hiçbiri yapılış sürecinden söz etmiyor."}, {"t": "Four students wrote about the dishes they make in the cooking club.", "c": "Dört öğrencinin yaptığı yemek, kullandığı aletler ve süre bilgileri", "q": "According to the information above, which of the following is correct?", "o": ["Lale needs a pan for her dish.", "Hakan's dish takes longer than Nil's.", "Mert's dish takes the shortest time.", "Nil needs a pot to make her dish."], "a": 2, "w": "Süreler: Mert 5, Hakan 10, Nil 15, Lale 40 dakika; en kısa süre Mert’in. Lale tava değil tencere (pot) kullanıyor, Hakan’ın yemeği Nil’inkinden kısa sürüyor, Nil tencere değil kâse (bowl) kullanıyor."}, {"t": "Three short recipes are given in a cooking magazine. Read the texts.", "c": "Bir yemek dergisindeki üç kısa tarif", "q": "Which of the following headings does <u>NOT</u> match with any of the three texts given above?", "o": ["Making lemonade at home", "A quick cheese sandwich", "Cooking pasta with tomato sauce", "Baking a chocolate cake"], "a": 3, "w": "I. metin limonata, II. metin peynirli sandviç, III. metin domates soslu makarna tarifidir. “Baking a chocolate cake” (çikolatalı kek yapmak) hiçbir metinle eşleşmez; metinlerde kek ya da fırında pişirme yoktur."}, {"t": "Read the message Ms Aksoy sent to the members of the cooking club.", "c": "Ms Aksoy'nin kulüp üyelerine tarif kitabı için yazdığı mesaj", "q": "According to the message above, which of the following replies includes all the information Ms Aksoy asked for?", "o": ["My dish is meatballs. The main ingredient is minced meat. It is very tasty.", "My dish is meatballs. The main ingredient is minced meat. It takes twenty minutes.", "My dish is meatballs. It is very easy. It takes twenty minutes.", "The main ingredient is minced meat. It takes twenty minutes. It is very easy."], "a": 1, "w": "Ms Aksoy üç bilgi istiyor: yemeğin adı, ana malzemesi ve süresi. Yalnızca B şıkkında üçü de var. A’da süre, C’de ana malzeme, D’de yemeğin adı eksik."}, {"t": "Three recipe steps are given below, but each sentence has a blank.", "c": "Her cümlesinde bir boşluk bulunan üç tarif adımı", "q": "Which of the following words <u>CANNOT</u> you use in any of the sentences above?", "o": ["dice", "spread", "boil", "mash"], "a": 2, "w": "I. cümleye dice (küp küp doğra), II. cümleye spread (sür), III. cümleye mash (ez) uyar. “boil” (haşlamak) ise soğanı küçük parçalara ayırmaz, ekmeğe tereyağı sürülmez, çatalla da yapılmaz; hiçbirine uymaz."}, {"t": "Zehra writes a blog about cooking. Read her blog.", "c": "Zehra'nın ekmek yapmayı anlattığı yemek blogu", "q": "Which of the following questions has Zehra answered in her blog?", "o": ["How many eggs do I need?", "Do you use oil or butter?", "Where do you buy the flour?", "How long do you bake it?"], "a": 3, "w": "Blogda “bake it for about thirty minutes” yazıyor; bu, “How long do you bake it?” sorusunun cevabıdır. Yumurta, yağ/tereyağı ya da unun nereden alındığı blogda geçmiyor."}, {"t": "Selma is making pasta with cheese for dinner. First, she boils the pasta. Then, she grates some cheese and sprinkles it on the pasta. Look at the pictures of some kitchen tools.", "c": "Üç mutfak aletini gösteren resimler: tencere, rende ve çırpıcı", "q": "According to the information above, which of the following tools does Selma <u>NOT</u> need?", "o": ["I", "II", "III", "I and II"], "a": 2, "w": "Selma makarnayı haşlamak için tencere (I), peyniri rendelemek için rende (II) kullanır. Çırpıcı (III) için anlatılan adımlarda bir iş yoktur; bu yüzden ihtiyacı olmayan alet III’tür. “I and II” ise ihtiyacı olan iki alettir."}, {"t": "Efe wrote a recipe for the cooking club. One step of the recipe is missing.", "c": "Efe'nin mini pizza tarifi; bir adım eksik", "q": "Which of the following fills in the blank in the recipe above?", "o": ["sprinkle some grated cheese on them", "pour the syrup on them", "boil them in a pot for ten minutes", "mash them with a fork"], "a": 0, "w": "Hamur parçalarına sos sürüldükten sonra, fırına vermeden önce peynir serpilir (sprinkle). Şurup dökmek, haşlamak ya da ezmek pizza tarifinin mantığına uymaz; ayrıca “bake them” adımından önce haşlama olmaz."}, {"t": "Chef Orhan is preparing a worksheet for the cooking club. The students should write one verb for each picture.", "c": "Patates ezme, tosta yağ sürme ve elma soyma işlemlerini gösteren üç resim", "q": "Which of the following shows the correct verbs for pictures I, II and III in order?", "o": ["peel – mash – spread", "mash – spread – peel", "spread – peel – mash", "mash – peel – spread"], "a": 1, "w": "I. resimde patates eziliyor (mash), II. resimde ekmeğe yağ sürülüyor (spread), III. resimde elma soyuluyor (peel). Doğru sıra: mash – spread – peel. Diğer şıklarda fiillerin sırası karışık."}, {"t": "Yusuf asks his cooking teacher two questions. Read the questions.", "c": "Yusuf'un yemek öğretmenine sorduğu iki soru", "q": "Which of the following <u>CANNOT</u> be the teacher's answer to any of the questions above?", "o": ["You can use a frying pan.", "You can use a knife.", "I usually prefer butter.", "You should use oil."], "a": 0, "w": "“Do I use oil or butter…?” sorusuna C ve D uygun cevaptır; “What can I use to cut the cheese?” sorusuna B (bıçak) uygundur. A şıkkındaki “frying pan” (tava) peyniri kesmek için kullanılmaz ve yağ-tereyağı sorusunu da cevaplamaz; bu yüzden hiçbir sorunun cevabı olamaz."}];
@@ -144,9 +139,8 @@ a.btn{display:inline-block;text-decoration:none}
     const L = "ABCD", $ = s => document.getElementById(s), strip = h => h.replace(/<[^>]+>/g, ""), alt = d => d.c.replace(/"/g, "&quot;");
     let i = 0, sel = [], zoom = false, rv = false;
 
-    function begin() { if (!isFs()) { try { fullscr() } catch (e) { } } setZoom(true); $("splash").classList.add("hide"); $("menuBtn").classList.remove("hide"); restart() }
-    function restart() { sel = Array(Q.length).fill(null); i = 0; menu(0); $("game").classList.remove("hide"); render() }
-    function menu(f) { $("menu").classList.toggle("hide", !f) }
+    function begin() { if (!isFs()) { try { fullscr() } catch (e) { } } setZoom(true); $("splash").classList.add("hide"); restart() }
+    function restart() { sel = Array(Q.length).fill(null); i = 0; $("game").classList.remove("hide"); render() }
     function isFs() { return !!(document.fullscreenElement || document.webkitFullscreenElement) }
     function fullscr() { const d = document, e = d.documentElement; if (isFs()) (d.exitFullscreen || d.webkitExitFullscreen).call(d); else (e.requestFullscreen || e.webkitRequestFullscreen).call(e) }
     function setZoom(v) { zoom = v; document.body.classList.toggle("zoom", zoom) }
@@ -169,14 +163,19 @@ a.btn{display:inline-block;text-decoration:none}
     function render() {
       const d = Q[i], lo = LO.includes(i), last = i == Q.length - 1; rv = false;
       const w = $("game"); w.classList.remove("resmode");
-      w.innerHTML = `<div class="top"><span>Soru ${i + 1} / ${Q.length}</span><div class="bar"><i style="width:${(i + 1) / Q.length * 100}%"></i></div><button id="fb" class="zbtn fbtn${isFs() ? " on" : ""}" onclick="classMode()">${isFs() ? "⛶ Tam Ekrandan Çık" : "⛶ Tam Ekran"}</button></div>
+      w.innerHTML = `<div class="top"><span>Soru ${i + 1} / ${Q.length}</span><span style="flex:1"></span><button id="fb" class="zbtn fbtn${isFs() ? " on" : ""}" onclick="classMode()">${isFs() ? "⛶ Tam Ekrandan Çık" : "⛶ Tam Ekran"}</button></div>
+  <div class="qmap" id="qmap">${mapHtml()}</div>
   <div class="card"><p class="intro"><span class="n">${i + 1}</span>${d.t}</p><div class="cols"><div class="picbox"><img class="pic" src="${IMG[i]}" alt="${alt(d)}"></div>
   <div class="txt"><p class="qt">${d.q}</p><div class="opts${lo ? " lo" : ""}">${d.o.map((t, j) => `<button class="opt${sel[i] === j ? " sel" : ""}" aria-label="${L[j]}) ${strip(t)}" onclick="pick(${j})"><b>${L[j]})</b>${lo ? "" : " " + t}</button>`).join("")}</div></div></div></div>
-  <div class="nav"><button class="btn" onclick="go(-1)" ${i ? "" : "disabled"}>◀ Önceki</button><button class="btn${last ? " g" : ""}" onclick="go(1)">${last ? "Bitir ✔" : "Sonraki ▶"}</button></div>`;
+  <div class="nav nv1"><button class="btn" onclick="go(-1)" ${i ? "" : "disabled"}>◀ Önceki</button><button class="btn${last ? " g" : ""}" onclick="go(1)">${last ? "Bitir ✔" : "Sonraki ▶"}</button></div>`;
       window.scrollTo(0, 0);
       fit();
     }
-    function pick(j) { sel[i] = sel[i] === j ? null : j; document.querySelectorAll(".opt").forEach((b, k) => b.classList.toggle("sel", k === sel[i])) }
+    const MENU = location.pathname.replace(/_test_\d+\.html$/, "_tests.html").split("/").pop();
+    function mapHtml() { return `<a class="qback" href="${MENU}" onclick="return leave()" title="Testler listesine dön">↩<span> Testler</span></a>` + Q.map((d, k) => `<button class="qm${k === i ? " cur" : sel[k] !== null ? " done" : ""}" onclick="jump(${k})" aria-label="Soru ${k + 1}${sel[k] !== null ? " (cevaplandı)" : ""}">${k + 1}</button>`).join("") }
+    function jump(k) { i = k; render() }
+    function leave() { return sel.every(s => s === null) || confirm("Testten çıkarsan cevapların silinir. Çıkmak istiyor musun?") }
+    function pick(j) { sel[i] = sel[i] === j ? null : j; document.querySelectorAll(".opt").forEach((b, k) => b.classList.toggle("sel", k === sel[i])); const m = $("qmap"); if (m) m.innerHTML = mapHtml() }
     function go(n) { if (i + n >= Q.length) finish(); else { i += n; render() } }
     function bad() { return Q.map((d, k) => k).filter(k => sel[k] !== Q[k].a) }
     function wrongNav(k) {

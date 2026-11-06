@@ -23,13 +23,6 @@ button{font:inherit;cursor:pointer}
 .start:active{transform:scale(.96)}
 .start span:first-child{font-size:52px;line-height:1}
 .start span:last-child{font-size:20px;font-weight:900;margin-top:4px}
-.fab{position:fixed;bottom:10px;width:42px;height:42px;border-radius:50%;border:2px solid #bfdbfe;background:rgba(255,255,255,.92);color:#1e3a8a;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.2)}
-#menuBtn{left:10px;z-index:60;background:#171717;border-color:#525252;color:#fff;font-size:20px}
-#menu{position:fixed;inset:0;z-index:70}
-#menu div{position:absolute;bottom:60px;left:10px;width:240px;background:#171717;color:#fff;border-radius:12px;border:2px solid #525252;padding:10px}
-#menu small{display:block;color:#a3a3a3;font-weight:900;letter-spacing:.1em;padding-bottom:6px;margin-bottom:6px;border-bottom:2px solid #000}
-#menu button{display:block;width:100%;text-align:left;background:none;border:0;color:#fff;font-weight:900;font-size:17px;padding:8px 10px;border-radius:8px}
-#menu button:hover{background:#404040}
 .wrap{width:100%;max-width:2200px;margin:0 auto;flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;font-size:var(--fs,18px)}
 .top{flex:none;background:rgba(255,255,255,.9);border:3px solid #fff;border-radius:18px;padding:6px 14px;box-shadow:0 8px 20px rgba(0,0,0,.12);display:flex;align-items:center;gap:12px;font-weight:900;color:#6b21a8;font-size:16px}
 .bar{flex:1;height:12px;background:#e9d5ff;border-radius:99px;overflow:hidden}
@@ -43,6 +36,12 @@ button{font:inherit;cursor:pointer}
 @media (max-width:520px){.top .zbtn{font-size:12.5px;padding:5px 8px;margin-left:4px}
 .top{gap:6px}
 }
+.qmap{flex:none;display:flex;align-items:center;justify-content:center;gap:clamp(4px,.9vmin,10px);flex-wrap:wrap}
+.qm{width:clamp(30px,5.2vmin,64px);height:clamp(30px,5.2vmin,64px);border:3px solid #6d28d9;border-radius:12px;background:#fff;color:#4c1d95;font-weight:900;font-size:clamp(14px,2.4vmin,30px);line-height:1;padding:0}
+.qm.done{background:#7e22ce;color:#fff}
+.qm.cur{background:#fde047;color:#1f2937;border-color:#b45309;box-shadow:0 0 0 3px #fff,0 0 0 6px #b45309}
+.qback{border:3px solid #475569;border-radius:12px;background:#fff;color:#1f2937;font-weight:900;font-size:clamp(13px,2.2vmin,26px);padding:0 .7em;height:clamp(30px,5.2vmin,64px);text-decoration:none;display:inline-flex;align-items:center;margin-right:.6em}
+@media (max-width:520px){.qmap{flex-wrap:nowrap;gap:3px}.qm{width:7vw;min-width:24px;height:7vw;min-height:24px;border-width:2px;border-radius:8px;font-size:13px}.qm.cur{box-shadow:0 0 0 2px #fff,0 0 0 4px #b45309}.qback{height:7vw;min-height:24px;border-width:2px;border-radius:8px;padding:0 .5em;margin-right:.2em}.qback span{display:none}.nv1{padding:0 6px}.nv1 .btn{white-space:nowrap;padding:8px 14px;font-size:16px}}
 .start2{margin-top:12px;border:0;border-bottom:4px solid #0369a1;border-radius:14px;background:#0ea5e9;color:#fff;font-weight:900;font-size:1.1rem;padding:10px 22px;cursor:pointer}
 .zbtn.on{background:#f59e0b;border-color:#b45309}
 .card{flex:1;min-height:0;display:flex;flex-direction:column;background:#fff;border:6px solid #60a5fa;border-radius:24px;padding:.7em .9em;box-shadow:0 12px 30px rgba(0,0,0,.2);overflow:hidden}
@@ -130,10 +129,6 @@ a.btn{display:inline-block;text-decoration:none}
   <li>BAŞLAT tam ekranda ve büyütülmüş açılır.</li>
 </ol>
   </div>
-  <button class="fab hide" id="menuBtn" onclick="menu(1)" title="Menü">☰</button>
-  <div id="menu" class="hide" onclick="menu(0)">
-    <div onclick="event.stopPropagation()"><small>REVS TEST 2</small><button onclick="restart()">Yeniden başlat</button></div>
-  </div>
   <main class="wrap hide" id="game"></main>
   <script>
     const Q = [{"t": "Four friends are talking about their weekend plans. Read the comments.", "c": "Dört arkadaşın hafta sonu planları", "q": "According to the comments above, who says something about <u>food</u>?", "o": ["Ben", "Eva", "Chloe", "Dan"], "a": 2, "w": "Yemekle ilgili yorum Chloe'nin: pasta (chocolate cake) yapacak. Ben maç izleyecek, Eva büyükanne-büyükbabasını ziyaret edecek, Dan ormanda yürüyüş yapacak."}, {"t": "A student calls the school office. The sentences are mixed up.", "c": "Kayıp ceket için okul ofisiyle yapılan telefon konuşması (karışık cümleler)", "q": "Which of the following is the correct order of the sentences in the phone conversation above?", "o": ["II – IV – I – V – III", "II – I – IV – III – V", "IV – II – I – III – V", "IV – II – V – I – III"], "a": 0, "w": "Önce ofisin açılışı (II), sonra sorun (IV), ofisin rengi sorması (I), cevap (V) ve “That's it!” ile bitiş (III)."}, {"t": "Look at the menu of Sunny Café.", "c": "Sunny Café menüsü ve fiyatlar", "q": "According to the information above, which of the following is <u>NOT</u> correct?", "o": ["The lemonade is cheaper than the soup.", "The chocolate cake is the most expensive on the menu.", "The soup is more expensive than the salad.", "The tuna sandwich is more expensive than the salad."], "a": 2, "w": "Çorba 30 TL, salata 35 TL; yani çorba salatadan daha ucuz. “The soup is more expensive than the salad.” yanlıştır. Diğer üç cümle menüyle uyumludur."}, {"t": "Four friends are talking about their homes.", "c": "Dört arkadaşın yaşadıkları ev türünü anlatan mesajları", "q": "According to the messages above, which two people live in the same type of house?", "o": ["Nina and Leo", "Nina and Kaan", "Kaan and Elif", "Elif and Leo"], "a": 0, "w": "Nina ve Leo ikisi de apartman dairesinde (flat) yaşıyor. Kaan çiftlik evinde (farmhouse), Elif küçük bir evde (tiny house)."}, {"t": "Jack is inviting Lily to his birthday party. Read the conversation.", "c": "Jack'in Lily'yi doğum günü partisine davet ettiği konuşma", "q": "Lily accepts Jack's invitation. Which of the following can be Lily's answer to Jack?", "o": ["Sorry, I have a piano lesson on Saturday.", "That sounds great! I'd love to come.", "Thanks, but I must help my mum on Saturday.", "I'm sorry, but I don't like parties."], "a": 1, "w": "Lily daveti kabul ediyor; kabul ifadesi “That sounds great! I'd love to come.” Diğer üç şık davet reddi (mazeret ya da hoşlanmama)."}, {"t": "Read Aylin's text about her holiday plan.", "c": "Aylin'in çiftlik evi tatili planı", "q": "Which of the following information is <u>NOT</u> in the text above?", "o": ["The family is going to stay in a farmhouse.", "Aylin and her brother are going to ride horses.", "The family is going to travel by bus.", "Aylin's dad is going to cook fish."], "a": 2, "w": "Metinde ulaşım şekli (bus) geçmiyor. Çiftlik evi, at binme ve balık pişirme bilgileri metinde var."}, {"t": "Mr Jones is looking for a new student in the photos. Read the information.", "c": "Sam'in tarifi ve A, B, C, D harfli dört erkek yüzü", "q": "According to the information above, who is Sam?", "o": ["A", "B", "C", "D"], "a": 3, "w": "“Curly dark brown hair” (kıvırcık koyu kahverengi saç) → D. A ve C dik duran saçlı, B kısa ve düz saçlı."}, {"t": "Hana is planning her holiday. Look at the pictures on her wall.", "c": "Opera binası, kanguru ve mercan resifi görselleri", "q": "According to the pictures above, which country is Hana going to visit?", "o": ["Canada", "Australia", "Egypt", "Brazil"], "a": 1, "w": "Sydney Opera Binası, kanguru ve mercan resifi Avustralya'yı gösterir."}, {"t": "Read the email Ece sent to her teacher.", "c": "Ece'nin öğretmenine yazdığı milli park gezisi e-postası", "q": "According to the information above, why did Ece write this email? To - - - -.", "o": ["invite her teacher to a birthday lunch", "thank her teacher for the school trip", "tell her teacher about a lost bag", "ask her teacher about food for the trip"], "a": 3, "w": "Ece gezide öğle yemeğini evden getirip getiremeyeceklerini soruyor; amaç yemek hakkında soru sormak. “Thank you” ya da davet ifadesi yok."}, {"t": "Tom is going to leave home on Saturday. Read the information about his plan.", "c": "Tom'un cumartesi planı: yağmurlu ve soğuk hava", "q": "According to the information above, which of the following should Tom wear on Saturday?", "o": ["a T-shirt and sandals", "a raincoat and boots", "a cap and sunglasses", "shorts and sneakers"], "a": 1, "w": "Hava yağmurlu ve soğuk (7°C). Bu yüzden raincoat and boots. T-shirt, sandals, cap, sunglasses ve shorts bu havaya uymaz."}];
@@ -144,9 +139,8 @@ a.btn{display:inline-block;text-decoration:none}
     const L = "ABCD", $ = s => document.getElementById(s), strip = h => h.replace(/<[^>]+>/g, ""), alt = d => d.c.replace(/"/g, "&quot;");
     let i = 0, sel = [], zoom = false, rv = false;
 
-    function begin() { if (!isFs()) { try { fullscr() } catch (e) { } } setZoom(true); $("splash").classList.add("hide"); $("menuBtn").classList.remove("hide"); restart() }
-    function restart() { sel = Array(Q.length).fill(null); i = 0; menu(0); $("game").classList.remove("hide"); render() }
-    function menu(f) { $("menu").classList.toggle("hide", !f) }
+    function begin() { if (!isFs()) { try { fullscr() } catch (e) { } } setZoom(true); $("splash").classList.add("hide"); restart() }
+    function restart() { sel = Array(Q.length).fill(null); i = 0; $("game").classList.remove("hide"); render() }
     function isFs() { return !!(document.fullscreenElement || document.webkitFullscreenElement) }
     function fullscr() { const d = document, e = d.documentElement; if (isFs()) (d.exitFullscreen || d.webkitExitFullscreen).call(d); else (e.requestFullscreen || e.webkitRequestFullscreen).call(e) }
     function setZoom(v) { zoom = v; document.body.classList.toggle("zoom", zoom) }
@@ -169,14 +163,19 @@ a.btn{display:inline-block;text-decoration:none}
     function render() {
       const d = Q[i], lo = LO.includes(i), last = i == Q.length - 1; rv = false;
       const w = $("game"); w.classList.remove("resmode");
-      w.innerHTML = `<div class="top"><span>Soru ${i + 1} / ${Q.length}</span><div class="bar"><i style="width:${(i + 1) / Q.length * 100}%"></i></div><button id="fb" class="zbtn fbtn${isFs() ? " on" : ""}" onclick="classMode()">${isFs() ? "⛶ Tam Ekrandan Çık" : "⛶ Tam Ekran"}</button></div>
+      w.innerHTML = `<div class="top"><span>Soru ${i + 1} / ${Q.length}</span><span style="flex:1"></span><button id="fb" class="zbtn fbtn${isFs() ? " on" : ""}" onclick="classMode()">${isFs() ? "⛶ Tam Ekrandan Çık" : "⛶ Tam Ekran"}</button></div>
+  <div class="qmap" id="qmap">${mapHtml()}</div>
   <div class="card"><p class="intro"><span class="n">${i + 1}</span>${d.t}</p><div class="cols"><div class="picbox"><img class="pic" src="${IMG[i]}" alt="${alt(d)}"></div>
   <div class="txt"><p class="qt">${d.q}</p><div class="opts${lo ? " lo" : ""}">${d.o.map((t, j) => `<button class="opt${sel[i] === j ? " sel" : ""}" aria-label="${L[j]}) ${strip(t)}" onclick="pick(${j})"><b>${L[j]})</b>${lo ? "" : " " + t}</button>`).join("")}</div></div></div></div>
-  <div class="nav"><button class="btn" onclick="go(-1)" ${i ? "" : "disabled"}>◀ Önceki</button><button class="btn${last ? " g" : ""}" onclick="go(1)">${last ? "Bitir ✔" : "Sonraki ▶"}</button></div>`;
+  <div class="nav nv1"><button class="btn" onclick="go(-1)" ${i ? "" : "disabled"}>◀ Önceki</button><button class="btn${last ? " g" : ""}" onclick="go(1)">${last ? "Bitir ✔" : "Sonraki ▶"}</button></div>`;
       window.scrollTo(0, 0);
       fit();
     }
-    function pick(j) { sel[i] = sel[i] === j ? null : j; document.querySelectorAll(".opt").forEach((b, k) => b.classList.toggle("sel", k === sel[i])) }
+    const MENU = location.pathname.replace(/_test_\d+\.html$/, "_tests.html").split("/").pop();
+    function mapHtml() { return `<a class="qback" href="${MENU}" onclick="return leave()" title="Testler listesine dön">↩<span> Testler</span></a>` + Q.map((d, k) => `<button class="qm${k === i ? " cur" : sel[k] !== null ? " done" : ""}" onclick="jump(${k})" aria-label="Soru ${k + 1}${sel[k] !== null ? " (cevaplandı)" : ""}">${k + 1}</button>`).join("") }
+    function jump(k) { i = k; render() }
+    function leave() { return sel.every(s => s === null) || confirm("Testten çıkarsan cevapların silinir. Çıkmak istiyor musun?") }
+    function pick(j) { sel[i] = sel[i] === j ? null : j; document.querySelectorAll(".opt").forEach((b, k) => b.classList.toggle("sel", k === sel[i])); const m = $("qmap"); if (m) m.innerHTML = mapHtml() }
     function go(n) { if (i + n >= Q.length) finish(); else { i += n; render() } }
     function bad() { return Q.map((d, k) => k).filter(k => sel[k] !== Q[k].a) }
     function wrongNav(k) {
