@@ -112,6 +112,10 @@ body.secmod #toast{bottom:calc(172px + env(safe-area-inset-bottom))}
 .box{flex:none;width:34px;height:34px;border:3px solid #222;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;background:#fff}
 .box.on{background:var(--pri2);color:#fff;border-color:var(--pri2)}
 .bar .tp.on{background:var(--pri2);color:#fff;border-color:var(--pri2)}
+.vban{margin:0 10px 10px;background:#b91c1c;color:#fff;border-radius:12px;padding:12px;font-size:15px;font-weight:700;line-height:1.4}
+.vel{display:inline-block;margin-top:4px;background:#b91c1c;color:#fff;border-radius:8px;padding:4px 8px;font-size:13px;font-weight:700}
+.sp .vel{display:block;margin:0 0 10px;padding:10px;font-size:15px}
+.row.uyari{border-color:var(--d);box-shadow:0 0 0 1px var(--d)}
 </style>
 </head>
 <body>
@@ -126,6 +130,7 @@ body.secmod #toast{bottom:calc(172px + env(safe-area-inset-bottom))}
 </div>
 <div class="ara" id="arab" hidden><input id="ara" type="search" placeholder="🔍 Öğrenci ara (ad veya numara)" autocomplete="off"></div>
 <div class="ban" id="ban" hidden><span>Veriler yalnızca bu telefonda duruyor. Düzenli yedek almayı unutmayın.</span><button data-do="yedekIndir">Yedek al</button></div>
+<div class="vban" id="vban" hidden></div>
 <div id="list"></div>
 <button id="fab" data-do="ogrEkle" hidden>＋ Öğrenci</button>
 <div id="abar" hidden><div class="ac"><span id="asay">0 öğrenci seçili</span><button data-do="secHepsi">Hepsi</button><button data-do="secTemiz">Temizle</button></div><div class="ak" id="ak"></div></div>
@@ -139,6 +144,7 @@ const KRITER=[
   {k:'d',ad:'Disiplinsiz',p:-1,i:'⚠️'}
 ];
 const KEY='sinif-yildizlari-v1';
+const ESIK=3; // bir haftada bu kadar eksi alan öğrenci için veli görüşmesi uyarısı
 const $=s=>document.querySelector(s);
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -172,6 +178,8 @@ function baslangic(){
   if(S.range==='hafta'){d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d.getTime();}
   return 0;
 }
+function haftaBas(){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d.getTime();}
+function haftaEksi(c){const t0=haftaBas(),m={};c.events.forEach(e=>{if(e.k==='d'&&e.t>=t0)m[e.sid]=(m[e.sid]||0)+1;});return m;}
 function istat(c){
   const t0=baslangic(),m={};
   c.students.forEach(s=>m[s.id]={y:0,s:0,d:0,top:0});
@@ -187,7 +195,7 @@ function render(){
   const L=$('#list');
   if(!c){L.innerHTML='<div class="empty"><p>Henüz sınıf yok.</p><button class="big" data-do="sinifEkle">＋ Sınıf ekle</button></div>';banner();return;}
   if(!c.students.length){L.innerHTML='<div class="empty"><p>Bu sınıfta öğrenci yok.</p><button class="big" data-do="ogrEkle">＋ Öğrenci ekle</button></div>';banner();return;}
-  const st=istat(c);
+  const st=istat(c),hd=haftaEksi(c);
   const f=aranan?kat(aranan):'';
   const arr=c.students.filter(s=>!f||kat(s.name).includes(f));
   if(!arr.length){L.innerHTML='<div class="empty"><p>Eşleşen öğrenci yok.</p></div>';banner();return;}
@@ -197,8 +205,8 @@ function render(){
   gorunen=arr.map(x=>x.id);
   L.innerHTML=arr.map(s=>{
     const m=st[s.id];
-    const on=secili.has(s.id);
-    return `<div class="row${secModu?' pick':''}${on?' on':''}" data-sid="${s.id}"><div class="r1">${secModu?`<span class="box${on?' on':''}">${on?'✓':''}</span>`:''}<div class="who"><button class="nm">${esc(s.name)}</button><div class="sub">⭐ ${m.y} · 🌟 ${m.s} · ⚠️ ${m.d}</div></div><div class="tot${m.top<0?' neg':''}">${m.top}</div></div>`+
+    const on=secili.has(s.id),vk=(hd[s.id]||0)>=ESIK;
+    return `<div class="row${secModu?' pick':''}${on?' on':''}${vk?' uyari':''}" data-sid="${s.id}"><div class="r1">${secModu?`<span class="box${on?' on':''}">${on?'✓':''}</span>`:''}<div class="who"><button class="nm">${esc(s.name)}</button><div class="sub">⭐ ${m.y} · 🌟 ${m.s} · ⚠️ ${m.d}</div>${vk?`<div class="vel">📞 Veli görüşmesi: bu hafta ${hd[s.id]} eksi</div>`:''}</div><div class="tot${m.top<0?' neg':''}">${m.top}</div></div>`+
       (secModu?'':'<div class="btns">'+KRITER.map(k=>`<button class="b ${k.k}" data-k="${k.k}"><span class="ic">${k.i}</span><small>${k.ad} ${k.p>0?'+':''}${k.p}</small></button>`).join('')+'</div>')+'</div>';
   }).join('');
   banner();
@@ -217,22 +225,33 @@ function secUygula(k){
   const t=Date.now(),yeni=ids.map(sid=>({id:uid(),sid,k,p:kr.p,t}));
   c.events.push(...yeni);secili.clear();kaydet();render();
   const idler=new Set(yeni.map(x=>x.id));
-  toast(`${ids.length} öğrenciye ${kr.i} ${kr.p>0?'+':''}${kr.p} verildi`,()=>{c.events=c.events.filter(x=>!idler.has(x.id));kaydet();render();});
+  let ulas=[];
+  if(k==='d'){const hd=haftaEksi(c);ulas=c.students.filter(x=>ids.includes(x.id)&&(hd[x.id]||0)>=ESIK).map(x=>x.name);}
+  const ek=ulas.length?` · veli görüşmesi: ${ulas.slice(0,3).join(', ')}${ulas.length>3?` +${ulas.length-3}`:''}`:'';
+  toast(`${ids.length} öğrenciye ${kr.i} ${kr.p>0?'+':''}${kr.p} verildi`+ek,()=>{c.events=c.events.filter(x=>!idler.has(x.id));kaydet();render();},ulas.length?8000:undefined);
   if(navigator.vibrate)navigator.vibrate(kr.p<0?[30,40,30]:20);
 }
+function vbanner(){
+  const c=cls(),el=$('#vban');
+  if(!c){el.hidden=true;return;}
+  const hd=haftaEksi(c);
+  const ad=c.students.filter(x=>(hd[x.id]||0)>=ESIK).map(x=>x.name);
+  el.hidden=!ad.length;
+  if(ad.length)el.textContent='📞 Bu hafta veli görüşmesi gereken: '+ad.join(', ');
+}
 function banner(){
-  altBar();
+  altBar();vbanner();
   const n=S.classes.reduce((a,c)=>a+c.events.length,0);
   const eski=S.yedek?(Date.now()-S.yedek>14*864e5):n>=20;
   $('#ban').hidden=!(n>0&&eski);
 }
 
 let tT;
-function toast(msg,geri){
+function toast(msg,geri,ms){
   const t=$('#toast');t.innerHTML='';
   const sp=document.createElement('span');sp.textContent=msg;t.append(sp);
   if(geri){const b=document.createElement('button');b.textContent='Geri al';b.onclick=()=>{geri();t.classList.remove('on');};t.append(b);}
-  t.classList.add('on');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('on'),geri?4500:2800);
+  t.classList.add('on');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('on'),ms||(geri?4500:2800));
 }
 function modal(o){
   return new Promise(res=>{
@@ -269,7 +288,8 @@ function puanVer(sid,k){
   if(!kr||!s)return;
   const ev={id:uid(),sid,k,p:kr.p,t:Date.now()};
   c.events.push(ev);kaydet();render();
-  toast(`${s.name}: ${kr.i} ${kr.p>0?'+':''}${kr.p}`,()=>{c.events=c.events.filter(e=>e.id!==ev.id);kaydet();render();});
+  const n=haftaEksi(c)[sid]||0,uy=k==='d'&&n>=ESIK;
+  toast(`${s.name}: ${kr.i} ${kr.p>0?'+':''}${kr.p}`+(uy?` · bu hafta ${n} eksi → veli görüşmesi`:''),()=>{c.events=c.events.filter(e=>e.id!==ev.id);kaydet();render();},uy?8000:undefined);
   if(navigator.vibrate)navigator.vibrate(kr.p<0?[30,40,30]:20);
 }
 
@@ -282,7 +302,8 @@ function detay(sid){
   ev.forEach(e=>{n[e.k]++;top+=e.p;});
   const w=document.createElement('div');
   const tarih=t=>new Date(t).toLocaleString('tr-TR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-  w.innerHTML=`<div class="sum"><div>⭐<b>${n.y}</b></div><div>🌟<b>${n.s}</b></div><div>⚠️<b>${n.d}</b></div><div>Toplam<b>${top}</b></div></div>`+
+  const hn=haftaEksi(c)[sid]||0;
+  w.innerHTML=(hn>=ESIK?`<div class="vel">📞 Veli görüşmesi: bu hafta ${hn} eksi</div>`:'')+`<div class="sum"><div>⭐<b>${n.y}</b></div><div>🌟<b>${n.s}</b></div><div>⚠️<b>${n.d}</b></div><div>Toplam<b>${top}</b></div></div>`+
     (ev.length?ev.slice(0,60).map(e=>{const k=KRITER.find(x=>x.k===e.k);return `<div class="h"><span>${tarih(e.t)}</span><span>${k.i} ${e.p>0?'+':''}${e.p}</span><button data-ev="${e.id}" aria-label="Sil">✕</button></div>`;}).join(''):'<p>Henüz kayıt yok.</p>')+
     '<div class="act"><button data-do="ogrAd">✏️ Adı değiştir</button><button class="red" data-do="ogrSil">🗑️ Öğrenciyi sil</button></div>';
   sheet(s.name,w);
