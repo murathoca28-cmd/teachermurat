@@ -81,7 +81,12 @@ header{position:sticky;top:0;z-index:5;background:var(--pri);color:#fff;padding:
 .bar .tp{flex:none;width:52px;border:2px solid var(--line);background:#fff;border-radius:10px;font-size:22px}
 .kr{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
 .b.sel{outline:4px solid #111;outline-offset:2px}
-.tl button{border:2px solid var(--line);background:#fff;border-radius:10px;padding:10px 14px;font-size:15px;font-weight:700;font-family:inherit;color:var(--ink)}
+.gr{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{border:2px solid var(--pri2);background:#fff;color:var(--pri2);border-radius:999px;padding:10px 16px;font-size:16px;font-weight:700;font-family:inherit}
+.chip.on{background:var(--pri2);color:#fff}
+.gy{margin-bottom:10px}
+.tl{display:flex;gap:8px;flex-wrap:wrap}
+.tl button{flex:1 1 140px;border:2px solid var(--line);background:#fff;border-radius:10px;padding:10px 14px;font-size:15px;font-weight:700;font-family:inherit;color:var(--ink)}
 .lst{max-height:42vh;overflow:auto;border:2px solid var(--line);border-radius:12px;margin:10px 0}
 .ck{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid var(--line);font-size:17px}
 .ck input{width:24px;height:24px;flex:none}
@@ -95,6 +100,18 @@ header{position:sticky;top:0;z-index:5;background:var(--pri);color:#fff;padding:
 .rp th{border-bottom:2px solid var(--ink);font-size:14px}
 .rp .neg{color:var(--d)}
 .rp .tt td{font-weight:800;border-top:2px solid var(--ink)}
+#abar{position:fixed;left:0;right:0;bottom:0;z-index:7;background:#fff;border-top:3px solid var(--pri2);padding:8px 10px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -3px 10px rgba(0,0,0,.2)}
+.ac{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ac span{flex:1;font-weight:800;font-size:16px}
+.ac button{border:2px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;font-weight:700;font-size:14px;font-family:inherit;color:var(--ink)}
+.ak{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+body.secmod{padding-bottom:200px}
+body.secmod #toast{bottom:calc(172px + env(safe-area-inset-bottom))}
+.row.pick{cursor:pointer}
+.row.on{border-color:var(--pri2);background:#e6f4f2;box-shadow:0 0 0 2px var(--pri2)}
+.box{flex:none;width:34px;height:34px;border:3px solid #222;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;background:#fff}
+.box.on{background:var(--pri2);color:#fff;border-color:var(--pri2)}
+.bar .tp.on{background:var(--pri2);color:#fff;border-color:var(--pri2)}
 </style>
 </head>
 <body>
@@ -105,12 +122,13 @@ header{position:sticky;top:0;z-index:5;background:var(--pri);color:#fff;padding:
 <div class="bar" id="bar" hidden>
   <select id="rng" aria-label="Dönem"><option value="hepsi">Tüm zamanlar</option><option value="hafta">Bu hafta</option><option value="bugun">Bugün</option></select>
   <select id="srt" aria-label="Sıralama"><option value="liste">Liste sırası</option><option value="ad">A → Z</option><option value="puan">Puana göre</option></select>
-  <button class="tp" data-do="topluPuan" aria-label="Toplu puan">👥</button>
+  <button class="tp" id="secbtn" data-do="secModu" aria-label="Öğrenci seç">☑</button>
 </div>
 <div class="ara" id="arab" hidden><input id="ara" type="search" placeholder="🔍 Öğrenci ara (ad veya numara)" autocomplete="off"></div>
 <div class="ban" id="ban" hidden><span>Veriler yalnızca bu telefonda duruyor. Düzenli yedek almayı unutmayın.</span><button data-do="yedekIndir">Yedek al</button></div>
 <div id="list"></div>
 <button id="fab" data-do="ogrEkle" hidden>＋ Öğrenci</button>
+<div id="abar" hidden><div class="ac"><span id="asay">0 öğrenci seçili</span><button data-do="secHepsi">Hepsi</button><button data-do="secTemiz">Temizle</button></div><div class="ak" id="ak"></div></div>
 <div id="toast"></div>
 <div id="sheet"><div class="sp"><div class="sph"><h2 id="shT"></h2><button data-do="kapat" aria-label="Kapat">✕</button></div><div id="shB"></div></div></div>
 
@@ -124,7 +142,8 @@ const KEY='sinif-yildizlari-v1';
 const $=s=>document.querySelector(s);
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let aktifOgr=null,aranan='';
+let aktifOgr=null,aranan='',secModu=false,gorunen=[];
+const secili=new Set();
 const kat=s=>String(s).toLocaleLowerCase('tr').replace(/ı/g,'i').replace(/ş/g,'s').replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ö/g,'o').replace(/ç/g,'c');
 
 function bos(){return {classes:[],cur:null,range:'hepsi',sort:'liste',yedek:0};}
@@ -161,9 +180,9 @@ function istat(c){
 }
 
 function render(){
-  const c=cls();
+  const c=cls();gorunen=[];
   $('#tabs').innerHTML=S.classes.map(x=>`<button class="tab${x.id===S.cur?' on':''}" data-id="${x.id}">${esc(x.name)}</button>`).join('')+'<button class="tab" data-do="sinifEkle" aria-label="Sınıf ekle">＋</button>';
-  $('#bar').hidden=!c;$('#arab').hidden=!c;$('#fab').hidden=!c;
+  $('#bar').hidden=!c;$('#arab').hidden=!c;$('#fab').hidden=!c||secModu;
   $('#rng').value=S.range;$('#srt').value=S.sort;
   const L=$('#list');
   if(!c){L.innerHTML='<div class="empty"><p>Henüz sınıf yok.</p><button class="big" data-do="sinifEkle">＋ Sınıf ekle</button></div>';banner();return;}
@@ -175,14 +194,34 @@ function render(){
   const tr=(a,b)=>a.name.localeCompare(b.name,'tr',{numeric:true});
   if(S.sort==='ad')arr.sort(tr);
   else if(S.sort==='puan')arr.sort((a,b)=>st[b.id].top-st[a.id].top||tr(a,b));
+  gorunen=arr.map(x=>x.id);
   L.innerHTML=arr.map(s=>{
     const m=st[s.id];
-    return `<div class="row" data-sid="${s.id}"><div class="r1"><div class="who"><button class="nm">${esc(s.name)}</button><div class="sub">⭐ ${m.y} · 🌟 ${m.s} · ⚠️ ${m.d}</div></div><div class="tot${m.top<0?' neg':''}">${m.top}</div></div><div class="btns">`+
-      KRITER.map(k=>`<button class="b ${k.k}" data-k="${k.k}"><span class="ic">${k.i}</span><small>${k.ad} ${k.p>0?'+':''}${k.p}</small></button>`).join('')+'</div></div>';
+    const on=secili.has(s.id);
+    return `<div class="row${secModu?' pick':''}${on?' on':''}" data-sid="${s.id}"><div class="r1">${secModu?`<span class="box${on?' on':''}">${on?'✓':''}</span>`:''}<div class="who"><button class="nm">${esc(s.name)}</button><div class="sub">⭐ ${m.y} · 🌟 ${m.s} · ⚠️ ${m.d}</div></div><div class="tot${m.top<0?' neg':''}">${m.top}</div></div>`+
+      (secModu?'':'<div class="btns">'+KRITER.map(k=>`<button class="b ${k.k}" data-k="${k.k}"><span class="ic">${k.i}</span><small>${k.ad} ${k.p>0?'+':''}${k.p}</small></button>`).join('')+'</div>')+'</div>';
   }).join('');
   banner();
 }
+function altBar(){
+  const c=cls(),ac=secModu&&!!c;
+  $('#abar').hidden=!ac;document.body.classList.toggle('secmod',ac);
+  $('#secbtn').classList.toggle('on',secModu);
+  if(ac)$('#asay').textContent=c.students.filter(x=>secili.has(x.id)).length+' öğrenci seçili';
+}
+function secUygula(k){
+  const c=cls(),kr=KRITER.find(x=>x.k===k);
+  if(!c||!kr)return;
+  const ids=c.students.filter(x=>secili.has(x.id)).map(x=>x.id);
+  if(!ids.length)return toast('Önce öğrenci seçin');
+  const t=Date.now(),yeni=ids.map(sid=>({id:uid(),sid,k,p:kr.p,t}));
+  c.events.push(...yeni);secili.clear();kaydet();render();
+  const idler=new Set(yeni.map(x=>x.id));
+  toast(`${ids.length} öğrenciye ${kr.i} ${kr.p>0?'+':''}${kr.p} verildi`,()=>{c.events=c.events.filter(x=>!idler.has(x.id));kaydet();render();});
+  if(navigator.vibrate)navigator.vibrate(kr.p<0?[30,40,30]:20);
+}
 function banner(){
+  altBar();
   const n=S.classes.reduce((a,c)=>a+c.events.length,0);
   const eski=S.yedek?(Date.now()-S.yedek>14*864e5):n>=20;
   $('#ban').hidden=!(n>0&&eski);
@@ -270,7 +309,6 @@ const ISLEM={
     w.innerHTML=`<button data-do="rapor">📈 Öğrenci raporu (tablo)</button>
 <button data-do="sinifEkle">➕ Sınıf ekle</button>
 <button data-do="ogrEkle">👤 Öğrenci ekle (çoklu)</button>
-<button data-do="topluPuan">👥 Toplu puan ver (sınıfa / seçilenlere)</button>
 <button data-do="sinifAd">✏️ Sınıf adını değiştir</button><hr>
 <button data-do="csvOzet">📊 Excel için özet (CSV)</button>
 <button data-do="csvKayit">📋 Excel için ayrıntılı kayıt (CSV)</button>
@@ -327,36 +365,9 @@ const ISLEM={
     ciz();
     sheet(c.name+' – Rapor',w);
   },
-  topluPuan(){
-    const c=cls();
-    if(!c||!c.students.length)return toast('Önce öğrenci ekleyin');
-    let sec='y';
-    const w=document.createElement('div');
-    w.innerHTML='<div class="kr">'+KRITER.map(k=>`<button class="b ${k.k}${k.k===sec?' sel':''}" data-kr="${k.k}"><span class="ic">${k.i}</span><small>${k.ad} ${k.p>0?'+':''}${k.p}</small></button>`).join('')+'</div>'+
-      '<div class="tl"><button data-hepsi="1">Hepsini seç / kaldır</button></div>'+
-      '<div class="lst">'+c.students.map(s=>`<label class="ck"><input type="checkbox" data-s="${s.id}" checked><span>${esc(s.name)}</span></label>`).join('')+'</div>'+
-      '<button class="big wide" data-uyg="1"></button>';
-    const kutular=()=>[...w.querySelectorAll('input[data-s]')];
-    const uyg=w.querySelector('[data-uyg]');
-    const yenile=()=>{uyg.textContent=`Uygula (${kutular().filter(x=>x.checked).length} öğrenci)`;};
-    yenile();
-    w.addEventListener('change',yenile);
-    w.addEventListener('click',e=>{
-      const kb=e.target.closest('[data-kr]');
-      if(kb){sec=kb.dataset.kr;w.querySelectorAll('[data-kr]').forEach(x=>x.classList.toggle('sel',x===kb));return;}
-      if(e.target.closest('[data-hepsi]')){const hepsi=kutular().every(x=>x.checked);kutular().forEach(x=>x.checked=!hepsi);yenile();return;}
-      if(e.target.closest('[data-uyg]')){
-        const secili=kutular().filter(x=>x.checked).map(x=>x.dataset.s);
-        if(!secili.length)return toast('Öğrenci seçilmedi');
-        const kr=KRITER.find(x=>x.k===sec),t=Date.now();
-        const yeni=secili.map(sid=>({id:uid(),sid,k:sec,p:kr.p,t}));
-        c.events.push(...yeni);kaydet();sheetKapat();render();
-        const idler=new Set(yeni.map(x=>x.id));
-        toast(`${secili.length} öğrenciye ${kr.i} ${kr.p>0?'+':''}${kr.p} verildi`,()=>{c.events=c.events.filter(x=>!idler.has(x.id));kaydet();render();});
-      }
-    });
-    sheet('Toplu puan ver',w);
-  },
+  secModu(){secModu=!secModu;secili.clear();render();},
+  secHepsi(){gorunen.forEach(id=>secili.add(id));render();},
+  secTemiz(){secili.clear();render();},
   async ogrAd(){
     const c=cls(),s=c&&c.students.find(x=>x.id===aktifOgr);if(!s)return;
     const v=await modal({title:'Öğrenci adı',input:true,value:s.name,ok:'Kaydet'});
@@ -415,12 +426,18 @@ const ISLEM={
 };
 
 document.addEventListener('click',e=>{
+  const ap=e.target.closest('[data-ap]');
+  if(ap){secUygula(ap.dataset.ap);return;}
+  if(secModu){
+    const rw=e.target.closest('.row');
+    if(rw){const id=rw.dataset.sid;if(secili.has(id))secili.delete(id);else secili.add(id);render();return;}
+  }
   const b=e.target.closest('[data-k]');
   if(b){puanVer(b.closest('.row').dataset.sid,b.dataset.k);return;}
   const nm=e.target.closest('.nm');
   if(nm){detay(nm.closest('.row').dataset.sid);return;}
   const t=e.target.closest('.tab[data-id]');
-  if(t){S.cur=t.dataset.id;aranan='';$('#ara').value='';kaydet();render();return;}
+  if(t){S.cur=t.dataset.id;secili.clear();aranan='';$('#ara').value='';kaydet();render();return;}
   const x=e.target.closest('[data-ev]');
   if(x){const c=cls();c.events=c.events.filter(v=>v.id!==x.dataset.ev);kaydet();render();detay(aktifOgr);return;}
   const d=e.target.closest('[data-do]');
@@ -431,6 +448,7 @@ $('#rng').onchange=e=>{S.range=e.target.value;kaydet();render();};
 $('#ara').oninput=e=>{aranan=e.target.value.trim();render();};
 $('#srt').onchange=e=>{S.sort=e.target.value;kaydet();render();};
 
+$('#ak').innerHTML=KRITER.map(k=>`<button class="b ${k.k}" data-ap="${k.k}"><span class="ic">${k.i}</span><small>${k.ad} ${k.p>0?'+':''}${k.p}</small></button>`).join('');
 render();
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
