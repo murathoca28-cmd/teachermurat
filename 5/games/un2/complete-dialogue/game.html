@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete the Dialogue</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 4px 14px 12px; }
+  #dtitle { text-align: center; font-weight: 900; font-size: clamp(1.2rem, 3vw, 2.2rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #chat { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: #fff; border: 5px solid #0B2F2C; border-radius: 20px; padding: 10px 12px; }
+  .row { display: flex; align-items: center; gap: 10px; }
+  .row.r { flex-direction: row-reverse; }
+  .av { flex: 0 0 auto; width: clamp(38px, 6vh, 56px); height: clamp(38px, 6vh, 56px); border-radius: 50%; border: 4px solid #0B2F2C; color: #fff; font-weight: 900;
+    font-size: clamp(1.1rem, 2.6vh, 1.7rem); display: flex; align-items: center; justify-content: center; }
+  .who { flex: 0 0 auto; font-weight: 900; font-size: clamp(.7rem, 1.3vw, 1rem); color: #0B5C56; text-align: center; max-width: 7em; }
+  .bub { max-width: 78%; border: 4px solid #0B2F2C; border-radius: 18px; padding: 4px 14px; background: #fff; }
+  .bub .en { font-weight: 900; font-size: clamp(1.05rem, 2.5vw, 1.9rem); line-height: 1.2; }
+  .bub .trl { font-weight: 800; font-size: clamp(.8rem, 1.6vw, 1.2rem); color: #0B5C56; }
+  .bub.blank { border-style: dashed; background: #FFF3B0; border-color: #D62828; }
+  .bub.blank .en { color: #D62828; }
+  .bub.done { border-color: #0A7A2F; background: #C8F7D4; }
+  #opts { flex: 0 0 auto; display: flex; flex-direction: column; gap: 8px; }
+  .opt { text-align: left; font-size: clamp(1rem, 2.4vw, 1.8rem); font-weight: 900; padding: .2em .8em; background: #fff; color: #0B2F2C; border: 5px solid #0B2F2C; border-radius: 14px; box-shadow: 0 4px 0 #0B2F2C; }
+  .opt:active { transform: translateY(3px); box-shadow: 0 1px 0 #0B2F2C; }
+  .opt.bad { background: #FFD6D6; border-color: #D62828; text-decoration: line-through; }
+  #nbox { flex: 0 0 auto; display: none; text-align: center; }
+  #nbox .big-btn { font-size: clamp(1.1rem, 2.6vw, 1.8rem); }
+</style>
+<style id="ln-css">
+.ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
+:where(.tile .e, .cell .e, .wc .e, .fe, .ct, #qmark, .w .e, .word .e, #pic) svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+#ln-screen { display: none; position: fixed; inset: 0; z-index: 70; background: #0E8F86; flex-direction: column; gap: 8px; padding: 8px 10px 10px; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; color: #0B2F2C; }
+#ln-top { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#ln-title { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.4rem); color: #fff; text-shadow: 3px 3px 0 #0B2F2C; margin-right: 6px; }
+#ln-tabs { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.ln-tab { font-weight: 900; font-size: clamp(.9rem, 2.1vw, 1.5rem); padding: .05em .8em; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; cursor: pointer; font-family: inherit; }
+.ln-tab.act { background: #FFD23F; border-color: #D62828; }
+#ln-close { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.5rem); padding: .05em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #D62828; color: #fff; cursor: pointer; font-family: inherit; }
+#ln-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 17vw, 240px), 1fr)); gap: 10px; align-content: start; padding: 2px; }
+.ln-card { background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ln-card.wide { grid-column: span 2; }
+.ln-card .le { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1.1; }
+.ln-card .le svg { width: clamp(2.4rem, 8vh, 4rem); height: clamp(2.4rem, 8vh, 4rem); display: block; }
+.ln-card .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.6rem); line-height: 1.15; }
+.ln-card .trl { font-weight: 800; font-size: clamp(.8rem, 1.7vw, 1.15rem); color: #0B5C56; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Complete<br>the Dialogue</h1>
+  <p class="subtitle">Choose the best answer!</p>
+  <div class="preview">💬 💬</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Dialogue: <span id="rn">1</span>/5</div>
+  <div class="stat">Stars: <span id="st">0</span> ⭐</div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="dtitle"></div>
+  <div id="chat"></div>
+  <div id="opts"></div>
+  <div id="nbox"><button class="big-btn" id="nbtn" onclick="nextD()">Next</button></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  function toggleTR() { var off = document.body.classList.toggle('no-tr'); document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On'); }
+
+  var D = [["🕘 The New Timetable", [["Ela", "Do we have a Maths lesson on Monday?", "Pazartesi günü Matematik dersimiz var mı?"], ["Can", ["Yes, we do. It starts at twenty past nine.", "I have got a blue pencil case.", "She is from Spain."], "Evet, var. Dokuzu yirmi geçe başlıyor."], ["Ela", "And what time does the Science lesson start?", "Peki Fen Bilimleri dersi saat kaçta başlıyor?"], ["Can", ["It starts at eleven o’clock.", "It is on the bookshelf.", "I like pizza."], "Saat on birde başlıyor."], ["Ela", "Great! I love Science.", "Harika! Fen Bilimleri’ni çok severim."]]], ["✏️ A Pencil, Please", [["Mia", "Oh no! I forgot my pencil case. Can you lend me a pencil, please?", "Eyvah! Kalem kutumu unuttum. Bana bir kalem ödünç verir misin, lütfen?"], ["Ali", ["Of course. Here you are.", "It is on Friday.", "He is my teacher."], "Tabii. Buyur."], ["Mia", "Thank you! Can I use your rubber too?", "Teşekkürler! Silgini de kullanabilir miyim?"], ["Ali", ["Sure. Take it.", "It is half past nine.", "They are in the bag."], "Tabii. Al."], ["Mia", "You are a great friend!", "Sen harika bir arkadaşsın!"]]], ["🚫 Classroom Rules", [["Selin", "Can I run in the classroom?", "Sınıfta koşabilir miyim?"], ["Mr Kaya", ["No, you can’t. You mustn’t run in the classroom.", "It starts at ten o’clock.", "I have Art on Monday."], "Hayır, koşamazsın. Sınıfta koşmamalısın."], ["Selin", "OK. What must I do before I speak?", "Tamam. Konuşmadan önce ne yapmalıyım?"], ["Mr Kaya", ["You must raise your hand.", "It is next to the door.", "We have Music at one o’clock."], "Parmak kaldırmalısın."], ["Selin", "I understand. Thank you!", "Anladım. Teşekkür ederim!"]]], ["🕐 What Time Is It?", [["Efe", "Excuse me! What time is it?", "Affedersiniz! Saat kaç?"], ["Zeynep", ["It is quarter to ten.", "It is on Monday.", "I am from Türkiye."], "Ona çeyrek var."], ["Efe", "What time does the English lesson start?", "İngilizce dersi saat kaçta başlıyor?"], ["Zeynep", ["It starts at ten o’clock.", "She is my English teacher.", "It is under the desk."], "Saat onda başlıyor."], ["Efe", "Thanks. Let’s go!", "Teşekkürler. Hadi gidelim!"]]], ["📅 Days and Lessons", [["Leyla", "Which day do you like the most?", "En çok hangi günü seviyorsun?"], ["Arda", ["I like Friday the most.", "It is a red pencil.", "They are in the canteen."], "En çok Cuma’yı seviyorum."], ["Leyla", "Why do you like Friday?", "Cuma’yı neden seviyorsun?"], ["Arda", ["Because we have Art and Drama on Friday.", "Because it is under the bed.", "Because she is from Spain."], "Çünkü Cuma günü Resim ve Drama dersimiz var."], ["Leyla", "I like Fridays too!", "Ben de Cuma günlerini seviyorum!"]]], ["🚪 In My Classroom", [["Burak", "Is there a clock in your classroom?", "Sınıfında saat var mı?"], ["Nehir", ["Yes, there is. It is on the wall.", "Yes, I am. I am in Year 5.", "He has got a red bag."], "Evet, var. Duvarda."], ["Burak", "How many students are there in your class?", "Sınıfında kaç öğrenci var?"], ["Nehir", ["There are twenty-six students.", "There is a rubbish bin.", "It is Tuesday today."], "Yirmi altı öğrenci var."], ["Burak", "That is a big class!", "Bu büyük bir sınıf!"]]], ["📒 Homework Help", [["Defne", "Hi, Kerem! Can you give me a hand with this homework?", "Merhaba Kerem! Bu ödevde bana yardım eder misin?"], ["Kerem", ["Of course. Which lesson is it?", "It is at quarter to three.", "I have got a pencil."], "Tabii. Hangi ders?"], ["Defne", "It is Maths. I don’t understand the problems.", "Matematik. Problemleri anlamıyorum."], ["Kerem", ["Don’t worry. I can help you.", "The bookshelf is big.", "We have a Music lesson."], "Merak etme. Sana yardım edebilirim."], ["Defne", "Thank you so much!", "Çok teşekkür ederim!"]]], ["⚽ The Sports Club", [["Okan", "Do you want to join the Sports club?", "Spor kulübüne katılmak ister misin?"], ["Ceren", ["I’d love to! When is the first meeting?", "No, it isn’t on the wall.", "It is a big dictionary."], "Çok isterim! İlk toplantı ne zaman?"], ["Okan", "The first meeting is on Wednesday at half past three.", "İlk toplantı Çarşamba günü üç buçukta."], ["Ceren", ["Great! See you on Wednesday.", "I use a ruler.", "They have got a poster."], "Harika! Çarşamba günü görüşürüz."], ["Okan", "See you there!", "Orada görüşürüz!"]]]], ROUNDS = 5, COLORS = ['#1F5FBF', '#D62828', '#0A7A2F', '#7B2CBF', '#B35C00'];
+  var order, di, bi, stars, total, tried, locked, spk, blanks;
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    order = shuffle(D.slice()).slice(0, ROUNDS); di = 0; stars = 0; total = 0;
+    document.getElementById('st').textContent = 0;
+    showD();
+  }
+  function showD() {
+    var d = order[di]; bi = 0; locked = false; tried = false;
+    document.getElementById('rn').textContent = di + 1;
+    document.getElementById('dtitle').textContent = d[0];
+    document.getElementById('nbox').style.display = 'none';
+    spk = []; blanks = [];
+    var chat = document.getElementById('chat'); chat.innerHTML = '';
+    d[1].forEach(function (ln, i) {
+      if (spk.indexOf(ln[0]) < 0) spk.push(ln[0]);
+      var right = spk.indexOf(ln[0]) % 2 === 1, isBlank = Array.isArray(ln[1]);
+      var row = document.createElement('div'); row.className = 'row' + (right ? ' r' : ''); row.id = 'ln' + i;
+      var av = '<div style="display:flex;flex-direction:column;align-items:center"><div class="av" style="background:' + COLORS[spk.indexOf(ln[0]) % COLORS.length] + '">' + ln[0].charAt(0) + '</div><div class="who">' + ln[0] + '</div></div>';
+      var text = isBlank ? '<div class="en">?</div>' : '<div class="en">' + ln[1] + '</div><div class="trl tr">' + ln[2] + '</div>';
+      row.innerHTML = av + '<div class="bub' + (isBlank ? ' blank' : '') + '" id="bub' + i + '">' + text + '</div>';
+      chat.appendChild(row);
+      if (isBlank) blanks.push(i);
+    });
+    showOpts();
+  }
+  function showOpts() {
+    var d = order[di], i = blanks[bi], ln = d[1][i];
+    tried = false; locked = false;
+    var box = document.getElementById('opts'); box.innerHTML = '';
+    document.getElementById('ln' + i).scrollIntoView({ block: 'nearest' });
+    shuffle(ln[1].map(function (t, k) { return { t: t, k: k }; })).forEach(function (o) {
+      var b = document.createElement('button'); b.className = 'opt'; b.textContent = o.t;
+      b.addEventListener('click', function () { pick(b, o.k); });
+      box.appendChild(b);
+    });
+  }
+  function pick(btn, k) {
+    if (locked || btn.classList.contains('bad')) return;
+    var d = order[di], i = blanks[bi], ln = d[1][i];
+    if (k === 0) {
+      locked = true; if (!tried) { stars++; document.getElementById('st').textContent = stars; }
+      total++;
+      var bub = document.getElementById('bub' + i); bub.className = 'bub done';
+      bub.innerHTML = '<div class="en">' + ln[1][0] + '</div><div class="trl tr">' + ln[2] + '</div>';
+      document.getElementById('opts').innerHTML = '';
+      bi++;
+      if (bi < blanks.length) { setTimeout(showOpts, 900); }
+      else {
+        var nx = document.getElementById('nbtn'); nx.textContent = (di === order.length - 1) ? 'Finish' : 'Next dialogue';
+        document.getElementById('nbox').style.display = 'block';
+      }
+    } else {
+      tried = true; btn.classList.add('bad', 'shake');
+    }
+  }
+  function nextD() {
+    di++;
+    if (di >= order.length) {
+      document.getElementById('win-title').textContent = stars >= 9 ? 'Great Talker!' : (stars >= 6 ? 'Well Done!' : 'Good Try!');
+      document.getElementById('win-stats').textContent = 'Stars: ' + stars + ' / ' + total;
+      document.getElementById('win-screen').style.display = 'flex'; return;
+    }
+    showD();
+  }
+</script>
+<div id="ln-screen">
+  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-grid"></div>
+</div>
+<script>
+(function () {
+  var LN = [["Time", "Saat", [["🕖", "It’s seven o’clock.", "Saat yedi."], ["🕣", "It’s half past eight.", "Saat sekiz buçuk."], ["⏰", "It’s quarter past nine.", "Saat dokuzu çeyrek geçiyor."], ["⏰", "It’s quarter to ten.", "Saat ona çeyrek var."], ["⏰", "It’s five past one.", "Saat biri beş geçiyor."], ["⏰", "It’s ten to two.", "Saat ikiye on var."], ["❓", "What time is it?", "Saat kaç?"], ["❓", "What time does the lesson start?", "Ders saat kaçta başlıyor?"], ["🕙", "It starts at ten o’clock.", "Saat onda başlıyor."]]], ["Rules and Sentences", "Kurallar ve Cümleler", [["✋", "Raise your hand to speak.", "Konuşmak için parmak kaldır."], ["🚫", "Don’t run in the classroom.", "Sınıfta koşma."], ["🔇", "Don’t shout at your friends.", "Arkadaşlarına bağırma."], ["👂", "Listen to your teacher carefully.", "Öğretmenini dikkatle dinle."], ["🗑️", "Don’t throw rubbish on the ground.", "Yere çöp atma."], ["🧹", "Keep the classroom clean.", "Sınıfı temiz tut."], ["❓", "Is there a clock on the wall?", "Duvarda saat var mı?"], ["✅", "Yes, there is.", "Evet, var."], ["❌", "No, there isn’t.", "Hayır, yok."], ["✏️", "Can you lend me your pencil?", "Bana kalemini ödünç verir misin?"]]], ["Days", "Günler", [["1️⃣", "Monday", "Pazartesi"], ["2️⃣", "Tuesday", "Salı"], ["3️⃣", "Wednesday", "Çarşamba"], ["4️⃣", "Thursday", "Perşembe"], ["5️⃣", "Friday", "Cuma"], ["6️⃣", "Saturday", "Cumartesi"], ["7️⃣", "Sunday", "Pazar"], ["🏖️", "weekend", "hafta sonu"], ["🌅", "in the morning", "sabah"], ["🌇", "in the afternoon", "öğleden sonra"]]]];
+  function lnShow(i) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
+    document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
+      var wide = it[1].length > 26 && it[0].indexOf('<svg') < 0;
+      return '<div class="ln-card' + (wide ? ' wide' : '') + '"><div class="le">' + it[0] + '</div><div class="en">' + it[1] + '</div><div class="trl">' + it[2] + '</div></div>';
+    }).join('');
+    document.getElementById('ln-grid').scrollTop = 0;
+  }
+  window.lnOpen = function () {
+    var tabs = document.getElementById('ln-tabs'); tabs.innerHTML = '';
+    LN.forEach(function (s, i) { var b = document.createElement('button'); b.className = 'ln-tab'; b.textContent = s[0]; b.onclick = function () { lnShow(i); }; tabs.appendChild(b); });
+    document.getElementById('ln-screen').style.display = 'flex'; lnShow(0);
+  };
+  window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+</body>
+</html>
