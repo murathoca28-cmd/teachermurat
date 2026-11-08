@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mime It!</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 2.2vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.2rem, 3.4vw, 2.4rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  body.no-tr .tr { display: none; }
+
+  .og { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; color: #fff; font-weight: 900; font-size: clamp(1.1rem, 2.6vw, 1.9rem); text-shadow: 2px 2px 0 #0B2F2C; }
+  .ob { min-width: 2.2em; font-weight: 900; font-size: clamp(1.1rem, 2.6vw, 1.9rem); padding: .1em .7em; background: #fff; color: #0B2F2C; border: 5px solid #0B2F2C; border-radius: 14px; text-shadow: none; }
+  .ob.on { background: #FFD23F; border-color: #D62828; }
+
+  #score { flex: 0 0 auto; display: flex; gap: 8px; justify-content: center; padding: 2px 12px; flex-wrap: wrap; }
+  .tm { color: #fff; font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.6rem); padding: 0 16px; border-radius: 12px; border: 4px solid #0B2F2C; opacity: .75; }
+  .tm.now { opacity: 1; box-shadow: 0 0 0 5px #FFD23F; transform: scale(1.06); }
+  #main { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 6px 12px 12px; }
+  #card { position: relative; flex: 1 1 auto; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 22px; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding: 6px 14px; text-align: center; }
+  #who { color: #fff; font-weight: 900; font-size: clamp(1rem, 2.6vw, 1.9rem); padding: 0 22px; border-radius: 999px; border: 4px solid #0B2F2C; }
+  #cbig { font-size: clamp(3rem, 20vh, 9rem); line-height: 1; }
+  #ctext { font-weight: 900; font-size: clamp(1.4rem, 4.2vw, 3.2rem); line-height: 1.1; min-height: 1.1em; }
+  #cmeans { font-weight: 800; font-size: clamp(1rem, 2.4vw, 1.8rem); color: #0B5C56; min-height: 1.1em; }
+  #cmsg { font-weight: 800; font-size: clamp(1rem, 2.4vw, 1.8rem); }
+  #bar { width: min(70%, 520px); height: 14px; border: 3px solid #0B2F2C; border-radius: 99px; background: #fff; overflow: hidden; visibility: hidden; }
+  #bar i { display: block; height: 100%; width: 100%; background: #D62828; transition: width 1s linear; }
+  #timer { font-weight: 900; font-size: clamp(1.8rem, 6vw, 4rem); min-height: 1.1em; color: #0B2F2C; }
+  #timer.low { color: #D62828; }
+  #acts { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .act { font-size: clamp(1.1rem, 2.8vw, 2.1rem); font-weight: 900; padding: .2em .9em; border: 5px solid #0B2F2C; border-radius: 16px; box-shadow: 0 5px 0 #0B2F2C; background: #FFD23F; color: #0B2F2C; }
+  .act:active { transform: translateY(3px); box-shadow: 0 2px 0 #0B2F2C; }
+  .act.good { background: #C8F7D4; border-color: #0A7A2F; }
+  .act:disabled { opacity: .55; cursor: default; }
+  @keyframes pop { 0% { transform: scale(.6); } 70% { transform: scale(1.12); } 100% { transform: scale(1); } }
+  .pop { animation: pop .35s; }
+</style>
+<style id="ln-css">
+.ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
+:where(.tile .e, .cell .e, .wc .e, .fe, .ct, #qmark, .w .e, .word .e, #pic) svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+#ln-screen { display: none; position: fixed; inset: 0; z-index: 70; background: #0E8F86; flex-direction: column; gap: 8px; padding: 8px 10px 10px; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; color: #0B2F2C; }
+#ln-top { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#ln-title { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.4rem); color: #fff; text-shadow: 3px 3px 0 #0B2F2C; margin-right: 6px; }
+#ln-tabs { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.ln-tab { font-weight: 900; font-size: clamp(.9rem, 2.1vw, 1.5rem); padding: .05em .8em; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; cursor: pointer; font-family: inherit; }
+.ln-tab.act { background: #FFD23F; border-color: #D62828; }
+#ln-close { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.5rem); padding: .05em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #D62828; color: #fff; cursor: pointer; font-family: inherit; }
+#ln-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 17vw, 240px), 1fr)); gap: 10px; align-content: start; padding: 2px; }
+.ln-card { background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ln-card.wide { grid-column: span 2; }
+.ln-card .le { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1.1; }
+.ln-card .le svg { width: clamp(2.4rem, 8vh, 4rem); height: clamp(2.4rem, 8vh, 4rem); display: block; }
+.ln-card .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.6rem); line-height: 1.15; }
+.ln-card .trl { font-weight: 800; font-size: clamp(.8rem, 1.7vw, 1.15rem); color: #0B5C56; }
+</style>
+<style id="phone-short">
+@media (max-height: 480px) {
+  #start-screen, #win-screen { gap: 1.2vh; padding: 6px 10px; }
+  .title { font-size: 2rem; } .title br { display: none; } .subtitle { font-size: 1rem; } .preview { font-size: 1.6rem; }
+  .big-btn { font-size: 1.25rem; padding: .12em 1em; border-width: 4px; box-shadow: 0 3px 0 #0B2F2C; }
+  .win-title { font-size: 2rem; } .win-stats { font-size: 1.05rem; }
+  .og, .ob { font-size: 1rem; } .ob { border-width: 3px; padding: 0 .6em; }
+  #topbar { padding-top: 4px; padding-bottom: 2px; gap: 8px; }
+  .stat, .restart-btn { font-size: .95rem; border-width: 3px; padding: 0 12px; }
+}
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Mime It!</h1>
+  <p class="subtitle">Act it out. Your team guesses!</p>
+  <div class="preview">🎭 🦷 📖 🧩</div>
+  <div class="og"><span>Teams</span><button class="ob on" data-k="t" data-v="2">2</button><button class="ob" data-k="t" data-v="3">3</button><button class="ob" data-k="t" data-v="4">4</button></div>
+  <div class="og"><span>Time</span><button class="ob" data-k="s" data-v="30">30 s</button><button class="ob on" data-k="s" data-v="45">45 s</button><button class="ob" data-k="s" data-v="60">60 s</button></div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Turn: <span id="tn">1</span>/<span id="tt">8</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="score"></div>
+<div id="main">
+  <div id="card">
+    <div id="who"></div>
+    <div id="cbig"></div>
+    <div id="ctext"></div>
+    <div id="cmeans" class="tr"></div>
+    <div id="bar"><i></i></div>
+    <div id="timer"></div>
+    <div id="cmsg"></div>
+    <div id="acts"></div>
+  </div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+  function toggleTR() { var off = document.body.classList.toggle('no-tr'); document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On'); }
+
+  var A = [["brush teeth", "🦷", "You are brushing your teeth.", "diş fırçalamak", "Dişlerini fırçalıyorsun."], ["rest", "😴", "You are resting.", "dinlenmek", "Dinleniyorsun."], ["search online", "🔍", "You are searching online.", "internette araştırma yapmak", "İnternette araştırma yapıyorsun."], ["focus on a project", "📊", "You are focusing on a project.", "bir projeye odaklanmak", "Bir projeye odaklanıyorsun."], ["revise lessons", "📝", "You are revising your lessons.", "dersleri tekrar etmek", "Derslerini tekrar ediyorsun."], ["work in pairs", "👫", "You are working in pairs.", "ikili çalışmak", "İkili çalışıyorsun."], ["work in groups", "👥", "You are working in groups.", "grup halinde çalışmak", "Grup halinde çalışıyorsun."], ["share something", "🤝", "You are sharing something.", "bir şey paylaşmak", "Bir şey paylaşıyorsun."], ["mark exercises", "✅", "You are marking exercises.", "alıştırmaları işaretlemek", "Alıştırmaları işaretliyorsun."], ["count numbers", "🔢", "You are counting numbers.", "sayıları saymak", "Sayıları sayıyorsun."], ["read silently", "🤫", "You are reading silently.", "sessizce okumak", "Sessizce okuyorsun."], ["read aloud", "📢", "You are reading aloud.", "yüksek sesle okumak", "Yüksek sesle okuyorsun."], ["take notes", "🗒️", "You are taking notes.", "not almak", "Not alıyorsun."], ["write a diary", "📔", "You are writing a diary.", "günlük yazmak", "Günlük yazıyorsun."], ["do homework", "📒", "You are doing your homework.", "ödev yapmak", "Ödevini yapıyorsun."], ["have breakfast", "🍳", "You are having breakfast.", "kahvaltı yapmak", "Kahvaltı yapıyorsun."], ["do research", "🔎", "You are doing research.", "araştırma yapmak", "Araştırma yapıyorsun."], ["solve a puzzle", "🧩", "You are solving a puzzle.", "bulmaca çözmek", "Bulmaca çözüyorsun."], ["prepare a presentation", "🎤", "You are preparing a presentation.", "sunum hazırlamak", "Sunum hazırlıyorsun."], ["read a book", "📖", "You are reading a book.", "kitap okumak", "Kitap okuyorsun."]];
+  var COLORS = ['#D62828', '#1F5FBF', '#0A7A2F', '#7B2CBF'], TPT = 4;
+  var PEEK = 5, REPEEK = 3;
+  var nT = 2, tlen = 45, order, turn, scores, total, state, tmr = null, left = 0;
+  function $(id) { return document.getElementById(id); }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.ob'), function (b) {
+    b.addEventListener('click', function () {
+      Array.prototype.forEach.call(document.querySelectorAll('.ob[data-k="' + b.dataset.k + '"]'), function (x) { x.classList.toggle('on', x === b); });
+      if (b.dataset.k === 't') nT = +b.dataset.v; else tlen = +b.dataset.v;
+    });
+  });
+
+  function stopTimer() { if (tmr) { clearInterval(tmr); tmr = null; } }
+  function startGame() {
+    stopTimer();
+    $('start-screen').style.display = 'none'; $('win-screen').style.display = 'none';
+    scores = []; for (var i = 0; i < nT; i++) scores.push(0);
+    total = nT * TPT; order = shuffle(A.slice()); turn = 0; $('tt').textContent = total;
+    ready();
+  }
+  function drawScore() {
+    var box = $('score'); box.innerHTML = '';
+    for (var i = 0; i < nT; i++) {
+      var d = document.createElement('div'); d.className = 'tm' + (i === turn % nT ? ' now' : '');
+      d.style.background = COLORS[i]; d.textContent = 'Team ' + (i + 1) + ': ' + scores[i]; box.appendChild(d);
+    }
+  }
+  function acts(list) {
+    var box = $('acts'); box.innerHTML = '';
+    list.forEach(function (a) {
+      var b = document.createElement('button'); b.className = 'act' + (a.cls ? ' ' + a.cls : ''); b.textContent = a.t; b.id = a.id || '';
+      if (a.dis) b.disabled = true; b.addEventListener('click', a.fn); box.appendChild(b);
+    });
+  }
+  function setCard(o) {
+    var who = $('who'); who.textContent = o.who; who.style.background = COLORS[turn % nT];
+    $('cbig').textContent = o.big; $('ctext').textContent = o.text || ''; $('cmeans').textContent = o.means || '';
+    $('cmsg').textContent = o.msg || ''; $('timer').textContent = o.timer || ''; $('timer').className = '';
+    $('bar').style.visibility = o.bar ? 'visible' : 'hidden';
+  }
+  var timeLeft = 0, started = false;
+  function ready() {
+    stopTimer(); state = 'ready'; started = false; timeLeft = tlen; drawScore(); $('tn').textContent = turn + 1;
+    setCard({ who: 'Team ' + (turn % nT + 1) + ' - your turn!', big: '❓', msg: 'Choose a mimer. Everybody else: look away!' });
+    acts([{ t: '👀 Show the card (mimer only)', id: 'show', fn: peek }]);
+  }
+  function peek() {
+    var a = order[turn]; stopTimer(); state = 'peek';
+    var secs = started ? REPEEK : PEEK; left = secs;
+    setCard({ who: 'Mimer: memorise it!', big: a[1], text: a[0], means: a[3], msg: 'Everybody else: look away!', bar: true });
+    var fill = $('bar').firstElementChild; fill.style.transition = 'none'; fill.style.width = '100%';
+    setTimeout(function () { fill.style.transition = 'width ' + secs + 's linear'; fill.style.width = '0%'; }, 30);
+    acts([{ t: '⏳ Memorise it…', dis: true }]);
+    tmr = setInterval(function () { left--; if (left <= 0) { stopTimer(); mime(); } }, 1000);
+  }
+  function mime() {
+    stopTimer(); state = 'mime'; started = true;
+    setCard({ who: 'Mime it! No words!', big: '🎭', msg: 'The team says: “You are …ing.”', timer: timeLeft + ' s' });
+    if (timeLeft <= 10) $('timer').className = 'low';
+    acts([
+      { t: '✔ Correct! +10', cls: 'good', id: 'ok', fn: function () { finishTurn(true); } },
+      { t: '👀 Peek again', id: 'again', fn: peek },
+      { t: '⏭ Skip', id: 'skip', fn: function () { finishTurn(false, 'Skipped.'); } }
+    ]);
+    tmr = setInterval(function () {
+      timeLeft--; $('timer').textContent = timeLeft + ' s'; if (timeLeft <= 10) $('timer').className = 'low';
+      if (timeLeft <= 0) { stopTimer(); finishTurn(false, 'Time is up!'); }
+    }, 1000);
+  }
+  function finishTurn(good, why) {
+    stopTimer(); state = 'reveal'; var a = order[turn];
+    if (good) scores[turn % nT] += 10;
+    drawScore();
+    setCard({ who: good ? '✔ Great! +10 points' : '✘ ' + why, big: a[1], text: a[2], means: a[4], msg: '' });
+    $('cbig').classList.remove('pop'); void $('cbig').offsetWidth; $('cbig').classList.add('pop');
+    acts([{ t: (turn === total - 1) ? 'Finish' : 'Next team ▶', id: 'next', fn: nextTurn }]);
+  }
+  function nextTurn() {
+    turn++;
+    if (turn >= total) { finish(); return; }
+    ready();
+  }
+  function finish() {
+    stopTimer();
+    var mx = Math.max.apply(null, scores), lead = [];
+    scores.forEach(function (v, i) { if (v === mx) lead.push(i + 1); });
+    $('win-title').textContent = lead.length === 1 ? 'Team ' + lead[0] + ' Wins!' : "It's a Draw!";
+    $('win-stats').textContent = scores.map(function (v, i) { return 'Team ' + (i + 1) + ': ' + v; }).join('  |  ');
+    $('win-screen').style.display = 'flex';
+  }
+</script>
+<div id="ln-screen">
+  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-grid"></div>
+</div>
+<script>
+(function () {
+  var LN = [["Daily Routines", "Günlük Rutinler", [["⏰", "wake up", "uyanmak"], ["🍳", "have breakfast", "kahvaltı yapmak"], ["🦷", "brush teeth", "diş fırçalamak"], ["🚌", "go to school", "okula gitmek"], ["🥪", "have lunch", "öğle yemeği yemek"], ["📒", "do homework", "ödev yapmak"], ["😴", "rest after school", "okuldan sonra dinlenmek"], ["🍽️", "have dinner", "akşam yemeği yemek"], ["📖", "read a book", "kitap okumak"], ["📔", "write a diary", "günlük yazmak"], ["🛏️", "go to bed", "yatmaya gitmek"]]], ["Study and Learning", "Çalışma ve Öğrenme", [["📝", "revise lessons", "dersleri tekrar etmek"], ["🔍", "review words", "kelimeleri gözden geçirmek"], ["💭", "remember", "hatırlamak"], ["🔁", "practise English", "İngilizce pratik yapmak"], ["👫", "work in pairs", "ikili çalışmak"], ["👥", "work in groups", "grup halinde çalışmak"], ["🤫", "read silently", "sessizce okumak"], ["📢", "read aloud", "yüksek sesle okumak"], ["🤝", "together", "birlikte"], ["🔎", "do research", "araştırma yapmak"], ["📊", "focus on a project", "bir projeye odaklanmak"], ["📋", "share a task", "görev paylaşmak"], ["🧩", "learning method", "öğrenme yöntemi"], ["✅", "effective", "etkili"], ["🔄", "habit", "alışkanlık"], ["💯", "full marks", "tam puan"]]]];
+  function lnShow(i) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
+    document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
+      var wide = it[1].length > 26 && it[0].indexOf('<svg') < 0;
+      return '<div class="ln-card' + (wide ? ' wide' : '') + '"><div class="le">' + it[0] + '</div><div class="en">' + it[1] + '</div><div class="trl">' + it[2] + '</div></div>';
+    }).join('');
+    document.getElementById('ln-grid').scrollTop = 0;
+  }
+  window.lnOpen = function () {
+    var tabs = document.getElementById('ln-tabs'); tabs.innerHTML = '';
+    LN.forEach(function (s, i) { var b = document.createElement('button'); b.className = 'ln-tab'; b.textContent = s[0]; b.onclick = function () { lnShow(i); }; tabs.appendChild(b); });
+    document.getElementById('ln-screen').style.display = 'flex'; lnShow(0);
+  };
+  window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+</body>
+</html>
