@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 5 Unit 2 - Team Quiz Arena</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; color: #0B2F2C; }
+  body.no-tr .tr { display: none !important; }
+  [hidden] { display: none !important; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 60; width: 48px; height: 48px; border-radius: 50%; border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  .big-btn { font-size: clamp(1.4rem, 3.6vw, 2.6rem); font-weight: 900; padding: .3em 1.4em; border: 5px solid #0B2F2C; border-radius: 999px; background: #FFD23F; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .pill { font-size: clamp(.95rem, 2.2vw, 1.5rem); font-weight: 900; background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 14px; }
+  .pill.white { background: #fff; }
+
+  /* ---------- setup ---------- */
+  #setup, #end { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2.2vh; text-align: center; padding: 16px 16px 16px; background: #0E8F86; overflow-y: auto; }
+  #end { display: none; background: rgba(11,47,44,.94); color: #fff; z-index: 45; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 4.6rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.1rem, 2.8vw, 1.9rem); font-weight: 800; color: #fff; }
+  .cfg { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: center; }
+  .stepper { display: flex; align-items: center; gap: 10px; background: #fff; border: 5px solid #0B2F2C; border-radius: 18px; padding: 4px 12px; font-size: clamp(1.1rem, 2.6vw, 1.8rem); font-weight: 900; }
+  .stepper button { width: 2.1em; height: 2.1em; border: 4px solid #0B2F2C; border-radius: 12px; background: #FFD23F; font-size: 1em; font-weight: 900; line-height: 1; padding: 0; }
+  .stepper b { min-width: 1.4em; font-size: 1.3em; }
+  #names { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 980px; }
+  #names input { width: clamp(120px, 20vw, 190px); font-size: clamp(1rem, 2.2vw, 1.5rem); font-weight: 900; text-align: center; padding: 4px 8px; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; font-family: inherit; }
+  .how { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 980px; }
+  .how .pill { background: #fff; }
+  .how .pill small { font-weight: 700; font-size: .78em; }
+  .how .pill .tr { display: block; font-weight: 700; font-size: .7em; opacity: .85; }
+
+  /* ---------- game ---------- */
+  #game { flex: 1; min-height: 0; display: none; flex-direction: column; gap: 8px; padding: 8px 10px 10px; }
+  #bar { flex: 0 0 auto; display: flex; gap: 8px; align-items: center; padding-right: 58px; }
+  #teams { flex: 1; min-width: 0; display: flex; gap: 8px; flex-wrap: wrap; }
+  .team { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 12px; display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: clamp(1rem, 2.2vw, 1.7rem); white-space: nowrap; }
+  .team .sc { font-size: 1.25em; min-width: 2.2em; text-align: right; }
+  .team.cur { background: #FFD23F; outline: 4px solid #fff; }
+  .team .adj { display: none; width: 1.6em; height: 1.6em; border: 3px solid #0B2F2C; border-radius: 8px; background: #fff; font-weight: 900; padding: 0; line-height: 1; }
+  body.edit .team .adj { display: inline-block; }
+  .team .cards { font-size: .62em; font-weight: 900; display: flex; gap: 3px; }
+  .team .cards i { font-style: normal; border: 2px solid #0B2F2C; border-radius: 6px; padding: 0 4px; background: #E3F5F3; }
+  .team .cards i.used { opacity: .28; text-decoration: line-through; }
+  #tools { display: flex; gap: 6px; flex: 0 0 auto; flex-wrap: wrap; justify-content: flex-end; }
+  #tools button { font-size: clamp(.8rem, 1.8vw, 1.25rem); font-weight: 900; background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 12px; padding: 1px 10px; }
+
+  #stage { flex: 1; min-height: 0; position: relative; display: flex; flex-direction: column; }
+  #ready { flex: 1; min-height: 0; background: #fff; border: 6px solid #0B2F2C; border-radius: 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2.2vh; text-align: center; padding: 10px; }
+  #ready h2 { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; }
+  #ready p { margin: 0; font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 800; }
+  #x2btn { font-size: clamp(1.2rem, 3vw, 2.2rem); font-weight: 900; padding: .25em 1em; border: 5px solid #0B2F2C; border-radius: 16px; background: #fff; box-shadow: 0 5px 0 #0B2F2C; }
+  #x2btn.on { background: #D62828; color: #fff; }
+  #x2btn:disabled { background: #B8C2C1; color: #5B6B69; box-shadow: none; cursor: default; }
+
+  #qwrap { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
+  #qinfo { flex: 0 0 auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  #qinfo .pill.hot { background: #D62828; color: #fff; }
+  #timer { flex: 1 1 120px; height: 22px; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; overflow: hidden; min-width: 90px; }
+  #timer i { display: block; height: 100%; width: 100%; background: #0A7A2F; transition: width .25s linear; }
+  #qbody { flex: 1; min-height: 0; display: flex; gap: 10px; }
+  @media (orientation: portrait) { #qbody { flex-direction: column; } }
+  #pic { flex: 1.15; min-width: 0; min-height: 0; background: #fff; border: 6px solid #0B2F2C; border-radius: 22px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+  #pic img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; transition: filter .15s linear; }
+  #qside { flex: 1; min-width: 0; min-height: 0; background: #fff; border: 6px solid #0B2F2C; border-radius: 22px; display: flex; flex-direction: column; gap: 6px; padding: 8px 12px; justify-content: space-evenly; text-align: center; }
+  #prompt { font-weight: 900; font-size: clamp(1.15rem, 2.9vw, 2.3rem); line-height: 1.18; }
+  #prompt-tr { font-weight: 800; font-size: clamp(.9rem, 1.9vw, 1.4rem); color: #0B5C56; }
+  #opts { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: minmax(0, 1fr); gap: 10px; flex: 1; min-height: 0; container-type: size; }
+  #opts.short { --fz: 15cqh; } #opts.long { --fz: 8.2cqh; grid-template-columns: 1fr; }
+  .opt { font-size: clamp(.8rem, min(2.5vw, var(--fz, 15cqh)), 1.9rem); overflow: hidden; font-weight: 900; padding: .35em .5em; background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; box-shadow: 0 5px 0 #0B2F2C; line-height: 1.15; min-height: 2.4em; }
+  .opt:active { transform: translateY(3px); box-shadow: 0 2px 0 #0B2F2C; }
+  .opt.good { background: #C8F7D4; border-color: #0A7A2F; }
+  .opt.bad { background: #FFD6D6; border-color: #D62828; }
+  .opt.gone { opacity: .22; pointer-events: none; text-decoration: line-through; }
+  .opt:disabled { cursor: default; }
+  .opt.imgopt { padding: 4px; display: flex; align-items: center; justify-content: center; min-height: 0; overflow: hidden; }
+  .opt.imgopt img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+  /* gorsel secenekli (B) sorular: yazi ustte, gorseller altta genis */
+  #qbody.imgq #pic { display: none; }
+  #qbody.imgq #qside { flex: 1; }
+  #life { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  #life button { font-size: clamp(.95rem, 2.2vw, 1.5rem); font-weight: 900; padding: .1em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #FFD23F; }
+  #life button:disabled { background: #B8C2C1; color: #5B6B69; cursor: default; }
+  #fb { flex: 0 0 auto; min-height: 1.4em; text-align: center; font-weight: 900; font-size: clamp(1rem, 2.5vw, 1.8rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; line-height: 1.2; }
+  #fb .tr { display: block; font-size: .75em; }
+  #actions { flex: 0 0 auto; display: flex; gap: 10px; justify-content: center; }
+  #actions .big-btn { font-size: clamp(1.1rem, 2.6vw, 1.8rem); padding: .15em 1.2em; border-width: 4px; box-shadow: 0 4px 0 #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  @keyframes pop { 0% { transform: scale(.7); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
+  .pop { animation: pop .35s; }
+
+  /* ---------- end ---------- */
+  .win-title { font-size: clamp(2.2rem, 8vw, 5.5rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  #rank { display: flex; flex-direction: column; gap: 8px; width: min(560px, 92vw); }
+  #rank div { display: flex; justify-content: space-between; background: #fff; color: #0B2F2C; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px; font-weight: 900; font-size: clamp(1.1rem, 2.8vw, 1.9rem); }
+  #rank div.first { background: #FFD23F; }
+
+  /* ---------- telefon / dar ekran (yalnizca dar ekranda devreye girer) ---------- */
+  @media (max-width: 700px) {
+    #bar { flex-wrap: wrap; padding-right: 52px; gap: 4px 8px; }
+    #teams { flex: 1 1 100%; gap: 4px 6px; }
+    #tools { flex: 1 1 100%; justify-content: flex-start; }
+    .team { padding: 0 8px; border-width: 3px; font-size: .9rem; }
+    .team .cards { display: none; }
+    #tools button { font-size: .8rem; }
+    #prompt { font-size: 1.1rem; } #prompt-tr { font-size: .85rem; }
+    .opt { font-size: .98rem; border-width: 4px; }
+    #fb { font-size: .95rem; }
+    #pic, #qside, #ready { border-width: 4px; border-radius: 16px; }
+  }
+  @media (max-width: 700px) and (orientation: portrait) {
+    #pic { flex: 0 0 27%; } #qside { flex: 1; overflow-y: auto; gap: 4px; padding: 6px 10px; justify-content: flex-start; }
+    #opts { grid-template-columns: 1fr; flex: none; container-type: normal; grid-auto-rows: auto; gap: 6px; } #opts .opt { font-size: .9rem; min-height: 2em; padding: .2em .4em; }
+    #qbody.imgq #opts { grid-template-columns: 1fr 1fr; flex: 1; grid-auto-rows: minmax(0, 1fr); min-height: 220px; }
+  }
+  @media (orientation: landscape) and (max-height: 460px) {
+    #game { gap: 4px; padding: 4px 8px 6px; }
+    .team .cards { font-size: 9.5px; }
+    .team { font-size: .8rem; padding: 0 8px; border-width: 3px; } #tools button { font-size: .75rem; padding: 0 8px; border-width: 3px; }
+    #qwrap { gap: 4px; } .pill { font-size: .8rem; padding: 0 10px; border-width: 3px; } #timer { height: 16px; border-width: 3px; }
+    #qside { padding: 4px 8px; gap: 3px; border-width: 4px; } #pic { border-width: 4px; }
+    #prompt { font-size: 1rem; } #prompt-tr { font-size: .78rem; } #opts { gap: 6px; } #opts.long { grid-template-columns: 1fr 1fr; --fz: 13cqh; }
+    .opt { padding: .15em .4em; border-width: 3px; box-shadow: 0 3px 0 #0B2F2C; min-height: 2em; }
+    #life button { font-size: .8rem; border-width: 3px; } #fb { font-size: .85rem; min-height: 0; }
+    #actions .big-btn { font-size: 1rem !important; padding: .05em 1em; }
+    #ready h2 { font-size: 2rem; } #ready p { font-size: .9rem; } #x2btn { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+
+<div id="setup">
+  <h1 class="title">Team Quiz Arena</h1>
+  <p class="subtitle">Look at the pictures, think and choose!</p>
+  <div class="cfg">
+    <div class="stepper">Teams <button id="tm-minus" aria-label="Fewer teams">−</button><b id="tm-n">3</b><button id="tm-plus" aria-label="More teams">+</button></div>
+    <button class="pill white" id="timerbtn">Timer: Off</button>
+    <button class="pill white" id="trbtn0">Turkish: On</button>
+  </div>
+  <div id="names"></div>
+  <div class="how">
+    <span class="pill">×2 <small>double points (a wrong answer costs −50)</small><span class="tr">Çift puan (yanlış cevap −50)</span></span>
+    <span class="pill">50:50 <small>two wrong answers disappear</small><span class="tr">İki yanlış şık silinir</span></span>
+    <span class="pill">Steal <small>wrong answer? The next team tries the same question for 100 points</small><span class="tr">Yanlış cevapta sıradaki takım aynı soruyu 100 puana cevaplar</span></span>
+  </div>
+  <button class="big-btn" id="startbtn">Start</button>
+</div>
+
+<div id="game">
+  <div id="bar">
+    <div id="teams"></div>
+    <div id="tools"><button id="trbtn">Turkish: On</button><button id="editbtn">± Scores</button><button id="restartbtn">Restart</button></div>
+  </div>
+  <div id="stage">
+    <div id="ready" hidden>
+      <div class="pill hot" id="rd-final" hidden>★ FINAL ROUND ★ <span class="tr">Final Turu</span></div>
+      <h2 id="rd-team">Team 1</h2>
+      <p>It is your turn! Do you want to play for double points?</p>
+      <p class="tr" id="rd-tr">Sıra sende! Çift puan için oynamak ister misin?</p>
+      <button id="x2btn">×2 Double points</button>
+      <button class="big-btn" id="showq">Show the question</button>
+    </div>
+    <div id="qwrap" hidden>
+      <div id="qinfo"><span class="pill white" id="qn">Question 1/30</span><span class="pill hot" id="ftag" hidden>Final Round</span><span class="pill" id="who">Team 1</span><span class="pill white" id="worth">Worth: 100</span><span class="pill hot" id="x2tag" hidden>×2</span><div id="timer" hidden><i></i></div></div>
+      <div id="qbody">
+        <div id="pic"><img alt=""></div>
+        <div id="qside">
+          <div id="prompt"></div><div id="prompt-tr" class="tr"></div>
+          <div id="opts"></div>
+          <div id="life"><button id="f50">50:50</button></div>
+        </div>
+      </div>
+      <div id="fb"></div>
+      <div id="actions"><button class="big-btn" id="nextbtn" hidden>Next</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="end">
+  <h2 class="win-title" id="end-title">Team 1 Wins!</h2>
+  <div id="rank"></div>
+  <button class="big-btn" onclick="toSetup()">Play Again</button>
+</div>
+
+<script>
+  var IMG = {"art": "img/tqa_art.webp", "bag": "img/tqa_bag.webp", "bin": "img/tqa_bin.webp", "bookshelf": "img/tqa_bookshelf.webp", "bookshelf_blue": "img/tqa_bookshelf_blue.webp", "boy_bin": "img/tqa_boy_bin.webp", "calendar": "img/tqa_calendar.webp", "calendar_icons": "img/tqa_calendar_icons.webp", "chair": "img/tqa_chair.webp", "clk_0420": "img/tqa_clk_0420.svg", "clk_0755": "img/tqa_clk_0755.svg", "clk_0830": "img/tqa_clk_0830.svg", "clk_0915": "img/tqa_clk_0915.svg", "clk_0945": "img/tqa_clk_0945.svg", "clk_1015": "img/tqa_clk_1015.svg", "clk_1045": "img/tqa_clk_1045.svg", "count": "img/tqa_count.svg", "dictionary": "img/tqa_dictionary.webp", "girl_read": "img/tqa_girl_read.webp", "it": "img/tqa_it.webp", "listen": "img/tqa_listen.webp", "maths": "img/tqa_maths.webp", "music": "img/tqa_music.webp", "music_flute": "img/tqa_music_flute.webp", "num57": "img/tqa_num57.svg", "num65": "img/tqa_num65.svg", "num68": "img/tqa_num68.svg", "num70": "img/tqa_num70.svg", "num75": "img/tqa_num75.svg", "num98": "img/tqa_num98.svg", "pe": "img/tqa_pe.webp", "pencil": "img/tqa_pencil.webp", "pencilcase": "img/tqa_pencilcase.webp", "raise_hand": "img/tqa_raise_hand.webp", "science": "img/tqa_science.webp", "social": "img/tqa_social.webp", "timetable": "img/tqa_timetable.svg", "whiteboard": "img/tqa_whiteboard.webp"};
+  var QUIZ = [{"t": "A", "img": "social", "p": "Which school subject is it?", "pt": "Bu hangi okul dersi?", "o": ["Social Studies", "Maths", "Music", "English"], "e": "It is Social Studies.", "et": "Sosyal Bilgiler dersi."}, {"t": "B", "img": null, "p": "We play basketball and football in this lesson. Which picture is it?", "pt": "Bu derste basketbol ve futbol oynarız. Hangi görsel?", "o": ["pe", "music", "science", "art"], "e": "It is the P.E. lesson.", "et": "Beden Eğitimi dersi."}, {"t": "C", "img": "science", "p": "Which school subject is it?", "pt": "Bu hangi okul dersi?", "o": ["Science", "Social Studies", "Maths", "Art"], "e": "It is Science.", "et": "Fen Bilimleri dersi."}, {"t": "A", "img": "it", "p": "Which school subject is it?", "pt": "Bu hangi okul dersi?", "o": ["IT", "Music", "P.E.", "Turkish"], "e": "It is IT (Information Technology).", "et": "Bilişim Teknolojileri dersi."}, {"t": "A", "img": "calendar", "p": "Which day comes after Wednesday?", "pt": "Çarşambadan sonra hangi gün gelir?", "o": ["Thursday", "Tuesday", "Friday", "Saturday"], "e": "Thursday comes after Wednesday.", "et": "Çarşambadan sonra perşembe gelir."}, {"t": "A", "img": "clk_0830", "p": "What time is it?", "pt": "Saat kaç?", "o": ["It is half past eight.", "It is half past nine.", "It is quarter past eight.", "It is quarter to nine."], "e": "It is half past eight.", "et": "Saat sekiz buçuk."}, {"t": "B", "img": null, "p": "It is quarter to ten. Which clock is it?", "pt": "Saat ona çeyrek var. Hangi saat?", "o": ["clk_0945", "clk_0915", "clk_1015", "clk_1045"], "e": "Quarter to ten is 9:45.", "et": "Ona çeyrek var: 9.45."}, {"t": "C", "img": "clk_0420", "p": "What time is it?", "pt": "Saat kaç?", "o": ["It is twenty past four.", "It is twenty to four.", "It is twenty past five.", "It is twenty-five past four."], "e": "It is twenty past four.", "et": "Saat dördü yirmi geçiyor."}, {"t": "A", "img": "num68", "p": "How do we say this number?", "pt": "Bu sayıyı nasıl okuruz?", "o": ["Sixty-eight", "Eighty-six", "Sixty-six", "Seventy-eight"], "e": "It is sixty-eight.", "et": "Altmış sekiz."}, {"t": "B", "img": null, "p": "It is seventy-five. Which number card is it?", "pt": "Yetmiş beş. Hangi sayı kartı?", "o": ["num75", "num57", "num65", "num70"], "e": "It is seventy-five.", "et": "Yetmiş beş."}, {"t": "C", "img": "num98", "p": "How do we say this number?", "pt": "Bu sayıyı nasıl okuruz?", "o": ["Ninety-eight", "Eighty-nine", "Ninety-six", "Eighty-eight"], "e": "It is ninety-eight.", "et": "Doksan sekiz."}, {"t": "D", "img": "pencil", "p": "Look at the picture. Which sentence is true?", "pt": "Görsele bak. Hangi cümle doğru?", "o": ["We use it to write in our notebooks.", "We throw rubbish in it.", "We sit on it.", "We put books on it."], "e": "We use a pencil to write in our notebooks.", "et": "Defterlerimize yazmak için kurşun kalem kullanırız."}, {"t": "D", "img": "bookshelf", "p": "Look at the picture. Which sentence is true?", "pt": "Görsele bak. Hangi cümle doğru?", "o": ["We put books on it.", "We use it to write in our notebooks.", "We sit on it.", "We throw rubbish in it."], "e": "We put books on a bookshelf.", "et": "Kitapları kitaplığa koyarız."}, {"t": "D", "img": "bin", "p": "Look at the picture. Which sentence is true?", "pt": "Görsele bak. Hangi cümle doğru?", "o": ["We throw rubbish in it.", "We look up new words in it.", "We sit on it.", "We use it to erase mistakes."], "e": "We throw rubbish in a rubbish bin.", "et": "Çöpleri çöp kutusuna atarız."}, {"t": "B", "img": null, "p": "We sit on it. Which picture is it?", "pt": "Üzerine otururuz. Hangi görsel?", "o": ["chair", "bin", "pencil", "bag"], "e": "We sit on a seat (chair).", "et": "Sandalyeye otururuz."}, {"t": "B", "img": null, "p": "We look up new words in it. Which picture is it?", "pt": "Yeni kelimelere onda bakarız. Hangi görsel?", "o": ["dictionary", "pencilcase", "bag", "bookshelf"], "e": "We look up new words in a dictionary.", "et": "Yeni kelimelere sözlükte bakarız."}, {"t": "A", "img": "pencilcase", "p": "Can you give ___ your pencil case, please?", "pt": "Kalemliğini bana verir misin, lütfen?", "o": ["me", "I", "my", "mine"], "e": "Can you give me your pencil case, please?", "et": "“give” fiilinden sonra “me” gelir."}, {"t": "A", "img": "girl_read", "p": "Selin has a new book. Please ask ___ .", "pt": "Selin’in yeni bir kitabı var. Lütfen ona sor.", "o": ["her", "him", "them", "us"], "e": "Selin is a girl, so we say “her”.", "et": "Selin kız olduğu için “her”."}, {"t": "D", "img": "raise_hand", "p": "Look at the picture. Which rule is it?", "pt": "Görsele bak. Hangi kural?", "o": ["Raise your hand to speak.", "Don’t run in the classroom.", "Don’t shout at your friends.", "Don’t throw rubbish on the ground."], "e": "Raise your hand to speak.", "et": "Konuşmak için elini kaldır."}, {"t": "D", "img": "boy_bin", "p": "Look at the picture. Which rule is it?", "pt": "Görsele bak. Hangi kural?", "o": ["Don’t throw rubbish on the ground.", "Raise your hand to speak.", "Don’t run in the classroom.", "Listen to your teachers carefully."], "e": "Don’t throw rubbish on the ground.", "et": "Yere çöp atma."}, {"t": "A", "img": "timetable", "p": "Look at the timetable. What lesson does Efe have on Thursday at 09:20?", "pt": "Ders programına bak. Efe’nin perşembe günü 09:20’de hangi dersi var?", "o": ["Turkish", "Maths", "Science", "English"], "e": "Efe has a Turkish lesson on Thursday at 09:20.", "et": "Efe’nin perşembe 09:20’de Türkçe dersi var.", "r": "F"}, {"t": "A", "img": "whiteboard", "p": "Complete the sentence. We write on the board with a board ___ .", "pt": "Cümleyi tamamla. Tahtaya tahta kalemiyle yazarız.", "o": ["marker", "rubber", "sheet", "seat"], "e": "We write on the board with a board marker.", "et": "Tahtaya tahta kalemiyle yazarız.", "r": "F"}, {"t": "A", "img": "bookshelf_blue", "p": "Complete the question. How many books ___ there on the bookshelf?", "pt": "Soruyu tamamla. Kitaplıkta kaç kitap var?", "o": ["are", "is", "do", "does"], "e": "How many books are there on the bookshelf?", "et": "Çoğul isimle “How many … are there?” kullanılır.", "r": "F"}, {"t": "A", "img": "maths", "p": "Which school subject is it?", "pt": "Bu hangi okul dersi?", "o": ["Maths", "Music", "Science", "Art"], "e": "It is Maths.", "et": "Matematik dersi.", "r": "F"}, {"t": "A", "img": "music_flute", "p": "Which school subject is it?", "pt": "Bu hangi okul dersi?", "o": ["Music", "Art", "English", "P.E."], "e": "It is Music.", "et": "Müzik dersi.", "r": "F"}, {"t": "A", "img": "count", "p": "How many pencils are there?", "pt": "Kaç tane kurşun kalem var?", "o": ["Six", "Five", "Seven", "Eight"], "e": "There are six pencils.", "et": "Altı kurşun kalem var.", "r": "F"}, {"t": "A", "img": "bag", "p": "What is it?", "pt": "Bu ne?", "o": ["A school bag", "A pencil case", "A seat", "A bookshelf"], "e": "It is a school bag.", "et": "Okul çantası.", "r": "F"}, {"t": "D", "img": "listen", "p": "Look at the picture. Which rule is it?", "pt": "Görsele bak. Hangi kural?", "o": ["Listen to your teachers carefully.", "Don’t run in the classroom.", "Don’t throw rubbish on the ground.", "Don’t shout at your friends."], "e": "Listen to your teachers carefully.", "et": "Öğretmenlerini dikkatle dinle.", "r": "F"}, {"t": "A", "img": "clk_0755", "p": "What time is it?", "pt": "Saat kaç?", "o": ["It is five to eight.", "It is five past eight.", "It is five to seven.", "It is five past seven."], "e": "It is five to eight.", "et": "Saat sekize beş var.", "r": "F"}, {"t": "A", "img": "calendar_icons", "p": "Which days are the weekend?", "pt": "Hafta sonu hangi günlerdir?", "o": ["Saturday and Sunday", "Friday and Saturday", "Sunday and Monday", "Monday and Tuesday"], "e": "The weekend is Saturday and Sunday.", "et": "Hafta sonu cumartesi ve pazardır.", "r": "F"}];
+  var PRE = Object.keys(IMG).map(function (k) { var im = new Image(); im.decoding = "async"; im.src = IMG[k]; return im; });
+  var TR = true, TIMER = [0, 20, 30], timerIdx = 0, NT = 3, names = [];
+  function $(id) { return document.getElementById(id); }
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) { var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el); }
+    else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+  function setTR(v) { TR = v; document.body.classList.toggle('no-tr', !TR); var t = 'Turkish: ' + (TR ? 'On' : 'Off'); $('trbtn').textContent = t; $('trbtn0').textContent = t; }
+  $('trbtn').onclick = $('trbtn0').onclick = function () { setTR(!TR); };
+  $('timerbtn').onclick = function () { timerIdx = (timerIdx + 1) % 3; $('timerbtn').textContent = 'Timer: ' + (TIMER[timerIdx] ? TIMER[timerIdx] + ' s' : 'Off'); };
+
+  /* ---------- kurulum ---------- */
+  function renderNames() {
+    var box = $('names'); box.innerHTML = '';
+    for (var i = 0; i < NT; i++) {
+      var inp = document.createElement('input'); inp.maxLength = 14; inp.value = names[i] || ('Team ' + (i + 1)); inp.setAttribute('aria-label', 'Team ' + (i + 1) + ' name');
+      (function (k) { inp.oninput = function () { names[k] = this.value; }; })(i); names[i] = inp.value; box.appendChild(inp);
+    }
+    $('tm-n').textContent = NT;
+  }
+  $('tm-minus').onclick = function () { if (NT > 2) { NT--; renderNames(); } };
+  $('tm-plus').onclick = function () { if (NT < 6) { NT++; renderNames(); } };
+  function toSetup() { $('end').style.display = 'none'; $('game').style.display = 'none'; $('setup').style.display = 'flex'; stopTimers(); }
+
+  /* ---------- oyun durumu ---------- */
+  var scores, x2avail, f50avail, order, qi, turn, cur, opts, x2on, worthLocked, state, tickT = null, revealT = null, tLeft = 0, revealStart = 0, wrongSet, stealUsed, stealTeam, baseWorth;
+  function stopTimers() { clearInterval(tickT); clearInterval(revealT); tickT = revealT = null; }
+  $('startbtn').onclick = function () { startGame(); };
+  $('restartbtn').onclick = function () { stopTimers(); toSetup(); };
+  $('editbtn').onclick = function () { document.body.classList.toggle('edit'); };
+  function tn(i) { return (names[i] || '').trim() || ('Team ' + (i + 1)); }
+  function startGame() {
+    $('setup').style.display = 'none'; $('end').style.display = 'none'; $('game').style.display = 'flex'; document.body.classList.remove('edit');
+    scores = []; x2avail = []; f50avail = []; for (var i = 0; i < NT; i++) { scores.push(0); x2avail.push(true); f50avail.push(true); }
+    order = shuffle(QUIZ.filter(function (q) { return q.r !== 'F'; })).concat(shuffle(QUIZ.filter(function (q) { return q.r === 'F'; }))); qi = 0; turn = 0; renderTeams(); showReady();
+  }
+  function renderTeams() {
+    var box = $('teams'); box.innerHTML = '';
+    for (var i = 0; i < NT; i++) {
+      var d = document.createElement('div'); d.className = 'team' + (i === turn ? ' cur' : '');
+      d.innerHTML = '<button class="adj" data-i="' + i + '" data-d="-50" aria-label="minus 50">−</button><span class="nm"></span><span class="sc">' + scores[i] + '</span><button class="adj" data-i="' + i + '" data-d="50" aria-label="plus 50">+</button><span class="cards"><i class="' + (x2avail[i] ? '' : 'used') + '">×2</i><i class="' + (f50avail[i] ? '' : 'used') + '">50:50</i></span>';
+      d.querySelector('.nm').textContent = tn(i); box.appendChild(d);
+    }
+    Array.prototype.forEach.call(box.querySelectorAll('.adj'), function (b) { b.onclick = function () { var k = +b.dataset.i; scores[k] += +b.dataset.d; renderTeams(); }; });
+  }
+  function showReady() {
+    stopTimers(); state = 'ready'; renderTeams();
+    $('qwrap').hidden = true; $('ready').hidden = false; $('rd-team').textContent = tn(turn); $('rd-final').hidden = order[qi].r !== 'F';
+    x2on = false; var b = $('x2btn'); b.classList.remove('on'); b.disabled = !x2avail[turn]; b.textContent = x2avail[turn] ? '×2 Double points' : '×2 already used';
+  }
+  $('x2btn').onclick = function () { if (!x2avail[turn]) return; x2on = !x2on; this.classList.toggle('on', x2on); this.textContent = x2on ? '×2 is ON! (wrong = −50)' : '×2 Double points'; };
+  $('showq').onclick = function () { showQuestion(); };
+
+  function worthNow() {
+    return 100;
+  }
+  function blurNow() { var s = (Date.now() - revealStart) / 1000; return Math.max(0, 30 * (1 - s / 15)); }
+  function showQuestion() {
+    cur = order[qi]; state = 'q'; wrongSet = {}; stealUsed = false; stealTeam = -1;
+    if (x2on) x2avail[turn] = false; renderTeams();
+    $('ready').hidden = true; $('qwrap').hidden = false;
+    $('qn').textContent = 'Question ' + (qi + 1) + '/' + order.length; $('ftag').hidden = cur.r !== 'F'; $('who').textContent = tn(turn);
+    $('x2tag').hidden = !x2on; $('fb').innerHTML = ''; $('nextbtn').hidden = true;
+    $('prompt').textContent = cur.p; $('prompt-tr').textContent = cur.pt;
+    var qb = $('qbody'); qb.classList.toggle('imgq', cur.t === 'B');
+    if (cur.t !== 'B') { var im = $('pic').querySelector('img'); im.src = IMG[cur.img]; im.style.filter = 'none'; }
+    opts = shuffle(cur.o.map(function (v, k) { return { v: v, k: k }; }));
+    var box = $('opts'); box.innerHTML = ''; box.className = (cur.t !== 'B' && cur.o.some(function (s) { return s.length > 22; })) ? 'long' : 'short';
+    opts.forEach(function (o, idx) {
+      var b = document.createElement('button'); b.className = 'opt' + (cur.t === 'B' ? ' imgopt' : '');
+      if (cur.t === 'B') { var im2 = document.createElement('img'); im2.src = IMG[o.v]; im2.alt = ''; b.appendChild(im2); } else b.textContent = o.v;
+      b.onclick = function () { pick(idx, b); }; box.appendChild(b);
+    });
+    var f = $('f50'); f.disabled = !f50avail[turn]; f.hidden = false; f.textContent = '50:50'; f.onclick = use50;
+    // sure
+    var tm = TIMER[timerIdx]; $('timer').hidden = !tm; tLeft = tm;
+    if (tm) { $('timer').firstElementChild.style.width = '100%'; clearInterval(tickT); tickT = setInterval(function () { tLeft -= .25; $('timer').firstElementChild.style.width = Math.max(0, tLeft / tm * 100) + '%'; $('timer').firstElementChild.style.background = tLeft < tm * .25 ? '#D62828' : '#0A7A2F'; if (tLeft <= 0) { clearInterval(tickT); timeUp(); } }, 250); }
+    clearInterval(revealT); revealStart = Date.now(); $('worth').textContent = 'Worth: ' + worthNow() * (x2on ? 2 : 1);
+  }
+  function use50() {
+    if (state !== 'q' || !f50avail[turn]) return; f50avail[turn] = false; renderTeams(); $('f50').disabled = true;
+    var wrong = []; opts.forEach(function (o, i) { if (o.k !== 0 && !wrongSet[i]) wrong.push(i); });
+    shuffle(wrong).slice(0, 2).forEach(function (i) { wrongSet[i] = 'gone'; $('opts').children[i].classList.add('gone'); });
+  }
+  function lockAll() { Array.prototype.forEach.call($('opts').children, function (b) { b.disabled = true; }); }
+  function endReveal() { clearInterval(revealT); revealT = null; if (cur.t === 'C') $('pic').querySelector('img').style.filter = 'none'; }
+  function pick(idx, btn) {
+    if (state !== 'q' && state !== 'steal') return;
+    var ok = opts[idx].k === 0, asker = state === 'q';
+    clearInterval(tickT);
+    if (ok) {
+      btn.classList.add('good', 'pop'); var base = asker ? worthNow() : 100; var pts = asker ? base * (x2on ? 2 : 1) : base; var who = asker ? turn : stealTeam;
+      if (cur.t === 'C') { /* bulanik gorsel acilir */ }
+      scores[who] += pts; endReveal(); lockAll(); renderTeams();
+      finishQ('✔ ' + tn(who) + ' +' + pts + '!' + (asker ? '' : ' (steal)'), true); return;
+    }
+    btn.classList.add('bad', 'shake'); btn.disabled = true; wrongSet[idx] = 'bad';
+    if (asker) {
+      if (x2on) { scores[turn] = Math.max(0, scores[turn] - 50); renderTeams(); }
+      startSteal('✘ Not this time.' + (x2on ? ' ×2 risk: −50.' : ''));
+    } else { endReveal(); lockAll(); finishQ('✘ ' + tn(stealTeam) + ' missed it, too.', false); }
+  }
+  function timeUp() {
+    if (state !== 'q') return;
+    if (x2on) { scores[turn] = Math.max(0, scores[turn] - 50); renderTeams(); }
+    startSteal('⏰ Time is up!' + (x2on ? ' ×2 risk: −50.' : ''));
+  }
+  function startSteal(msg) {
+    var nxt = (turn + 1) % NT; stealUsed = true; stealTeam = nxt; state = 'steal';
+    $('fb').innerHTML = msg + ' ' + 'Steal chance: ' + esc(tn(nxt)) + ': 100 points!<span class="tr">Çalma şansı: ' + esc(tn(nxt)) + ': 100 puan!</span>';
+    $('who').textContent = tn(nxt) + ' (steal)'; $('f50').hidden = true; $('x2tag').hidden = true; $('worth').textContent = 'Worth: 100';
+    Array.prototype.forEach.call($('opts').children, function (b, i) { if (!wrongSet[i]) b.disabled = false; });
+  }
+  function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+  function finishQ(head, ok) {
+    state = 'done'; endReveal(); clearInterval(tickT);
+    // dogru secenegi goster
+    opts.forEach(function (o, i) { if (o.k === 0) $('opts').children[i].classList.add('good'); });
+    lockAll(); $('f50').hidden = true;
+    $('fb').innerHTML = head + '<br>' + esc(cur.e) + '<span class="tr">' + esc(cur.et) + '</span>';
+    var nb = $('nextbtn'); nb.hidden = false; nb.textContent = (qi === order.length - 1) ? 'Finish' : 'Next';
+  }
+  $('nextbtn').onclick = function () {
+    qi++; if (qi >= order.length) { finish(); return; }
+    turn = (turn + 1) % NT; showReady();
+  };
+  function finish() {
+    stopTimers(); var idx = scores.map(function (s, i) { return i; }).sort(function (a, b) { return scores[b] - scores[a]; });
+    var top = scores[idx[0]], winners = idx.filter(function (i) { return scores[i] === top; });
+    $('end-title').textContent = winners.length === 1 ? tn(winners[0]) + ' Wins!' : "It's a Draw!";
+    var box = $('rank'); box.innerHTML = '';
+    idx.forEach(function (i, r) { var d = document.createElement('div'); if (scores[i] === top) d.className = 'first'; var a = document.createElement('span'), b = document.createElement('span'); a.textContent = (r + 1) + '. ' + tn(i); b.textContent = scores[i]; d.appendChild(a); d.appendChild(b); box.appendChild(d); });
+    $('end').style.display = 'flex';
+  }
+  renderNames();
+</script>
+</body>
+</html>
