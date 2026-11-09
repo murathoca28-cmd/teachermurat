@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speaking Wheel</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 14px; padding: 8px 14px 12px; align-items: stretch; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #wheelbox { position: relative; flex: 0 0 46%; min-width: 0; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  @media (orientation: portrait) { #wheelbox { flex: 0 0 50%; } }
+  #wheelwrap { position: relative; flex: 1; min-height: 0; aspect-ratio: 1; max-width: 100%; }
+  #wheel { position: absolute; inset: 0; pointer-events: none; transition: transform 4.2s cubic-bezier(.12, .7, .1, 1); }
+  #wheel svg { width: 100%; height: 100%; display: block; }
+  #pointer { position: absolute; left: 50%; top: -2%; width: 11%; transform: translateX(-50%); z-index: 3; }
+  #pointer svg { width: 100%; display: block; }
+  #spin { font-size: clamp(1.4rem, 3.4vw, 2.6rem); padding: .15em 1.2em; }
+  #spin:disabled { background: #B8C2C1; color: #5B6B69; cursor: not-allowed; box-shadow: 0 6px 0 #5B6B69; }
+  #card { flex: 1; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 22px; padding: 10px 20px; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+  #cat { align-self: flex-start; color: #fff; font-weight: 900; font-size: clamp(1.1rem, 2.6vw, 2rem); padding: 0 20px; border-radius: 999px; border: 4px solid #0B2F2C; }
+  #q-en { font-weight: 900; font-size: clamp(1.5rem, 4vw, 3.4rem); line-height: 1.15; }
+  #q-tr { font-weight: 800; font-size: clamp(1rem, 2.2vw, 1.7rem); color: #0B5C56; }
+  #start { font-weight: 800; font-size: clamp(1.1rem, 2.6vw, 2rem); color: #0B2F2C; background: #FFF3B0; border: 4px solid #0B2F2C; border-radius: 14px; padding: 6px 14px; }
+  #start b { color: #D62828; }
+  #qbox { flex-direction: column; gap: clamp(10px, 2vh, 18px); }
+  #q-en { margin: 2px 0 0; }
+  #showans { align-self: flex-start; font-size: clamp(1rem, 2.4vw, 1.8rem); }
+  #ans { display: none; background: #C8F7D4; border: 4px solid #0A7A2F; border-radius: 14px; padding: 8px 14px; }
+  #ans b { color: #0A7A2F; }
+  #a-en { font-weight: 900; font-size: clamp(1.2rem, 3vw, 2.4rem); line-height: 1.2; }
+  #a-tr { font-weight: 800; font-size: clamp(.95rem, 2vw, 1.5rem); color: #0B5C56; }
+  #idle { font-weight: 900; font-size: clamp(1.6rem, 4.4vw, 3.6rem); text-align: center; line-height: 1.2; }
+</style>
+<style id="ln-css">
+.ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
+:where(.tile .e, .cell .e, .wc .e, .fe, .ct, #qmark, .w .e, .word .e, #pic) svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+#ln-screen { display: none; position: fixed; inset: 0; z-index: 70; background: #0E8F86; flex-direction: column; gap: 8px; padding: 8px 10px 10px; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; color: #0B2F2C; }
+#ln-top { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#ln-title { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.4rem); color: #fff; text-shadow: 3px 3px 0 #0B2F2C; margin-right: 6px; }
+#ln-tabs { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.ln-tab { font-weight: 900; font-size: clamp(.9rem, 2.1vw, 1.5rem); padding: .05em .8em; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; cursor: pointer; font-family: inherit; }
+.ln-tab.act { background: #FFD23F; border-color: #D62828; }
+#ln-close { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.5rem); padding: .05em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #D62828; color: #fff; cursor: pointer; font-family: inherit; }
+#ln-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 17vw, 240px), 1fr)); gap: 10px; align-content: start; padding: 2px; }
+.ln-card { background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ln-card.wide { grid-column: span 2; }
+.ln-card .le { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1.1; }
+.ln-card .le svg { width: clamp(2.4rem, 8vh, 4rem); height: clamp(2.4rem, 8vh, 4rem); display: block; }
+.ln-card .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.6rem); line-height: 1.15; }
+.ln-card .trl { font-weight: 800; font-size: clamp(.8rem, 1.7vw, 1.15rem); color: #0B5C56; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Speaking<br>Wheel</h1>
+  <p class="subtitle">Spin, ask and answer in pairs!</p>
+  <div class="preview">🎡 🗣️ 💬</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Spins: <span id="sp">0</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="wheelbox">
+    <div id="wheelwrap">
+      <div id="wheel"><svg viewBox="-250 -250 500 500" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L0.0 -240.0 A240 240 0 0 1 169.7 -169.7 Z" fill="#D62828" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(22.5)"><text x="0" y="-206" text-anchor="middle" dominant-baseline="central" font-size="40">🎂</text><text transform="translate(0,-112) rotate(-90)" x="0" y="0" dy=".35em" text-anchor="middle" font-size="25" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" stroke-linejoin="round" font-family="Segoe UI, Verdana, Arial, sans-serif">Life</text></g><path d="M0 0 L169.7 -169.7 A240 240 0 0 1 240.0 -0.0 Z" fill="#1F5FBF" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(67.5)"><text x="0" y="-206" text-anchor="middle" dominant-baseline="central" font-size="40">👵</text><text transform="translate(0,-112) rotate(-90)" x="0" y="0" dy=".35em" text-anchor="middle" font-size="25" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" stroke-linejoin="round" font-family="Segoe UI, Verdana, Arial, sans-serif">Family</text></g><path d="M0 0 L240.0 -0.0 A240 240 0 0 1 169.7 169.7 Z" fill="#0A7A2F" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(112.5)"><text x="0" y="-206" text-anchor="middle" dominant-baseline="central" font-size="40">🔬</text><text transform="translate(0,-112) rotate(-90)" x="0" y="0" dy=".35em" text-anchor="middle" font-size="25" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" stroke-linejoin="round" font-family="Segoe UI, Verdana, Arial, sans-serif">Science</text></g><path d="M0 0 L169.7 169.7 A240 240 0 0 1 0.0 240.0 Z" fill="#E8710A" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(157.5)"><text x="0" y="-206" text-anchor="middle" dominant-baseline="central" font-size="40">🎓</text><text transform="translate(0,-112) rotate(-90)" x="0" y="0" dy=".35em" text-anchor="middle" font-size="25" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" stroke-linejoin="round" font-family="Segoe UI, Verdana, Arial, sans-serif">School</text></g><path d="M0 0 L0.0 240.0 A240 240 0 0 1 -169.7 169.7 Z" fill="#7B2CBF" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(202.5)"><text x="0" y="-206" text-anchor="middle" dominant-baseline="central" font-size="40">⏰</text><text transform="translate(0,-112) rotate(-90)" x="0" y="0" dy=".35em" text-anchor="middle" font-size="25" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" stroke-linejoin="round" font-family="Segoe UI, Verdana, Arial, sans-serif">Time</text></g><path d="M0 0 L-169.7 169.7 A240 240 0 0 1 -240.0 0.0 Z" fill="#0B7285" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(247.5)"><text x="0" y="-206" text-anchor="middle" dominant-baseline="central" font-size="40">🏆</text><text transform="translate(0,-112) rotate(-90)" x="0" y="0" dy=".35em" text-anchor="middle" font-size="25" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" stroke-linejoin="round" font-family="Segoe UI, Verdana, Arial, sans-serif">Success</text></g><path d="M0 0 L-240.0 0.0 A240 240 0 0 1 -169.7 -169.7 Z" fill="#B5179E" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(292.5)"><text x="0" y="-206" text-anchor="middle" dominant-baseline="central" font-size="40">🕰️</text><text transform="translate(0,-112) rotate(-90)" x="0" y="0" dy=".35em" text-anchor="middle" font-size="25" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" stroke-linejoin="round" font-family="Segoe UI, Verdana, Arial, sans-serif">Past</text></g><path d="M0 0 L-169.7 -169.7 A240 240 0 0 1 -0.0 -240.0 Z" fill="#C2410C" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/><g transform="rotate(337.5)"><text x="0" y="-206" text-anchor="middle" dominant-baseline="central" font-size="40">🌍</text><text transform="translate(0,-112) rotate(-90)" x="0" y="0" dy=".35em" text-anchor="middle" font-size="25" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="5" paint-order="stroke" stroke-linejoin="round" font-family="Segoe UI, Verdana, Arial, sans-serif">Famous</text></g><circle r="34" fill="#FFD23F" stroke="#0B2F2C" stroke-width="7"/></svg></div>
+      <div id="pointer"><svg viewBox="0 0 60 80"><path d="M6 6 H54 L30 74 Z" fill="#D62828" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/></svg></div>
+    </div>
+    <button class="big-btn" id="spin" onclick="spin()">SPIN</button>
+  </div>
+  <div id="card">
+    <div id="idle">Spin the wheel!<div class="tr" style="font-size:.5em;color:#0B5C56;font-weight:800">Çarkı çevir!</div></div>
+    <div id="qbox" style="display:none">
+      <div id="cat"></div>
+      <div id="q-en"></div>
+      <div id="q-tr" class="tr"></div>
+      <div id="start"></div>
+      <button class="restart-btn" id="showans" onclick="toggleAns()">Show answer</button>
+      <div id="ans"><b>Sample answer:</b><div id="a-en"></div><div id="a-tr" class="tr"></div></div>
+    </div>
+  </div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  var TR = true, fbParts = null;
+  function setFb(p, tr) { fbParts = [p, tr]; renderFb(); }
+  function renderFb() { var f = document.getElementById('fb'); if (f) f.textContent = fbParts ? fbParts[0] + (TR && fbParts[1] ? ' ' + fbParts[1] : '') : ''; }
+  function toggleTR() { TR = !TR; document.body.classList.toggle('no-tr', !TR); document.getElementById('trbtn').textContent = 'Turkish: ' + (TR ? 'On' : 'Off'); renderFb(); }
+  var WHEEL = [["🎂", "My Life Story", "#D62828", [["When were you born?", "Ne zaman doğdun?", "I was born in …", "I was born in 2013.", "2013’te doğdum."], ["Where were you born?", "Nerede doğdun?", "I was born in …", "I was born in Giresun.", "Giresun’da doğdum."], ["Where did you grow up?", "Nerede büyüdün?", "I grew up in …", "I grew up in a small town.", "Küçük bir kasabada büyüdüm."], ["When did you start school?", "Okula ne zaman başladın?", "I started school when …", "I started school when I was six.", "Okula altı yaşındayken başladım."], ["Who lived with you when you were a child?", "Çocukken seninle kim yaşıyordu?", "I lived with …", "I lived with my parents and my sister.", "Annem, babam ve kız kardeşimle yaşıyordum."], ["What was your favourite toy?", "En sevdiğin oyuncak neydi?", "My favourite toy was …", "My favourite toy was a red car.", "En sevdiğim oyuncak kırmızı bir arabaydı."]]], ["👵", "Grandparents", "#1F5FBF", [["Where was your grandmother born?", "Büyükannen nerede doğdu?", "She was born in …", "She was born in a village.", "Bir köyde doğdu."], ["What did your grandfather do?", "Dedeniz ne iş yapıyordu?", "He worked as …", "He worked as a farmer.", "Çiftçi olarak çalışıyordu."], ["Did your grandparents move to a new place?", "Büyükanne ve dedeniz yeni bir yere taşındı mı?", "Yes, they … / No, they …", "Yes, they moved to the city.", "Evet, şehre taşındılar."], ["How many children did they have?", "Kaç çocukları oldu?", "They had …", "They had three children.", "Üç çocukları oldu."], ["What did your grandmother like doing?", "Büyükannen ne yapmayı severdi?", "She liked …", "She liked cooking for the family.", "Aile için yemek yapmayı severdi."], ["What do you remember about them?", "Onlar hakkında neyi hatırlıyorsun?", "I remember …", "I remember their old house.", "Eski evlerini hatırlıyorum."]]], ["🔬", "Scientists", "#0A7A2F", [["Who is a famous scientist?", "Ünlü bir bilim insanı kim?", "A famous scientist is …", "A famous scientist is Albert Einstein.", "Ünlü bir bilim insanı Albert Einstein."], ["What did this scientist discover or invent?", "Bu bilim insanı ne keşfetti ya da icat etti?", "He or she …", "He discovered new things about light.", "Işık hakkında yeni şeyler keşfetti."], ["When did this person live?", "Bu kişi ne zaman yaşadı?", "This person lived …", "This person lived about a hundred years ago.", "Bu kişi yaklaşık yüz yıl önce yaşadı."], ["Why was this person important?", "Bu kişi neden önemliydi?", "Because …", "Because the work helps people today.", "Çünkü yaptığı iş bugün insanlara yardım ediyor."], ["Did this person win a prize?", "Bu kişi bir ödül kazandı mı?", "Yes, he or she … / No, …", "Yes, he won a Nobel Prize.", "Evet, Nobel Ödülü kazandı."], ["What can we learn from this person?", "Bu kişiden ne öğrenebiliriz?", "We can learn …", "We can learn to be curious.", "Meraklı olmayı öğrenebiliriz."]]], ["🎓", "School Days", "#E8710A", [["Who was your first teacher?", "İlk öğretmenin kimdi?", "My first teacher was …", "My first teacher was Mrs Ayşe.", "İlk öğretmenim Ayşe Hanım’dı."], ["Did you like primary school?", "İlkokulu sevdin mi?", "Yes, I did. / No, I didn’t.", "Yes, I did. I had many friends.", "Evet, sevdim. Çok arkadaşım vardı."], ["What was your favourite lesson last year?", "Geçen yıl en sevdiğin ders neydi?", "My favourite lesson was …", "My favourite lesson was science.", "En sevdiğim ders fen bilimleriydi."], ["What did you do at break time?", "Teneffüste ne yapardın?", "I played … / I talked …", "I played football with my friends.", "Arkadaşlarımla futbol oynardım."], ["When did you learn to read?", "Okumayı ne zaman öğrendin?", "I learned to read when …", "I learned to read when I was seven.", "Okumayı yedi yaşındayken öğrendim."], ["What did you learn this week?", "Bu hafta ne öğrendin?", "I learned …", "I learned about famous people.", "Ünlü insanlar hakkında öğrendim."]]], ["⏰", "Time and Dates", "#7B2CBF", [["What time is it now?", "Şimdi saat kaç?", "It is …", "It is half past ten.", "Saat on buçuk."], ["What time do you get up?", "Saat kaçta kalkarsın?", "I get up at …", "I get up at a quarter past seven.", "Yediyi çeyrek geçe kalkarım."], ["When is your birthday?", "Doğum günün ne zaman?", "My birthday is on …", "My birthday is on the third of June.", "Doğum günüm 3 Haziran’da."], ["What is today’s date?", "Bugünün tarihi ne?", "It is the … of …", "It is the tenth of November.", "Bugün 10 Kasım."], ["What day was it yesterday?", "Dün günlerden neydi?", "It was …", "It was Sunday.", "Pazardı."], ["What time did you go to bed last night?", "Dün gece saat kaçta yattın?", "I went to bed at …", "I went to bed at ten o’clock.", "Saat onda yattım."]]], ["🏆", "Success", "#0B7285", [["What is your biggest achievement?", "En büyük başarın nedir?", "My biggest achievement is …", "My biggest achievement is learning to swim.", "En büyük başarım yüzmeyi öğrenmek."], ["Did you ever win a prize or a medal?", "Hiç ödül ya da madalya kazandın mı?", "Yes, I did. / No, I didn’t.", "Yes, I won a medal in a race.", "Evet, bir yarışta madalya kazandım."], ["Who is a successful person you know?", "Tanıdığın başarılı bir kişi kim?", "A successful person is …", "A successful person is my uncle.", "Başarılı bir kişi amcam."], ["What do you want to achieve in the future?", "Gelecekte neyi başarmak istiyorsun?", "I want to …", "I want to become a doctor.", "Doktor olmak istiyorum."], ["What does a person need to be successful?", "Başarılı olmak için bir kişinin neye ihtiyacı vardır?", "A person needs …", "A person needs hard work.", "Bir kişinin çok çalışmaya ihtiyacı vardır."], ["Who helped you to learn something new?", "Yeni bir şey öğrenmene kim yardım etti?", "… helped me.", "My teacher helped me.", "Öğretmenim bana yardım etti."]]], ["🕰️", "Yesterday", "#B5179E", [["What did you do yesterday evening?", "Dün akşam ne yaptın?", "I … yesterday evening.", "I watched a film with my family.", "Ailemle bir film izledim."], ["Where did you go last weekend?", "Geçen hafta sonu nereye gittin?", "I went to …", "I went to my grandparents’ house.", "Büyükanne ve dedemin evine gittim."], ["Who did you meet last week?", "Geçen hafta kiminle buluştun?", "I met …", "I met my cousin.", "Kuzenimle buluştum."], ["What did you eat for dinner last night?", "Dün gece akşam yemeğinde ne yedin?", "I ate …", "I ate rice and chicken.", "Pilav ve tavuk yedim."], ["Did you read a book last month?", "Geçen ay bir kitap okudun mu?", "Yes, I did. / No, I didn’t.", "Yes, I read a short story.", "Evet, kısa bir hikâye okudum."], ["What time did you arrive at school today?", "Bugün okula saat kaçta geldin?", "I arrived at …", "I arrived at ten to eight.", "Sekize on kala geldim."]]], ["🌍", "Famous People", "#C2410C", [["Which famous person do you like?", "Hangi ünlü kişiyi seviyorsun?", "I like …", "I like a famous Turkish painter.", "Ünlü bir Türk ressamı seviyorum."], ["Where was this person born?", "Bu kişi nerede doğdu?", "He or she was born in …", "She was born in Istanbul.", "İstanbul’da doğdu."], ["What did this person do?", "Bu kişi ne yaptı?", "He or she …", "She painted beautiful pictures.", "Güzel resimler yaptı."], ["Why do people remember this person?", "İnsanlar bu kişiyi neden hatırlıyor?", "Because …", "Because the pictures are very famous.", "Çünkü resimleri çok ünlü."], ["Do you want to read a biography? Why?", "Bir biyografi okumak ister misin? Neden?", "Yes, because … / No, because …", "Yes, because I want to learn about real life.", "Evet, çünkü gerçek hayat hakkında öğrenmek istiyorum."], ["What question do you want to ask this person?", "Bu kişiye hangi soruyu sormak istersin?", "I want to ask …", "I want to ask, “When did you start painting?”", "“Resim yapmaya ne zaman başladın?” diye sormak istiyorum."]]]];
+  var rot = 0, spinning = false, spins = 0, queues = [];
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    spins = 0; document.getElementById('sp').textContent = 0;
+    queues = WHEEL.map(function () { return []; });
+    document.getElementById('qbox').style.display = 'none';
+    document.getElementById('idle').style.display = '';
+  }
+  function spin(forced) {
+    if (spinning) return; spinning = true;
+    document.getElementById('spin').disabled = true;
+    var n = WHEEL.length, step = 360 / n, idx = (typeof forced === 'number') ? forced : Math.floor(Math.random() * n);
+    var target = ((360 - (idx * step + step / 2) + (Math.random() * 2 - 1) * step * 0.3) % 360 + 360) % 360;
+    var cur = ((rot % 360) + 360) % 360;
+    rot += 1800 + ((target - cur) + 360) % 360;
+    var w = document.getElementById('wheel');
+    w.style.transform = 'rotate(' + rot + 'deg)';
+    var done = false;
+    function finish() { if (done) return; done = true; w.removeEventListener('transitionend', finish); show(idx); }
+    w.addEventListener('transitionend', finish);
+    setTimeout(finish, 4600);
+  }
+  window.__testSpin = function (i) { spin(i); };
+  function toggleAns() {
+    var a = document.getElementById('ans'), open = a.style.display !== 'block';
+    a.style.display = open ? 'block' : 'none';
+    document.getElementById('showans').textContent = open ? 'Hide answer' : 'Show answer';
+  }
+  function show(idx) {
+    var c = WHEEL[idx];
+    if (!queues[idx].length) queues[idx] = shuffle(c[3].slice());
+    var q = queues[idx].pop();
+    spins++; document.getElementById('sp').textContent = spins;
+    document.getElementById('idle').style.display = 'none';
+    document.getElementById('qbox').style.display = 'flex';
+    var cat = document.getElementById('cat'); cat.textContent = c[0] + ' ' + c[1]; cat.style.background = c[2];
+    document.getElementById('q-en').textContent = q[0];
+    document.getElementById('q-tr').textContent = q[1];
+    document.getElementById('start').innerHTML = '<b>Start:</b> ' + q[2].replace(/</g, '&lt;');
+    document.getElementById('a-en').textContent = q[3]; document.getElementById('a-tr').textContent = q[4];
+    document.getElementById('ans').style.display = 'none'; document.getElementById('showans').textContent = 'Show answer';
+    spinning = false; document.getElementById('spin').disabled = false;
+  }
+</script>
+<div id="ln-screen">
+  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-grid"></div>
+</div>
+<script>
+(function () {
+  var LN = [["Asking about the Past", "Geçmişi Sorma", [["❓", "When were you born?", "Ne zaman doğdun?"], ["❓", "Where did you grow up?", "Nerede büyüdün?"], ["❓", "What did you study?", "Ne okudun?"], ["❓", "Why did you move?", "Neden taşındın?"], ["❓", "Did you graduate?", "Mezun oldun mu?"], ["✅", "Yes, I did.", "Evet, mezun oldum."], ["🚫", "No, I didn’t.", "Hayır, olmadım."]]], ["Past Simple", "Geçmiş Zaman", [["👶", "was born", "doğdu"], ["🌱", "grew up", "büyüdü"], ["🏫", "went to school", "okula gitti"], ["🎓", "graduated", "mezun oldu"], ["🚚", "moved", "taşındı"], ["🤝", "met", "tanıştı"], ["📚", "studied", "okudu"], ["💼", "worked", "çalıştı"], ["🏆", "won", "kazandı"], ["✍️", "wrote", "yazdı"], ["💡", "invented", "icat etti"], ["🔭", "discovered", "keşfetti"], ["🕊️", "died", "öldü"]]], ["Telling the Time", "Saati Söyleme", [["🕖", "It’s seven o’clock.", "Saat yedi."], ["🕡", "It’s half past six.", "Saat altı buçuk."], ["⏰", "It’s a quarter past three.", "Saat üçü çeyrek geçiyor."], ["⏰", "It’s a quarter to four.", "Saat dörde çeyrek var."], ["⏰", "It’s five past five.", "Saat beşi beş geçiyor."], ["⏰", "It’s ten to ten.", "Saat ona on var."], ["❓", "What time is it?", "Saat kaç?"], ["🌅", "in the morning", "sabah"], ["🌙", "at night", "geceleyin"], ["🕛", "midnight", "gece yarısı"]]], ["Days and Dates", "Gün ve Tarihler", [["🗓️", "month", "ay"], ["📆", "year", "yıl"], ["🎂", "birthday", "doğum günü"], ["🥇", "first (1st)", "birinci (1.)"], ["🥈", "second (2nd)", "ikinci (2.)"], ["🥉", "third (3rd)", "üçüncü (3.)"], ["🔟", "tenth (10th)", "onuncu (10.)"], ["📅", "on the twelfth of March", "12 Mart’ta"], ["📅", "on Monday", "pazartesi günü"], ["🗓️", "in May", "mayıs ayında"], ["📆", "nineteen ninety (1990)", "1990"], ["📆", "two thousand and ten (2010)", "2010"], ["⌛", "ago", "önce"], ["⏳", "later", "sonra"]]]];
+  function lnShow(i) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
+    document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
+      var wide = it[1].length > 26 && it[0].indexOf('<svg') < 0;
+      return '<div class="ln-card' + (wide ? ' wide' : '') + '"><div class="le">' + it[0] + '</div><div class="en">' + it[1] + '</div><div class="trl">' + it[2] + '</div></div>';
+    }).join('');
+    document.getElementById('ln-grid').scrollTop = 0;
+  }
+  window.lnOpen = function () {
+    var tabs = document.getElementById('ln-tabs'); tabs.innerHTML = '';
+    LN.forEach(function (s, i) { var b = document.createElement('button'); b.className = 'ln-tab'; b.textContent = s[0]; b.onclick = function () { lnShow(i); }; tabs.appendChild(b); });
+    document.getElementById('ln-screen').style.display = 'flex'; lnShow(0);
+  };
+  window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+</body>
+</html>

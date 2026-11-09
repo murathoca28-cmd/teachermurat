@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who Am I?</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 4px 12px 12px; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #left { flex: 1.1 1 0; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
+  #card { flex: 1; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 20px; padding: 8px 14px; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; }
+  #qmark { text-align: center; font-weight: 900; font-size: clamp(2rem, 8vh, 4.5rem); line-height: 1; color: #D62828; }
+  .cl { border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 12px; background: #FFF3B0; }
+  .cl .en { font-weight: 900; font-size: clamp(1.1rem, 2.8vw, 2.1rem); line-height: 1.2; }
+  .cl .trl { font-weight: 800; font-size: clamp(.8rem, 1.6vw, 1.2rem); color: #0B5C56; }
+  #ctl { flex: 0 0 auto; display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
+  #nc { font-size: clamp(1rem, 2.4vw, 1.7rem); }
+  #nc:disabled { opacity: .45; cursor: default; }
+  #fb { font-weight: 900; font-size: clamp(1rem, 2.2vw, 1.6rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; text-align: center; min-height: 1.3em; }
+  #right { flex: 1 1 0; min-width: 0; min-height: 0; display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); }
+  .tile { container-type: size; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0B2F2C; }
+  .tile .e { font-size: 40cqmin; line-height: 1.1; }
+  .tile .p { font-weight: 900; font-size: 13cqmin; line-height: 1.1; }
+  .tile .t { font-weight: 800; font-size: 9.5cqmin; color: #0B5C56; }
+  .tile.bad { background: #FFD6D6; border-color: #D62828; }
+  .tile.good { background: #C8F7D4; border-color: #0A7A2F; border-width: 8px; }
+  #nxt { display: none; font-size: clamp(1.1rem, 2.6vw, 1.7rem); }
+</style>
+<style id="phone-fix">
+@media (max-width:700px) and (max-aspect-ratio:1/1) { .tile .p { font-size: max(13cqmin, 9.5px); } .tile .t { font-size: max(9.5cqmin, 9px); } }
+</style>
+<style id="ln-css">
+.ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
+:where(.tile .e, .cell .e, .wc .e, .fe, .ct, #qmark, .w .e, .word .e, #pic) svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+#ln-screen { display: none; position: fixed; inset: 0; z-index: 70; background: #0E8F86; flex-direction: column; gap: 8px; padding: 8px 10px 10px; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; color: #0B2F2C; }
+#ln-top { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#ln-title { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.4rem); color: #fff; text-shadow: 3px 3px 0 #0B2F2C; margin-right: 6px; }
+#ln-tabs { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.ln-tab { font-weight: 900; font-size: clamp(.9rem, 2.1vw, 1.5rem); padding: .05em .8em; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; cursor: pointer; font-family: inherit; }
+.ln-tab.act { background: #FFD23F; border-color: #D62828; }
+#ln-close { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.5rem); padding: .05em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #D62828; color: #fff; cursor: pointer; font-family: inherit; }
+#ln-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 17vw, 240px), 1fr)); gap: 10px; align-content: start; padding: 2px; }
+.ln-card { background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ln-card.wide { grid-column: span 2; }
+.ln-card .le { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1.1; }
+.ln-card .le svg { width: clamp(2.4rem, 8vh, 4rem); height: clamp(2.4rem, 8vh, 4rem); display: block; }
+.ln-card .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.6rem); line-height: 1.15; }
+.ln-card .trl { font-weight: 800; font-size: clamp(.8rem, 1.7vw, 1.15rem); color: #0B5C56; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Who Am I?</h1>
+  <p class="subtitle">Read the clues. Guess who or what I am!</p>
+  <div class="preview">❓ 🔬 🏆 🎓</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Round: <span id="rn">1</span>/10</div>
+  <div class="stat">Points: <span id="sc">0</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="left">
+    <div id="card"><div id="qmark">?</div><div id="cls"></div></div>
+    <div id="ctl"><button class="restart-btn" id="nc" onclick="moreClue()">Next clue</button><button class="big-btn" id="nxt" onclick="nextR()">Next</button></div>
+    <div id="fb"></div>
+  </div>
+  <div id="right"></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  function toggleTR() { var off = document.body.classList.toggle('no-tr'); document.getElementById('trbtn').textContent = 'Turkish: ' + (off ? 'Off' : 'On'); }
+
+  var R = [{"k": "award", "en": ["I am a thing.", "People get me when they do something excellent.", "Athletes and scientists can win me.", "I can be a cup, a medal or a certificate."], "tr": ["Ben bir şeyim.", "İnsanlar harika bir şey yaptığında beni alır.", "Sporcular ve bilim insanları beni kazanabilir.", "Bir kupa, bir madalya ya da bir sertifika olabilirim."], "opts": [["award", "🏆", "award", "ödül"], ["ticket", "🎫", "ticket", "bilet"], ["diploma", "📜", "diploma", "diploma"], ["map", "🗺️", "map", "harita"]]}, {"k": "biography", "en": ["I am a book or a text.", "I tell the story of a real person.", "I have the birth date, school years, career and achievements of that person.", "You read me to learn about a famous life."], "tr": ["Ben bir kitap ya da metinim.", "Gerçek bir kişinin hikâyesini anlatırım.", "Bende o kişinin doğum tarihi, okul yılları, kariyeri ve başarıları vardır.", "Ünlü bir hayatı öğrenmek için beni okursun."], "opts": [["biography", "📖", "biography", "biyografi"], ["newspaper", "📰", "newspaper", "gazete"], ["calendar", "📅", "calendar", "takvim"], ["letter", "✉️", "letter", "mektup"]]}, {"k": "scientist", "en": ["I am a person with a special job.", "I read a lot and ask many questions.", "I work in a laboratory.", "I do experiments and discover new things."], "tr": ["Özel bir işi olan bir kişiyim.", "Çok okurum ve birçok soru sorarım.", "Bir laboratuvarda çalışırım.", "Deneyler yapar ve yeni şeyler keşfederim."], "opts": [["scientist", "🔬", "scientist", "bilim insanı"], ["painter", "🎨", "painter", "ressam"], ["composer", "🎼", "composer", "besteci"], ["writer", "✍️", "writer", "yazar"]]}, {"k": "writer", "en": ["I am a person with a creative job.", "I use words, not paint or music.", "I sit at a desk with paper or a laptop.", "I write books, stories and poems."], "tr": ["Yaratıcı bir işi olan bir kişiyim.", "Boya ya da müzik değil, sözcükler kullanırım.", "Kâğıtla ya da bir dizüstü bilgisayarla bir masada otururum.", "Kitap, hikâye ve şiir yazarım."], "opts": [["writer", "✍️", "writer", "yazar"], ["painter", "🎨", "painter", "ressam"], ["composer", "🎼", "composer", "besteci"], ["scientist", "🔬", "scientist", "bilim insanı"]]}, {"k": "painter", "en": ["I am a person who makes art.", "I often work in a studio.", "I use brushes and a canvas.", "I make pictures with paint."], "tr": ["Sanat yapan bir kişiyim.", "Sık sık bir stüdyoda çalışırım.", "Fırçalar ve bir tuval kullanırım.", "Boyayla resim yaparım."], "opts": [["painter", "🎨", "painter", "ressam"], ["writer", "✍️", "writer", "yazar"], ["scientist", "🔬", "scientist", "bilim insanı"], ["composer", "🎼", "composer", "besteci"]]}, {"k": "composer", "en": ["I am a person with a musical job.", "Orchestras and singers need my work.", "I write notes on paper, not words.", "I write music and songs."], "tr": ["Müzikle ilgili bir işi olan bir kişiyim.", "Orkestralar ve şarkıcılar benim işime ihtiyaç duyar.", "Kâğıda sözcük değil, nota yazarım.", "Müzik ve şarkı yazarım."], "opts": [["composer", "🎼", "composer", "besteci"], ["painter", "🎨", "painter", "ressam"], ["writer", "✍️", "writer", "yazar"], ["scientist", "🔬", "scientist", "bilim insanı"]]}, {"k": "inventor", "en": ["I am a person who has many ideas.", "I often work in a workshop.", "I make machines.", "I make a new thing that did not exist before."], "tr": ["Birçok fikri olan bir kişiyim.", "Sık sık bir atölyede çalışırım.", "Makineler yaparım.", "Daha önce var olmayan yeni bir şey yaparım."], "opts": [["inventor", "💡", "inventor", "mucit"], ["pilot", "✈️", "pilot", "pilot"], ["farmer", "🌾", "farmer", "çiftçi"], ["chef", "🍳", "chef", "aşçı"]]}, {"k": "wedding", "en": ["I am a special day.", "Family and friends come to me and wear nice clothes.", "There is often music and dancing in me.", "Two people get married in me."], "tr": ["Ben özel bir günüm.", "Aile ve arkadaşlar bana gelir ve güzel kıyafetler giyer.", "Bende sık sık müzik ve dans vardır.", "İki kişi bende evlenir."], "opts": [["wedding", "💒", "wedding", "düğün"], ["birthday", "🎂", "birthday", "doğum günü"], ["graduation", "🎓", "graduation", "mezuniyet"], ["concert", "🎤", "concert", "konser"]]}, {"k": "graduation", "en": ["I am a ceremony.", "Students wear special hats and gowns in me.", "Teachers and families clap in me.", "You get your diploma in me when you finish your studies."], "tr": ["Ben bir törenim.", "Öğrenciler bende özel şapkalar ve cüppeler giyer.", "Öğretmenler ve aileler bende alkışlar.", "Öğrenimini bitirdiğinde diplomanı bende alırsın."], "opts": [["graduation", "🎓", "graduation", "mezuniyet"], ["wedding", "💒", "wedding", "düğün"], ["concert", "🎤", "concert", "konser"], ["race", "🏁", "race", "yarış"]]}, {"k": "midnight", "en": ["I am a time of the day.", "Most people are asleep in me.", "It is very dark in me.", "I am twelve o’clock at night."], "tr": ["Ben günün bir vaktiyim.", "İnsanların çoğu bende uykudadır.", "Bende hava çok karanlıktır.", "Ben gecenin saat on ikisiyim."], "opts": [["midnight", "🌙", "midnight", "gece yarısı"], ["noon", "☀️", "noon", "öğle"], ["sunrise", "🌅", "sunrise", "gün doğumu"], ["sunset", "🌇", "sunset", "gün batımı"]]}, {"k": "calendar", "en": ["I am a thing with many numbers.", "I have twelve parts, one for each month.", "You look at me to find the day and the date.", "I show days, weeks and months."], "tr": ["Birçok sayısı olan bir şeyim.", "On iki bölümüm var, her ay için bir tane.", "Günü ve tarihi bulmak için bana bakarsın.", "Günleri, haftaları ve ayları gösteririm."], "opts": [["calendar", "📅", "calendar", "takvim"], ["clock", "🕒", "clock", "saat"], ["newspaper", "📰", "newspaper", "gazete"], ["map", "🗺️", "map", "harita"]]}, {"k": "clock", "en": ["I am an object.", "I have two hands.", "I have numbers from 1 to 12.", "You look at me to tell the time."], "tr": ["Ben bir nesneyim.", "İki ibrem var.", "1’den 12’ye kadar sayılarım var.", "Saati söylemek için bana bakarsın."], "opts": [["clock", "🕒", "clock", "saat"], ["calendar", "📅", "calendar", "takvim"], ["ruler", "📏", "ruler", "cetvel"], ["compass", "🧭", "compass", "pusula"]]}, {"k": "medal", "en": ["I am small and round.", "I am made of metal and I hang on a ribbon.", "Athletes wear me round their necks.", "I can be gold, silver or bronze."], "tr": ["Küçük ve yuvarlağım.", "Metalden yapılmışım ve bir kurdeleden sarkarım.", "Sporcular beni boyunlarına takar.", "Altın, gümüş ya da bronz olabilirim."], "opts": [["medal", "🥇", "medal", "madalya"], ["ring", "💍", "ring", "yüzük"], ["watch", "⌚", "watch", "kol saati"], ["key", "🔑", "key", "anahtar"]]}, {"k": "university", "en": ["I am a big place of learning.", "Young adults study many subjects in me.", "I am the school after high school.", "You graduate from me and get a diploma."], "tr": ["Büyük bir öğrenim yeriyim.", "Genç yetişkinler bende birçok konu okur.", "Liseden sonraki okulum.", "Benden mezun olur ve diploma alırsın."], "opts": [["university", "🏛️", "university", "üniversite"], ["hospital", "🏥", "hospital", "hastane"], ["bakery", "🥖", "bakery", "fırın"], ["stadium", "🏟️", "stadium", "stadyum"]]}, {"k": "explorer", "en": ["I am a person who loves adventure.", "I travel to places that few people know.", "I use maps and a compass.", "I explore new lands and seas."], "tr": ["Macerayı seven bir kişiyim.", "Az sayıda insanın bildiği yerlere seyahat ederim.", "Harita ve pusula kullanırım.", "Yeni kıtaları ve denizleri keşfederim."], "opts": [["explorer", "🧭", "explorer", "kâşif"], ["baker", "🥖", "baker", "fırıncı"], ["driver", "🚌", "driver", "şoför"], ["singer", "🎤", "singer", "şarkıcı"]]}], ROUNDS = 10;
+  var order, qi, shown, wrong, score, locked;
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    order = shuffle(R.slice()).slice(0, ROUNDS); qi = 0; score = 0;
+    document.getElementById('sc').textContent = 0;
+    showR();
+  }
+  function addClue() {
+    var q = order[qi], i = shown;
+    var d = document.createElement('div'); d.className = 'cl';
+    d.innerHTML = '<div class="en">' + (i + 1) + '. ' + q.en[i] + '</div><div class="trl tr">' + q.tr[i] + '</div>';
+    document.getElementById('cls').appendChild(d);
+    shown++;
+    document.getElementById('nc').disabled = (shown >= q.en.length);
+    if (d.scrollIntoView) d.scrollIntoView({ block: 'nearest' });
+  }
+  function showR() {
+    var q = order[qi]; shown = 0; wrong = 0; locked = false;
+    document.getElementById('rn').textContent = qi + 1;
+    document.getElementById('cls').innerHTML = ''; document.getElementById('qmark').textContent = '?';
+    document.getElementById('fb').textContent = ''; document.getElementById('nxt').style.display = 'none';
+    document.getElementById('nc').style.display = ''; document.getElementById('nc').disabled = false;
+    addClue();
+    var box = document.getElementById('right'); box.innerHTML = '';
+    shuffle(q.opts.slice()).forEach(function (o) {
+      var b = document.createElement('button'); b.className = 'tile';
+      b.innerHTML = '<div class="e">' + o[1] + '</div><div class="p">' + o[2] + '</div><div class="t tr">' + o[3] + '</div>';
+      b.addEventListener('click', function () { guess(b, o[0]); });
+      box.appendChild(b);
+    });
+  }
+  function moreClue() { if (locked) return; if (shown < order[qi].en.length) addClue(); }
+  function guess(btn, k) {
+    if (locked || btn.classList.contains('bad')) return;
+    var q = order[qi];
+    if (k === q.k) {
+      locked = true;
+      var pts = Math.max(0, (q.en.length - shown + 1) - wrong); score += pts;
+      document.getElementById('sc').textContent = score;
+      btn.classList.add('good');
+      var o = q.opts[0]; document.getElementById('qmark').textContent = o[1];
+      document.getElementById('fb').textContent = '✔ I am ' + (/^[aeiou]/.test(o[2]) ? 'an ' : 'a ') + o[2] + '!  +' + pts + (pts === 1 ? ' point' : ' points');
+      document.getElementById('nc').style.display = 'none';
+      var nx = document.getElementById('nxt'); nx.textContent = (qi === order.length - 1) ? 'Finish' : 'Next'; nx.style.display = 'inline-block';
+    } else {
+      wrong++; btn.classList.add('bad', 'shake');
+      document.getElementById('fb').textContent = 'Not this one. Try again!';
+    }
+  }
+  function nextR() {
+    qi++;
+    if (qi >= order.length) {
+      var max = ROUNDS * 4;
+      document.getElementById('win-title').textContent = score >= 32 ? 'Super Detective!' : (score >= 22 ? 'Well Done!' : 'Good Try!');
+      document.getElementById('win-stats').textContent = 'Points: ' + score + ' / ' + max;
+      document.getElementById('win-screen').style.display = 'flex'; return;
+    }
+    showR();
+  }
+</script>
+<div id="ln-screen">
+  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-grid"></div>
+</div>
+<script>
+(function () {
+  var LN = [["Life Events", "Hayat Olayları", [["👶", "be born", "doğmak"], ["🌱", "grow up", "büyümek"], ["🏫", "go to school", "okula gitmek"], ["🎓", "graduate", "mezun olmak"], ["🚚", "move", "taşınmak"], ["🏠", "stay", "kalmak"], ["💍", "get engaged", "nişanlanmak"], ["💒", "get married", "evlenmek"], ["🍼", "raise a child", "çocuk yetiştirmek"], ["🏖️", "retire", "emekli olmak"], ["🕊️", "die", "ölmek"]]], ["Career and Success", "Kariyer ve Başarı", [["📖", "biography", "biyografi"], ["💼", "career", "kariyer"], ["🏆", "award", "ödül"], ["🥇", "prize", "ödül, armağan"], ["🏅", "medal", "madalya"], ["🎯", "achievement", "başarı"], ["💡", "invent", "icat etmek"], ["🔭", "discover", "keşfetmek"], ["🔬", "scientist", "bilim insanı"], ["✍️", "writer", "yazar"], ["🎨", "painter", "ressam"], ["🎼", "composer", "besteci"], ["⭐", "famous", "ünlü"], ["🧠", "genius", "dahi"], ["✨", "brilliant", "parlak, çok zeki"]]], ["Telling the Time", "Saati Söyleme", [["🕖", "It’s seven o’clock.", "Saat yedi."], ["🕡", "It’s half past six.", "Saat altı buçuk."], ["⏰", "It’s a quarter past three.", "Saat üçü çeyrek geçiyor."], ["⏰", "It’s a quarter to four.", "Saat dörde çeyrek var."], ["⏰", "It’s five past five.", "Saat beşi beş geçiyor."], ["⏰", "It’s ten to ten.", "Saat ona on var."], ["❓", "What time is it?", "Saat kaç?"], ["🌅", "in the morning", "sabah"], ["🌙", "at night", "geceleyin"], ["🕛", "midnight", "gece yarısı"]]], ["Days and Dates", "Gün ve Tarihler", [["🗓️", "month", "ay"], ["📆", "year", "yıl"], ["🎂", "birthday", "doğum günü"], ["🥇", "first (1st)", "birinci (1.)"], ["🥈", "second (2nd)", "ikinci (2.)"], ["🥉", "third (3rd)", "üçüncü (3.)"], ["🔟", "tenth (10th)", "onuncu (10.)"], ["📅", "on the twelfth of March", "12 Mart’ta"], ["📅", "on Monday", "pazartesi günü"], ["🗓️", "in May", "mayıs ayında"], ["📆", "nineteen ninety (1990)", "1990"], ["📆", "two thousand and ten (2010)", "2010"], ["⌛", "ago", "önce"], ["⏳", "later", "sonra"]]]];
+  function lnShow(i) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
+    document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
+      var wide = it[1].length > 26 && it[0].indexOf('<svg') < 0;
+      return '<div class="ln-card' + (wide ? ' wide' : '') + '"><div class="le">' + it[0] + '</div><div class="en">' + it[1] + '</div><div class="trl">' + it[2] + '</div></div>';
+    }).join('');
+    document.getElementById('ln-grid').scrollTop = 0;
+  }
+  window.lnOpen = function () {
+    var tabs = document.getElementById('ln-tabs'); tabs.innerHTML = '';
+    LN.forEach(function (s, i) { var b = document.createElement('button'); b.className = 'ln-tab'; b.textContent = s[0]; b.onclick = function () { lnShow(i); }; tabs.appendChild(b); });
+    document.getElementById('ln-screen').style.display = 'flex'; lnShow(0);
+  };
+  window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+</body>
+</html>
