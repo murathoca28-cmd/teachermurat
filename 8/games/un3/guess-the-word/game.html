@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guess the Word</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 6px 12px 12px; }
+  #stage { flex: 1 1 auto; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding: 4px 12px; text-align: center; }
+  #hearts { font-size: clamp(1.4rem, 5vh, 2.6rem); letter-spacing: .1em; }
+  #hint { display: flex; align-items: center; gap: 16px; justify-content: center; }
+  #pic { font-size: clamp(3rem, 15vh, 7rem); line-height: 1; } #pic svg { width: clamp(3.4rem, 15vh, 7rem); height: clamp(3.4rem, 15vh, 7rem); display: block; }
+  #mean { text-align: left; font-weight: 900; font-size: clamp(1.2rem, 3.2vw, 2.4rem); color: #0B5C56; line-height: 1.15; }
+  #catpill { display: inline-block; font-size: clamp(.8rem, 1.7vw, 1.2rem); background: #FFD23F; border: 3px solid #0B2F2C; border-radius: 999px; padding: 0 12px; color: #0B2F2C; }
+  #slots { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+  .sl { width: clamp(30px, 6.4vw, 64px); height: clamp(40px, 8.4vh, 72px); border-bottom: 8px solid #0B2F2C; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: clamp(1.4rem, 4vw, 2.8rem); }
+  .sl.miss { color: #D62828; }
+  #keys { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .k { width: clamp(38px, 7vw, 78px); height: clamp(40px, 8vh, 70px); font-weight: 900; font-size: clamp(1.1rem, 3vw, 2.2rem); background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 12px; box-shadow: 0 4px 0 #0B2F2C; color: #0B2F2C; padding: 0; }
+  .k:active { transform: translateY(3px); box-shadow: 0 1px 0 #0B2F2C; }
+  .k.ok { background: #7DDC9A; border-color: #0A7A2F; box-shadow: none; } .k.no { background: #FFD6D6; border-color: #D62828; box-shadow: none; color: #9A9A9A; }
+  .k:disabled { cursor: default; }
+  #fb { min-height: 1.3em; text-align: center; font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.8rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #next { display: none; align-self: center; font-size: clamp(1.1rem, 2.6vw, 1.7rem); }
+</style>
+<style id="svg-fix">#pic svg { width: clamp(3.4rem, 15vh, 7rem); height: clamp(3.4rem, 15vh, 7rem); display: block; }</style>
+<style id="ln-css">
+.ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
+:where(.tile .e, .cell .e, .wc .e, .fe, .ct, #qmark, .w .e, .word .e, #pic) svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+#ln-screen { display: none; position: fixed; inset: 0; z-index: 70; background: #0E8F86; flex-direction: column; gap: 8px; padding: 8px 10px 10px; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; color: #0B2F2C; }
+#ln-top { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#ln-title { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.4rem); color: #fff; text-shadow: 3px 3px 0 #0B2F2C; margin-right: 6px; }
+#ln-tabs { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.ln-tab { font-weight: 900; font-size: clamp(.9rem, 2.1vw, 1.5rem); padding: .05em .8em; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; cursor: pointer; font-family: inherit; }
+.ln-tab.act { background: #FFD23F; border-color: #D62828; }
+#ln-close { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.5rem); padding: .05em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #D62828; color: #fff; cursor: pointer; font-family: inherit; }
+#ln-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 17vw, 240px), 1fr)); gap: 10px; align-content: start; padding: 2px; }
+.ln-card { background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ln-card.wide { grid-column: span 2; }
+.ln-card .le { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1.1; }
+.ln-card .le svg { width: clamp(2.4rem, 8vh, 4rem); height: clamp(2.4rem, 8vh, 4rem); display: block; }
+.ln-card .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.6rem); line-height: 1.15; }
+.ln-card .trl { font-weight: 800; font-size: clamp(.8rem, 1.7vw, 1.15rem); color: #0B5C56; }
+</style>
+<style id="phone-short">
+@media (max-height: 480px) {
+  #start-screen, #win-screen { gap: 1.2vh; padding: 6px 10px; }
+  .title { font-size: 2rem; } .title br { display: none; } .subtitle { font-size: 1rem; } .preview { font-size: 1.6rem; }
+  .big-btn { font-size: 1.25rem; padding: .12em 1em; border-width: 4px; box-shadow: 0 3px 0 #0B2F2C; }
+  .win-title { font-size: 2rem; } .win-stats { font-size: 1.05rem; }
+  .og, .ob { font-size: 1rem; } .ob { border-width: 3px; padding: 0 .6em; }
+  #topbar { padding-top: 4px; padding-bottom: 2px; gap: 8px; }
+  .stat, .restart-btn { font-size: .95rem; border-width: 3px; padding: 0 12px; }
+}
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Guess <br>the Word</h1>
+  <p class="subtitle">Pick letters. Do not lose your hearts!</p>
+  <div class="preview">❤️ ❤️ ❤️</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Word: <span id="rn">1</span>/8</div>
+  <div class="stat">Score: <span id="sc">0</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="stage">
+    <div id="hearts"></div>
+    <div id="hint"><div id="pic"></div><div id="mean"><span id="catpill"></span><div id="tr-mean" class="tr"></div></div></div>
+    <div id="slots"></div>
+  </div>
+  <div id="keys"></div>
+  <div id="fb"></div>
+  <button class="big-btn" id="next" onclick="nextWord()">Next</button>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  var TR = true, fbParts = null;
+  function setFb(p, tr) { fbParts = [p, tr]; renderFb(); }
+  function renderFb() { var f = document.getElementById('fb'); if (f) f.textContent = fbParts ? fbParts[0] + (TR && fbParts[1] ? ' ' + fbParts[1] : '') : ''; }
+  function toggleTR() { TR = !TR; document.body.classList.toggle('no-tr', !TR); document.getElementById('trbtn').textContent = 'Turkish: ' + (TR ? 'On' : 'Off'); renderFb(); }
+  var W = [["knead", "🥖", "yoğurmak", "Verb"], ["whisk", "🥚", "çırpmak", "Verb"], ["grate", "🧀", "rendelemek", "Verb"], ["boil", "♨️", "kaynatmak", "Verb"], ["bake", "🍪", "fırında pişirmek", "Verb"], ["sprinkle", "🥜", "serpmek", "Verb"], ["pour", "🥛", "dökmek", "Verb"], ["mash", "🥔", "ezmek", "Verb"], ["saucepan", "🥘", "sos tenceresi", "Tool"], ["blender", "🥤", "blender", "Tool"], ["thermometer", "🌡️", "termometre", "Tool"], ["spoon", "🥄", "kaşık", "Tool"], ["knife", "🔪", "bıçak", "Tool"], ["bowl", "🥣", "kase", "Tool"], ["timer", "⏲️", "zamanlayıcı", "Tool"], ["oven", "🔥", "fırın", "Tool"], ["flour", "🌾", "un", "Food"], ["sugar", "🍬", "şeker", "Food"], ["lemon", "🍋", "limon", "Food"], ["parsley", "🌿", "maydanoz", "Food"], ["honey", "🍯", "bal", "Food"], ["recipe", "📖", "tarif", "Food"], ["dessert", "🍰", "tatlı", "Food"], ["delicious", "😋", "lezzetli", "Food"]];
+  var order, qi, score, lives, cur, guessed, over;
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    order = shuffle(W.slice()).slice(0, 8); qi = 0; score = 0; document.getElementById('sc').textContent = 0; showWord();
+  }
+  function hearts() { var s = ''; for (var i = 0; i < 6; i++) s += (i < lives ? '❤️' : '🖤'); document.getElementById('hearts').textContent = s; }
+  function showWord() {
+    cur = order[qi]; lives = 6; guessed = {}; over = false;
+    document.getElementById('rn').textContent = qi + 1;
+    document.getElementById('pic').innerHTML = cur[1]; document.getElementById('catpill').textContent = cur[3]; document.getElementById('tr-mean').textContent = cur[2];
+    fbParts = null; renderFb(); document.getElementById('next').style.display = 'none'; hearts();
+    var kb = document.getElementById('keys'); kb.innerHTML = '';
+    'abcdefghijklmnopqrstuvwxyz'.split('').forEach(function (ch) {
+      var b = document.createElement('button'); b.className = 'k'; b.textContent = ch.toUpperCase(); b.id = 'k-' + ch;
+      b.addEventListener('click', function () { pick(ch); }); kb.appendChild(b);
+    });
+    renderSlots(false);
+  }
+  function renderSlots(reveal) {
+    var sb = document.getElementById('slots'); sb.innerHTML = '';
+    cur[0].split('').forEach(function (ch) {
+      var d = document.createElement('div'); d.className = 'sl';
+      if (guessed[ch]) d.textContent = ch.toUpperCase(); else if (reveal) { d.textContent = ch.toUpperCase(); d.classList.add('miss'); }
+      sb.appendChild(d);
+    });
+  }
+  function pick(ch) {
+    if (over || guessed[ch] !== undefined) return;
+    var hit = cur[0].indexOf(ch) >= 0; guessed[ch] = hit;
+    var k = document.getElementById('k-' + ch); k.classList.add(hit ? 'ok' : 'no'); k.disabled = true;
+    if (!hit) { lives--; hearts(); }
+    renderSlots(false);
+    var all = cur[0].split('').every(function (c) { return guessed[c]; });
+    if (all) { over = true; score++; document.getElementById('sc').textContent = score; setFb('✔ ' + cur[0] + ' = ' + cur[2], ''); showNext(); }
+    else if (lives <= 0) { over = true; renderSlots(true); setFb('✘ The word is "' + cur[0] + '".', cur[2]); showNext(); }
+  }
+  function showNext() { var nx = document.getElementById('next'); nx.textContent = (qi === order.length - 1) ? 'Finish' : 'Next'; nx.style.display = 'inline-block'; }
+  document.addEventListener('keydown', function (e) { if (/^[a-z]$/i.test(e.key) && document.getElementById('start-screen').style.display === 'none') pick(e.key.toLowerCase()); });
+  function nextWord() {
+    qi++;
+    if (qi >= order.length) {
+      document.getElementById('win-title').textContent = score >= 7 ? 'Word Master!' : (score >= 5 ? 'Well Done!' : 'Good Try!');
+      document.getElementById('win-stats').textContent = 'Score: ' + score + ' / ' + order.length;
+      document.getElementById('win-screen').style.display = 'flex'; return;
+    }
+    showWord();
+  }
+</script>
+<div id="ln-screen">
+  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-grid"></div>
+</div>
+<script>
+(function () {
+  var LN = [["Cooking Verbs", "Pişirme Fiilleri", [["🍅", "dice", "küp küp doğramak"], ["🥔", "mash", "ezmek"], ["🍎", "peel", "soymak"], ["🔪", "slice", "dilimlemek"], ["🥕", "chop", "doğramak"], ["♨️", "boil", "kaynatmak"], ["🍳", "fry", "kızartmak"], ["🍪", "bake", "fırında pişirmek"], ["🍗", "roast", "fırında kavurmak"], ["🥪", "spread", "sürmek"], ["🥄", "stir", "karıştırmak"], ["🥣", "mix", "karıştırmak, birleştirmek"], ["🥚", "whisk", "çırpmak"], ["🥖", "knead", "yoğurmak"], ["🧀", "grate", "rendelemek"], ["🥛", "pour", "dökmek"], ["🥜", "sprinkle", "serpmek"], ["➕", "add", "eklemek"], ["🔥", "heat", "ısıtmak"], ["🍽️", "serve", "servis etmek"]]], ["Kitchen Tools", "Mutfak Aletleri", [["🍳", "frying pan", "tava"], ["🍲", "pot", "tencere"], ["🥘", "saucepan", "sos tenceresi"], ["🥣", "bowl", "kase"], ["🔪", "knife", "bıçak"], ["🥄", "spoon", "kaşık"], ["🧀", "grater", "rende"], ["🔥", "oven", "fırın"], ["🍴", "fork", "çatal"], ["🥚", "whisk", "çırpma teli"], ["🍞", "baking tray", "fırın tepsisi"], ["🥤", "blender", "blender"], ["⏲️", "timer", "zamanlayıcı"], ["🌡️", "thermometer", "termometre"]]], ["Ingredients and Amounts", "Malzemeler ve Ölçüler", [["🌾", "flour", "un"], ["🍬", "sugar", "şeker"], ["🧂", "salt", "tuz"], ["🌶️", "pepper", "biber"], ["🥛", "milk", "süt"], ["🧀", "cheese", "peynir"], ["🍯", "honey", "bal"], ["🍋", "lemon", "limon"], ["🍅", "tomato", "domates"], ["🥔", "potato", "patates"], ["🥕", "carrot", "havuç"], ["🌿", "parsley", "maydanoz"], ["🥖", "dough", "hamur"], ["🥄", "a tablespoon of", "bir yemek kaşığı"], ["🥄", "a teaspoon of", "bir çay kaşığı"], ["🧂", "a pinch of", "bir tutam"], ["🍰", "a piece of", "bir parça"]]]];
+  function lnShow(i) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
+    document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
+      var wide = it[1].length > 26 && it[0].indexOf('<svg') < 0;
+      return '<div class="ln-card' + (wide ? ' wide' : '') + '"><div class="le">' + it[0] + '</div><div class="en">' + it[1] + '</div><div class="trl">' + it[2] + '</div></div>';
+    }).join('');
+    document.getElementById('ln-grid').scrollTop = 0;
+  }
+  window.lnOpen = function () {
+    var tabs = document.getElementById('ln-tabs'); tabs.innerHTML = '';
+    LN.forEach(function (s, i) { var b = document.createElement('button'); b.className = 'ln-tab'; b.textContent = s[0]; b.onclick = function () { lnShow(i); }; tabs.appendChild(b); });
+    document.getElementById('ln-screen').style.display = 'flex'; lnShow(0);
+  };
+  window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+</body>
+</html>

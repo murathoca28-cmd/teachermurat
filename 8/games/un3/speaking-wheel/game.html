@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speaking Wheel</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 14px; padding: 8px 14px 12px; align-items: stretch; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #wheelbox { position: relative; flex: 0 0 46%; min-width: 0; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  @media (orientation: portrait) { #wheelbox { flex: 0 0 50%; } }
+  #wheelwrap { position: relative; flex: 1; min-height: 0; aspect-ratio: 1; max-width: 100%; }
+  #wheel { position: absolute; inset: 0; pointer-events: none; transition: transform 4.2s cubic-bezier(.12, .7, .1, 1); }
+  #wheel svg { width: 100%; height: 100%; display: block; }
+  #pointer { position: absolute; left: 50%; top: -2%; width: 11%; transform: translateX(-50%); z-index: 3; }
+  #pointer svg { width: 100%; display: block; }
+  #spin { font-size: clamp(1.4rem, 3.4vw, 2.6rem); padding: .15em 1.2em; }
+  #spin:disabled { background: #B8C2C1; color: #5B6B69; cursor: not-allowed; box-shadow: 0 6px 0 #5B6B69; }
+  #card { flex: 1; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 22px; padding: 10px 20px; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+  #cat { align-self: flex-start; color: #fff; font-weight: 900; font-size: clamp(1.1rem, 2.6vw, 2rem); padding: 0 20px; border-radius: 999px; border: 4px solid #0B2F2C; }
+  #q-en { font-weight: 900; font-size: clamp(1.5rem, 4vw, 3.4rem); line-height: 1.15; }
+  #q-tr { font-weight: 800; font-size: clamp(1rem, 2.2vw, 1.7rem); color: #0B5C56; }
+  #start { font-weight: 800; font-size: clamp(1.1rem, 2.6vw, 2rem); color: #0B2F2C; background: #FFF3B0; border: 4px solid #0B2F2C; border-radius: 14px; padding: 6px 14px; }
+  #start b { color: #D62828; }
+  #qbox { flex-direction: column; gap: clamp(10px, 2vh, 18px); }
+  #q-en { margin: 2px 0 0; }
+  #showans { align-self: flex-start; font-size: clamp(1rem, 2.4vw, 1.8rem); }
+  #ans { display: none; background: #C8F7D4; border: 4px solid #0A7A2F; border-radius: 14px; padding: 8px 14px; }
+  #ans b { color: #0A7A2F; }
+  #a-en { font-weight: 900; font-size: clamp(1.2rem, 3vw, 2.4rem); line-height: 1.2; }
+  #a-tr { font-weight: 800; font-size: clamp(.95rem, 2vw, 1.5rem); color: #0B5C56; }
+  #idle { font-weight: 900; font-size: clamp(1.6rem, 4.4vw, 3.6rem); text-align: center; line-height: 1.2; }
+</style>
+<style id="ln-css">
+.ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
+:where(.tile .e, .cell .e, .wc .e, .fe, .ct, #qmark, .w .e, .word .e, #pic) svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+#ln-screen { display: none; position: fixed; inset: 0; z-index: 70; background: #0E8F86; flex-direction: column; gap: 8px; padding: 8px 10px 10px; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; color: #0B2F2C; }
+#ln-top { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#ln-title { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.4rem); color: #fff; text-shadow: 3px 3px 0 #0B2F2C; margin-right: 6px; }
+#ln-tabs { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.ln-tab { font-weight: 900; font-size: clamp(.9rem, 2.1vw, 1.5rem); padding: .05em .8em; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; cursor: pointer; font-family: inherit; }
+.ln-tab.act { background: #FFD23F; border-color: #D62828; }
+#ln-close { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.5rem); padding: .05em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #D62828; color: #fff; cursor: pointer; font-family: inherit; }
+#ln-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 17vw, 240px), 1fr)); gap: 10px; align-content: start; padding: 2px; }
+.ln-card { background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ln-card.wide { grid-column: span 2; }
+.ln-card .le { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1.1; }
+.ln-card .le svg { width: clamp(2.4rem, 8vh, 4rem); height: clamp(2.4rem, 8vh, 4rem); display: block; }
+.ln-card .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.6rem); line-height: 1.15; }
+.ln-card .trl { font-weight: 800; font-size: clamp(.8rem, 1.7vw, 1.15rem); color: #0B5C56; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Speaking<br>Wheel</h1>
+  <p class="subtitle">Spin, ask and answer in pairs!</p>
+  <div class="preview">🎡 🍳 🍰</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Spins: <span id="sp">0</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="wheelbox">
+    <div id="wheelwrap">
+      <div id="wheel"></div>
+      <div id="pointer"><svg viewBox="0 0 60 80"><path d="M6 6 H54 L30 74 Z" fill="#D62828" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/></svg></div>
+    </div>
+    <button class="big-btn" id="spin" onclick="spin()">SPIN</button>
+  </div>
+  <div id="card">
+    <div id="idle">Spin the wheel!<div class="tr" style="font-size:.5em;color:#0B5C56;font-weight:800">Çarkı çevir!</div></div>
+    <div id="qbox" style="display:none">
+      <div id="cat"></div>
+      <div id="q-en"></div>
+      <div id="q-tr" class="tr"></div>
+      <div id="start"></div>
+      <button class="restart-btn" id="showans" onclick="toggleAns()">Show answer</button>
+      <div id="ans"><b>Sample answer:</b><div id="a-en"></div><div id="a-tr" class="tr"></div></div>
+    </div>
+  </div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  var TR = true, fbParts = null;
+  function setFb(p, tr) { fbParts = [p, tr]; renderFb(); }
+  function renderFb() { var f = document.getElementById('fb'); if (f) f.textContent = fbParts ? fbParts[0] + (TR && fbParts[1] ? ' ' + fbParts[1] : '') : ''; }
+  function toggleTR() { TR = !TR; document.body.classList.toggle('no-tr', !TR); document.getElementById('trbtn').textContent = 'Turkish: ' + (TR ? 'On' : 'Off'); renderFb(); }
+  var WHEEL = [["🔪", "Cooking Verbs", "#D62828", [["What do you do to a potato before you boil it?", "Bir patatesi kaynatmadan önce ona ne yaparsın?", "I … it.", "I peel it and cut it into pieces.", "Onu soyar ve parçalara keserim."], ["What can you do with cheese?", "Peynirle ne yapabilirsin?", "I can … it.", "I can grate it and put it on pasta.", "Onu rendeleyip makarnanın üzerine koyabilirim."], ["How do you cook an egg?", "Bir yumurtayı nasıl pişirirsin?", "I … it.", "I boil it for ten minutes.", "Onu on dakika haşlarım."], ["What do you bake in the oven?", "Fırında ne pişirirsin?", "I bake …", "I bake cakes and cookies.", "Kek ve kurabiye pişiririm."], ["What do you do with dough?", "Hamurla ne yaparsın?", "I … it.", "I knead it with my hands.", "Onu ellerimle yoğururum."], ["Which cooking verb do you like most?", "En çok hangi pişirme fiilini seversin?", "I like to …", "I like to chop vegetables.", "Sebzeleri doğramayı severim."]]], ["🍲", "Kitchen Tools", "#1F5FBF", [["What do you use to cut bread?", "Ekmeği kesmek için ne kullanırsın?", "I use a …", "I use a sharp knife.", "Keskin bir bıçak kullanırım."], ["What do you use to fry an egg?", "Yumurta kızartmak için ne kullanırsın?", "I use a …", "I use a frying pan.", "Bir tava kullanırım."], ["Where do you cook soup?", "Çorbayı nerede pişirirsin?", "I cook it in a …", "I cook it in a big pot.", "Onu büyük bir tencerede pişiririm."], ["What can you use to make cheese into thin pieces?", "Peyniri ince parçalar haline getirmek için ne kullanabilirsin?", "I can use a …", "I can use a grater.", "Bir rende kullanabilirim."], ["What do you use to beat eggs?", "Yumurtaları çırpmak için ne kullanırsın?", "I use a …", "I use a whisk.", "Bir çırpma teli kullanırım."], ["What do you need to bake a cake?", "Bir kek pişirmek için neye ihtiyacın var?", "I need an …", "I need an oven and a baking tray.", "Bir fırına ve bir fırın tepsisine ihtiyacım var."]]], ["🍋", "Ingredients", "#0A7A2F", [["What are the ingredients of a pizza?", "Bir pizzanın malzemeleri nelerdir?", "The ingredients are …", "The ingredients are flour, tomatoes and cheese.", "Malzemeler un, domates ve peynirdir."], ["What do you put in your tea?", "Çayına ne koyarsın?", "I put … in my tea.", "I put a little sugar and lemon in my tea.", "Çayıma biraz şeker ve limon koyarım."], ["What do you need to make bread?", "Ekmek yapmak için neye ihtiyacın var?", "I need …", "I need flour, water, yeast and salt.", "Una, suya, mayaya ve tuza ihtiyacım var."], ["Which ingredient is sweet?", "Hangi malzeme tatlıdır?", "… is sweet.", "Honey is sweet.", "Bal tatlıdır."], ["Which ingredient is sour?", "Hangi malzeme ekşidir?", "… is sour.", "Lemon is sour.", "Limon ekşidir."], ["What ingredients do you always have at home?", "Evde her zaman hangi malzemeler bulunur?", "We always have …", "We always have eggs, milk and rice.", "Evde her zaman yumurta, süt ve pirinç bulunur."]]], ["📋", "Recipe Steps", "#E07B00", [["What do you do first when you make a salad?", "Salata yaparken önce ne yaparsın?", "First, I …", "First, I wash the vegetables.", "Önce sebzeleri yıkarım."], ["What do you do next?", "Ardından ne yaparsın?", "Next, I …", "Next, I cut them into small pieces.", "Ardından onları küçük parçalara keserim."], ["What do you add after that?", "Bundan sonra ne eklersin?", "After that, I add …", "After that, I add some oil and lemon juice.", "Bundan sonra biraz yağ ve limon suyu eklerim."], ["How do you finish the recipe?", "Tarifi nasıl bitirirsin?", "Finally, I …", "Finally, I serve it fresh.", "Son olarak onu taze servis ederim."], ["Tell me the steps of making a sandwich.", "Bana bir sandviç yapmanın adımlarını anlat.", "First, … Then, … Finally, …", "First, I slice the bread. Then, I add cheese. Finally, I eat it.", "Önce ekmeği dilimlerim. Sonra peynir eklerim. Son olarak onu yerim."], ["Why is the order of the steps important?", "Adımların sırası neden önemlidir?", "Because …", "Because the food may not be tasty in the wrong order.", "Çünkü yanlış sırada yemek lezzetli olmayabilir."]]], ["❤️", "Preferences", "#7B2CBF", [["Do you prefer cooking meat or vegetables?", "Et mi sebze mi pişirmeyi tercih edersin?", "I prefer cooking …", "I prefer cooking vegetables.", "Sebze pişirmeyi tercih ederim."], ["Do you prefer baking or frying?", "Fırında pişirmeyi mi kızartmayı mı tercih edersin?", "I prefer …", "I prefer baking because it is healthier.", "Fırında pişirmeyi tercih ederim çünkü daha sağlıklı."], ["Do you prefer sweet or salty food?", "Tatlı mı tuzlu yiyecekleri mi tercih edersin?", "I prefer … food.", "I prefer salty food.", "Tuzlu yiyecekleri tercih ederim."], ["What do you love cooking?", "Ne pişirmeyi çok seversin?", "I love cooking …", "I love cooking pasta.", "Makarna pişirmeyi çok severim."], ["Do you prefer tea or coffee?", "Çay mı kahve mi tercih edersin?", "I prefer …", "I prefer tea with lemon.", "Limonlu çayı tercih ederim."], ["Do you prefer eating at home or in a restaurant?", "Evde mi yoksa restoranda mı yemeyi tercih edersin?", "I prefer eating …", "I prefer eating at home.", "Evde yemeyi tercih ederim."]]], ["❓", "Cooking Questions", "#0B7285", [["How long does it take to boil an egg?", "Bir yumurtayı haşlamak ne kadar sürer?", "It takes …", "It takes about ten minutes.", "Yaklaşık on dakika sürer."], ["What is the cooking time for a cake?", "Bir kek için pişirme süresi nedir?", "The cooking time is …", "The cooking time is about forty minutes.", "Pişirme süresi yaklaşık kırk dakikadır."], ["What is the temperature of the oven?", "Fırının sıcaklığı kaç derece?", "It is … degrees.", "It is one hundred and eighty degrees.", "Yüz seksen derece."], ["Should I preheat the oven?", "Fırını önceden ısıtmalı mıyım?", "Yes, you should. / No, you shouldn’t.", "Yes, you should. Heat it for ten minutes.", "Evet, ısıtmalısın. Onu on dakika ısıt."], ["What can I use to cook pasta?", "Makarna pişirmek için ne kullanabilirim?", "You can use a …", "You can use a big pot.", "Büyük bir tencere kullanabilirsin."], ["Do I use a knife or a grater for carrots?", "Havuçlar için bıçak mı rende mi kullanırım?", "You can use …", "You can use a grater for carrot salad.", "Havuç salatası için rende kullanabilirsin."]]], ["🥣", "Amounts", "#B5179E", [["How much sugar should I use for a cake?", "Bir kek için ne kadar şeker kullanmalıyım?", "You should use …", "You should use two tablespoons of sugar.", "İki yemek kaşığı şeker kullanmalısın."], ["How much salt do you put in soup?", "Çorbaya ne kadar tuz koyarsın?", "I put … of salt.", "I put a pinch of salt.", "Bir tutam tuz koyarım."], ["How many eggs do you need for pancakes?", "Krep için kaç yumurtaya ihtiyacın var?", "I need … eggs.", "I need two eggs.", "İki yumurtaya ihtiyacım var."], ["How much milk should I add?", "Ne kadar süt eklemeliyim?", "You should add …", "You should add a glass of milk.", "Bir bardak süt eklemelisin."], ["How much flour do you need for bread?", "Ekmek için ne kadar una ihtiyacın var?", "I need …", "I need five hundred grams of flour.", "Beş yüz gram una ihtiyacım var."], ["Is a tablespoon bigger than a teaspoon?", "Bir yemek kaşığı bir çay kaşığından büyük müdür?", "Yes, it is. / No, it isn’t.", "Yes, it is bigger.", "Evet, daha büyüktür."]]], ["🍰", "Favourite Dish", "#4D7C0F", [["What is your favourite dish?", "En sevdiğin yemek nedir?", "My favourite dish is …", "My favourite dish is pizza.", "En sevdiğim yemek pizza."], ["What are the ingredients of this dish?", "Bu yemeğin malzemeleri nelerdir?", "The ingredients are …", "The ingredients are dough, cheese and tomatoes.", "Malzemeleri hamur, peynir ve domatestir."], ["Is it easy or difficult to make?", "Yapması kolay mı zor mu?", "It is …", "It is easy to make.", "Yapması kolay."], ["How long does it take to make it?", "Onu yapmak ne kadar sürer?", "It takes …", "It takes about thirty minutes.", "Yaklaşık otuz dakika sürer."], ["Who cooks this dish at your home?", "Bu yemeği evinde kim pişirir?", "… cooks it.", "My mother cooks it on Sundays.", "Annem onu pazar günleri pişirir."], ["When do you eat it?", "Onu ne zaman yersin?", "I eat it …", "I eat it at birthday parties.", "Onu doğum günü partilerinde yerim."]]]];
+
+  /* Build the wheel. Labels run outward from the hub (r = TEXT_START) to just
+     before the emoji (r = TEXT_END), so they never touch the centre circle or the emoji.
+     Long names are split into two lines and the font size is fitted to the space. */
+  (function buildWheel() {
+    var R = 240, TEXT_START = 46, TEXT_END = 198, MID = 122, EMOJI_BASE = 210, EMOJI_SIZE = 26;
+    var CHAR_W = 0.6;
+    var n = WHEEL.length, step = 360 / n, FONT = "Segoe UI, Verdana, Arial, sans-serif";
+    var GFS = 18; WHEEL.forEach(function (c) { var nm = c[1].replace(/^My /, ''), ls = [nm]; if (nm.indexOf(' ') > -1 && nm.length > 16) ls = nm.split(' '); var st = ls.length > 1 ? 56 : TEXT_START, av = TEXT_END - st, ml = Math.max.apply(null, ls.map(function (s) { return s.length; })); GFS = Math.min(GFS, av / (CHAR_W * ml)); });
+    var out = '<svg viewBox="-250 -250 500 500" xmlns="http://www.w3.org/2000/svg">';
+    for (var i = 0; i < n; i++) {
+      var c = WHEEL[i], a0 = i * step * Math.PI / 180, a1 = (i + 1) * step * Math.PI / 180;
+      var x0 = (R * Math.sin(a0)).toFixed(1), y0 = (-R * Math.cos(a0)).toFixed(1);
+      var x1 = (R * Math.sin(a1)).toFixed(1), y1 = (-R * Math.cos(a1)).toFixed(1);
+      out += '<path d="M0 0 L' + x0 + ' ' + y0 + ' A' + R + ' ' + R + ' 0 0 1 ' + x1 + ' ' + y1 + ' Z" fill="' + c[2] + '" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/>';
+      var name = c[1].replace(/^My /, ''), lines = [name];
+      if (name.indexOf(' ') > -1 && name.length > 16) lines = name.split(' ');
+      var start = lines.length > 1 ? 56 : TEXT_START, avail = TEXT_END - start;
+      var cAngle = i * step + step / 2, flip = cAngle > 180;
+      var maxLen = Math.max.apply(null, lines.map(function (s) { return s.length; }));
+      var fs = GFS;
+      out += '<g transform="rotate(' + cAngle + ')">';
+      var eCy = EMOJI_BASE + EMOJI_SIZE * 0.22;
+      out += '<text x="0" y="-' + EMOJI_BASE + '"' + (flip ? ' transform="rotate(180 0 -' + eCy.toFixed(1) + ')"' : '') + ' text-anchor="middle" font-size="' + EMOJI_SIZE + '">' + c[0] + '</text>';
+      for (var k = 0; k < lines.length; k++) {
+        var off = (k - (lines.length - 1) / 2) * fs * 1.2;
+        var tf = flip
+          ? 'translate(' + (-off).toFixed(1) + ',-' + MID + ') rotate(90)'
+          : 'translate(' + off.toFixed(1) + ',-' + MID + ') rotate(-90)';
+        out += '<text transform="' + tf + '" x="0" y="0" text-anchor="middle" dominant-baseline="central" font-size="' + fs + '" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="4" paint-order="stroke" stroke-linejoin="round" font-family="' + FONT + '">' + lines[k] + '</text>';
+      }
+      out += '</g>';
+    }
+    out += '<circle r="34" fill="#FFD23F" stroke="#0B2F2C" stroke-width="7"/></svg>';
+    document.getElementById('wheel').innerHTML = out;
+  })();
+
+  var rot = 0, spinning = false, spins = 0, queues = [];
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    spins = 0; document.getElementById('sp').textContent = 0;
+    queues = WHEEL.map(function () { return []; });
+    document.getElementById('qbox').style.display = 'none';
+    document.getElementById('idle').style.display = '';
+  }
+  function spin() {
+    if (spinning) return; spinning = true;
+    document.getElementById('spin').disabled = true;
+    var n = WHEEL.length, step = 360 / n, idx = Math.floor(Math.random() * n);
+    var target = ((360 - (idx * step + step / 2) + (Math.random() * 2 - 1) * step * 0.3) % 360 + 360) % 360;
+    var cur = ((rot % 360) + 360) % 360;
+    rot += 1800 + ((target - cur) + 360) % 360;
+    var w = document.getElementById('wheel');
+    w.style.transform = 'rotate(' + rot + 'deg)';
+    var done = false;
+    function finish() { if (done) return; done = true; w.removeEventListener('transitionend', finish); show(idx); }
+    w.addEventListener('transitionend', finish);
+    setTimeout(finish, 4600);
+  }
+  window.__testSpin = function (i) { var n = WHEEL.length, step = 360 / n; var w = document.getElementById('wheel'); var target = ((360 - (i * step + step / 2)) % 360 + 360) % 360; var cur = ((rot % 360) + 360) % 360; rot += 1800 + ((target - cur) + 360) % 360; w.style.transition = 'none'; w.style.transform = 'rotate(' + rot + 'deg)'; void w.offsetWidth; w.style.transition = ''; spinning = true; show(i); };
+  function toggleAns() {
+    var a = document.getElementById('ans'), open = a.style.display !== 'block';
+    a.style.display = open ? 'block' : 'none';
+    document.getElementById('showans').textContent = open ? 'Hide answer' : 'Show answer';
+  }
+  function show(idx) {
+    var c = WHEEL[idx];
+    if (!queues[idx].length) queues[idx] = shuffle(c[3].slice());
+    var q = queues[idx].pop();
+    spins++; document.getElementById('sp').textContent = spins;
+    document.getElementById('idle').style.display = 'none';
+    document.getElementById('qbox').style.display = 'flex';
+    var cat = document.getElementById('cat'); cat.textContent = c[0] + ' ' + c[1]; cat.style.background = c[2];
+    document.getElementById('q-en').textContent = q[0];
+    document.getElementById('q-tr').textContent = q[1];
+    document.getElementById('start').innerHTML = '<b>Start:</b> ' + q[2].replace(/</g, '&lt;');
+    document.getElementById('a-en').textContent = q[3]; document.getElementById('a-tr').textContent = q[4];
+    document.getElementById('ans').style.display = 'none'; document.getElementById('showans').textContent = 'Show answer';
+    spinning = false; document.getElementById('spin').disabled = false;
+  }
+</script>
+<div id="ln-screen">
+  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-grid"></div>
+</div>
+<script>
+(function () {
+  var LN = [["Cooking Verbs", "Pişirme Fiilleri", [["🍅", "dice", "küp küp doğramak"], ["🥔", "mash", "ezmek"], ["🍎", "peel", "soymak"], ["🔪", "slice", "dilimlemek"], ["🥕", "chop", "doğramak"], ["♨️", "boil", "kaynatmak"], ["🍳", "fry", "kızartmak"], ["🍪", "bake", "fırında pişirmek"], ["🍗", "roast", "fırında kavurmak"], ["🥪", "spread", "sürmek"], ["🥄", "stir", "karıştırmak"], ["🥣", "mix", "karıştırmak, birleştirmek"], ["🥚", "whisk", "çırpmak"], ["🥖", "knead", "yoğurmak"], ["🧀", "grate", "rendelemek"], ["🥛", "pour", "dökmek"], ["🥜", "sprinkle", "serpmek"], ["➕", "add", "eklemek"], ["🔥", "heat", "ısıtmak"], ["🍽️", "serve", "servis etmek"]]], ["Kitchen Tools", "Mutfak Aletleri", [["🍳", "frying pan", "tava"], ["🍲", "pot", "tencere"], ["🥘", "saucepan", "sos tenceresi"], ["🥣", "bowl", "kase"], ["🔪", "knife", "bıçak"], ["🥄", "spoon", "kaşık"], ["🧀", "grater", "rende"], ["🔥", "oven", "fırın"], ["🍴", "fork", "çatal"], ["🥚", "whisk", "çırpma teli"], ["🍞", "baking tray", "fırın tepsisi"], ["🥤", "blender", "blender"], ["⏲️", "timer", "zamanlayıcı"], ["🌡️", "thermometer", "termometre"]]], ["Ingredients and Amounts", "Malzemeler ve Ölçüler", [["🌾", "flour", "un"], ["🍬", "sugar", "şeker"], ["🧂", "salt", "tuz"], ["🌶️", "pepper", "biber"], ["🥛", "milk", "süt"], ["🧀", "cheese", "peynir"], ["🍯", "honey", "bal"], ["🍋", "lemon", "limon"], ["🍅", "tomato", "domates"], ["🥔", "potato", "patates"], ["🥕", "carrot", "havuç"], ["🌿", "parsley", "maydanoz"], ["🥖", "dough", "hamur"], ["🥄", "a tablespoon of", "bir yemek kaşığı"], ["🥄", "a teaspoon of", "bir çay kaşığı"], ["🧂", "a pinch of", "bir tutam"], ["🍰", "a piece of", "bir parça"]]], ["Order Words", "Sıra Kelimeleri", [["1", "First,", "Önce,"], ["2", "Second,", "İkinci olarak,"], ["3", "Then,", "Sonra,"], ["4", "Next,", "Ardından,"], ["5", "After that,", "Bundan sonra,"], ["6", "Later,", "Daha sonra,"], ["7", "Finally,", "Son olarak,"]]]];
+  function lnShow(i) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
+    document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
+      var wide = it[1].length > 26 && it[0].indexOf('<svg') < 0;
+      return '<div class="ln-card' + (wide ? ' wide' : '') + '"><div class="le">' + it[0] + '</div><div class="en">' + it[1] + '</div><div class="trl">' + it[2] + '</div></div>';
+    }).join('');
+    document.getElementById('ln-grid').scrollTop = 0;
+  }
+  window.lnOpen = function () {
+    var tabs = document.getElementById('ln-tabs'); tabs.innerHTML = '';
+    LN.forEach(function (s, i) { var b = document.createElement('button'); b.className = 'ln-tab'; b.textContent = s[0]; b.onclick = function () { lnShow(i); }; tabs.appendChild(b); });
+    document.getElementById('ln-screen').style.display = 'flex'; lnShow(0);
+  };
+  window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+</body>
+</html>

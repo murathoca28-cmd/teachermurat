@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipe Order</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 2.2vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.2rem, 3.4vw, 2.4rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  body.no-tr .tr { display: none; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+
+  #main { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 6px 12px 10px; }
+  #head { flex: 0 0 auto; background: #fff; border: 5px solid #0B2F2C; border-radius: 20px; padding: 4px 16px; display: flex; align-items: center; justify-content: center; gap: 16px; text-align: left; }
+  #pic { font-size: clamp(2.4rem, 9vh, 4.4rem); line-height: 1; }
+  #who { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.6rem); line-height: 1.1; }
+  #who-tr { font-weight: 800; font-size: clamp(.95rem, 2vw, 1.5rem); color: #0B5C56; }
+  #task { font-weight: 800; font-size: clamp(.95rem, 2.1vw, 1.55rem); color: #0B2F2C; border-left: 5px solid #0B2F2C; padding-left: 14px; }
+  #task .tr { display: block; color: #0B5C56; font-weight: 700; }
+  #axis { flex: 0 0 auto; display: flex; align-items: center; gap: 10px; font-weight: 900; color: #fff; text-shadow: 2px 2px 0 #0B2F2C; font-size: clamp(.9rem, 2vw, 1.4rem); }
+  #axis i { flex: 1; height: 10px; background: #fff; border: 3px solid #0B2F2C; border-radius: 6px; position: relative; }
+  #axis i::after { content: ''; position: absolute; right: -6px; top: -10px; border-left: 16px solid #0B2F2C; border-top: 11px solid transparent; border-bottom: 11px solid transparent; }
+  #cards { flex: 1; min-height: 0; display: flex; flex-direction: row; gap: 10px; }
+  .ev { order: 10; flex: 1 1 0; min-width: 0; position: relative; background: #fff; border: 5px solid #0B2F2C; border-radius: 18px; box-shadow: 0 5px 0 #0B2F2C; padding: 8px 8px 6px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; color: #0B2F2C; }
+  .ev:active { transform: translateY(3px); box-shadow: 0 2px 0 #0B2F2C; }
+  .ev .yr { font-weight: 900; font-size: clamp(1.5rem, 4vw, 3.2rem); line-height: 1; color: #1F5FBF; }
+  .ev .tx { font-weight: 900; font-size: clamp(.95rem, 1.9vw, 1.55rem); line-height: 1.15; }
+  .ev .tr { font-weight: 700; font-size: clamp(.75rem, 1.35vw, 1.05rem); line-height: 1.15; color: #0B5C56; }
+  .ev .nb { display: none; position: absolute; top: -14px; left: -12px; width: 40px; height: 40px; border-radius: 50%; background: #0A7A2F; color: #fff; border: 4px solid #0B2F2C;
+    font-weight: 900; font-size: 1.4rem; align-items: center; justify-content: center; }
+  .ev.ok { background: #C8F7D4; border-color: #0A7A2F; box-shadow: 0 5px 0 #0A7A2F; cursor: default; }
+  .ev.ok .nb { display: flex; } .ev.ok .yr { color: #0A7A2F; }
+  .ev.bad { background: #FFD6D6; border-color: #D62828; }
+  #bottom { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; min-height: 2em; }
+  #fb { text-align: center; font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.8rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #next { display: none; font-size: clamp(1.1rem, 2.6vw, 1.7rem); }
+  @media (max-width: 700px) and (max-aspect-ratio: 1/1) {
+    #main { gap: 6px; padding: 4px 8px 8px; } #topbar { padding: 4px 56px 2px 6px; gap: 6px; }
+    #head { padding: 2px 10px; gap: 10px; border-width: 4px; flex-wrap: wrap; } #task { border-left: 0; padding-left: 0; text-align: center; font-size: .85rem; } #pic { font-size: 2.4rem; }
+    #axis { display: none; }
+    #cards { flex-direction: column; gap: 8px; }
+    .ev { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-content: center; text-align: left; gap: 0 10px; padding: 4px 8px 4px 14px; border-width: 4px; border-radius: 14px; }
+    .ev .yr { flex: 0 0 4.2rem; font-size: 1.7rem; } .ev .tx { flex: 1 1 0; min-width: 0; font-size: clamp(.9rem, 4vw, 1.2rem); } .ev .tr { flex: 1 0 100%; padding-left: 4.6rem; font-size: .75rem; }
+    .ev .nb { top: -10px; left: auto; right: -6px; width: 32px; height: 32px; font-size: 1.1rem; }
+    #fb { font-size: 1rem; }
+  }
+  @media (max-height: 480px) {
+    #main { gap: 4px; padding: 4px 8px 6px; }
+    #head { padding: 0 12px; border-width: 4px; border-radius: 14px; } #pic { font-size: 2.2rem; } #who { font-size: 1.1rem; } #who-tr { font-size: .8rem; } #task { font-size: .8rem; border-left-width: 4px; }
+    #axis { display: none; }
+    .ev { padding: 4px 4px 3px; gap: 1px; border-width: 4px; border-radius: 12px; box-shadow: 0 3px 0 #0B2F2C; } .ev .yr { font-size: 1.3rem; } .ev .tx { font-size: .8rem; } .ev .tr { font-size: .65rem; }
+    .ev .nb { top: -9px; left: -7px; width: 26px; height: 26px; font-size: .9rem; border-width: 3px; }
+    #fb { font-size: .85rem; line-height: 1.1; } #next { font-size: 1rem !important; padding: .05em .9em; border-width: 3px; box-shadow: 0 3px 0 #0B2F2C; } #bottom { min-height: 1.2em; gap: 8px; }
+  }
+</style>
+<style id="order-css">
+  .ev .yr { display: none !important; }
+  .ev .tx { font-size: clamp(1rem, 2.1vw, 1.7rem); }
+  @media (max-width: 700px) and (max-aspect-ratio: 1/1) {
+    .ev { flex-direction: column; flex-wrap: nowrap; align-items: flex-start; justify-content: center; gap: 2px; padding: 4px 8px 4px 16px; text-align: left; }
+    .ev .tx, .ev .tr { flex: 0 0 auto; width: 100%; min-width: 0; padding-left: 0; }
+    .ev .tx { font-size: clamp(.95rem, 4.2vw, 1.2rem); } .ev .tr { font-size: .78rem; }
+  }
+</style>
+<style id="ln-css">
+.ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
+:where(.tile .e, .cell .e, .wc .e, .fe, .ct, #qmark, .w .e, .word .e, #pic) svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+#ln-screen { display: none; position: fixed; inset: 0; z-index: 70; background: #0E8F86; flex-direction: column; gap: 8px; padding: 8px 10px 10px; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; color: #0B2F2C; }
+#ln-top { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#ln-title { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.4rem); color: #fff; text-shadow: 3px 3px 0 #0B2F2C; margin-right: 6px; }
+#ln-tabs { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.ln-tab { font-weight: 900; font-size: clamp(.9rem, 2.1vw, 1.5rem); padding: .05em .8em; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; cursor: pointer; font-family: inherit; }
+.ln-tab.act { background: #FFD23F; border-color: #D62828; }
+#ln-close { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.5rem); padding: .05em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #D62828; color: #fff; cursor: pointer; font-family: inherit; }
+#ln-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 17vw, 240px), 1fr)); gap: 10px; align-content: start; padding: 2px; }
+.ln-card { background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ln-card.wide { grid-column: span 2; }
+.ln-card .le { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1.1; }
+.ln-card .le svg { width: clamp(2.4rem, 8vh, 4rem); height: clamp(2.4rem, 8vh, 4rem); display: block; }
+.ln-card .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.6rem); line-height: 1.15; }
+.ln-card .trl { font-weight: 800; font-size: clamp(.8rem, 1.7vw, 1.15rem); color: #0B5C56; }
+</style>
+<style id="phone-short">
+@media (max-height: 480px) {
+  #start-screen, #win-screen { gap: 1.2vh; padding: 6px 10px; }
+  .title { font-size: 2rem; } .title br { display: none; } .subtitle { font-size: 1rem; } .preview { font-size: 1.6rem; }
+  .big-btn { font-size: 1.25rem; padding: .12em 1em; border-width: 4px; box-shadow: 0 3px 0 #0B2F2C; }
+  .win-title { font-size: 2rem; } .win-stats { font-size: 1.05rem; }
+  .og, .ob { font-size: 1rem; } .ob { border-width: 3px; padding: 0 .6em; }
+  #topbar { padding-top: 4px; padding-bottom: 2px; gap: 8px; }
+  .stat, .restart-btn { font-size: .95rem; border-width: 3px; padding: 0 12px; }
+}
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Recipe <br>Order</h1>
+  <p class="subtitle">Put the recipe steps in the right order!</p>
+  <div class="preview">🥣 🔪 🍳 🍽️</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">Recipe Master!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Recipe: <span id="rn">1</span>/5</div>
+  <div class="stat">Stars: <span id="sc">0</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="head">
+    <div id="pic"></div>
+    <div><div id="who"></div><div id="who-tr" class="tr"></div></div>
+    <div id="task">Tap the steps in the right order, from the first to the last.<span class="tr">Adımlara ilkten sona doğru, doğru sırayla dokun.</span></div>
+  </div>
+  <div id="axis"><span>First step</span><i></i><span>Last step</span></div>
+  <div id="cards"></div>
+  <div id="bottom"><div id="fb"></div><button class="big-btn" id="next" onclick="nextRound()">Next</button></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+  function $(id) { return document.getElementById(id); }
+  var TR = true, fbParts = null;
+  function setFb(p, tr) { fbParts = [p, tr]; renderFb(); }
+  function renderFb() { $('fb').textContent = fbParts ? fbParts[0] + (TR && fbParts[1] ? ' ' + fbParts[1] : '') : ''; }
+  function toggleTR() { TR = !TR; document.body.classList.toggle('no-tr', !TR); $('trbtn').textContent = 'Turkish: ' + (TR ? 'On' : 'Off'); renderFb(); }
+
+  var P = [["🥗", "Fruit Salad", "Meyve Salatası", [[1, "First, wash the fruit.", "Önce meyveleri yıka."], [2, "Second, peel the apples and the bananas.", "İkinci olarak elmaları ve muzları soy."], [3, "Next, slice them into a big bowl.", "Ardından onları büyük bir kaseye dilimle."], [4, "After that, add some honey and lemon juice.", "Bundan sonra biraz bal ve limon suyu ekle."], [5, "Finally, stir it and serve it cold.", "Son olarak karıştır ve soğuk servis et."]]], ["🍋", "Lemonade", "Limonata", [[1, "First, cut the lemons in half.", "Önce limonları ikiye kes."], [2, "Second, put the lemon juice and the water in a big bowl.", "İkinci olarak limon suyunu ve suyu büyük bir kaseye koy."], [3, "Next, add a few tablespoons of sugar.", "Ardından birkaç yemek kaşığı şeker ekle."], [4, "After that, stir it well.", "Bundan sonra iyice karıştır."], [5, "Finally, pour it into glasses and serve it.", "Son olarak bardaklara dök ve servis et."]]], ["🥤", "Banana Milkshake", "Muzlu Milkshake", [[1, "First, peel two bananas.", "Önce iki muzu soy."], [2, "Second, slice them and put them in a blender.", "İkinci olarak onları dilimle ve blendera koy."], [3, "Next, pour in a glass of cold milk.", "Ardından bir bardak soğuk süt ekle."], [4, "After that, add a tablespoon of honey and blend it for one minute.", "Bundan sonra bir yemek kaşığı bal ekle ve bir dakika blenderdan geçir."], [5, "Finally, pour it into a glass and serve it.", "Son olarak bir bardağa dök ve servis et."]]], ["🍚", "Rice Pudding", "Sütlaç", [[1, "First, boil the rice in water for ten minutes.", "Önce pirinci suda on dakika kaynat."], [2, "Second, add the milk and stir it.", "İkinci olarak sütü ekle ve karıştır."], [3, "Next, add half a cup of sugar.", "Ardından yarım bardak şeker ekle."], [4, "After that, cook it slowly for twenty minutes.", "Bundan sonra onu yirmi dakika yavaşça pişir."], [5, "Finally, pour it into bowls and let it cool.", "Son olarak kaselere dök ve soğumasını bekle."]]], ["🍟", "French Fries", "Patates Kızartması", [[1, "Peel the potatoes.", "Patatesleri soy."], [2, "Slice them into long pieces.", "Onları uzun parçalar halinde dilimle."], [3, "Fry them in hot oil until they are golden.", "Onları altın rengi olana kadar kızgın yağda kızart."], [4, "Put them on a plate and add a pinch of salt.", "Onları bir tabağa koy ve bir tutam tuz ekle."], [5, "Serve them hot.", "Onları sıcak servis et."]]], ["🍅", "Tomato Salad", "Domates Salatası", [[1, "Wash the tomatoes and the cucumbers.", "Domatesleri ve salatalıkları yıka."], [2, "Chop them into small pieces.", "Onları küçük parçalara doğra."], [3, "Put them in a big bowl.", "Onları büyük bir kaseye koy."], [4, "Add some salt, lemon juice and oil.", "Biraz tuz, limon suyu ve yağ ekle."], [5, "Mix it well and serve it.", "İyice karıştır ve servis et."]]], ["☕", "Hot Chocolate", "Sıcak Çikolata", [[1, "Heat the milk in a saucepan.", "Sütü bir sos tenceresinde ısıt."], [2, "Add two tablespoons of cocoa.", "İki yemek kaşığı kakao ekle."], [3, "Stir it until it is smooth.", "Pürüzsüz olana kadar karıştır."], [4, "Pour it into a cup.", "Onu bir fincana dök."], [5, "Serve it hot.", "Sıcak servis et."]]]];
+  var ROUNDS = 5, order, ri, placed, roundMis, stars, totalMis, locked;
+  function startGame() {
+    $('start-screen').style.display = 'none'; $('win-screen').style.display = 'none';
+    order = shuffle(P.slice()).slice(0, ROUNDS); ri = 0; stars = 0; totalMis = 0; $('sc').textContent = 0; showRound();
+  }
+  function showRound() {
+    var p = order[ri]; placed = 0; roundMis = 0; locked = false; $('rn').textContent = ri + 1;
+    $('pic').textContent = p[0]; $('who').textContent = p[1]; $('who-tr').textContent = p[2];
+    fbParts = null; renderFb(); $('next').style.display = 'none';
+    var box = $('cards'); box.innerHTML = '';
+    shuffle(p[3].map(function (c) { return { y: c[0], en: c[1], tr: c[2] }; })).forEach(function (c) {
+      var b = document.createElement('button'); b.className = 'ev'; b.setAttribute('data-y', c.y);
+      b.innerHTML = '<span class="nb"></span><span class="tx">' + c.en + '</span><span class="tr">' + c.tr + '</span>';
+      b.addEventListener('click', function () { tap(b, c); });
+      box.appendChild(b);
+    });
+  }
+  function tap(btn, c) {
+    if (locked || btn.classList.contains('ok')) return;
+    var p = order[ri];
+    if (c.y === p[3][placed][0]) {
+      placed++; btn.classList.add('ok'); btn.style.order = placed; btn.querySelector('.nb').textContent = placed;
+      if (placed === p[3].length) {
+        locked = true; var s = roundMis === 0 ? 3 : (roundMis <= 2 ? 2 : 1); stars += s; $('sc').textContent = stars;
+        setFb('✔ Perfect recipe! ' + '⭐'.repeat(s), 'Harika! Tarif tamam.');
+        var nx = $('next'); nx.textContent = (ri === order.length - 1) ? 'Finish' : 'Next'; nx.style.display = 'inline-block';
+      } else { setFb('✔ Yes! Now the next one.', 'Evet! Şimdi sıradaki.'); }
+    } else {
+      roundMis++; totalMis++; btn.classList.add('bad', 'shake'); setFb('✘ Not yet. Which step comes first?', 'Henüz değil. Hangi adım önce gelir?');
+      setTimeout(function () { btn.classList.remove('bad', 'shake'); }, 450);
+    }
+  }
+  function nextRound() {
+    ri++;
+    if (ri >= order.length) {
+      $('win-title').textContent = stars >= 13 ? 'Recipe Master!' : (stars >= 9 ? 'Well Done!' : 'Good Try!');
+      $('win-stats').textContent = 'Stars: ' + stars + ' / ' + (order.length * 3) + '  -  Mistakes: ' + totalMis;
+      $('win-screen').style.display = 'flex'; return;
+    }
+    showRound();
+  }
+</script>
+<div id="ln-screen">
+  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-grid"></div>
+</div>
+<script>
+(function () {
+  var LN = [["Order Words", "Sıra Kelimeleri", [["1", "First,", "Önce,"], ["2", "Second,", "İkinci olarak,"], ["3", "Then,", "Sonra,"], ["4", "Next,", "Ardından,"], ["5", "After that,", "Bundan sonra,"], ["6", "Later,", "Daha sonra,"], ["7", "Finally,", "Son olarak,"]]], ["Cooking Verbs", "Pişirme Fiilleri", [["🍅", "dice", "küp küp doğramak"], ["🥔", "mash", "ezmek"], ["🍎", "peel", "soymak"], ["🔪", "slice", "dilimlemek"], ["🥕", "chop", "doğramak"], ["♨️", "boil", "kaynatmak"], ["🍳", "fry", "kızartmak"], ["🍪", "bake", "fırında pişirmek"], ["🍗", "roast", "fırında kavurmak"], ["🥪", "spread", "sürmek"], ["🥄", "stir", "karıştırmak"], ["🥣", "mix", "karıştırmak, birleştirmek"], ["🥚", "whisk", "çırpmak"], ["🥖", "knead", "yoğurmak"], ["🧀", "grate", "rendelemek"], ["🥛", "pour", "dökmek"], ["🥜", "sprinkle", "serpmek"], ["➕", "add", "eklemek"], ["🔥", "heat", "ısıtmak"], ["🍽️", "serve", "servis etmek"]]], ["Kitchen Tools", "Mutfak Aletleri", [["🍳", "frying pan", "tava"], ["🍲", "pot", "tencere"], ["🥘", "saucepan", "sos tenceresi"], ["🥣", "bowl", "kase"], ["🔪", "knife", "bıçak"], ["🥄", "spoon", "kaşık"], ["🧀", "grater", "rende"], ["🔥", "oven", "fırın"], ["🍴", "fork", "çatal"], ["🥚", "whisk", "çırpma teli"], ["🍞", "baking tray", "fırın tepsisi"], ["🥤", "blender", "blender"], ["⏲️", "timer", "zamanlayıcı"], ["🌡️", "thermometer", "termometre"]]]];
+  function lnShow(i) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
+    document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
+      var wide = it[1].length > 26 && it[0].indexOf('<svg') < 0;
+      return '<div class="ln-card' + (wide ? ' wide' : '') + '"><div class="le">' + it[0] + '</div><div class="en">' + it[1] + '</div><div class="trl">' + it[2] + '</div></div>';
+    }).join('');
+    document.getElementById('ln-grid').scrollTop = 0;
+  }
+  window.lnOpen = function () {
+    var tabs = document.getElementById('ln-tabs'); tabs.innerHTML = '';
+    LN.forEach(function (s, i) { var b = document.createElement('button'); b.className = 'ln-tab'; b.textContent = s[0]; b.onclick = function () { lnShow(i); }; tabs.appendChild(b); });
+    document.getElementById('ln-screen').style.display = 'flex'; lnShow(0);
+  };
+  window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+</body>
+</html>

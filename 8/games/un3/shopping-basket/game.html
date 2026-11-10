@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopping Basket</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  #start-screen, #win-screen { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh; text-align: center; padding: 20px; background: #0E8F86; }
+  #win-screen { display: none; background: rgba(11,47,44,.9); color: #fff; }
+  .title { margin: 0; font-size: clamp(2rem, 7vw, 5rem); font-weight: 900; color: #fff; text-shadow: 3px 3px 0 #0B2F2C; line-height: 1.1; }
+  .subtitle { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800; color: #fff; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  .preview { font-size: clamp(2rem, 6vw, 4rem); letter-spacing: .15em; }
+  .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
+  .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .shake { animation: shake .4s; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 12px; padding: 8px 12px 12px; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #left { flex: 0 0 40%; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
+  @media (orientation: portrait) { #left { flex: 0 0 46%; } }
+  #trip { flex: 1 1 auto; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 22px; padding: 8px 16px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; }
+  #scene { font-size: clamp(2.4rem, 10vh, 5.5rem); line-height: 1; }
+  #t-en { font-weight: 900; font-size: clamp(1.1rem, 2.5vw, 2rem); line-height: 1.2; }
+  #t-tr { font-weight: 800; font-size: clamp(.9rem, 1.8vw, 1.35rem); color: #0B5C56; }
+  #ask { font-weight: 900; font-size: clamp(1rem, 2.2vw, 1.6rem); color: #D62828; }
+  #case { position: relative; flex: 0 0 auto; display: flex; gap: 10px; background: #C9772B; border: 5px solid #0B2F2C; border-radius: 20px; padding: 14px 12px 12px; margin-top: 14px; }
+  #case::before { content: ''; position: absolute; left: 50%; top: -22px; width: 90px; height: 24px; transform: translateX(-50%);
+    border: 5px solid #0B2F2C; border-bottom: 0; border-radius: 14px 14px 0 0; background: #fff; }
+  .slot { flex: 1; min-height: clamp(70px, 14vh, 130px); background: #fff; border: 4px dashed #0B2F2C; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .slot .e { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1; }
+  .slot .e svg { width: clamp(2.4rem, 8vh, 4.4rem); height: clamp(2.4rem, 8vh, 4.4rem); display: block; }
+  #check { font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 900; padding: .25em 1em; border: 5px solid #0B2F2C; border-radius: 16px; background: #1F5FBF; color: #fff; box-shadow: 0 5px 0 #0B2F2C; }
+  #check:disabled { background: #B8C2C1; color: #5B6B69; cursor: not-allowed; }
+  #fb { min-height: 1.3em; text-align: center; font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.7rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
+  #items { flex: 1; min-width: 0; min-height: 0; display: grid; gap: 10px; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); }
+  @media (orientation: portrait) { #items { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .tile { container-type: size; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0B2F2C; }
+  .tile .e { font-size: 38cqmin; line-height: 1.05; }
+  .tile .e svg { width: 46cqmin; height: 46cqmin; display: block; }
+  .tile .p { font-weight: 900; font-size: 12cqmin; line-height: 1.1; padding: 0 4px; }
+  .tile .t { font-weight: 800; font-size: 9cqmin; color: #0B5C56; }
+  .tile.sel { background: #FFF3B0; border-color: #D62828; border-width: 7px; }
+  .tile.good { background: #C8F7D4; border-color: #0A7A2F; border-width: 7px; }
+  .tile.bad { background: #FFD6D6; border-color: #D62828; border-width: 7px; }
+  #next { display: none; font-size: clamp(1.1rem, 2.6vw, 1.7rem); }
+</style>
+<style id="phone-fix">
+@media (max-width:700px) and (max-aspect-ratio:1/1) {
+  #main { gap: 6px; padding: 4px 8px 8px; }
+  #left { flex: 0 0 auto; gap: 6px; }
+  #trip { flex: 0 0 auto; padding: 4px 10px; gap: 1px; border-width: 4px; border-radius: 16px; }
+  #scene { font-size: 2rem; }
+  #t-en { font-size: clamp(.95rem, 4.2vw, 1.15rem); line-height: 1.15; }
+  #t-tr { font-size: .78rem; line-height: 1.1; }
+  #ask { font-size: .85rem; }
+  #case { margin-top: 12px; padding: 10px 8px 8px; gap: 6px; border-width: 4px; border-radius: 14px; }
+  #case::before { top: -18px; height: 20px; width: 70px; }
+  .slot { min-height: 52px; border-width: 3px; }
+  .slot .e { font-size: 1.8rem; }
+  #check { font-size: 1rem; padding: .15em .8em; border-width: 4px; box-shadow: 0 3px 0 #0B2F2C; }
+  #next { font-size: 1rem; padding: .1em .9em; border-width: 4px; box-shadow: 0 3px 0 #0B2F2C; }
+  #fb { font-size: .85rem; line-height: 1.1; min-height: 1.1em; }
+  #items { gap: 6px; }
+  .tile { border-width: 4px; border-radius: 12px; }
+  .tile .p { font-size: max(12cqmin, 11px); }
+  .tile .t { font-size: max(9cqmin, 9.5px); }
+}
+@media (max-height: 480px) {
+  #main { gap: 8px; padding: 4px 10px 6px; }
+  #left { gap: 4px; }
+  #trip { padding: 2px 10px; gap: 0; border-width: 4px; border-radius: 14px; }
+  #scene { font-size: 1.5rem; }
+  #t-en { font-size: 1rem; line-height: 1.1; } #t-tr { font-size: .75rem; line-height: 1.05; } #ask { font-size: .8rem; }
+  #case { margin-top: 10px; padding: 8px 8px 6px; gap: 6px; border-width: 4px; border-radius: 14px; }
+  #case::before { top: -16px; height: 18px; width: 64px; }
+  .slot { min-height: 40px; border-width: 3px; } .slot .e { font-size: 1.6rem; }
+  #check { font-size: 1rem; padding: .08em .8em; border-width: 4px; box-shadow: 0 3px 0 #0B2F2C; }
+  #next { font-size: 1rem !important; padding: .05em .9em; border-width: 4px; box-shadow: 0 3px 0 #0B2F2C; }
+  #fb { font-size: .8rem; line-height: 1.1; min-height: 1em; }
+  #items { gap: 6px; } .tile { border-width: 4px; border-radius: 12px; }
+}
+</style>
+<style id="ln-css">
+.ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
+:where(.tile .e, .cell .e, .wc .e, .fe, .ct, #qmark, .w .e, .word .e, #pic) svg { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+#ln-screen { display: none; position: fixed; inset: 0; z-index: 70; background: #0E8F86; flex-direction: column; gap: 8px; padding: 8px 10px 10px; font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; color: #0B2F2C; }
+#ln-top { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#ln-title { font-weight: 900; font-size: clamp(1.3rem, 3.4vw, 2.4rem); color: #fff; text-shadow: 3px 3px 0 #0B2F2C; margin-right: 6px; }
+#ln-tabs { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.ln-tab { font-weight: 900; font-size: clamp(.9rem, 2.1vw, 1.5rem); padding: .05em .8em; border: 4px solid #0B2F2C; border-radius: 12px; background: #fff; color: #0B2F2C; cursor: pointer; font-family: inherit; }
+.ln-tab.act { background: #FFD23F; border-color: #D62828; }
+#ln-close { font-weight: 900; font-size: clamp(.95rem, 2.2vw, 1.5rem); padding: .05em .9em; border: 4px solid #0B2F2C; border-radius: 12px; background: #D62828; color: #fff; cursor: pointer; font-family: inherit; }
+#ln-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 17vw, 240px), 1fr)); gap: 10px; align-content: start; padding: 2px; }
+.ln-card { background: #fff; border: 5px solid #0B2F2C; border-radius: 16px; padding: 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.ln-card.wide { grid-column: span 2; }
+.ln-card .le { font-size: clamp(2rem, 7vh, 3.6rem); line-height: 1.1; }
+.ln-card .le svg { width: clamp(2.4rem, 8vh, 4rem); height: clamp(2.4rem, 8vh, 4rem); display: block; }
+.ln-card .en { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.6rem); line-height: 1.15; }
+.ln-card .trl { font-weight: 800; font-size: clamp(.8rem, 1.7vw, 1.15rem); color: #0B5C56; }
+</style>
+<style id="phone-short">
+@media (max-height: 480px) {
+  #start-screen, #win-screen { gap: 1.2vh; padding: 6px 10px; }
+  .title { font-size: 2rem; } .title br { display: none; } .subtitle { font-size: 1rem; } .preview { font-size: 1.6rem; }
+  .big-btn { font-size: 1.25rem; padding: .12em 1em; border-width: 4px; box-shadow: 0 3px 0 #0B2F2C; }
+  .win-title { font-size: 2rem; } .win-stats { font-size: 1.05rem; }
+  .og, .ob { font-size: 1rem; } .ob { border-width: 3px; padding: 0 .6em; }
+  #topbar { padding-top: 4px; padding-bottom: 2px; gap: 8px; }
+  .stat, .restart-btn { font-size: .95rem; border-width: 3px; padding: 0 12px; }
+}
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="start-screen">
+  <h1 class="title">Shopping<br>Basket</h1>
+  <p class="subtitle">Put the right ingredients in the basket!</p>
+  <div class="preview">🧺 🍋 🥚 🍅</div>
+  <button class="big-btn" onclick="startGame()">Start</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+</div>
+<div id="win-screen">
+  <h2 class="win-title" id="win-title">You Win!</h2>
+  <p class="win-stats" id="win-stats"></p>
+  <button class="big-btn" onclick="startGame()">Play Again</button>
+</div>
+<div id="topbar">
+  <div class="stat">Dish: <span id="rn">1</span>/6</div>
+  <div class="stat">Score: <span id="sc">0</span></div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="startGame()">Restart</button>
+</div>
+<div id="main">
+  <div id="left">
+    <div id="trip"><div id="scene"></div><div id="t-en"></div><div id="t-tr" class="tr"></div><div id="ask"></div></div>
+    <div id="case"><div class="slot" data-i="0"></div><div class="slot" data-i="1"></div><div class="slot" data-i="2"></div></div>
+    <button id="check" disabled>Check the basket</button>
+    <div id="fb"></div>
+    <button class="big-btn" id="next" onclick="nextTrip()">Next</button>
+  </div>
+  <div id="items"></div>
+</div>
+<script>
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function toggleFullScreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+    } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+  }
+
+  var TR = true, fbParts = null;
+  function setFb(p, tr) { fbParts = [p, tr]; renderFb(); }
+  function renderFb() { var f = document.getElementById('fb'); if (f) f.textContent = fbParts ? fbParts[0] + (TR && fbParts[1] ? ' ' + fbParts[1] : '') : ''; }
+  function toggleTR() { TR = !TR; document.body.classList.toggle('no-tr', !TR); document.getElementById('trbtn').textContent = 'Turkish: ' + (TR ? 'On' : 'Off'); renderFb(); }
+  var ITEMS = {"apple": ["🍎", "apple", "elma"], "banana": ["🍌", "banana", "muz"], "orange": ["🍊", "orange", "portakal"], "flour": ["🌾", "flour", "un"], "onion": ["🧅", "onion", "soğan"], "fish": ["🐟", "fish", "balık"], "lemon": ["🍋", "lemon", "limon"], "water": ["💧", "water", "su"], "sugar": ["🍬", "sugar", "şeker"], "rice": ["🍚", "rice", "pirinç"], "mushroom": ["🍄", "mushroom", "mantar"], "egg": ["🥚", "egg", "yumurta"], "tomato": ["🍅", "tomato", "domates"], "cucumber": ["🥒", "cucumber", "salatalık"], "lettuce": ["🥬", "lettuce", "marul"], "honey": ["🍯", "honey", "bal"], "milk": ["🥛", "milk", "süt"], "potato": ["🥔", "potato", "patates"], "oil": ["🌻", "sunflower oil", "ayçiçek yağı"], "salt": ["🧂", "salt", "tuz"]};
+  var TRIPS = [{"scene": "🥗", "en": "You want to make a fruit salad.", "tr": "Meyve salatası yapmak istiyorsun.", "good": ["apple", "banana", "orange"], "bad": ["flour", "onion", "fish", "rice", "egg"]}, {"scene": "🍋", "en": "You want to make lemonade for your friends.", "tr": "Arkadaşların için limonata yapmak istiyorsun.", "good": ["lemon", "water", "sugar"], "bad": ["onion", "fish", "mushroom", "flour", "potato"]}, {"scene": "🍅", "en": "You want to make a tomato and cucumber salad.", "tr": "Domatesli ve salatalıklı bir salata yapmak istiyorsun.", "good": ["tomato", "cucumber", "lettuce"], "bad": ["banana", "flour", "rice", "milk", "sugar"]}, {"scene": "🍚", "en": "You want to make rice pudding.", "tr": "Sütlaç yapmak istiyorsun.", "good": ["rice", "milk", "sugar"], "bad": ["onion", "fish", "mushroom", "tomato", "cucumber"]}, {"scene": "🥤", "en": "You want to make a banana milkshake.", "tr": "Muzlu milkshake yapmak istiyorsun.", "good": ["banana", "milk", "honey"], "bad": ["onion", "flour", "fish", "mushroom", "potato"]}, {"scene": "🍟", "en": "You want to make French fries.", "tr": "Patates kızartması yapmak istiyorsun.", "good": ["potato", "oil", "salt"], "bad": ["banana", "milk", "orange", "sugar", "honey"]}];
+  var ASK = ["Put 3 ingredients in the basket!", "Sepete 3 malzeme koy!"];
+  var order, ti, sel, score, locked;
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display = 'none';
+    order = shuffle(TRIPS.slice()); ti = 0; score = 0;
+    document.getElementById('sc').textContent = 0;
+    showTrip();
+  }
+  function showTrip() {
+    var t = order[ti]; sel = []; locked = false;
+    document.getElementById('rn').textContent = ti + 1;
+    document.getElementById('scene').textContent = t.scene;
+    document.getElementById('t-en').textContent = t.en;
+    document.getElementById('t-tr').textContent = t.tr;
+    document.getElementById('ask').textContent = ASK[0];
+    fbParts = null; renderFb();
+    document.getElementById('next').style.display = 'none';
+    document.getElementById('check').style.display = '';
+    var box = document.getElementById('items'); box.innerHTML = '';
+    shuffle(t.good.concat(t.bad)).forEach(function (id) {
+      var it = ITEMS[id], b = document.createElement('button');
+      b.className = 'tile'; b.dataset.id = id;
+      b.innerHTML = '<div class="e">' + it[0] + '</div><div class="p">' + it[1] + '</div><div class="t tr">' + it[2] + '</div>';
+      b.addEventListener('click', function () { toggleItem(id); });
+      box.appendChild(b);
+    });
+    renderCase();
+  }
+  function toggleItem(id) {
+    if (locked) return;
+    var k = sel.indexOf(id);
+    if (k >= 0) sel.splice(k, 1); else if (sel.length < 3) sel.push(id);
+    renderCase();
+  }
+  function renderCase() {
+    Array.prototype.forEach.call(document.querySelectorAll('.slot'), function (s, i) {
+      s.innerHTML = sel[i] ? '<div class="e">' + ITEMS[sel[i]][0] + '</div>' : '';
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.tile'), function (b) { b.classList.toggle('sel', sel.indexOf(b.dataset.id) >= 0); });
+    document.getElementById('check').disabled = (sel.length !== 3);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.slot'), function (s) {
+    s.addEventListener('click', function () { if (!locked && sel[+s.dataset.i]) { sel.splice(+s.dataset.i, 1); renderCase(); } });
+  });
+  document.getElementById('check').addEventListener('click', function () {
+    if (locked || sel.length !== 3) return; locked = true;
+    var t = order[ti], right = 0;
+    sel.forEach(function (id) { if (t.good.indexOf(id) >= 0) right++; });
+    score += right; document.getElementById('sc').textContent = score;
+    Array.prototype.forEach.call(document.querySelectorAll('.tile'), function (b) {
+      b.classList.remove('sel');
+      var good = t.good.indexOf(b.dataset.id) >= 0, chosen = sel.indexOf(b.dataset.id) >= 0;
+      if (good) b.classList.add('good'); else if (chosen) b.classList.add('bad', 'shake');
+    });
+    if (right === 3) setFb('✔ Perfect shopping!', 'Harika bir alışveriş!');
+    else setFb('✘ ' + right + ' / 3. The green ones are right.', 'Yeşil olanlar doğru.');
+    document.getElementById('check').style.display = 'none';
+    var nx = document.getElementById('next'); nx.textContent = (ti === order.length - 1) ? 'Finish' : 'Next'; nx.style.display = 'inline-block';
+  });
+  function nextTrip() {
+    ti++;
+    if (ti >= order.length) {
+      var total = order.length * 3;
+      document.getElementById('win-title').textContent = score >= total - 2 ? 'Super Shopper!' : (score >= total * 0.65 ? 'Well Done!' : 'Good Try!');
+      document.getElementById('win-stats').textContent = 'Score: ' + score + ' / ' + total;
+      document.getElementById('win-screen').style.display = 'flex'; return;
+    }
+    showTrip();
+  }
+</script>
+<div id="ln-screen">
+  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-grid"></div>
+</div>
+<script>
+(function () {
+  var LN = [["Ingredients and Amounts", "Malzemeler ve Ölçüler", [["🌾", "flour", "un"], ["🍬", "sugar", "şeker"], ["🧂", "salt", "tuz"], ["🌶️", "pepper", "biber"], ["🥛", "milk", "süt"], ["🧀", "cheese", "peynir"], ["🍯", "honey", "bal"], ["🍋", "lemon", "limon"], ["🍅", "tomato", "domates"], ["🥔", "potato", "patates"], ["🥕", "carrot", "havuç"], ["🌿", "parsley", "maydanoz"], ["🥖", "dough", "hamur"], ["🥄", "a tablespoon of", "bir yemek kaşığı"], ["🥄", "a teaspoon of", "bir çay kaşığı"], ["🧂", "a pinch of", "bir tutam"], ["🍰", "a piece of", "bir parça"]]], ["Kitchen Tools", "Mutfak Aletleri", [["🍳", "frying pan", "tava"], ["🍲", "pot", "tencere"], ["🥘", "saucepan", "sos tenceresi"], ["🥣", "bowl", "kase"], ["🔪", "knife", "bıçak"], ["🥄", "spoon", "kaşık"], ["🧀", "grater", "rende"], ["🔥", "oven", "fırın"], ["🍴", "fork", "çatal"], ["🥚", "whisk", "çırpma teli"], ["🍞", "baking tray", "fırın tepsisi"], ["🥤", "blender", "blender"], ["⏲️", "timer", "zamanlayıcı"], ["🌡️", "thermometer", "termometre"]]]];
+  function lnShow(i) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
+    document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
+      var wide = it[1].length > 26 && it[0].indexOf('<svg') < 0;
+      return '<div class="ln-card' + (wide ? ' wide' : '') + '"><div class="le">' + it[0] + '</div><div class="en">' + it[1] + '</div><div class="trl">' + it[2] + '</div></div>';
+    }).join('');
+    document.getElementById('ln-grid').scrollTop = 0;
+  }
+  window.lnOpen = function () {
+    var tabs = document.getElementById('ln-tabs'); tabs.innerHTML = '';
+    LN.forEach(function (s, i) { var b = document.createElement('button'); b.className = 'ln-tab'; b.textContent = s[0]; b.onclick = function () { lnShow(i); }; tabs.appendChild(b); });
+    document.getElementById('ln-screen').style.display = 'flex'; lnShow(0);
+  };
+  window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+</body>
+</html>
