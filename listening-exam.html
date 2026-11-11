@@ -6,55 +6,73 @@
 <title>Listening Exam</title>
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; margin: 0; }
-  body { display: flex; flex-direction: column; min-height: 100dvh; overflow-x: hidden;
+  html, body { margin: 0; }
+  body { display: flex; flex-direction: column; min-height: 100dvh;
     font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
   button, input { font-family: inherit; }
-  button { cursor: pointer; }
-  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+  button { cursor: pointer; touch-action: manipulation; }
+  #fs-btn { position: fixed; top: 6px; right: 6px; z-index: 50; width: 44px; height: 44px; border-radius: 50%;
     border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
-  #fs-btn svg { width: 26px; height: 26px; }
-  #topbar { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
-  .tab { font-weight: 900; font-size: clamp(1rem, 2.3vw, 1.8rem); padding: 0 .9em; border: 4px solid #0B2F2C; border-radius: 14px; background: #fff; color: #0B2F2C; }
+  #fs-btn svg { width: 24px; height: 24px; }
+  #head { position: sticky; top: 0; z-index: 40; background: #0E8F86; padding-bottom: 2px; }
+  #topbar { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 6px 58px 3px 8px; flex-wrap: wrap; }
+  .tab { font-weight: 900; font-size: clamp(.95rem, min(2.2vw, 3.6vh), 1.7rem); padding: 0 .8em; border: 4px solid #0B2F2C; border-radius: 14px; background: #fff; color: #0B2F2C; }
   .tab.act { background: #D62828; color: #fff; }
-  .sep { width: 6px; height: 34px; background: #0B2F2C; border-radius: 3px; opacity: .55; }
-  .btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 0 14px;
-    font-size: clamp(1rem, 2.1vw, 1.6rem); font-weight: 900; color: #0B2F2C; }
+  .sep { width: 6px; height: 30px; background: #0B2F2C; border-radius: 3px; opacity: .55; }
+  .btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 0 12px;
+    font-size: clamp(.9rem, min(1.9vw, 3.3vh), 1.5rem); font-weight: 900; color: #0B2F2C; }
   .btn.on { background: #fff; }
   .btn.red { background: #D62828; color: #fff; }
-  #info { text-align: center; color: #fff; font-weight: 900; font-size: clamp(1rem, 1.9vw, 1.5rem); padding: 2px 70px 4px 12px; text-shadow: 2px 2px 0 #0B2F2C; }
-  #info small { display: block; font-size: .72em; font-weight: 800; }
-  #score { display: none; text-align: center; margin: 2px auto 4px; background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 0 18px;
-    font-size: clamp(1.1rem, 2.4vw, 1.9rem); font-weight: 900; width: fit-content; }
-  #grid { flex: 1; display: grid; gap: 12px; padding: 6px 14px 14px; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: stretch; }
-  @media (max-width: 1100px) { #grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 640px) { #grid { grid-template-columns: 1fr; } }
-  .card { background: #fff; border: 5px solid #0B2F2C; border-radius: 20px; padding: 10px; display: flex; flex-direction: column; gap: 8px; position: relative; }
-  .badge { position: absolute; top: -4px; left: -4px; width: 46px; height: 46px; border-radius: 50%; background: #D62828; color: #fff; border: 4px solid #0B2F2C;
-    display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.6rem; z-index: 2; }
-  .imgbox { height: clamp(150px, 26vh, 300px); display: flex; align-items: center; justify-content: center; border: 3px solid #0B2F2C; border-radius: 12px; background: #fff; padding: 4px; }
+  #info { text-align: center; color: #fff; font-weight: 900; font-size: clamp(.9rem, min(1.7vw, 2.8vh), 1.4rem); padding: 0 58px 2px 10px; text-shadow: 2px 2px 0 #0B2F2C; line-height: 1.2; }
+  #info small { display: block; font-size: .75em; font-weight: 800; }
+  #score { display: none; text-align: center; margin: 2px auto 2px; background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 0 16px;
+    font-size: clamp(1rem, min(2.2vw, 3.6vh), 1.8rem); font-weight: 900; width: fit-content; max-width: 94vw; }
+  #warn { display: none; text-align: center; color: #fff; background: #D62828; border: 4px solid #0B2F2C; border-radius: 12px; margin: 4px 10px; font-weight: 800; padding: 2px 10px; font-size: .9rem; }
+  #grid { flex: 1; min-height: 0; display: grid; gap: 10px; padding: 6px 10px 12px; grid-template-columns: 1fr; align-items: stretch; }
+  .card { background: #fff; border: 5px solid #0B2F2C; border-radius: 20px; padding: 8px; display: flex; flex-direction: column; gap: 6px; position: relative; min-height: 0; }
+  .badge { position: absolute; top: -4px; left: -4px; width: 42px; height: 42px; border-radius: 50%; background: #D62828; color: #fff; border: 4px solid #0B2F2C;
+    display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.5rem; z-index: 2; }
+  .imgbox { height: clamp(130px, 30vw, 240px); display: flex; align-items: center; justify-content: center; border: 3px solid #0B2F2C; border-radius: 12px; background: #fff; padding: 3px; min-height: 0; }
   .imgbox img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
-  .row { display: flex; align-items: flex-start; gap: 8px; padding: 6px; border: 3px solid #0B2F2C; border-radius: 12px; flex: 1; }
+  .row { display: flex; align-items: center; gap: 8px; padding: 6px; border: 3px solid #0B2F2C; border-radius: 12px; }
   .row.playing { background: #FFF3B0; }
-  .play { flex: 0 0 auto; width: 52px; height: 52px; border-radius: 50%; border: 4px solid #0B2F2C; background: #FFD23F; color: #0B2F2C;
-    font-weight: 900; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1; }
+  .play { flex: 0 0 auto; width: 56px; height: 56px; border-radius: 50%; border: 4px solid #0B2F2C; background: #FFD23F; color: #0B2F2C;
+    font-weight: 900; font-size: 1rem; display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1; }
   .play.on { background: #D62828; color: #fff; }
   .play:active { transform: translateY(2px); }
-  .sent { font-weight: 800; font-size: clamp(1.15rem, 1.6vw, 1.75rem); line-height: 1.95; min-width: 0; }
+  .sent { font-weight: 800; font-size: clamp(1.1rem, 4.6vw, 1.5rem); line-height: 1.9; min-width: 0; flex: 1; }
   .sent b.n { font-weight: 900; margin-right: 4px; }
-  .sent input { width: 7.2em; max-width: 100%; font-size: 1em; font-weight: 900; text-align: center; border: 0; border-bottom: 4px solid #0B2F2C; background: transparent; color: #0B2F2C; outline: none; padding: 0 2px; font-family: inherit; }
+  .sent input { width: 6.8em; max-width: 100%; font-size: 1em; font-weight: 900; text-align: center; border: 0; border-bottom: 4px solid #0B2F2C; border-radius: 0; background: transparent; color: #0B2F2C; outline: none; padding: 0 2px; font-family: inherit; }
   .sent input:focus { background: #FFF3B0; }
   .sent input.ok { background: #C8F7D4; border-bottom-color: #0A7A2F; color: #0A5A22; }
   .sent input.bad { background: #FFD6D6; border-bottom-color: #D62828; color: #9B1111; }
   .ansline { display: none; color: #0A7A2F; font-weight: 900; }
   .showans .ansline { display: inline; }
-  #warn { display: none; text-align: center; color: #fff; background: #D62828; border: 4px solid #0B2F2C; border-radius: 12px; margin: 4px 14px; font-weight: 800; padding: 2px 10px; }
+
+  /* tablet / small laptop: 2 columns, page scrolls */
+  @media (min-width: 700px) { #grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .sent { font-size: clamp(1.1rem, 2.4vw, 1.5rem); } }
+  /* phone landscape */
+  @media (max-height: 520px) and (orientation: landscape) { #grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .imgbox { height: 38vh; } .sent { font-size: 1.05rem; } .play { width: 46px; height: 46px; } }
+
+  /* big landscape screens (smartboard, laptop, desktop, fullscreen): everything fits, no scrolling */
+  @media (min-width: 1100px) and (min-aspect-ratio: 3/2) and (min-height: 560px) {
+    html, body { height: 100%; overflow: hidden; }
+    body { height: 100dvh; }
+    #head { position: static; }
+    #grid { grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr); }
+    .card { overflow: hidden; }
+    .imgbox { height: auto; flex: 1 1 0; }
+    .row { flex: 0 0 auto; align-items: flex-start; }
+    .play { width: clamp(40px, 5.2vh, 56px); height: clamp(40px, 5.2vh, 56px); font-size: clamp(.8rem, 1.7vh, 1rem); }
+    .sent { font-size: clamp(.95rem, min(1.5vw, 2.6vh), 1.75rem); line-height: 1.75; }
+  }
 </style>
 </head>
 <body>
 <button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
 </button>
+<div id="head">
 <div id="topbar">
   <div id="tabs" style="display:contents"></div>
   <div class="sep"></div>
@@ -66,11 +84,13 @@
 </div>
 <div id="info"></div>
 <div id="score"></div>
+</div>
 <div id="warn">Audio files were not found, so the browser voice is used instead.</div>
 <div id="grid"></div>
 <script>
 var CLASSES = [{"id": "g5", "title": "5th Class", "heading": "5th Grade · Unit 1", "boxes": [{"img": "listening-exam/img/g5_a.png", "unit": "Unit 1", "s": [{"before": "The ", "after": " is in his office.", "ans": "headmaster", "audio": "listening-exam/audio/g5_01.mp3"}, {"before": "He welcomes the ", "after": " to our school.", "ans": "students", "audio": "listening-exam/audio/g5_02.mp3"}]}, {"img": "listening-exam/img/g5_b.png", "unit": "Unit 1", "s": [{"before": "I borrow books from the ", "after": ".", "ans": "library", "audio": "listening-exam/audio/g5_03.mp3"}, {"before": "You can't ", "after": " in the library.", "ans": "shout", "audio": "listening-exam/audio/g5_04.mp3"}]}, {"img": "listening-exam/img/g5_c.png", "unit": "Unit 1", "s": [{"before": "My favourite school club is ", "after": " club.", "ans": "art", "audio": "listening-exam/audio/g5_05.mp3"}, {"before": "We ", "after": " pictures in this club.", "ans": "draw", "audio": "listening-exam/audio/g5_06.mp3"}]}, {"img": "listening-exam/img/g5_d.png", "unit": "Unit 1", "s": [{"before": "A girl carries the Turkish ", "after": ".", "ans": "flag", "audio": "listening-exam/audio/g5_07.mp3"}, {"before": "We celebrate ", "after": " Day on 29 October.", "ans": "Republic", "audio": "listening-exam/audio/g5_08.mp3"}]}, {"img": "listening-exam/img/g5_e.webp", "unit": "Unit 1", "s": [{"before": "She is in the science ", "after": ".", "ans": "lab", "audio": "listening-exam/audio/g5_09.mp3"}, {"before": "You mustn't ", "after": " in the lab.", "ans": "run", "audio": "listening-exam/audio/g5_10.mp3"}]}]}, {"id": "g7", "title": "7th Class", "heading": "7th Grade · Units 1–2", "boxes": [{"img": "listening-exam/img/g7_a.png", "unit": "Unit 1", "s": [{"before": "Tom shares his sandwich with his friend. He is very ", "after": ".", "ans": "generous", "audio": "listening-exam/audio/g7_01.mp3"}, {"before": "He never tells lies because he is ", "after": ".", "ans": "honest", "audio": "listening-exam/audio/g7_02.mp3"}]}, {"img": "listening-exam/img/g7_b.png", "unit": "Unit 1", "s": [{"before": "Emma is tall and slim with long ", "after": " hair.", "ans": "blonde", "audio": "listening-exam/audio/g7_03.mp3"}, {"before": "She is ", "after": ", so she always arrives on time.", "ans": "punctual", "audio": "listening-exam/audio/g7_04.mp3"}]}, {"img": "listening-exam/img/g7_c.png", "unit": "Unit 1", "s": [{"before": "Maya has ", "after": " brown hair and brown eyes.", "ans": "curly", "audio": "listening-exam/audio/g7_05.mp3"}, {"before": "She is more ", "after": " than her brother. She has a lot of friends.", "ans": "outgoing", "audio": "listening-exam/audio/g7_06.mp3"}]}, {"img": "listening-exam/img/g7_d.png", "unit": "Unit 2", "s": [{"before": "Skiing is an ", "after": " sport.", "ans": "outdoor", "audio": "listening-exam/audio/g7_07.mp3"}, {"before": "He needs special ", "after": ", like skis and boots.", "ans": "equipment", "audio": "listening-exam/audio/g7_08.mp3"}]}, {"img": "listening-exam/img/g7_e.webp", "unit": "Unit 2", "s": [{"before": "She is the winner and gets a gold ", "after": ".", "ans": "medal", "audio": "listening-exam/audio/g7_09.mp3"}, {"before": "The ", "after": " in the stadium are cheering for her.", "ans": "spectators", "audio": "listening-exam/audio/g7_10.mp3"}]}]}, {"id": "g8", "title": "8th Class", "heading": "8th Grade · Units 1–2", "boxes": [{"img": "listening-exam/img/g8_a.png", "unit": "Unit 1", "s": [{"before": "Ali is my best ", "after": ". We have fun together.", "ans": "buddy", "audio": "listening-exam/audio/g8_01.mp3"}, {"before": "True friends always ", "after": " each other.", "ans": "support", "audio": "listening-exam/audio/g8_02.mp3"}]}, {"img": "listening-exam/img/g8_b.png", "unit": "Unit 1", "s": [{"before": "Would you like to come ", "after": " to my house this evening?", "ans": "over", "audio": "listening-exam/audio/g8_03.mp3"}, {"before": "I'm sorry, but I can't. I'm ", "after": " today.", "ans": "busy", "audio": "listening-exam/audio/g8_04.mp3"}]}, {"img": "listening-exam/img/g8_c.png", "unit": "Unit 1", "s": [{"before": "Would you like some ", "after": " and tea?", "ans": "cake", "audio": "listening-exam/audio/g8_05.mp3"}, {"before": "No, thanks. I'm ", "after": ".", "ans": "full", "audio": "listening-exam/audio/g8_06.mp3"}]}, {"img": "listening-exam/img/g8_d.png", "unit": "Unit 2", "s": [{"before": "I like surfing the ", "after": " and chatting with my friends.", "ans": "Internet", "audio": "listening-exam/audio/g8_07.mp3"}, {"before": "I'm keen on playing online ", "after": ".", "ans": "games", "audio": "listening-exam/audio/g8_08.mp3"}]}, {"img": "listening-exam/img/g8_e.png", "unit": "Unit 2", "s": [{"before": "Camping is very ", "after": ". I feel calm in nature.", "ans": "relaxing", "audio": "listening-exam/audio/g8_09.mp3"}, {"before": "My brother ", "after": " camping because he thinks it is boring.", "ans": "hates", "audio": "listening-exam/audio/g8_10.mp3"}]}]}];
-var cur = 0, twice = true, token = 0, curAudio = null, usedFallback = false, answersShown = false;
+var PLAYER = new Audio(); PLAYER.preload = 'auto';
+var cur = 0, twice = true, token = 0, curAudio = null, wake = null, usedFallback = false, answersShown = false;
 var GAP_TWICE = 2200, GAP_ALL = 4500;
 
 function toggleFullScreen() {
@@ -114,12 +134,13 @@ function sentenceText(n) {
 function sleep(ms, my) { return new Promise(function (res) { setTimeout(function () { res(my === token); }, ms); }); }
 function playOnce(n, my) {
   return new Promise(function (res) {
-    var info = sentenceText(n), a = new Audio(info.src); curAudio = a;
+    var info = sentenceText(n), a = PLAYER; curAudio = a; a.onended = a.onerror = null; a.src = info.src;
     var done = false;
     function fin(ok) { if (done) return; done = true; res(ok && my === token); }
     a.onended = function () { fin(true); };
     a.onerror = function () { speakFallback(info.t, my).then(fin); };
     var p = a.play(); if (p && p.catch) p.catch(function () { speakFallback(info.t, my).then(fin); });
+    if (!wake && navigator.wakeLock) { navigator.wakeLock.request('screen').then(function (w) { wake = w; w.addEventListener('release', function () { wake = null; }); }).catch(function () {}); }
   });
 }
 function speakFallback(text, my) {
