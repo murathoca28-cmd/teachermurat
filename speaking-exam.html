@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speaking Exam Wheel</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; background: #0E8F86; color: #0B2F2C; }
+  button { font-family: inherit; cursor: pointer; }
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid #0B2F2C; background: #fff; color: #0B2F2C; display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .35em 1.4em; border: 5px solid #0B2F2C;
+    border-radius: 999px; background: #FFD23F; color: #0B2F2C; box-shadow: 0 6px 0 #0B2F2C; }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0B2F2C; }
+  #topbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 8px 70px 4px 12px; flex-wrap: wrap; }
+  .tab { font-weight: 900; font-size: clamp(1rem, 2.5vw, 1.8rem); padding: 0 .9em; border: 4px solid #0B2F2C; border-radius: 14px; background: #fff; color: #0B2F2C; }
+  .tab.act { background: #D62828; color: #fff; }
+  .stat { background: #fff; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; white-space: nowrap; }
+  .restart-btn { background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 2px 16px;
+    font-size: clamp(1rem, 2.4vw, 1.7rem); font-weight: 900; color: #0B2F2C; }
+  .sep { width: 6px; height: 34px; background: #0B2F2C; border-radius: 3px; opacity: .55; }
+  body.no-tr .tr { display: none; }
+
+  #main { flex: 1; min-height: 0; display: flex; gap: 14px; padding: 8px 14px 12px; align-items: stretch; }
+  @media (orientation: portrait) { #main { flex-direction: column; } }
+  #wheelbox { position: relative; flex: 0 0 46%; min-width: 0; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  @media (orientation: portrait) { #wheelbox { flex: 0 0 50%; } }
+  #wheelwrap { position: relative; flex: 1; min-height: 0; aspect-ratio: 1; max-width: 100%; }
+  #wheel { position: absolute; inset: 0; pointer-events: none; transition: transform 4.2s cubic-bezier(.12, .7, .1, 1); }
+  #wheel.notrans { transition: none; }
+  #wheel svg { width: 100%; height: 100%; display: block; }
+  #pointer { position: absolute; left: 50%; top: -2%; width: 11%; transform: translateX(-50%); z-index: 3; }
+  #pointer svg { width: 100%; display: block; }
+  #spin { font-size: clamp(1.4rem, 3.4vw, 2.6rem); padding: .15em 1.2em; }
+  #spin:disabled { background: #B8C2C1; color: #5B6B69; cursor: not-allowed; box-shadow: 0 6px 0 #5B6B69; }
+  #spin.next { background: #fff; }
+  #card { flex: 1; min-width: 0; min-height: 0; background: #fff; border: 5px solid #0B2F2C; border-radius: 22px; padding: 10px 20px; display: flex; flex-direction: column; justify-content: center; gap: 10px; overflow: auto; }
+  #cat { align-self: flex-start; color: #fff; font-weight: 900; font-size: clamp(1.1rem, 2.6vw, 2rem); padding: 0 20px; border-radius: 999px; border: 4px solid #0B2F2C; }
+  #q-en { font-weight: 900; font-size: clamp(1.5rem, 4vw, 3.4rem); line-height: 1.15; margin: 2px 0 0; }
+  #q-tr { font-weight: 800; font-size: clamp(1rem, 2.2vw, 1.7rem); color: #0B5C56; }
+  #start { font-weight: 800; font-size: clamp(1.1rem, 2.6vw, 2rem); color: #0B2F2C; background: #FFF3B0; border: 4px solid #0B2F2C; border-radius: 14px; padding: 6px 14px; }
+  #start b { color: #D62828; }
+  #qbox { flex-direction: column; gap: clamp(10px, 2vh, 18px); }
+  #showans { align-self: flex-start; font-size: clamp(1rem, 2.4vw, 1.8rem); }
+  #ans { display: none; background: #C8F7D4; border: 4px solid #0A7A2F; border-radius: 14px; padding: 8px 14px; }
+  #ans b { color: #0A7A2F; }
+  #a-en { font-weight: 900; font-size: clamp(1.2rem, 3vw, 2.4rem); line-height: 1.2; }
+  #a-tr { font-weight: 800; font-size: clamp(.95rem, 2vw, 1.5rem); color: #0B5C56; }
+  #idle { font-weight: 900; font-size: clamp(1.6rem, 4.4vw, 3.6rem); text-align: center; line-height: 1.2; }
+  #done { display: none; font-weight: 900; font-size: clamp(1.1rem, 2.6vw, 2rem); background: #FFD23F; border: 4px solid #0B2F2C; border-radius: 14px; padding: 6px 14px; text-align: center; }
+  #done .tr { font-size: .65em; font-weight: 800; color: #0B5C56; }
+</style>
+</head>
+<body>
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+<div id="topbar">
+  <div id="tabs" style="display:contents"></div>
+  <div class="sep"></div>
+  <div class="stat">Question: <span id="sp">0</span> / 3</div>
+  <button class="restart-btn" id="trbtn" onclick="toggleTR()">Turkish: On</button>
+  <button class="restart-btn" onclick="resetStudent()">Next student</button>
+</div>
+<div id="main">
+  <div id="wheelbox">
+    <div id="wheelwrap">
+      <div id="wheel"></div>
+      <div id="pointer"><svg viewBox="0 0 60 80"><path d="M6 6 H54 L30 74 Z" fill="#D62828" stroke="#0B2F2C" stroke-width="7" stroke-linejoin="round"/></svg></div>
+    </div>
+    <button class="big-btn" id="spin" onclick="spin()">SPIN</button>
+  </div>
+  <div id="card">
+    <div id="idle">Spin the wheel!<div class="tr" style="font-size:.5em;color:#0B5C56;font-weight:800">Çarkı çevir! Her öğrenci 3 soru cevaplar.</div></div>
+    <div id="qbox" style="display:none">
+      <div id="cat"></div>
+      <div id="q-en"></div>
+      <div id="q-tr" class="tr"></div>
+      <div id="start"></div>
+      <button class="restart-btn" id="showans" onclick="toggleAns()">Show answer</button>
+      <div id="ans"><b>Sample answer:</b><div id="a-en"></div><div id="a-tr" class="tr"></div></div>
+      <div id="done">All 3 questions are finished! Press “Next student”.<div class="tr">3 soru bitti! “Next student” düğmesine bas.</div></div>
+    </div>
+  </div>
+</div>
+<script>
+var CLASSES = [{"id": "5", "title": "5th Class", "units": ["Unit 1 · School Life"], "q": [{"u": 0, "q": "Where are you from?", "qt": "Nerelisin?", "s": "I'm from …", "a": "I'm from Türkiye. I'm a student at a lower secondary school.", "at": "Türkiye'denim. Bir ortaokul öğrencisiyim."}, {"u": 0, "q": "Who is your best friend?", "qt": "En iyi arkadaşın kim?", "s": "My best friend is …", "a": "My best friend is Elif. She is in my class.", "at": "En iyi arkadaşım Elif. O benim sınıfımda."}, {"u": 0, "q": "What is your favourite subject at school?", "qt": "Okulda en sevdiğin ders nedir?", "s": "My favourite subject is …", "a": "My favourite subject is English. I like it a lot.", "at": "En sevdiğim ders İngilizce. Onu çok seviyorum."}, {"u": 0, "q": "Who is your English teacher?", "qt": "İngilizce öğretmenin kim?", "s": "My English teacher is …", "a": "My English teacher is Ms Smith. She is a great teacher.", "at": "İngilizce öğretmenim Ms Smith. O harika bir öğretmen."}, {"u": 0, "q": "Which school clubs are there at your school?", "qt": "Okulunda hangi okul kulüpleri var?", "s": "We have …", "a": "We have a music club, an art club, a drama club and a chess club.", "at": "Bizim müzik, resim, drama ve satranç kulübümüz var."}, {"u": 0, "q": "What is your favourite school club?", "qt": "En sevdiğin okul kulübü hangisi?", "s": "My favourite school club is …", "a": "My favourite school club is music club.", "at": "En sevdiğim okul kulübü müzik kulübü."}, {"u": 0, "q": "What do you do in the music club?", "qt": "Müzik kulübünde ne yaparsın?", "s": "We play …", "a": "We play musical instruments and sing songs. I like playing the guitar.", "at": "Müzik aletleri çalar ve şarkı söyleriz. Gitar çalmayı severim."}, {"u": 0, "q": "What do you do in the art club?", "qt": "Resim kulübünde ne yaparsın?", "s": "We draw …", "a": "We draw pictures and take nature photos. I like drawing.", "at": "Resim yapar ve doğa fotoğrafları çekeriz. Resim yapmayı severim."}, {"u": 0, "q": "Do you like playing the guitar?", "qt": "Gitar çalmayı sever misin?", "s": "Yes, I do. / No, I don't.", "a": "Yes, I do. I like playing the guitar. (No, I don't. I like playing the piano.)", "at": "Evet, severim. Gitar çalmayı severim. (Hayır, sevmem. Piyano çalmayı severim.)"}, {"u": 0, "q": "Do you like reading books in your free time?", "qt": "Boş zamanında kitap okumayı sever misin?", "s": "Yes, I do. / No, I don't.", "a": "Yes, I do. I like reading books in my free time. (No, I don't. I like drawing pictures.)", "at": "Evet, severim. Boş zamanımda kitap okumayı severim. (Hayır, sevmem. Resim yapmayı severim.)"}, {"u": 0, "q": "Who are the people at school?", "qt": "Okulda kimler var?", "s": "They are …", "a": "They are a headmaster, a secretary, a coach, a cook and teachers.", "at": "Müdür, sekreter, antrenör, aşçı ve öğretmenler var."}, {"u": 0, "q": "What places are there at school?", "qt": "Okulda hangi yerler var?", "s": "There are …", "a": "There are a library, a canteen, a science lab and a sports field.", "at": "Bir kütüphane, bir kantin, bir fen laboratuvarı ve bir spor sahası var."}, {"u": 0, "q": "Where is the coach?", "qt": "Antrenör nerede?", "s": "He is …", "a": "He is in the sports field.", "at": "O spor sahasında."}, {"u": 0, "q": "Where is the secretary?", "qt": "Sekreter nerede?", "s": "She is …", "a": "She is in the administration department.", "at": "O idari bölümde."}, {"u": 0, "q": "What can't you do in the library?", "qt": "Kütüphanede ne yapamazsın?", "s": "You can't …", "a": "You can't shout in the library.", "at": "Kütüphanede bağıramazsın."}, {"u": 0, "q": "What mustn't you do in the classroom?", "qt": "Sınıfta ne yapmamalısın?", "s": "You mustn't …", "a": "You mustn't run in the classroom.", "at": "Sınıfta koşmamalısın."}, {"u": 0, "q": "What are the rules in the science lab?", "qt": "Fen laboratuvarındaki kurallar nelerdir?", "s": "You mustn't … / Wear …", "a": "You mustn't run in the lab. Wear your lab coat, gloves and goggles.", "at": "Laboratuvarda koşmamalısın. Önlüğünü, eldivenlerini ve gözlüğünü tak."}, {"u": 0, "q": "When is Republic Day?", "qt": "Cumhuriyet Bayramı ne zaman?", "s": "It is on …", "a": "It is on 29 October.", "at": "29 Ekim'de."}, {"u": 0, "q": "When is National Sovereignty and Children's Day?", "qt": "Ulusal Egemenlik ve Çocuk Bayramı ne zaman?", "s": "It is on …", "a": "It is on 23 April.", "at": "23 Nisan'da."}, {"u": 0, "q": "Which countries do you know?", "qt": "Hangi ülkeleri biliyorsun?", "s": "I know …", "a": "I know Türkiye, Spain, Italy, France, Japan and Canada.", "at": "Türkiye, İspanya, İtalya, Fransa, Japonya ve Kanada'yı biliyorum."}]}, {"id": "7", "title": "7th Class", "units": ["Unit 1 · Appearance and Personality", "Unit 2 · Sports"], "q": [{"u": 0, "q": "What do you look like?", "qt": "Dış görünüşün nasıl?", "s": "I'm … with …", "a": "I'm tall and slim. I have short brown hair and green eyes.", "at": "Uzun boylu ve zayıfım. Kısa kahverengi saçlarım ve yeşil gözlerim var."}, {"u": 0, "q": "What are you like? Describe your personality.", "qt": "Karakterin nasıl? Kişiliğini anlat.", "s": "I'm … and …", "a": "I'm outgoing and easy-going. I'm also punctual, but sometimes I'm a bit stubborn.", "at": "Girişken ve rahat biriyim. Ayrıca dakiğim ama bazen biraz inatçıyım."}, {"u": 0, "q": "What is your best friend like?", "qt": "En iyi arkadaşın nasıl biri?", "s": "My best friend is …", "a": "My best friend is generous and honest. He is also very funny, so I always enjoy spending time with him.", "at": "En iyi arkadaşım cömert ve dürüst. Aynı zamanda çok komik, bu yüzden onunla vakit geçirmekten hep keyif alırım."}, {"u": 0, "q": "What does your mother or father look like?", "qt": "Annen ya da baban neye benziyor?", "s": "My mother is … with …", "a": "My mother is beautiful with long brown hair and blue eyes. She is medium height and has a nice smile.", "at": "Annem güzel; uzun kahverengi saçlı ve mavi gözlü. Orta boylu ve güzel bir gülüşü var."}, {"u": 0, "q": "Who is more outgoing, you or your best friend?", "qt": "Sen mi daha girişkensin, en iyi arkadaşın mı?", "s": "… is more … than …", "a": "My best friend is more outgoing than me, but I am more hardworking than him.", "at": "En iyi arkadaşım benden daha girişken ama ben ondan daha çalışkanım."}, {"u": 0, "q": "Compare yourself with your brother, sister or a friend.", "qt": "Kendini kardeşinle ya da bir arkadaşınla karşılaştır.", "s": "My brother is … than me.", "a": "My brother is taller than me, but I am older than him. He is more easy-going than me, and I am more punctual than him.", "at": "Kardeşim benden daha uzun ama ben ondan büyüğüm. O benden daha rahat, ben ise ondan daha dakiğim."}, {"u": 0, "q": "Are you punctual? Why is it important?", "qt": "Dakik misin? Bu neden önemli?", "s": "Yes, I am. / No, I'm not.", "a": "Yes, I am. I always arrive on time. It is important because being late is rude and wastes other people's time.", "at": "Evet, dakiğim. Her zaman zamanında gelirim. Önemli çünkü geç kalmak kabalıktır ve başkalarının zamanını boşa harcar."}, {"u": 0, "q": "What is a selfish person like?", "qt": "Bencil biri nasıl biridir?", "s": "A selfish person …", "a": "A selfish person cares only about himself or herself. He or she doesn't like sharing things with others.", "at": "Bencil biri sadece kendini düşünür. Bir şeyleri başkalarıyla paylaşmayı sevmez."}, {"u": 0, "q": "What qualities should a good friend have?", "qt": "İyi bir arkadaşın hangi özellikleri olmalı?", "s": "A good friend should …", "a": "A good friend should be honest, generous and fair. He or she should also keep promises and never tell lies.", "at": "İyi bir arkadaş dürüst, cömert ve adil olmalı. Ayrıca sözünü tutmalı ve asla yalan söylememeli."}, {"u": 0, "q": "Describe a famous person you like.", "qt": "Sevdiğin ünlü bir kişiyi anlat.", "s": "I like …", "a": "I like Cristiano Ronaldo. He is tall and handsome with short dark hair. He is hardworking and strong, so he is a very successful football player.", "at": "Cristiano Ronaldo'yu severim. Uzun boylu ve yakışıklı, kısa koyu saçlı. Çalışkan ve güçlü, bu yüzden çok başarılı bir futbolcu."}, {"u": 1, "q": "How often do you do sports?", "qt": "Ne sıklıkla spor yaparsın?", "s": "I do sports …", "a": "I do sports twice a week. I usually play football with my friends at school.", "at": "Haftada iki kez spor yaparım. Genellikle okulda arkadaşlarımla futbol oynarım."}, {"u": 1, "q": "What is your favourite sport? Why do you like it?", "qt": "En sevdiğin spor hangisi? Neden seviyorsun?", "s": "My favourite sport is …", "a": "My favourite sport is basketball. I like it because it is exciting and I can play it with my friends.", "at": "En sevdiğim spor basketbol. Onu seviyorum çünkü heyecan verici ve arkadaşlarımla oynayabiliyorum."}, {"u": 1, "q": "What do you usually do on weekends?", "qt": "Hafta sonları genellikle ne yaparsın?", "s": "On weekends, I …", "a": "I often ride my bike in the park on Saturdays. I sometimes go jogging with my dad, and I never stay up late on Sundays.", "at": "Cumartesi günleri sık sık parkta bisiklete binerim. Bazen babamla koşuya çıkarım ve pazar günleri asla geç saatlere kadar uyumam."}, {"u": 1, "q": "How do you start your day? Talk about your morning routine.", "qt": "Güne nasıl başlarsın? Sabah rutininden bahset.", "s": "I always wake up …", "a": "I always wake up at seven o'clock. I usually have breakfast with my family, and then I go to school. I often walk to school.", "at": "Her zaman saat yedide uyanırım. Genellikle ailemle kahvaltı yaparım, sonra okula giderim. Sık sık okula yürürüm."}, {"u": 1, "q": "How often do you eat junk food?", "qt": "Ne sıklıkla abur cubur yersin?", "s": "I … eat junk food …", "a": "I rarely eat junk food. I usually eat healthy food like fruit, vegetables and meat because they give me energy.", "at": "Nadiren abur cubur yerim. Genellikle meyve, sebze ve et gibi sağlıklı yiyecekler yerim çünkü bana enerji verirler."}, {"u": 1, "q": "Why do people do sports?", "qt": "İnsanlar neden spor yapar?", "s": "People do sports to …", "a": "People do sports to keep fit and stay healthy. Sports also give energy and help people have fun with friends.", "at": "İnsanlar formda kalmak ve sağlıklı olmak için spor yapar. Spor ayrıca enerji verir ve insanların arkadaşlarıyla eğlenmesine yardımcı olur."}, {"u": 1, "q": "What is the difference between an indoor sport and an outdoor sport?", "qt": "İç mekân sporu ile açık hava sporu arasındaki fark nedir?", "s": "Indoor sports are …", "a": "We do indoor sports inside, like basketball, volleyball and judo. We do outdoor sports outside, like football, cycling and skiing.", "at": "İç mekân sporlarını içeride yaparız; basketbol, voleybol ve judo gibi. Açık hava sporlarını dışarıda yaparız; futbol, bisiklet ve kayak gibi."}, {"u": 1, "q": "What equipment do you need for swimming?", "qt": "Yüzme için hangi ekipmanlara ihtiyacın var?", "s": "I need …", "a": "For swimming, I need a swimsuit, goggles and a swimming cap.", "at": "Yüzmek için mayo, gözlük ve bone gerekir."}, {"u": 1, "q": "What is the difference between a team sport and an individual sport?", "qt": "Takım sporu ile bireysel spor arasındaki fark nedir?", "s": "In a team sport, …", "a": "In a team sport, there are many players in each team, like basketball. In an individual sport, you compete alone, like swimming or judo.", "at": "Takım sporunda her takımda birçok oyuncu vardır; basketbol gibi. Bireysel sporda tek başına yarışırsın; yüzme ya da judo gibi."}, {"u": 1, "q": "Imagine you are a famous athlete. How do you spend your day?", "qt": "Ünlü bir sporcu olduğunu hayal et. Gününü nasıl geçirirsin?", "s": "I wake up … and …", "a": "I always wake up early and have a big breakfast. Then I go to the gym and train for three hours. In the evening, I watch TV and rest.", "at": "Her zaman erken uyanırım ve büyük bir kahvaltı yaparım. Sonra spor salonuna gider ve üç saat antrenman yaparım. Akşamları televizyon izler ve dinlenirim."}]}, {"id": "8", "title": "8th Class", "units": ["Unit 1 · Friendship", "Unit 2 · Teen Life"], "q": [{"u": 0, "q": "Who is your best friend? Why?", "qt": "En iyi arkadaşın kim? Neden?", "s": "My best friend is …", "a": "My best friend is Ali. We became friends at primary school. We trust and support each other.", "at": "En iyi arkadaşım Ali. İlkokulda arkadaş olduk. Birbirimize güveniriz ve destek oluruz."}, {"u": 0, "q": "What qualities should a true friend have?", "qt": "Gerçek bir arkadaşın hangi özellikleri olmalı?", "s": "A true friend should …", "a": "A true friend should be honest, loyal and respectful. He or she should trust and support you.", "at": "Gerçek bir arkadaş dürüst, sadık ve saygılı olmalı. Sana güvenmeli ve seni desteklemeli."}, {"u": 0, "q": "What do you like doing with your friends?", "qt": "Arkadaşlarınla ne yapmayı seversin?", "s": "I like … with my friends.", "a": "I like going to the cinema and playing football with my friends. Sometimes we play online games.", "at": "Arkadaşlarımla sinemaya gitmeyi ve futbol oynamayı severim. Bazen online oyun oynarız."}, {"u": 0, "q": "Can people be friends with animals? Why?", "qt": "İnsanlar hayvanlarla arkadaş olabilir mi? Neden?", "s": "Yes, they can. / No, they can't.", "a": "Yes, they can. Animals can understand and share our feelings. For example, my dog always listens to me, so I never feel alone.", "at": "Evet, olabilirler. Hayvanlar duygularımızı anlayabilir ve paylaşabilir. Örneğin köpeğim beni hep dinler, bu yüzden kendimi asla yalnız hissetmem."}, {"u": 0, "q": "Your friend says, “Would you like to come over to my house this evening?” Accept the invitation.", "qt": "Arkadaşın “Bu akşam bize gelmek ister misin?” diyor. Daveti kabul et.", "s": "Yes, I'd … / Sure, …", "a": "Yeah, that would be great! I'd love to. What time shall I come?", "at": "Evet, harika olur! Çok isterim. Saat kaçta geleyim?"}, {"u": 0, "q": "Your friend invites you to a film night, but you are busy. Refuse politely and give a reason.", "qt": "Arkadaşın seni film gecesine davet ediyor ama meşgulsün. Kibarca reddet ve bir sebep söyle.", "s": "I'm sorry, but …", "a": "I'm sorry, but I can't. I have a guitar lesson tomorrow. How about Saturday?", "at": "Üzgünüm ama gelemem. Yarın gitar dersim var. Cumartesi nasıl olur?"}, {"u": 0, "q": "Someone asks, “Would you like some cake?” Answer in two ways.", "qt": "Birisi “Biraz kek ister misin?” diye soruyor. İki şekilde cevap ver.", "s": "Yes, I'd … / No, thanks. …", "a": "Yes, I'd love some. It looks yummy! / No, thanks. I'm full.", "at": "Evet, çok isterim. Çok lezzetli görünüyor! / Hayır, teşekkürler. Doydum."}, {"u": 0, "q": "How do you apologize to a friend for not joining a party?", "qt": "Bir partiye katılamadığın için arkadaşından nasıl özür dilersin?", "s": "I'm so sorry, but …", "a": "I'm so sorry, but I can't join your party because I have a football match. I promise I will be with you next time.", "at": "Çok üzgünüm ama partine katılamam çünkü bir futbol maçım var. Söz veriyorum, bir dahaki sefere seninle olacağım."}, {"u": 0, "q": "Can you count on your friends? When?", "qt": "Arkadaşlarına güvenebilir misin? Ne zaman?", "s": "Yes, I can. / No, I can't.", "a": "Yes, I can. My friends always support me when I have a problem. I know they are always there for me.", "at": "Evet, güvenebilirim. Bir sorunum olduğunda arkadaşlarım her zaman beni destekler. Her zaman yanımda olduklarını biliyorum."}, {"u": 0, "q": "Why is it important to keep promises to your friends?", "qt": "Arkadaşlarına verdiğin sözleri tutmak neden önemlidir?", "s": "It is important because …", "a": "It is important because promises build trust. If you break a promise, your friend feels sad and may not trust you again.", "at": "Önemli çünkü sözler güven oluşturur. Sözünü bozarsan arkadaşın üzülür ve sana bir daha güvenmeyebilir."}, {"u": 1, "q": "What do you like doing in your free time?", "qt": "Boş zamanında ne yapmayı seversin?", "s": "I like … and …", "a": "I like hanging out with my friends and playing basketball. I'm also keen on reading books.", "at": "Boş zamanımda arkadaşlarımla vakit geçirmeyi ve basketbol oynamayı severim. Ayrıca kitap okumaya meraklıyım."}, {"u": 1, "q": "What type of music do you like? Why?", "qt": "Hangi tür müziği seversin? Neden?", "s": "I like … because …", "a": "I like pop music because it is fun and I can dance to it. I dislike metal music. It is too loud.", "at": "Pop müziği severim çünkü eğlenceli ve onunla dans edebilirim. Metal müzikten hoşlanmam. Çok gürültülü."}, {"u": 1, "q": "Do you prefer team sports or individual sports? Why?", "qt": "Takım sporlarını mı yoksa bireysel sporları mı tercih edersin? Neden?", "s": "I prefer … to … because …", "a": "I prefer team sports to individual sports because I can play with my friends. I think it is more enjoyable.", "at": "Takım sporlarını bireysel sporlara tercih ederim çünkü arkadaşlarımla oynayabilirim. Bence daha eğlenceli."}, {"u": 1, "q": "What do you do in the evenings?", "qt": "Akşamları ne yaparsın?", "s": "I usually … then …", "a": "I usually do my homework first. Then I watch TV or surf the Internet. Sometimes I read a book.", "at": "Genellikle önce ödevimi yaparım. Sonra televizyon izler ya da internette gezinirim. Bazen kitap okurum."}, {"u": 1, "q": "What kind of books do you prefer reading? Why?", "qt": "Ne tür kitap okumayı tercih edersin? Neden?", "s": "I prefer … to …", "a": "I prefer reading detective books to romance books. I think they are exciting.", "at": "Dedektif kitaplarını aşk kitaplarına tercih ederim. Bence heyecan verici."}, {"u": 1, "q": "How often do you hang out with your friends?", "qt": "Arkadaşlarınla ne sıklıkla vakit geçirirsin?", "s": "I hang out … every …", "a": "I hang out with my friends every weekend. We sometimes go to the cinema or play computer games.", "at": "Her hafta sonu arkadaşlarımla vakit geçiririm. Bazen sinemaya gideriz ya da bilgisayar oyunları oynarız."}, {"u": 1, "q": "What do you hate doing? Why?", "qt": "Ne yapmaktan nefret edersin? Neden?", "s": "I hate … because …", "a": "I hate doing the shopping because it is tiring. I think it is boring, too.", "at": "Alışveriş yapmaktan nefret ederim çünkü yorucu. Bence aynı zamanda sıkıcı."}, {"u": 1, "q": "What are the most popular activities among teenagers?", "qt": "Gençler arasında en popüler etkinlikler nelerdir?", "s": "Teenagers like …", "a": "Teenagers like surfing the Internet, sending messages and going to the cinema or concerts. They also like hanging around and going shopping.", "at": "Gençler internette gezinmeyi, mesaj göndermeyi, sinemaya ya da konserlere gitmeyi sever. Ayrıca dışarıda takılmayı ve alışverişe gitmeyi de severler."}, {"u": 1, "q": "Do you prefer camping or going to the cinema? Why?", "qt": "Kampı mı yoksa sinemaya gitmeyi mi tercih edersin? Neden?", "s": "I prefer … to … because …", "a": "I prefer camping to going to the cinema because it is relaxing. I think being in nature is amazing.", "at": "Kampı sinemaya gitmeye tercih ederim çünkü rahatlatıcı. Bence doğada olmak harika."}, {"u": 1, "q": "What do you think about computer games?", "qt": "Bilgisayar oyunları hakkında ne düşünüyorsun?", "s": "I think …", "a": "I think computer games are fun, but they can be unhealthy if you play for a long time. So I only play them on weekends.", "at": "Bence bilgisayar oyunları eğlenceli ama uzun süre oynarsan sağlıksız olabilir. Bu yüzden sadece hafta sonları oynarım."}]}];
+var COLORS = ["#D62828", "#2260C0", "#0B7A2F", "#E8720C", "#7B2CBF", "#0B7285", "#B5179E", "#C2410C", "#1D4ED8", "#9A3412"];
+var UNIT_COLORS = ["#D62828", "#2260C0"];
+var MAX = 3, N = 20, STEP = 360 / N;
+var TR = true, cur = 0, rot = 0, spinning = false, asked = 0, gone = [];
+
+function toggleFullScreen() {
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+  } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+}
+function toggleTR() { TR = !TR; document.body.classList.toggle('no-tr', !TR); document.getElementById('trbtn').textContent = 'Turkish: ' + (TR ? 'On' : 'Off'); }
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+// first few words of the question + "..." when it is cut
+function label(q) {
+  if (q.length <= 20) return q;
+  var w = q.split(' '), out = '';
+  for (var i = 0; i < w.length; i++) {
+    var t = out ? out + ' ' + w[i] : w[i];
+    if (t.length > 17 && out) break;
+    out = t;
+  }
+  return out + '...';
+}
+function pt(r, deg) { var a = deg * Math.PI / 180; return [(r * Math.sin(a)).toFixed(1), (-r * Math.cos(a)).toFixed(1)]; }
+
+function buildWheel() {
+  var qs = CLASSES[cur].q, out = '<svg viewBox="-250 -250 500 500" xmlns="http://www.w3.org/2000/svg">';
+  for (var i = 0; i < N; i++) {
+    var a0 = i * STEP, a1 = (i + 1) * STEP, p0 = pt(240, a0), p1 = pt(240, a1);
+    out += '<g id="sl' + i + '"><path class="slp" d="M0 0 L' + p0[0] + ' ' + p0[1] + ' A240 240 0 0 1 ' + p1[0] + ' ' + p1[1] + ' Z" fill="' + COLORS[i % COLORS.length] + '" stroke="#0B2F2C" stroke-width="5" stroke-linejoin="round"/>';
+    var txt = esc(label(qs[i].q)), fs = Math.min(15, 150 / (txt.length * 0.62));
+    out += '<g transform="rotate(' + (i * STEP + STEP / 2) + ')">' +
+      '<text class="sln" transform="translate(0,-128) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-size="' + fs.toFixed(1) + '" font-weight="900" fill="#fff" stroke="#0B2F2C" stroke-width="3.2" paint-order="stroke" stroke-linejoin="round">' + txt + '</text>' +
+      '<text class="snum" x="0" y="-225" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="900" fill="#FFD23F" stroke="#0B2F2C" stroke-width="3.5" paint-order="stroke" stroke-linejoin="round">' + (i + 1) + '</text></g></g>';
+  }
+  out += '<circle r="38" fill="#FFD23F" stroke="#0B2F2C" stroke-width="7"/><circle r="240" fill="none" stroke="#0B2F2C" stroke-width="9"/></svg>';
+  document.getElementById('wheel').innerHTML = out;
+}
+function greyOut(i) {
+  var g = document.getElementById('sl' + i);
+  g.querySelector('.slp').setAttribute('fill', '#C3CCCB');
+  var t = g.querySelector('.sln'); t.setAttribute('fill', '#7C8B89'); t.setAttribute('stroke', '#C3CCCB');
+  var n = g.querySelector('.snum'); n.setAttribute('fill', '#7C8B89'); n.setAttribute('stroke', '#C3CCCB');
+}
+function buildTabs() {
+  var box = document.getElementById('tabs'); box.innerHTML = '';
+  CLASSES.forEach(function (c, i) {
+    var b = document.createElement('button'); b.className = 'tab' + (i === cur ? ' act' : ''); b.textContent = c.title;
+    b.onclick = function () { if (i === cur || spinning) return; cur = i; buildTabs(); resetStudent(true); };
+    box.appendChild(b);
+  });
+}
+function resetStudent(rebuild) {
+  if (spinning) return;
+  asked = 0; gone = [];
+  document.getElementById('sp').textContent = 0;
+  var w = document.getElementById('wheel');
+  if (rebuild) { w.classList.add('notrans'); rot = 0; w.style.transform = 'rotate(0deg)'; }
+  buildWheel();
+  if (rebuild) { void w.offsetWidth; w.classList.remove('notrans'); }
+  document.getElementById('qbox').style.display = 'none';
+  document.getElementById('idle').style.display = '';
+  var s = document.getElementById('spin'); s.disabled = false; s.textContent = 'SPIN'; s.classList.remove('next');
+}
+function spin() {
+  if (spinning) return;
+  if (asked >= MAX) { resetStudent(); return; }
+  var free = []; for (var i = 0; i < N; i++) if (gone.indexOf(i) < 0) free.push(i);
+  var idx = free[Math.floor(Math.random() * free.length)];
+  spinning = true; document.getElementById('spin').disabled = true;
+  var target = ((360 - (idx * STEP + STEP / 2) + (Math.random() * 2 - 1) * STEP * 0.3) % 360 + 360) % 360;
+  var c = ((rot % 360) + 360) % 360;
+  rot += 1800 + ((target - c) + 360) % 360;
+  var w = document.getElementById('wheel');
+  w.style.transform = 'rotate(' + rot + 'deg)';
+  var done = false;
+  function finish() { if (done) return; done = true; w.removeEventListener('transitionend', finish); show(idx); }
+  w.addEventListener('transitionend', finish);
+  setTimeout(finish, 4600);
+}
+function toggleAns() {
+  var a = document.getElementById('ans'), open = a.style.display !== 'block';
+  a.style.display = open ? 'block' : 'none';
+  document.getElementById('showans').textContent = open ? 'Hide answer' : 'Show answer';
+}
+function show(idx) {
+  var C = CLASSES[cur], q = C.q[idx];
+  gone.push(idx); greyOut(idx); asked++;
+  document.getElementById('sp').textContent = asked;
+  document.getElementById('idle').style.display = 'none';
+  document.getElementById('qbox').style.display = 'flex';
+  var cat = document.getElementById('cat'); cat.textContent = '#' + (idx + 1) + ' · ' + C.units[q.u]; cat.style.background = UNIT_COLORS[q.u];
+  document.getElementById('q-en').textContent = q.q;
+  document.getElementById('q-tr').textContent = q.qt;
+  document.getElementById('start').innerHTML = '<b>Start:</b> ' + esc(q.s);
+  document.getElementById('a-en').textContent = q.a; document.getElementById('a-tr').textContent = q.at;
+  document.getElementById('ans').style.display = 'none'; document.getElementById('showans').textContent = 'Show answer';
+  var fin = asked >= MAX, s = document.getElementById('spin');
+  document.getElementById('done').style.display = fin ? 'block' : 'none';
+  s.textContent = fin ? 'NEXT STUDENT' : 'SPIN'; s.classList.toggle('next', fin);
+  spinning = false; s.disabled = false;
+}
+document.addEventListener('keydown', function (e) {
+  if (e.code === 'Space' && !e.repeat) { e.preventDefault(); var s = document.getElementById('spin'); if (!s.disabled) spin(); }
+});
+buildTabs(); resetStudent(true);
+</script>
+</body>
+</html>
