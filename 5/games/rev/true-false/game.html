@@ -51,6 +51,10 @@
   #fb-tr { font-weight: 800; font-size: clamp(.9rem, 1.9vw, 1.4rem); }
   #next { display: none; font-size: clamp(1.1rem, 2.6vw, 1.8rem); }
   .ok { color: #C8F7D4; } .no { color: #FFD6D6; }
+
+img.ei{height:1.12em;width:auto;vertical-align:-.2em;display:inline-block;object-fit:contain}
+.eiw{display:inline-block;line-height:0;vertical-align:-.15em}
+.eiw svg.ei{width:1em;height:1em;display:inline-block}
 </style>
 </head>
 <body>
@@ -60,7 +64,7 @@
 <div id="start-screen">
   <h1 class="title">True<br>or False?</h1>
   <p class="subtitle">Read fast. Decide fast!</p>
-  <div class="preview">✔ ❌</div>
+  <div class="preview">✔ ✘</div>
   <button class="big-btn" onclick="startGame()">Start</button>
 </div>
 <div id="win-screen">
@@ -144,6 +148,59 @@
     }
     showQ();
   }
+</script>
+<script>
+(function(){
+var IM={}, EM={"\u23f0": "v_clock", "\u2714": "v_ok", "\u2718": "v_no", "\ud83d\udd25": "v_flame"}, SV={"v_clock": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"13\" r=\"8\" fill=\"#fff\" stroke=\"#0B2F2C\" stroke-width=\"2\"/><path d=\"M12 8v5l3 2\" fill=\"none\" stroke=\"#0B2F2C\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M9 3h6\" stroke=\"#0B2F2C\" stroke-width=\"2.2\" stroke-linecap=\"round\"/></svg>", "v_ok": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12.5l5 5L20 6.5\" fill=\"none\" stroke=\"#1E9E5A\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>", "v_no": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5.5 5.5l13 13M18.5 5.5l-13 13\" fill=\"none\" stroke=\"#E5484D\" stroke-width=\"4\" stroke-linecap=\"round\"/></svg>", "v_flame": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 2.5c1 4-4.5 6-4.5 11a5 5 0 0 0 10 0c0-2.2-1-3.6-2-4.6.2 2-.8 3-1.7 3 .7-3.5-.3-6.7-1.8-9.4z\" fill=\"#FF8A1F\" stroke=\"#0B2F2C\" stroke-width=\"1.8\" stroke-linejoin=\"round\"/></svg>"};
+var RE=/(?:[⌐-⏿←-⇿①-⓿■-◿☀-➿⤀-⥿⬀-⯿]|[\uD83C-\uD83E][\uDC00-\uDFFF])️?(?:‍(?:[☀-➿]|[\uD83C-\uD83E][\uDC00-\uDFFF])️?)*|⟦[a-z0-9_]+⟧/g;
+var SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1,TITLE:1,OPTION:1};
+function mk(key){
+  if(SV[key]){var s=document.createElement('span');s.className='eiw';s.innerHTML=SV[key];return s;}
+  if(IM[key]){var i=document.createElement('img');i.className='ei';i.alt='';i.setAttribute('draggable','false');i.src=IM[key];return i;}
+  return null;
+}
+function fixText(t){
+  var v=t.nodeValue; RE.lastIndex=0; if(!RE.test(v)){return;} RE.lastIndex=0;
+  var p=t.parentNode; if(!p||SKIP[p.nodeName])return;
+  var inSvg=(p.namespaceURI&&p.namespaceURI.indexOf('svg')>=0);
+  var out=[],last=0,m;
+  while((m=RE.exec(v))){
+    out.push(v.slice(last,m.index)); last=m.index+m[0].length;
+    if(inSvg)continue;
+    var s=m[0], key;
+    if(s.charAt(0)==='⟦') key='t_'+s.slice(1,-1);
+    else key=EM[s.replace(/️/g,'').replace(/‍[\s\S]*$/,'')];
+    var n=key&&mk(key); if(n)out.push(n);
+  }
+  out.push(v.slice(last));
+  if(inSvg){t.nodeValue=out.join('').replace(/\s{2,}/g,' ').trim();return;}
+  var f=document.createDocumentFragment();
+  out.forEach(function(x){f.appendChild(typeof x==='string'?document.createTextNode(x):x);});
+  p.replaceChild(f,t);
+}
+function fillImgs(root){
+  var l=root.querySelectorAll?root.querySelectorAll('img[data-i]'):[];
+  for(var i=0;i<l.length;i++){var e=l[i];if(!e.getAttribute('src')&&IM[e.getAttribute('data-i')])e.src=IM[e.getAttribute('data-i')];}
+  if(root.tagName==='IMG'&&root.getAttribute('data-i')&&!root.getAttribute('src'))root.src=IM[root.getAttribute('data-i')];
+}
+function walk(n){
+  if(n.nodeType===3){fixText(n);return;}
+  if(n.nodeType!==1||SKIP[n.nodeName])return;
+  fillImgs(n);
+  var w=document.createTreeWalker(n,NodeFilter.SHOW_TEXT,null),a=[],x;
+  while((x=w.nextNode()))a.push(x);
+  a.forEach(function(t){if(t.parentNode&&!SKIP[t.parentNode.nodeName])fixText(t);});
+}
+function start(){
+  walk(document.body);
+  new MutationObserver(function(ms){
+    for(var i=0;i<ms.length;i++){var m=ms[i];
+      if(m.type==='characterData')walk(m.target);
+      else for(var j=0;j<m.addedNodes.length;j++)walk(m.addedNodes[j]);}
+  }).observe(document.body,{childList:true,subtree:true,characterData:true});
+}
+if(document.body)start();else document.addEventListener('DOMContentLoaded',start);
+})();
 </script>
 </body>
 </html>
