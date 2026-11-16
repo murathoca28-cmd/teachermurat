@@ -52,7 +52,11 @@
   .balloon:disabled { cursor: default; }
   #fb { min-height: 1.3em; text-align: center; font-weight: 900; font-size: clamp(1rem, 2.4vw, 1.8rem); color: #fff; text-shadow: 2px 2px 0 #0B2F2C; }
   #next { display: none; align-self: center; font-size: clamp(1.1rem, 2.6vw, 1.7rem); }
-</style>
+
+img.ei{height:1.12em;width:auto;vertical-align:-.2em;display:inline-block;object-fit:contain}
+.eiw{display:inline-block;line-height:0;vertical-align:-.15em}
+.eiw svg.ei{width:1em;height:1em;display:inline-block}
+.preview svg.bl{height:1.7em;width:auto;vertical-align:middle;margin:0 .1em}#fb .eiw svg.ei path{stroke:#fff}</style>
 </head>
 <body>
 <button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
@@ -61,7 +65,7 @@
 <div id="start-screen">
   <h1 class="title">Balloon<br>Pop</h1>
   <p class="subtitle">Read the clue and pop the right balloon!</p>
-  <div class="preview">🎈 🎈 🎈</div>
+  <div class="preview"><svg class="bl" viewBox="0 0 24 32" aria-hidden="true"><path d="M12 29c-1 1.5 1 2 0 3" fill="none" stroke="#0B3D41" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="12" cy="11" rx="8.6" ry="10" fill="#E5484D" stroke="#0B3D41" stroke-width="2"/><path d="M12 21l-2.2 3.4h4.4z" fill="#E5484D" stroke="#0B3D41" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.2 8c.6-2.2 2.2-3.4 4-3.6" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".8"/></svg> <svg class="bl" viewBox="0 0 24 32" aria-hidden="true"><path d="M12 29c-1 1.5 1 2 0 3" fill="none" stroke="#0B3D41" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="12" cy="11" rx="8.6" ry="10" fill="#FFD23F" stroke="#0B3D41" stroke-width="2"/><path d="M12 21l-2.2 3.4h4.4z" fill="#FFD23F" stroke="#0B3D41" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.2 8c.6-2.2 2.2-3.4 4-3.6" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".8"/></svg> <svg class="bl" viewBox="0 0 24 32" aria-hidden="true"><path d="M12 29c-1 1.5 1 2 0 3" fill="none" stroke="#0B3D41" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="12" cy="11" rx="8.6" ry="10" fill="#2F6FDE" stroke="#0B3D41" stroke-width="2"/><path d="M12 21l-2.2 3.4h4.4z" fill="#2F6FDE" stroke="#0B3D41" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.2 8c.6-2.2 2.2-3.4 4-3.6" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".8"/></svg></div>
   <button class="big-btn" onclick="startGame()">Start</button>
 </div>
 <div id="win-screen">
@@ -133,6 +137,59 @@
     }
     showClue();
   }
+</script>
+<script>
+(function(){
+var IM={}, EM={"\u2714": "v_ok", "\u2718": "v_no"}, SV={"v_ok": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12.5l5 5L20 6.5\" fill=\"none\" stroke=\"#1E9E5A\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>", "v_no": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5.5 5.5l13 13M18.5 5.5l-13 13\" fill=\"none\" stroke=\"#E5484D\" stroke-width=\"4\" stroke-linecap=\"round\"/></svg>"};
+var RE=/(?:[⌐-⏿←-⇿①-⓿■-◿☀-➿⤀-⥿⬀-⯿]|[\uD83C-\uD83E][\uDC00-\uDFFF])️?(?:‍(?:[☀-➿]|[\uD83C-\uD83E][\uDC00-\uDFFF])️?)*|⟦[a-z0-9_]+⟧/g;
+var SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1,TITLE:1,OPTION:1};
+function mk(key){
+  if(SV[key]){var s=document.createElement('span');s.className='eiw';s.innerHTML=SV[key];return s;}
+  if(IM[key]){var i=document.createElement('img');i.className='ei';i.alt='';i.setAttribute('draggable','false');i.src=IM[key];return i;}
+  return null;
+}
+function fixText(t){
+  var v=t.nodeValue; RE.lastIndex=0; if(!RE.test(v)){return;} RE.lastIndex=0;
+  var p=t.parentNode; if(!p||SKIP[p.nodeName])return;
+  var inSvg=(p.namespaceURI&&p.namespaceURI.indexOf('svg')>=0);
+  var out=[],last=0,m;
+  while((m=RE.exec(v))){
+    out.push(v.slice(last,m.index)); last=m.index+m[0].length;
+    if(inSvg)continue;
+    var s=m[0], key;
+    if(s.charAt(0)==='⟦') key='t_'+s.slice(1,-1);
+    else key=EM[s.replace(/️/g,'').replace(/‍[\s\S]*$/,'')];
+    var n=key&&mk(key); if(n)out.push(n);
+  }
+  out.push(v.slice(last));
+  if(inSvg){t.nodeValue=out.join('').replace(/\s{2,}/g,' ').trim();return;}
+  var f=document.createDocumentFragment();
+  out.forEach(function(x){f.appendChild(typeof x==='string'?document.createTextNode(x):x);});
+  p.replaceChild(f,t);
+}
+function fillImgs(root){
+  var l=root.querySelectorAll?root.querySelectorAll('img[data-i]'):[];
+  for(var i=0;i<l.length;i++){var e=l[i];if(!e.getAttribute('src')&&IM[e.getAttribute('data-i')])e.src=IM[e.getAttribute('data-i')];}
+  if(root.tagName==='IMG'&&root.getAttribute('data-i')&&!root.getAttribute('src'))root.src=IM[root.getAttribute('data-i')];
+}
+function walk(n){
+  if(n.nodeType===3){fixText(n);return;}
+  if(n.nodeType!==1||SKIP[n.nodeName])return;
+  fillImgs(n);
+  var w=document.createTreeWalker(n,NodeFilter.SHOW_TEXT,null),a=[],x;
+  while((x=w.nextNode()))a.push(x);
+  a.forEach(function(t){if(t.parentNode&&!SKIP[t.parentNode.nodeName])fixText(t);});
+}
+function start(){
+  walk(document.body);
+  new MutationObserver(function(ms){
+    for(var i=0;i<ms.length;i++){var m=ms[i];
+      if(m.type==='characterData')walk(m.target);
+      else for(var j=0;j<m.addedNodes.length;j++)walk(m.addedNodes[j]);}
+  }).observe(document.body,{childList:true,subtree:true,characterData:true});
+}
+if(document.body)start();else document.addEventListener('DOMContentLoaded',start);
+})();
 </script>
 </body>
 </html>
