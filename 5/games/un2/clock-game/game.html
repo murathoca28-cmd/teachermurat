@@ -62,6 +62,11 @@
     #fb { font-size: .85rem; min-height: 0; line-height: 1.15; }
     #next { font-size: 1rem !important; padding: .1em 1em; border-width: 4px; box-shadow: 0 3px 0 #0B2F2C; }
   }
+
+img.ei{height:1.12em;width:auto;vertical-align:-.2em;display:inline-block;object-fit:contain}
+.eiw{display:inline-block;line-height:0;vertical-align:-.15em}
+.eiw svg.ei{width:1em;height:1em;display:inline-block}
+img.ci{object-fit:contain}
 </style>
 <style id="ln-css">
 .ln-btn { background: #fff !important; font-size: clamp(1.1rem, 2.6vw, 1.9rem) !important; }
@@ -89,9 +94,9 @@
 <div id="start-screen">
   <h1 class="title">Clock<br>Game</h1>
   <p class="subtitle">What time is it?</p>
-  <div class="preview">🕐 ⏰ 🕘</div>
+  <div class="preview">⟦clk0100⟧ ⟦clk1010⟧ ⟦clk0900⟧</div>
   <button class="big-btn" onclick="startGame()">Start</button>
-  <button class="big-btn ln-btn" onclick="lnOpen()">📖 Learn</button>
+  <button class="big-btn ln-btn" onclick="lnOpen()">⟦dictionary⟧ Learn</button>
 </div>
 <div id="win-screen">
   <h2 class="win-title" id="win-title">You Win!</h2>
@@ -170,12 +175,12 @@
   }
 </script>
 <div id="ln-screen">
-  <div id="ln-top"><div id="ln-title">📖 Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
+  <div id="ln-top"><div id="ln-title">⟦dictionary⟧ Learn</div><div id="ln-tabs"></div><button id="ln-close" onclick="lnClose()">Close ✕</button></div>
   <div id="ln-grid"></div>
 </div>
 <script>
 (function () {
-  var LN = [["Time", "Saat", [["🕖", "It’s seven o’clock.", "Saat yedi."], ["🕣", "It’s half past eight.", "Saat sekiz buçuk."], ["⏰", "It’s quarter past nine.", "Saat dokuzu çeyrek geçiyor."], ["⏰", "It’s quarter to ten.", "Saat ona çeyrek var."], ["⏰", "It’s five past one.", "Saat biri beş geçiyor."], ["⏰", "It’s ten to two.", "Saat ikiye on var."], ["❓", "What time is it?", "Saat kaç?"], ["❓", "What time does the lesson start?", "Ders saat kaçta başlıyor?"], ["🕙", "It starts at ten o’clock.", "Saat onda başlıyor."]]]];
+  var LN = [["Time", "Saat", [["⟦clk0700⟧", "It’s seven o’clock.", "Saat yedi."], ["⟦clk0830⟧", "It’s half past eight.", "Saat sekiz buçuk."], ["⟦clk0915⟧", "It’s quarter past nine.", "Saat dokuzu çeyrek geçiyor."], ["⟦clk0945⟧", "It’s quarter to ten.", "Saat ona çeyrek var."], ["⟦clk0105⟧", "It’s five past one.", "Saat biri beş geçiyor."], ["⟦clk0150⟧", "It’s ten to two.", "Saat ikiye on var."], ["❓", "What time is it?", "Saat kaç?"], ["❓", "What time does the lesson start?", "Ders saat kaçta başlıyor?"], ["⟦clk1000⟧", "It starts at ten o’clock.", "Saat onda başlıyor."]]]];
   function lnShow(i) {
     Array.prototype.forEach.call(document.querySelectorAll('.ln-tab'), function (b, k) { b.classList.toggle('act', k === i); });
     document.getElementById('ln-grid').innerHTML = LN[i][2].map(function (it) {
@@ -191,6 +196,58 @@
   };
   window.lnClose = function () { document.getElementById('ln-screen').style.display = 'none'; };
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.lnClose(); });
+})();
+</script>
+<script>
+(function(){
+var IM={"b_dictionary": "data:image/webp;base64,UklGRjoSAABXRUJQVlA4WAoAAAAQAAAAnwAAnwAAQUxQSNsEAAABCYZt20aCFff+/RfuZ9wEEf2fAEVr5a0JSyTkSpz8h4BkZxyQ7wQkFPm+SCVkb33GtmAFPF15YaTlAlu10VvFUNu2DSP//3ZJsmWMiAlANV53u/jByxqJJOV4Rz+G/oI251AREzABtmjbNi3JGnOfcDGdZdu2bdu2Xd+2bT7btm3bZvjePT8i8saJdvdZz69FxAQQz1gqUS6GQJkiy0UQBubv0Fcap19/nBIWZVY4dvHExvtUxal++YYnvyfrMqscfsKW/RR4YPVrvrSfE3Kx+oGnbTqQLaTSyH1Hzc/qNnoP3K8HiwIbesF0t3HVk5Eocu+O80l0e7KRKPQaJ/RZ3fb7USEKbV29r0V364+v/Fmm3Nesk7tMvOfjouQn0/2H7eSCGav7Np5jlQtw902a0HpgBcWGHQ5CRVP3zZlTuHb32ZRcrDCAuqz4h2zn4Ixd85GUI2O/911yl7lw+vMrf1Z3pVQ2xO+HyZLo+9/BRSPDwHLk8HzlvaVDzD11zznQigmKL+btftJqFlD5sL3MGQhLE0rkuasTWsnt2IAUnf8D08ExQzg0cOj6VmzWXYngtCdTaET/qrmdFBdY+uqTV8yW4gKjH3vtW35vKSwWox9/9XxyWLClv59ywAqgoAA5Lb3d4UvjuOBM32pHLxMYJFcbzsmBARkcGpBTcICs6EgODkaKDbidU2z0pzeP4MCY9ud/Fxrk9KUfyoHB6auvR5GB/LrvEFrr269HkUETrye25tsbosjg9unByenEPhQZp0d2IoWGsze1IiPSCjgyMHjKClZoWDhEcO3oSCg2KxwoR0ZeZq9eKzCYTHQVnn//dXBEFRtr5OMtHBj4xedIOTTZmNBOVsR28p39cmCssS+RcmBQOxFa84HlcGTQV1EOjKuf7Y+IbP5wjyPj9Jt3ENy3D1mBcfrNhxGR0Zv6U2jEguG/p9D4sB3uJAUGq/W0ySmlqIBb1fq95JzDAtWBx5535RG9KCxOK1724I0rZwJrGxFJayaSBA5EdLNGNWjVkkJg89cbbpukXhup4Uwaf9tJC+6eqIlEtpssu4ffvG3lw1/VEsZ10Jq7CU2e9LMPvX3okj8BWKrFc49e3GDj7/zKz4FRMkD1d1wDriqpoXJ6yzsAgQGx+EfUKvjVZ9xQfIqeNhkzxatQs/XXt7UqN5GpcpsOPfSpXA9S3nlhOzUQ2HSa2PKQ5FowS33+J7iJZigPbD2IagH/dZjOJxsJ3OrtcU1I6uwd301uIph/xNJWPeBOzOff1aKZtdU86k9eEvLzP5cbyTaoLqwloW89/mfcRAjAdeElmbF736bcSFON6iJ5OhC770RqKoTrAi0BMwR2Q81qppKnTBUqneszqgv9YZIORyZELlo1G7imzFMvd6Bvvfq7bcnlGv5tfUjUlT72ZAf4269541fbrSoVauzBN8m14bpIY/d+vwPB917/8LlDx6zfUnnsF2/6G7MAromRk97UAVnia0+z6qJMedX63rDMbKqu0ZM7AiTINLPrGXzlSGqUyuRZm6qZDTx9YB2N7pnk5U6dE4yZpnzcFSgWAqsDcdjO0QCEpjNQ2QRz/KN/mJc1TaItEuH86NcvXq1nyuR33vQHTDgF65++cUvu+fxrv0ZIDVUfwDhSSHDKTKtMVDXdvw8DAFZQOCA4DQAAUDUAnQEqoACgAD55NpVIJKKiISV0vnCQDwllbdGgBod2XcAzjluizAa7Nnpi3BrHq/x/5J+dvjN9BJJ/vx+r9eH8n318Aj8Z/mf+q3uXU/2Z9QL28+z/7fw09SPwf7AH6rf7rymfDK8b9gj+df4X/rf3f17v+f/W+hL82/xv/t/0XwF/yn+of8z+++2j7Sf2A9lP9ezufJaJYNC9ZkDTc/+602H4OMhlYd+l6SikZehmaHyX6OSJRSYPYaIdJ4LO2EbhJVoClvHksbYQHoaM+a4xfrsZVN3+XdYSI0oVN+xUKynEBw13r1uqqJwxdZ68aUVmBWpL7gemR+NsaVq+DD4HWrrte8x3R4q2z6iJXNqU7t1coLTErBMQ2ULpkrqDblv88MhDgKeUH+Av92EUQEN44IYH2fTXvdogNgBfZ9st9kxsKGiOuvivPPmrgiQCA8oQzmvVYzzQeSUNqCUd8g/fIIKTTk46GGJjfZvuMbvrrdqnc8Py1NoMwxboot5gwBB43NKXJ8SzvC+YfOkVlJDRtGki/4iMKwA1+e/zKJLeNUr+pPagoqmCDL1XQJFryOIAAP7+7L3/T4niHxpHOsjBd2ptNX8V39/5POzv/8NeoBAVdAIrh9wFTrzKRmx3YuRaRtheB5Yci9pFr6mv+/xJHE3w8d9YK+vv68G440ShQDa2+2OP3Mpbyy/3S6r9MHewiDuFb2k+oN+1mFoT138d7T4YJuHNrnNpf5MV9g8VbtwSjYwQtlV0wtySlOF8jOpqZtJ9hrkginqWqaPIFLjTMNHyZs9pq2Oxi09YuI+PGED9uMygUIOzDZE2panr6qijnrz+I6momLH0rJEGkK/2dRiQmu+9z8iIVGIgB2Cxam/Z1drg88WdSiq9GTAjfeeXZ2Q40FCnHU9ImFiomzKq3SKxcHZj+T1lgIQIpIQolWySNQhDZ4i1TIFq10wzA8U/b6Hwz4qEoeoSnCfgwmSPSwNgMCodh0+wDkZEUFTcgoQeR9lKeLZdBnj27TLEawu3TQzXuM6RaXATq77OdsuOBgPI4rhh2unuoLwkBAcPaMxr2n4aAVcHoOuuQY54Uojw6/L0n6IsEbm26vrR/WjnjA2ZBbkP6lw0X6U/wy091j+Kt8/ydbRn5S3IOwtCoPgZ+Bz2dBqmLqk0NRH4LCfv7QxvNWd8pAwvu2kPSImY+z5nD9mN3lDfu6Av+wBuCkUN8X02bjP/fxifGA1YWksUscTeW/uGZSJHSM7sd4avYQcYP7arZcgxcq3ziGxy59029jnVyCAAR6w5OS/yMGv9LYAq1lOLRMKOpiVTH+yn1b8d3Om7tU85iIDzH9ZlzYIvCShNmolpXdclr4wAPG+jQgLoAqZkX84VawPsQOsFxs/pMO+JM3UoufKBbREmtq7CruU0aR4RmcGPKV5vEIu/5gO2osIBI5NJ3r9KsLXUzDSKn/F7UUt6PLP/UFyljDY5/kYAzvphqsDm26SBmqZBo28jcQH7RaBZgZe44tq4Imj5rwj53chlG7SztdB9KLzX2ZnrmnXkmQtAImzzahKtsBZvHPF6Pt2mcQvdmcaTiEGTO7asYSNMSh7TXVuJNutalT2UuUxGAlZ7yrBUc3Jn5vmwYSq6kPhup7zjyg3NKvFa1r+entl0uXHFsGrt78fP2OHt+xU3M9R3bgP388RuB1nJOd+xWh7kpPKR/Os79lmSHlK7nIZ2FZxevZeDevXwWxeS//L9XAJ8whRXI5AddfuMcVV5Ct9DDGkeNZb1vDrEoJxMa7rTf9dgUZQjSQGdN7Q2W6wta8LpP+Z7dPtQrM+fxumKhIVNngznGrYgRNAu8ahssjobLQi5AMCcAs1Vq0HnFCTJHrahoBcYf9J9a6WiUnFam89hQLU5Ej0FD0mbL0mdJk7K9mICFwOaSg+JjUvJAQMKy8fs8mtu9ztS+2v7yBpToLirj/5kh6lAGqQ7ap6AAO1FiA+vq263XQd5Wr6F/t3ZZZqiQu1iXBSlfOwh47IwLCFIIsDau5v4mi68lp+gINIins58bL9l/HNKc66yI5tRYngfQaKW79lFRs8dnBZvLP5ASYgMi33CQlLXjS1LJOomSa7Y/MkErwEKpIiPa73YQ6u99kXwxlaW9EKyDvVE2qlklVqohkEr+VpcrK15L4xI4xaYRSdM1m0R/a1lSMNhbap7V+AsEFanDRA+RdrenVqFRXC2NI1uCPs8xITHF0ZeZ38o6wDolWHJdHnWyYcS3keZFOCsxvTV2OVdzfqDUs7QwCK8zJ8BrXOJcCvKUSKa7e84NYp4aufviSoa/cjOZ+G8c09GO7hbFyFeimi+F06g4AjkEnnSQECJ0H2troX6kIJbpJ4U2Ej2l6WVFpzYQL5l/BiFCzeUw6kfOmHmonhIkpHBn9ocaPpey7NFxXPKQ4SSVm2Mc0LqjmTTNOys+9TCL6Q0fcv5Ejq9v6xQcu6wbSBUhQBjTQ84ygh0FPvj1k5/gjy+/AVoK6q1Rp6cvG+fh/mQQzLpWUS+ATs/NrxOD5euCQlD9tbqFFo2VtaxQUkUSsSh3caGXwKRW+/grfkUJVE7iHLNvZv4V6juGZOYtNJXZmYY33cllZbcebdvbQD590oNJBrEhIiclgFiSEdmSw1esrBSaHyRzgLpLn/TlSb4nS4d7g9oySLibbc+W6Jg7yaIxj4q44MxfhMqWzprN/lcaSxQzwdSbpmqkVBpRVzDCMieVvNSUtNMEV7jkFbvu0qW40EBuM1oJrpP/GzKtmT1PusGeHl/G/5a5K63ke7jGzi1FOZS2bLQlBpX2hN5nvsSMsO2MzObdkEcZxnJFEDBEnUTHEZ0bJFX7c/wmYw0CtqKPO1ui6AvtKQK+3vzGMQtmQXmnhJWUkjAaSbEYYhBksyOkyMXCayHz79q+CPn1WxwkGmEKDomnOI0p/94Ly/ALYlFKdV3muruy/ZG4mfeXBuYx2nJqv2r4iAuG6OVMOZijdm6bpgRA1G6Cpsfc3tC44Lg2OIKaxoX5Wzg8HbG3QpFMXnNK1RGrKXbGV9PXcxSvB0kbhP2NJGtTr422oZ2Yvx7N/fTrDCS/gnpe78PoQqzSVmLPJGVmQlMMCIfYAoahf5kpHzA+fc05wFRUGSGLfZJjxQjY9yU9Fd6x7QzKqy8dzp/3qat07/nd0/+Spv4PF/YYlyqYQ0CgBKwWURsWtQdf/5/v8P8Gq3pAsuoCAa3tfoA0wSwtAh/SdHjzBKKE7EkhjIidEgZgQ2slF/cgJRPVIAI56WuXZSY0sDed8BkYTRLCWuSwVqdLYlnsOdo7+MqPx5zwTqCMejrgqNxD7goZG39YzrzCfMwvlonqYV37A3D6+0W6pK6tt9UbWzLGyLHRYvOBrTCcz5Vvhn9c/80I/xvz0xdevvdzwY8hUMsgZQ5YW4sTXRerUidwZ5WoMcwJT8cwjXdSur6x4USZq+J8cwep5pu8fXgl/dnz1hpk34X9rswo7Rn+kFOjPlTjhyptQnXI4iku2ZM4JkCZGI0rW9HRNierFHYarT+g9SrGv/YzeRZvgBByOLlkejkfGiUh5j8rdcV9p33wQ5ijoHn4BOBmlRp80LMV/IydHsR/+r4ieH3llQdUZiP3glarnXK4uqpMSGwzPjhvtJWTPk4BaIINJh2FyNxJ7Fge45tIcIErfALx/aPoN0t8Kmjj2ZxK8ShOBtYZ8ryBSy/IpAhMoO/Q0/2WsI1ICUHMGTWcHm999e3Yq7zwfE1pL4zyGN2S/NY+MIByJRzBKdtDA+AZpCFZzfQqq2gORnIxFfSMEUQBkn8sgtX1xuLWcd8+NaJLzJMJrFEGpX62NSMT3IYAqFlE0s4yOPAtMAhTfeGUL/0O6YMGKXLjVr2DKIosIgGUVEDydsfIIFaK9pZcWEBxoTe7SU5e0OMtTYJn/1E/ACR4i9LeDy9wbIBvk8lqqqja7/NQG3UOddkYYSILl5j4+V1pF2FQeUcYMY3xtPxtb3w18i9Ubv//IF/ksZpmsQgDg/ySPnXGTtakhDePxhI6nA1dMEOzXuAZTUIJWWlSqod8X075JlG62gcvtSX+sbjWnT4aB94KiOYyc8dhs3I5TVX27mI7fkzZWxoQgraC7xNOIz/rAr7vHyjyMJhE01Alh4Ubq7FYezPjfhL6ImlNMd3zhFbI3BxOD48w4bagLIF6VdxK/U1pVW33LqwKVq839Sxa0VbdvHQAHX+BXB5G32CE/+I7jV0WXArENbX4cP9sl7Lrpog/INw9QlHsB0oV6bAIQnwprzGZ5pjGnD4z//3d3/+7Cv//doTT/+Ff1FGXnvtxdokYSe5fIOK7FfIAAAAIKzpEm63ilu13rlNkPUVt8++dfjbvQ+b+Qef2H3MyI/Gsf022fAmHzoCGUNSqIZdrFSYJ/7sQPKDq+iV7KUCL0YDgMsKXljcTyk5vr4mujMaaC0LgzndmU0QWhrNdj20NZcbuU9HGXVXukozutuzj8L4TANtULaXArN4BAR4UAAA"}, EM={"\u2714": "v_ok", "\u2715": "v_no", "\u2718": "v_no", "\u2753": "v_qmark"}, SV={"v_ok": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12.5l5 5L20 6.5\" fill=\"none\" stroke=\"#1E9E5A\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>", "v_no": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5.5 5.5l13 13M18.5 5.5l-13 13\" fill=\"none\" stroke=\"#E5484D\" stroke-width=\"4\" stroke-linecap=\"round\"/></svg>", "v_qmark": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#fff\" stroke=\"#0B2E2B\" stroke-width=\"2.4\"/><text x=\"12\" y=\"17.6\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"900\" fill=\"#E63946\" font-family=\"Arial,Verdana,sans-serif\">?</text></svg>", "b_clk0100": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#fff\" stroke=\"#0B2E2B\" stroke-width=\"2.6\"/><path d=\"M12 3.6v2M12 18.4v2M3.6 12h2M18.4 12h2\" stroke=\"#0B2E2B\" stroke-width=\"1.6\" stroke-linecap=\"round\"/><path d=\"M12 12L14.60 7.50\" stroke=\"#0B2E2B\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M12 12L12.00 4.20\" stroke=\"#E63946\" stroke-width=\"2\" stroke-linecap=\"round\"/><circle cx=\"12\" cy=\"12\" r=\"1.4\" fill=\"#0B2E2B\"/></svg>", "b_clk0105": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#fff\" stroke=\"#0B2E2B\" stroke-width=\"2.6\"/><path d=\"M12 3.6v2M12 18.4v2M3.6 12h2M18.4 12h2\" stroke=\"#0B2E2B\" stroke-width=\"1.6\" stroke-linecap=\"round\"/><path d=\"M12 12L14.79 7.61\" stroke=\"#0B2E2B\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M12 12L15.90 5.25\" stroke=\"#E63946\" stroke-width=\"2\" stroke-linecap=\"round\"/><circle cx=\"12\" cy=\"12\" r=\"1.4\" fill=\"#0B2E2B\"/></svg>", "b_clk0150": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#fff\" stroke=\"#0B2E2B\" stroke-width=\"2.6\"/><path d=\"M12 3.6v2M12 18.4v2M3.6 12h2M18.4 12h2\" stroke=\"#0B2E2B\" stroke-width=\"1.6\" stroke-linecap=\"round\"/><path d=\"M12 12L16.26 9.02\" stroke=\"#0B2E2B\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M12 12L5.25 8.10\" stroke=\"#E63946\" stroke-width=\"2\" stroke-linecap=\"round\"/><circle cx=\"12\" cy=\"12\" r=\"1.4\" fill=\"#0B2E2B\"/></svg>", "b_clk0700": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#fff\" stroke=\"#0B2E2B\" stroke-width=\"2.6\"/><path d=\"M12 3.6v2M12 18.4v2M3.6 12h2M18.4 12h2\" stroke=\"#0B2E2B\" stroke-width=\"1.6\" stroke-linecap=\"round\"/><path d=\"M12 12L9.40 16.50\" stroke=\"#0B2E2B\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M12 12L12.00 4.20\" stroke=\"#E63946\" stroke-width=\"2\" stroke-linecap=\"round\"/><circle cx=\"12\" cy=\"12\" r=\"1.4\" fill=\"#0B2E2B\"/></svg>", "b_clk0830": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#fff\" stroke=\"#0B2E2B\" stroke-width=\"2.6\"/><path d=\"M12 3.6v2M12 18.4v2M3.6 12h2M18.4 12h2\" stroke=\"#0B2E2B\" stroke-width=\"1.6\" stroke-linecap=\"round\"/><path d=\"M12 12L6.98 13.35\" stroke=\"#0B2E2B\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M12 12L12.00 19.80\" stroke=\"#E63946\" stroke-width=\"2\" stroke-linecap=\"round\"/><circle cx=\"12\" cy=\"12\" r=\"1.4\" fill=\"#0B2E2B\"/></svg>", "b_clk0900": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#fff\" stroke=\"#0B2E2B\" stroke-width=\"2.6\"/><path d=\"M12 3.6v2M12 18.4v2M3.6 12h2M18.4 12h2\" stroke=\"#0B2E2B\" stroke-width=\"1.6\" stroke-linecap=\"round\"/><path d=\"M12 12L6.80 12.00\" stroke=\"#0B2E2B\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M12 12L12.00 4.20\" stroke=\"#E63946\" stroke-width=\"2\" stroke-linecap=\"round\"/><circle cx=\"12\" cy=\"12\" r=\"1.4\" fill=\"#0B2E2B\"/></svg>", "b_clk0915": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#fff\" stroke=\"#0B2E2B\" stroke-width=\"2.6\"/><path d=\"M12 3.6v2M12 18.4v2M3.6 12h2M18.4 12h2\" stroke=\"#0B2E2B\" stroke-width=\"1.6\" stroke-linecap=\"round\"/><path d=\"M12 12L6.84 11.32\" stroke=\"#0B2E2B\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M12 12L19.80 12.00\" stroke=\"#E63946\" stroke-width=\"2\" stroke-linecap=\"round\"/><circle cx=\"12\" cy=\"12\" r=\"1.4\" fill=\"#0B2E2B\"/></svg>", "b_clk0945": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#fff\" stroke=\"#0B2E2B\" stroke-width=\"2.6\"/><path d=\"M12 3.6v2M12 18.4v2M3.6 12h2M18.4 12h2\" stroke=\"#0B2E2B\" stroke-width=\"1.6\" stroke-linecap=\"round\"/><path d=\"M12 12L7.20 10.01\" stroke=\"#0B2E2B\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M12 12L4.20 12.00\" stroke=\"#E63946\" stroke-width=\"2\" stroke-linecap=\"round\"/><circle cx=\"12\" cy=\"12\" r=\"1.4\" fill=\"#0B2E2B\"/></svg>", "b_clk1000": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#fff\" stroke=\"#0B2E2B\" stroke-width=\"2.6\"/><path d=\"M12 3.6v2M12 18.4v2M3.6 12h2M18.4 12h2\" stroke=\"#0B2E2B\" stroke-width=\"1.6\" stroke-linecap=\"round\"/><path d=\"M12 12L7.50 9.40\" stroke=\"#0B2E2B\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M12 12L12.00 4.20\" stroke=\"#E63946\" stroke-width=\"2\" stroke-linecap=\"round\"/><circle cx=\"12\" cy=\"12\" r=\"1.4\" fill=\"#0B2E2B\"/></svg>", "b_clk1010": "<svg class=\"ei\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#fff\" stroke=\"#0B2E2B\" stroke-width=\"2.6\"/><path d=\"M12 3.6v2M12 18.4v2M3.6 12h2M18.4 12h2\" stroke=\"#0B2E2B\" stroke-width=\"1.6\" stroke-linecap=\"round\"/><path d=\"M12 12L7.74 9.02\" stroke=\"#0B2E2B\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M12 12L18.75 8.10\" stroke=\"#E63946\" stroke-width=\"2\" stroke-linecap=\"round\"/><circle cx=\"12\" cy=\"12\" r=\"1.4\" fill=\"#0B2E2B\"/></svg>"};
+var RE=/\u27E6[a-z0-9_]+\u27E7|(?:[⌀-⏿①-⓿■-◿☀-➿⤀-⥿⬀-⯿]|[\uD83C-\uD83E][\uDC00-\uDFFF])️?(?:‍(?:[☀-➿]|[\uD83C-\uD83E][\uDC00-\uDFFF])️?)*/g;
+var SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1,TITLE:1,OPTION:1};
+function mk(key){
+  if(SV[key]){var s=document.createElement('span');s.className='eiw';s.innerHTML=SV[key];return s;}
+  if(IM[key]){var i=document.createElement('img');i.className='ei';i.alt='';i.src=IM[key];return i;}
+  return null;
+}
+function fixText(t){
+  var v=t.nodeValue; if(!RE.test(v)){RE.lastIndex=0;return;} RE.lastIndex=0;
+  var p=t.parentNode; if(!p||SKIP[p.nodeName])return;
+  var inSvg=(p.namespaceURI&&p.namespaceURI.indexOf('svg')>=0);
+  var inBtn=!inSvg&&p.closest&&p.closest('button');
+  var out=[],last=0,m;
+  while((m=RE.exec(v))){
+    var base=m[0].replace(/️/g,'').replace(/‍[\s\S]*$/,'');
+    out.push(v.slice(last,m.index)); last=m.index+m[0].length;
+    if(m[0].charAt(0)==='\u27E6'){ if(!inSvg){var tn=mk('b_'+m[0].slice(1,-1)); if(tn)out.push(tn);} continue; }
+    if(!inSvg){var key=EM[base]; if(inBtn&&!(key&&key.charAt(0)==='v'))key=null; var n=key&&mk(key); if(n)out.push(n);}
+  }
+  out.push(v.slice(last));
+  if(inSvg){t.nodeValue=out.join('').replace(/\s{2,}/g,' ').trim();return;}
+  var f=document.createDocumentFragment();
+  out.forEach(function(x){f.appendChild(typeof x==='string'?document.createTextNode(x):x);});
+  p.replaceChild(f,t);
+}
+function fillImgs(root){
+  var l=root.querySelectorAll?root.querySelectorAll('img[data-i]'):[];
+  for(var i=0;i<l.length;i++){var e=l[i];if(!e.getAttribute('src')&&IM[e.getAttribute('data-i')])e.src=IM[e.getAttribute('data-i')];}
+  if(root.tagName==='IMG'&&root.getAttribute('data-i')&&!root.getAttribute('src'))root.src=IM[root.getAttribute('data-i')];
+}
+function walk(n){
+  if(n.nodeType===3){fixText(n);return;}
+  if(n.nodeType!==1||SKIP[n.nodeName])return;
+  fillImgs(n);
+  var w=document.createTreeWalker(n,NodeFilter.SHOW_TEXT,null),a=[],x;
+  while((x=w.nextNode()))a.push(x);
+  a.forEach(function(t){if(t.parentNode&&!SKIP[t.parentNode.nodeName])fixText(t);});
+}
+function start(){
+  walk(document.body);
+  new MutationObserver(function(ms){
+    for(var i=0;i<ms.length;i++){var m=ms[i];
+      if(m.type==='characterData')walk(m.target);
+      else for(var j=0;j<m.addedNodes.length;j++)walk(m.addedNodes[j]);}
+  }).observe(document.body,{childList:true,subtree:true,characterData:true});
+}
+if(document.body)start();else document.addEventListener('DOMContentLoaded',start);
 })();
 </script>
 </body>
