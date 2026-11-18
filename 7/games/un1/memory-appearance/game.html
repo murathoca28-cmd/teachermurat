@@ -83,7 +83,11 @@
   @keyframes shake { 0%,100% { margin-left: 0; } 25% { margin-left: -6px; } 75% { margin-left: 6px; } }
   .win-title { font-size: clamp(2.5rem, 9vw, 6rem); font-weight: 900; margin: 0; color: #FFD23F; }
   .win-stats { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 800; margin: 0; }
-</style>
+
+img.ei{height:1.12em;width:auto;vertical-align:-.2em;display:inline-block;object-fit:contain}
+.eiw{display:inline-block;line-height:0;vertical-align:-.15em}
+.eiw svg.ei{width:1em;height:1em;display:inline-block}
+.preview svg.pv{height:1.15em;width:auto;vertical-align:middle;margin:0 .1em}.preview .eiw svg.ei{width:1.1em;height:1.1em}.win-title svg.pv{height:.85em;width:auto;vertical-align:-.15em;margin:0 .15em}.pic svg:not(.ei){width:84cqmin;height:84cqmin}.pic img.ei{height:84cqmin;width:auto;max-width:92cqw;object-fit:contain}</style>
 </head>
 <body>
 
@@ -94,12 +98,12 @@
 <div id="start-screen">
   <h1 class="title">Appearance<br>Memory Match</h1>
   <p class="subtitle">Find the picture and its word!</p>
-  <div class="preview">👓 💇 👁️ 🧔</div>
+  <div class="preview"><svg class="pv" viewBox="0 0 44 56" aria-hidden="true"><g transform="rotate(-8 22 28)"><rect x="5" y="5" width="34" height="46" rx="6" fill="#1E9E5A" stroke="#0B3D41" stroke-width="3"/><path d="M15.5 20.5a6.5 6.5 0 1 1 9.8 5.6c-2.2 1.2-3.3 2.4-3.3 5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="22" cy="39" r="2.7" fill="#fff"/></g></svg> <svg class="pv" viewBox="0 0 44 56" aria-hidden="true"><g transform="rotate(5 22 28)"><rect x="5" y="5" width="34" height="46" rx="6" fill="#F7A531" stroke="#0B3D41" stroke-width="3"/><path d="M15.5 20.5a6.5 6.5 0 1 1 9.8 5.6c-2.2 1.2-3.3 2.4-3.3 5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="22" cy="39" r="2.7" fill="#fff"/></g></svg> <svg class="pv" viewBox="0 0 44 56" aria-hidden="true"><g transform="rotate(-4 22 28)"><rect x="5" y="5" width="34" height="46" rx="6" fill="#2F6FDE" stroke="#0B3D41" stroke-width="3"/><path d="M15.5 20.5a6.5 6.5 0 1 1 9.8 5.6c-2.2 1.2-3.3 2.4-3.3 5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="22" cy="39" r="2.7" fill="#fff"/></g></svg> <svg class="pv" viewBox="0 0 44 56" aria-hidden="true"><g transform="rotate(8 22 28)"><rect x="5" y="5" width="34" height="46" rx="6" fill="#E5484D" stroke="#0B3D41" stroke-width="3"/><path d="M15.5 20.5a6.5 6.5 0 1 1 9.8 5.6c-2.2 1.2-3.3 2.4-3.3 5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="22" cy="39" r="2.7" fill="#fff"/></g></svg></div>
   <button class="big-btn" onclick="startGame()">Start</button>
 </div>
 
 <div id="win-screen">
-  <h2 class="win-title">🎉 You Win! 🎉</h2>
+  <h2 class="win-title"><svg class="pv" viewBox="0 0 44 44" aria-hidden="true"><path d="M22 4l4.2 9 9.8 1.2-7.2 6.8 1.9 9.7L22 25.8l-8.7 4.9 1.9-9.7L8 14.2l9.8-1.2z" fill="#F7C531" stroke="#0B3D41" stroke-width="2.4" stroke-linejoin="round"/><circle cx="6" cy="8" r="2.6" fill="#E5484D"/><circle cx="38" cy="9" r="2.6" fill="#2F6FDE"/><rect x="5" y="31" width="7" height="3.6" rx="1.4" fill="#1E9E5A" transform="rotate(-30 8 33)"/><rect x="32" y="32" width="7" height="3.6" rx="1.4" fill="#E5484D" transform="rotate(28 35 34)"/><circle cx="22" cy="39" r="2.2" fill="#2F6FDE"/></svg> You Win! <svg class="pv" viewBox="0 0 44 44" aria-hidden="true"><path d="M22 4l4.2 9 9.8 1.2-7.2 6.8 1.9 9.7L22 25.8l-8.7 4.9 1.9-9.7L8 14.2l9.8-1.2z" fill="#F7C531" stroke="#0B3D41" stroke-width="2.4" stroke-linejoin="round"/><circle cx="6" cy="8" r="2.6" fill="#E5484D"/><circle cx="38" cy="9" r="2.6" fill="#2F6FDE"/><rect x="5" y="31" width="7" height="3.6" rx="1.4" fill="#1E9E5A" transform="rotate(-30 8 33)"/><rect x="32" y="32" width="7" height="3.6" rx="1.4" fill="#E5484D" transform="rotate(28 35 34)"/><circle cx="22" cy="39" r="2.2" fill="#2F6FDE"/></svg></h2>
   <p class="win-stats" id="win-stats"></p>
   <button class="big-btn" onclick="startGame()">Play Again</button>
 </div>
@@ -220,6 +224,59 @@
       (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document);
     }
   }
+</script>
+<script>
+(function(){
+var IM={}, EM={}, SV={};
+var RE=/(?:[⌐-⏿←-⇿①-⓿■-◊◌-◎◐-◿☀-➿⤀-⥿⬀-⯿]|[\uD83C-\uD83E][\uDC00-\uDFFF])️?(?:‍(?:[☀-➿]|[\uD83C-\uD83E][\uDC00-\uDFFF])️?)*|⟦[a-z0-9_]+⟧/g;
+var SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1,TITLE:1,OPTION:1};
+function mk(key){
+  if(SV[key]){var s=document.createElement('span');s.className='eiw';s.innerHTML=SV[key];return s;}
+  if(IM[key]){var i=document.createElement('img');i.className='ei';i.alt='';i.setAttribute('draggable','false');i.src=IM[key];return i;}
+  return null;
+}
+function fixText(t){
+  var v=t.nodeValue; RE.lastIndex=0; if(!RE.test(v)){return;} RE.lastIndex=0;
+  var p=t.parentNode; if(!p||SKIP[p.nodeName])return;
+  var inSvg=(p.namespaceURI&&p.namespaceURI.indexOf('svg')>=0);
+  var out=[],last=0,m;
+  while((m=RE.exec(v))){
+    out.push(v.slice(last,m.index)); last=m.index+m[0].length;
+    if(inSvg)continue;
+    var s=m[0], key;
+    if(s.charAt(0)==='⟦') key='t_'+s.slice(1,-1);
+    else key=EM[s.replace(/️/g,'').replace(/‍[\s\S]*$/,'')];
+    var n=key&&mk(key); if(n)out.push(n);
+  }
+  out.push(v.slice(last));
+  if(inSvg){t.nodeValue=out.join('').replace(/\s{2,}/g,' ').trim();return;}
+  var f=document.createDocumentFragment();
+  out.forEach(function(x){f.appendChild(typeof x==='string'?document.createTextNode(x):x);});
+  p.replaceChild(f,t);
+}
+function fillImgs(root){
+  var l=root.querySelectorAll?root.querySelectorAll('img[data-i]'):[];
+  for(var i=0;i<l.length;i++){var e=l[i];if(!e.getAttribute('src')&&IM[e.getAttribute('data-i')])e.src=IM[e.getAttribute('data-i')];}
+  if(root.tagName==='IMG'&&root.getAttribute('data-i')&&!root.getAttribute('src'))root.src=IM[root.getAttribute('data-i')];
+}
+function walk(n){
+  if(n.nodeType===3){fixText(n);return;}
+  if(n.nodeType!==1||SKIP[n.nodeName])return;
+  fillImgs(n);
+  var w=document.createTreeWalker(n,NodeFilter.SHOW_TEXT,null),a=[],x;
+  while((x=w.nextNode()))a.push(x);
+  a.forEach(function(t){if(t.parentNode&&!SKIP[t.parentNode.nodeName])fixText(t);});
+}
+function start(){
+  walk(document.body);
+  new MutationObserver(function(ms){
+    for(var i=0;i<ms.length;i++){var m=ms[i];
+      if(m.type==='characterData')walk(m.target);
+      else for(var j=0;j<m.addedNodes.length;j++)walk(m.addedNodes[j]);}
+  }).observe(document.body,{childList:true,subtree:true,characterData:true});
+}
+if(document.body)start();else document.addEventListener('DOMContentLoaded',start);
+})();
 </script>
 </body>
 </html>
