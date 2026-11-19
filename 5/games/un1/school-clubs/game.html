@@ -145,6 +145,33 @@ img.ei{height:1.12em;width:auto;vertical-align:-.2em;display:inline-block;object
 .eiw{display:inline-block;line-height:0;vertical-align:-.15em}
 .eiw svg.ei{width:1em;height:1em;display:inline-block}
 img.ci{object-fit:contain}
+
+/* rs: yeniden baslat + puani duzelt */
+.rs-dock{position:fixed;left:8px;bottom:8px;z-index:60;display:flex;flex-direction:column;align-items:flex-start;gap:8px;font-family:'Nunito',sans-serif}
+.rs-dock.hidden{display:none}
+.rs-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.rs-btn{min-height:36px;padding:4px 12px;font-family:inherit;font-size:14px;font-weight:900;line-height:1.1;color:#0b4f5a;background:#fff;border:3px solid #0b6a7a;border-bottom-width:5px;border-radius:12px;cursor:pointer;transition:transform .15s}
+.rs-btn:hover,.rs-btn.on{background:#0b6a7a;color:#fff}
+.rs-btn:active{transform:translateY(2px)}
+.rs-step-label{font-size:14px;font-weight:900;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.rs-chip{min-width:38px;min-height:34px;padding:2px 8px;font-family:inherit;font-size:14px;font-weight:900;color:#0b4f5a;background:#fff;border:3px solid #0b6a7a;border-bottom-width:5px;border-radius:12px;cursor:pointer}
+.rs-chip.on{background:#0b6a7a;color:#fff}
+.rs-adj{display:none;justify-content:center;gap:8px;margin-top:6px}
+body.rs-edit .rs-adj{display:flex}
+.rs-adj-btn{width:40px;height:40px;padding:0;font-family:inherit;font-size:26px;font-weight:900;line-height:1;color:#0b4f5a;background:#fff;border:3px solid #0b6a7a;border-bottom-width:5px;border-radius:12px;cursor:pointer}
+.rs-adj-btn:hover{background:#0b6a7a;color:#fff}
+.rs-overlay{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.7);font-family:'Nunito',sans-serif}
+.rs-overlay.hidden{display:none}
+.rs-card{width:100%;max-width:440px;padding:22px 24px;text-align:center;background:#fff;border:6px solid #0b6a7a;border-radius:24px;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.rs-card h2{margin:0 0 8px;font-size:30px;font-weight:900;color:#0b4f5a}
+.rs-card p{margin:0 0 18px;font-size:18px;font-weight:800;color:#1f2937}
+.rs-actions{display:flex;gap:12px}
+.rs-actions .rs-btn{flex:1;min-height:52px;font-size:20px}
+.rs-btn.rs-yes{background:#0b6a7a;color:#fff}
+.rs-btn.rs-yes:hover{background:#064e5a}
+@media (min-width:640px){.rs-dock{left:16px;bottom:16px}.rs-btn{min-height:42px;padding:6px 16px;font-size:17px}.rs-step-label{font-size:16px}.rs-chip{min-width:42px;min-height:38px;font-size:16px}.rs-adj-btn{width:48px;height:48px;font-size:30px}}
+@media (max-height:500px){.rs-dock{left:8px;bottom:8px;gap:6px}.rs-btn{min-height:34px;padding:3px 10px;font-size:13px}.rs-card{padding:14px 18px}.rs-card h2{font-size:24px}.rs-card p{font-size:16px;margin-bottom:12px}.rs-actions .rs-btn{min-height:44px;font-size:18px}}
+.rs-dock{z-index:70}.rs-overlay{z-index:80}
 </style>
     <style id="tailwind-static">*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -1260,17 +1287,22 @@ video {
         </svg>
     </button>
 
-    <!-- Menü Butonu -->
-    <button id="menu-btn" onclick="openMenu()" title="Menü" class="hidden fixed top-2 left-2 sm:top-3 sm:left-3 z-[70] bg-neutral-900/90 text-white w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-lg border-2 border-neutral-600 hover:bg-neutral-800 hover:scale-105 transition-all text-xl cursor-pointer">
-        <svg viewBox="0 0 24 24" style="width:1.4em;height:1.4em;vertical-align:middle"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
-    </button>
+    <!-- Yeniden baslat + puani duzelt (oyun baslayinca gorunur) -->
+    <div id="menu-btn" class="rs-dock hidden">
+        <div class="rs-row">
+            <button type="button" id="rs-restart-btn" class="rs-btn" onclick="openRestartConfirm()">Yeniden başlat</button>
+        </div>
+    </div>
 
-    <!-- Menü Paneli -->
-    <div id="game-menu" class="hidden fixed inset-0 z-[65]" onclick="closeMenu()">
-        <div onclick="event.stopPropagation()" class="absolute top-14 left-2 sm:top-[4.25rem] sm:left-3 w-56 sm:w-64 bg-neutral-900 text-white rounded-xl border-2 border-neutral-600 shadow-2xl p-3">
-            <p class="text-xs sm:text-sm font-bold tracking-widest text-neutral-400 pb-2 mb-2 border-b-2 border-black">SCHOOL CLUBS</p>
-            <button onclick="restartGame()" class="w-full text-left text-base sm:text-xl font-extrabold px-3 py-2 rounded-lg hover:bg-neutral-700 cursor-pointer">Yeniden başlat</button>
-            <button onclick="closeMenu()" class="w-full text-left text-base sm:text-xl font-extrabold px-3 py-2 rounded-lg hover:bg-neutral-700 cursor-pointer">Sürdür</button>
+    <!-- Yeniden baslat onayi -->
+    <div id="rs-confirm" class="rs-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rs-confirm-title" onclick="cancelRestart()">
+        <div class="rs-card" onclick="event.stopPropagation()">
+            <h2 id="rs-confirm-title">Emin misiniz?</h2>
+            <p>Tüm puanlar silinecek ve oyun baştan başlayacak.</p>
+            <div class="rs-actions">
+                <button type="button" class="rs-btn rs-yes" onclick="restartGame()">Evet</button>
+                <button type="button" id="rs-confirm-no" class="rs-btn" onclick="cancelRestart()">Vazgeç</button>
+            </div>
         </div>
     </div>
 
@@ -1581,13 +1613,24 @@ video {
 
         // ================= MENÜ / EKRAN =================
         function closeSplash() { $('splash').style.display = 'none'; }
-        function openMenu() { $('game-menu').classList.remove('hidden'); }
-        function closeMenu() { $('game-menu').classList.add('hidden'); }
+        function openRestartConfirm() {
+            document.getElementById('rs-confirm').classList.remove('hidden');
+            document.getElementById('rs-confirm-no').focus();
+        }
+
+        function cancelRestart() {
+            document.getElementById('rs-confirm').classList.add('hidden');
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !document.getElementById('rs-confirm').classList.contains('hidden')) cancelRestart();
+        });
+
 
         function restartGame() {
             gameId++;
             busy = false;
-            ['game-menu', 'info-modal', 'end-modal', 'game-area', 'menu-btn'].forEach(id => $(id).classList.add('hidden'));
+            ['rs-confirm', 'info-modal', 'end-modal', 'game-area', 'menu-btn'].forEach(id => $(id).classList.add('hidden'));
             $('end-modal').classList.remove('flex');
             $('game-area').classList.remove('flex');
             $('setup-bar').classList.remove('hidden');

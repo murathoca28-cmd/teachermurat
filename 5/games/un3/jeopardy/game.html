@@ -66,6 +66,33 @@ img.ei{height:1.12em;width:auto;vertical-align:-.2em;display:inline-block;object
 .eiw{display:inline-block;line-height:0;vertical-align:-.15em}
 .eiw svg.ei{width:1em;height:1em;display:inline-block}
 img.ci{object-fit:contain}
+
+/* rs: yeniden baslat + puani duzelt */
+body{padding-bottom:60px}body.rs-edit{padding-bottom:104px}
+.rs-dock{position:fixed;left:8px;bottom:8px;z-index:60;display:flex;flex-direction:column;align-items:flex-start;gap:8px;font-family:'Nunito',sans-serif}
+.rs-dock.hidden{display:none}
+.rs-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.rs-btn{min-height:36px;padding:4px 12px;font-family:inherit;font-size:14px;font-weight:900;line-height:1.1;color:#0b4f5a;background:#fff;border:3px solid #0b6a7a;border-bottom-width:5px;border-radius:12px;cursor:pointer;transition:transform .15s}
+.rs-btn:hover,.rs-btn.on{background:#0b6a7a;color:#fff}
+.rs-btn:active{transform:translateY(2px)}
+.rs-step-label{font-size:14px;font-weight:900;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.rs-chip{min-width:38px;min-height:34px;padding:2px 8px;font-family:inherit;font-size:14px;font-weight:900;color:#0b4f5a;background:#fff;border:3px solid #0b6a7a;border-bottom-width:5px;border-radius:12px;cursor:pointer}
+.rs-chip.on{background:#0b6a7a;color:#fff}
+.rs-adj{display:none;justify-content:center;gap:8px;margin-top:6px}
+body.rs-edit .rs-adj{display:flex}
+.rs-adj-btn{width:40px;height:40px;padding:0;font-family:inherit;font-size:26px;font-weight:900;line-height:1;color:#0b4f5a;background:#fff;border:3px solid #0b6a7a;border-bottom-width:5px;border-radius:12px;cursor:pointer}
+.rs-adj-btn:hover{background:#0b6a7a;color:#fff}
+.rs-overlay{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.7);font-family:'Nunito',sans-serif}
+.rs-overlay.hidden{display:none}
+.rs-card{width:100%;max-width:440px;padding:22px 24px;text-align:center;background:#fff;border:6px solid #0b6a7a;border-radius:24px;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.rs-card h2{margin:0 0 8px;font-size:30px;font-weight:900;color:#0b4f5a}
+.rs-card p{margin:0 0 18px;font-size:18px;font-weight:800;color:#1f2937}
+.rs-actions{display:flex;gap:12px}
+.rs-actions .rs-btn{flex:1;min-height:52px;font-size:20px}
+.rs-btn.rs-yes{background:#0b6a7a;color:#fff}
+.rs-btn.rs-yes:hover{background:#064e5a}
+@media (min-width:640px){.rs-dock{left:16px;bottom:16px}.rs-btn{min-height:42px;padding:6px 16px;font-size:17px}.rs-step-label{font-size:16px}.rs-chip{min-width:42px;min-height:38px;font-size:16px}.rs-adj-btn{width:48px;height:48px;font-size:30px}}
+@media (max-height:500px){.rs-dock{left:8px;bottom:8px;gap:6px}.rs-btn{min-height:34px;padding:3px 10px;font-size:13px}.rs-card{padding:14px 18px}.rs-card h2{font-size:24px}.rs-card p{font-size:16px;margin-bottom:12px}.rs-actions .rs-btn{min-height:44px;font-size:18px}}
 </style>
     <style id="tailwind-static">*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -1450,17 +1477,29 @@ video {
         </svg>
     </button>
 
-    <!-- Menü Butonu (oyun başlayınca görünür) -->
-    <button id="menu-btn" onclick="openMenu()" title="Menü" class="hidden fixed bottom-2 left-2 sm:bottom-4 sm:left-4 z-[60] bg-neutral-900/90 text-white w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-lg border-2 border-neutral-600 hover:bg-neutral-800 hover:scale-105 transition-all text-xl cursor-pointer">
-        ☰
-    </button>
+    <!-- Yeniden baslat + puani duzelt (oyun baslayinca gorunur) -->
+    <div id="menu-btn" class="rs-dock hidden">
+        <div id="rs-steps" class="rs-row" style="display:none">
+            <span class="rs-step-label">Adım:</span>
+            <button type="button" class="rs-chip on" data-step="50" onclick="setScoreStep(50)">50</button>
+            <button type="button" class="rs-chip" data-step="100" onclick="setScoreStep(100)">100</button>
+            <button type="button" class="rs-chip" data-step="300" onclick="setScoreStep(300)">300</button>
+        </div>
+        <div class="rs-row">
+            <button type="button" id="rs-restart-btn" class="rs-btn" onclick="openRestartConfirm()">Yeniden başlat</button>
+            <button type="button" id="rs-edit-btn" class="rs-btn" aria-pressed="false" onclick="toggleScoreEdit()">Puanı düzelt</button>
+        </div>
+    </div>
 
-    <!-- Menü Paneli -->
-    <div id="game-menu" class="hidden fixed inset-0 z-[60]" onclick="closeMenu()">
-        <div onclick="event.stopPropagation()" class="absolute bottom-14 left-2 sm:bottom-20 sm:left-4 w-56 sm:w-64 bg-neutral-900 text-white rounded-xl border-2 border-neutral-600 shadow-2xl p-3">
-            <p class="text-xs sm:text-sm font-bold tracking-widest text-neutral-400 pb-2 mb-2 border-b-2 border-black">JEOPARDY</p>
-            <button onclick="restartGame()" class="w-full text-left text-base sm:text-xl font-extrabold px-3 py-2 rounded-lg hover:bg-neutral-700 cursor-pointer">Yeniden başlat</button>
-            <button onclick="closeMenu()" class="w-full text-left text-base sm:text-xl font-extrabold px-3 py-2 rounded-lg hover:bg-neutral-700 cursor-pointer">Sürdür</button>
+    <!-- Yeniden baslat onayi -->
+    <div id="rs-confirm" class="rs-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rs-confirm-title" onclick="cancelRestart()">
+        <div class="rs-card" onclick="event.stopPropagation()">
+            <h2 id="rs-confirm-title">Emin misiniz?</h2>
+            <p>Tüm puanlar silinecek ve oyun baştan başlayacak.</p>
+            <div class="rs-actions">
+                <button type="button" class="rs-btn rs-yes" onclick="restartGame()">Evet</button>
+                <button type="button" id="rs-confirm-no" class="rs-btn" onclick="cancelRestart()">Vazgeç</button>
+            </div>
         </div>
     </div>
 
@@ -1737,8 +1776,8 @@ video {
             document.getElementById('splash').style.display = 'none';
         }
 
-        // ---------- Menü (Yeniden başlat / Sürdür) ----------
-        function openMenu() {
+        // ---------- Menü (Yeniden başlat) ----------
+        function openRestartConfirm() {
             menuPausedTimer = false;
             const questionOpen = !document.getElementById('question-modal').classList.contains('hidden');
             // Soru açıkken ve cevap henüz gösterilmediyse süreyi duraklat
@@ -1746,16 +1785,57 @@ video {
                 clearInterval(timerInterval);
                 menuPausedTimer = true;
             }
-            document.getElementById('game-menu').classList.remove('hidden');
+            document.getElementById('rs-confirm').classList.remove('hidden');
+            document.getElementById('rs-confirm-no').focus();
         }
 
-        function closeMenu() {
-            document.getElementById('game-menu').classList.add('hidden');
+        function cancelRestart() {
+            document.getElementById('rs-confirm').classList.add('hidden');
             if (menuPausedTimer) {
                 menuPausedTimer = false;
-                resumeTimer();
+                runTimer();
             }
         }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !document.getElementById('rs-confirm').classList.contains('hidden')) cancelRestart();
+        });
+
+        let scoreStep = 50;
+
+        function setScoreStep(n) {
+            scoreStep = n;
+            document.querySelectorAll('.rs-chip').forEach(function (c) {
+                c.classList.toggle('on', Number(c.dataset.step) === n);
+            });
+        }
+
+        function setScoreEdit(on) {
+            document.body.classList.toggle('rs-edit', on);
+            const btn = document.getElementById('rs-edit-btn');
+            btn.classList.toggle('on', on);
+            btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+            btn.textContent = on ? 'Tamam' : 'Puanı düzelt';
+            document.getElementById('rs-steps').style.display = on ? 'flex' : 'none';
+        }
+
+        function toggleScoreEdit() {
+            setScoreEdit(!document.body.classList.contains('rs-edit'));
+        }
+
+        function adjustScore(i, sign) {
+            if (i < 0 || i >= scores.length) return;
+            scores[i] += sign * scoreStep;
+            document.getElementById('score-val-' + i).innerText = scores[i];
+        }
+
+        function scoreAdjHTML(i) {
+            return '<div class="rs-adj">' +
+                '<button type="button" class="rs-adj-btn" onclick="adjustScore(' + i + ', -1)" aria-label="' + (i + 1) + '. grup puanını azalt">\u2212</button>' +
+                '<button type="button" class="rs-adj-btn" onclick="adjustScore(' + i + ', 1)" aria-label="' + (i + 1) + '. grup puanını artır">+</button>' +
+                '</div>';
+        }
+
 
         function resumeTimer() {
             clearInterval(timerInterval);
@@ -1772,7 +1852,8 @@ video {
         function restartGame() {
             menuPausedTimer = false;
             clearInterval(timerInterval);
-            document.getElementById('game-menu').classList.add('hidden');
+            document.getElementById('rs-confirm').classList.add('hidden');
+            setScoreEdit(false);
             document.getElementById('question-modal').classList.add('hidden');
             document.getElementById('end-modal').classList.add('hidden');
             document.getElementById('end-modal').classList.remove('flex');
@@ -1856,7 +1937,7 @@ video {
                 const groupDiv = document.createElement('div');
                 groupDiv.id = `group-score-${i}`;
                 groupDiv.className = `px-2 py-1.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-2xl border-2 sm:border-4 border-white bg-white/80 font-extrabold text-xs sm:text-xl shadow-md transition-all duration-300 text-blue-900 text-center flex-1 min-w-[70px] ${i === currentGroup ? 'active-group' : ''}`;
-                groupDiv.innerHTML = `<span class="opacity-80 block sm:inline">${i + 1}. Grup</span> <span id="score-val-${i}" class="text-sm sm:text-2xl text-purple-700 block sm:inline sm:ml-2">${scores[i]}</span>`;
+                groupDiv.innerHTML = `<span class="opacity-80 block sm:inline">${i + 1}. Grup</span> <span id="score-val-${i}" class="text-sm sm:text-2xl text-purple-700 block sm:inline sm:ml-2">${scores[i]}</span>${scoreAdjHTML(i)}`;
                 board.appendChild(groupDiv);
             }
         }
