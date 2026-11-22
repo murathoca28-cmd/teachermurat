@@ -53,7 +53,7 @@ body.zoom .card{border-width:4px;border-radius:18px;padding:.5em .7em}
 body.zoom .cols{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr)}
 @media (max-aspect-ratio:1/1){.cols,body.zoom .cols{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
 }
-.picbox{position:relative;min-height:0;min-width:0;background:#eff6ff;border:2px solid #bfdbfe;border-radius:14px;overflow:hidden}
+.picbox{position:relative;min-height:0;min-width:0;background:#fff;border:2px solid #bfdbfe;border-radius:14px;overflow:hidden}
 .pic{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:6px}
 .txt{min-height:0;min-width:0;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
 .qt{font-weight:900;font-size:1.15em;margin-bottom:.6em;line-height:1.25}
@@ -110,7 +110,8 @@ a.btn{display:inline-block;text-decoration:none}
 .xbtn{margin-top:.6em;align-self:flex-start;font-size:.8em}
 .exp{margin-top:.5em;padding:.45em .7em;border:3px solid #f59e0b;background:#fffbeb;border-radius:14px;font-weight:700;font-size:.85em;line-height:1.3}
 #splash .steps{text-align:left;display:inline-block;margin:14px 0 0;padding-left:1.4em;line-height:1.7;color:#fff;font-weight:700}
-  </style>
+  .btn.bk{background:#1e3a8a;color:#fff;border:3px solid #0f172a;border-bottom-width:6px;text-shadow:none}.rbtns{flex-wrap:wrap}
+</style>
   <link rel="stylesheet" href="/theme.css">
 </head>
 
@@ -188,7 +189,7 @@ a.btn{display:inline-block;text-decoration:none}
       rv = false;
       const ok = Q.filter((d, k) => sel[k] === d.a).length, b = sel.filter(s => s === null).length, nb = bad().length;
       const w = $("game"); w.classList.add("resmode");
-      w.innerHTML = `<div class="card res"><div class="rhead"><h2>🏆 Test bitti!</h2><div class="big">${ok} / ${Q.length}</div><p class="cnt"><b>${ok}</b> doğru • <b>${Q.length - ok - b}</b> yanlış • <b>${b}</b> boş</p><div class="rbtns"><button class="btn g" onclick="restart()">🔄 Yeniden Başlat</button><a class="btn" href="https://cdn.teachermurat.com/6/un3_lgstests/g6_un3_test_3.pdf?v=1" download>📄 Testi indir (PDF)</a></div></div>
+      w.innerHTML = `<div class="card res"><div class="rhead"><h2>🏆 Test bitti!</h2><div class="big">${ok} / ${Q.length}</div><p class="cnt"><b>${ok}</b> doğru • <b>${Q.length - ok - b}</b> yanlış • <b>${b}</b> boş</p><div class="rbtns"><button class="btn g" onclick="restart()">🔄 Yeniden Başlat</button><a class="btn" href="https://cdn.teachermurat.com/6/un3_lgstests/g6_un3_test_3.pdf?v=1" download>📄 Testi indir (PDF)</a><a class="btn bk" href="g6_un3_tests.html">↩ Testlere dön</a></div></div>
   <p class="hint">${nb ? "👆 Yanlış ve boş soruların üzerine tıkla: soruya dön, doğru cevabı ve açıklamayı gör." : "🎉 Hepsi doğru, tebrikler! İstersen herhangi bir soruya tıklayıp tekrar bakabilirsin."}</p>
   <div class="rgrid">${Q.map((d, k) => { const s = sel[k], c = s === d.a; return `<button class="tile ${s === null ? "bl" : c ? "ok" : "no"}" onclick="review(${k})" aria-label="Soru ${k + 1}"><span class="th"><span class="tn">${k + 1}</span><span class="ti">${c ? "✅" : s === null ? "➖" : "❌"}</span></span><span class="tb">${c ? "<span class=\"tok\">Doğru</span>" : "<span class=\"ra\"><i>Senin</i><b class=\"mine\">" + (s === null ? "–" : L[s]) + "</b></span><span class=\"ra\"><i>Doğru</i><b class=\"rt\">" + L[d.a] + "</b></span>"}</span>${c ? "" : "<span class=\"tgo\">🔍 Soruya dön</span>"}</button>` }).join("")}</div></div>`;
       window.scrollTo(0, 0); fitRes();
