@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gem Match</title>
+<style>
+  :root { --ink: #0B2F2C; --u: min(2.1vw, 3.9vh); }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { height: 100dvh; display: flex; flex-direction: column; background: #0E8F86; color: var(--ink);
+    font-family: 'Segoe UI', Verdana, Tahoma, Arial, system-ui, sans-serif; user-select: none; -webkit-user-select: none; }
+  button { font-family: inherit; cursor: pointer; }
+  body.solo .team-only { display: none !important; }
+  body.team .solo-only { display: none !important; }
+
+  #fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid var(--ink); background: #fff; color: var(--ink); display: flex; align-items: center; justify-content: center; padding: 0; }
+  #fs-btn svg { width: 26px; height: 26px; }
+
+  /* ---------- HUD ---------- */
+  #hud { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 8px 70px 6px 12px; flex-wrap: wrap; }
+  .box { background: #fff; border: 4px solid var(--ink); border-radius: 14px; padding: 0 14px; min-width: 86px; text-align: center; line-height: 1.1; }
+  .box small { display: block; font-size: calc(var(--u) * .5); font-weight: 800; color: #0B5C56; letter-spacing: .06em; }
+  .box b { display: block; font-size: calc(var(--u) * 1.05); font-weight: 900; font-variant-numeric: tabular-nums; }
+  .box.warn { background: #FFD6D6; border-color: #D62828; }
+  #h-teams { display: flex; gap: 10px; }
+  .tbox { color: #fff; border: 4px solid var(--ink); border-radius: 14px; padding: 0 12px; min-width: 96px; text-align: center; line-height: 1.1; opacity: .72; }
+  .tbox small { display: block; font-size: calc(var(--u) * .5); font-weight: 800; letter-spacing: .06em; }
+  .tbox b { display: block; font-size: calc(var(--u) * 1.05); font-weight: 900; font-variant-numeric: tabular-nums; }
+  .tbox.cur { opacity: 1; outline: 5px solid #FFD23F; outline-offset: 2px; transform: scale(1.06); }
+  .hbtn { background: #FFD23F; border: 4px solid var(--ink); border-radius: 14px; padding: 4px 16px; font-size: calc(var(--u) * .8); font-weight: 900; color: var(--ink); box-shadow: 0 4px 0 var(--ink); }
+  .hbtn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+
+  /* ---------- PLAY AREA ---------- */
+  #main { flex: 1; min-height: 0; display: flex; gap: 14px; padding: 4px 14px 14px; }
+  #boardwrap { flex: 1 1 0; min-width: 0; }
+  #cardswrap { flex: 1 1 0; min-width: 0; }
+  #board { position: relative; width: 100%; height: 100%; background: #0B2F2C; border: 5px solid var(--ink); border-radius: 16px; overflow: hidden;
+    background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(20% - 3px), #1E5651 calc(20% - 3px), #1E5651 20%); }
+  #cards { width: 100%; height: 100%; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(5, 1fr); gap: 8px; }
+
+  .gem { position: absolute; width: 33.3333%; height: 20%; transition: top .38s cubic-bezier(.35, 1.25, .5, 1), opacity .3s; cursor: pointer; }
+  .gem .gv { position: absolute; inset: 4% 4%; transition: transform .15s; }
+  .gem svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .gem .lb { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 12%;
+    color: #fff; font-weight: 900; line-height: 1.05; font-size: calc(var(--u) * .95);
+    text-shadow: 0 2px 0 rgba(0,0,0,.65), 2px 0 0 rgba(0,0,0,.65), -2px 0 0 rgba(0,0,0,.65), 0 -2px 0 rgba(0,0,0,.65); }
+  .gem.sel .gv { transform: scale(1.08); outline: 6px solid #FFD23F; outline-offset: -1px; border-radius: 16px; }
+  .gem.burst { animation: burst .42s forwards; pointer-events: none; }
+  .gem.wrong .gv { animation: shake .4s; }
+  @keyframes burst { 0% { transform: scale(1); opacity: 1; } 35% { transform: scale(1.22); filter: brightness(1.8); opacity: 1; } 100% { transform: scale(.2); opacity: 0; } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-9px); } 75% { transform: translateX(9px); } }
+
+  .card { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px 8px; background: #FFFBE6; color: var(--ink);
+    border: 5px solid var(--ink); border-radius: 14px; box-shadow: 0 5px 0 var(--ink); font-weight: 900; line-height: 1.1;
+    font-size: calc(var(--u) * 1.05); cursor: pointer; transition: transform .12s, opacity .3s; }
+  .card:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--ink); }
+  .card.sel { background: #FFF3B0; border-color: #D62828; outline: 6px solid #FFD23F; outline-offset: 0; transform: scale(1.04); }
+  .card.wrong { animation: shake .4s; border-color: #D62828; }
+  .card.gone { opacity: 0; transform: scale(.5); pointer-events: none; }
+
+  /* ---------- FLOATING TEXT ---------- */
+  .float { position: absolute; z-index: 20; pointer-events: none; font-weight: 900; font-size: calc(var(--u) * 1.3); color: #FFD23F;
+    text-shadow: 0 3px 0 #000, 3px 0 0 #000, -3px 0 0 #000, 0 -3px 0 #000; animation: floatup .95s forwards; transform: translate(-50%, -50%); white-space: nowrap; }
+  .float.bad { color: #FF8A8A; }
+  @keyframes floatup { 0% { opacity: 0; margin-top: 0; } 15% { opacity: 1; } 100% { opacity: 0; margin-top: -70px; } }
+  #banner { position: absolute; left: 50%; top: 45%; z-index: 25; pointer-events: none; transform: translate(-50%, -50%); text-align: center;
+    font-weight: 900; font-size: calc(var(--u) * 2); color: #fff; text-shadow: 0 4px 0 #000, 4px 0 0 #000, -4px 0 0 #000, 0 -4px 0 #000; opacity: 0; white-space: nowrap; }
+  #banner.show { animation: banner 1.2s forwards; }
+  @keyframes banner { 0% { opacity: 0; transform: translate(-50%, -50%) scale(.5); } 15% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); } 30% { transform: translate(-50%, -50%) scale(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -80%) scale(1); } }
+
+  /* ---------- SCREENS ---------- */
+  .screen { position: fixed; inset: 0; z-index: 40; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 2.2vh; text-align: center; padding: 20px; background: #0E8F86; }
+  .screen.on { display: flex; }
+  .screen.dim { background: rgba(11,47,44,.95); color: #fff; }
+  .title { margin: 0; font-size: clamp(2.4rem, 8vw, 5.5rem); font-weight: 900; color: #fff; text-shadow: 4px 4px 0 var(--ink); line-height: 1.05; }
+  .subtitle { margin: 0; font-size: clamp(1.3rem, 3.4vw, 2.4rem); font-weight: 900; color: #FFD23F; text-shadow: 2px 2px 0 var(--ink); }
+  .how { max-width: 860px; background: #fff; border: 5px solid var(--ink); border-radius: 16px; padding: 8px 18px; font-size: clamp(.95rem, 2.1vw, 1.5rem); font-weight: 800; line-height: 1.25; }
+  .how .t { color: #0B5C56; font-size: .86em; display: block; margin-bottom: 4px; }
+  .big-btn { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: 900; padding: .3em 1.5em; border: 5px solid var(--ink); border-radius: 999px; background: #FFD23F; color: var(--ink); box-shadow: 0 6px 0 var(--ink); }
+  .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--ink); }
+  .big-btn.alt { background: #fff; }
+  .btn-row { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  .win-title { margin: 0; font-size: clamp(2.2rem, 8vw, 5.2rem); font-weight: 900; color: #FFD23F; text-shadow: 3px 3px 0 #000; }
+  .stats { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .stat { background: #fff; color: var(--ink); border: 4px solid var(--ink); border-radius: 14px; padding: 2px 16px; line-height: 1.15; min-width: 120px; }
+  .stat small { display: block; font-size: clamp(.7rem, 1.4vw, 1rem); font-weight: 800; color: #0B5C56; letter-spacing: .06em; }
+  .stat b { font-size: clamp(1.3rem, 3.4vw, 2.5rem); font-weight: 900; }
+  .tstat { color: #fff; border: 4px solid #fff; border-radius: 14px; padding: 4px 18px; line-height: 1.1; min-width: 150px; }
+  .tstat small { display: block; font-size: clamp(.8rem, 1.6vw, 1.15rem); font-weight: 800; letter-spacing: .06em; }
+  .tstat b { display: block; font-size: clamp(1.6rem, 4.4vw, 3.4rem); font-weight: 900; }
+  .tstat.win { outline: 6px solid #FFD23F; outline-offset: 3px; transform: scale(1.08); }
+  .bk { background: #fff; color: var(--ink); border: 4px solid var(--ink); border-radius: 14px; padding: 4px 18px; min-width: min(460px, 90vw); font-weight: 800; font-size: clamp(1rem, 2.2vw, 1.6rem); }
+  .bk div { display: flex; justify-content: space-between; gap: 30px; }
+  .bk .tot { border-top: 3px solid var(--ink); margin-top: 3px; font-weight: 900; }
+  #review { max-width: 900px; font-size: clamp(.9rem, 1.9vw, 1.35rem); font-weight: 800; }
+  #review .rv { display: inline-block; background: #fff; color: var(--ink); border: 3px solid var(--ink); border-radius: 10px; padding: 0 10px; margin: 3px; }
+  #review .rv i { font-style: normal; color: #0B5C56; margin-left: 6px; }
+  #tt-name { font-size: clamp(2.6rem, 9vw, 6.5rem); font-weight: 900; padding: .05em .5em; border: 6px solid #fff; border-radius: 22px; text-shadow: 3px 3px 0 rgba(0,0,0,.5); }
+  .ts { font-size: clamp(1.1rem, 3vw, 2rem); font-weight: 800; max-width: 800px; }
+  .ts small { display: block; color: #9FE6DF; font-size: .8em; }
+
+  /* ---------- PORTRAIT / SMALL PHONES ---------- */
+  @media (orientation: portrait) {
+    :root { --u: min(3.4vw, 2.2vh); }
+    #main { flex-direction: column; }
+    #cards { gap: 6px; }
+  }
+  @media (max-height: 460px) {
+    #hud { padding-top: 4px; padding-bottom: 2px; gap: 6px; }
+    .box { min-width: 70px; }
+    .tbox { min-width: 76px; }
+    #main { padding: 2px 8px 8px; gap: 8px; }
+    #fs-btn { width: 40px; height: 40px; top: 4px; right: 4px; }
+    #fs-btn svg { width: 22px; height: 22px; }
+  }
+</style>
+</head>
+<body class="solo">
+
+<!-- gem artwork: gradients and clip shapes, shared by every gem -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="g0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4ADE80"/><stop offset=".55" stop-color="#16A34A"/><stop offset="1" stop-color="#0F6B2E"/></linearGradient>
+    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#60A5FA"/><stop offset=".55" stop-color="#2563EB"/><stop offset="1" stop-color="#1B3FA0"/></linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0ABFC"/><stop offset=".55" stop-color="#C026D3"/><stop offset="1" stop-color="#86198F"/></linearGradient>
+    <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FDBA74"/><stop offset=".55" stop-color="#EA580C"/><stop offset="1" stop-color="#A63A06"/></linearGradient>
+    <clipPath id="c0"><path d="M18 4H182L196 20V80L182 96H18L4 80V20Z"/></clipPath>
+    <clipPath id="c1"><rect x="4" y="4" width="192" height="92" rx="10"/></clipPath>
+    <clipPath id="c2"><ellipse cx="100" cy="50" rx="96" ry="46"/></clipPath>
+    <clipPath id="c3"><polygon points="4,50 26,4 174,4 196,50 174,96 26,96"/></clipPath>
+  </defs>
+</svg>
+
+<button id="fs-btn" onclick="toggleFullScreen()" title="Fullscreen / Exit" aria-label="Fullscreen / Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+
+<div id="hud">
+  <div class="box solo-only"><small>SCORE</small><b id="h-score">0</b></div>
+  <div id="h-teams" class="team-only"></div>
+  <div class="box"><small>ROUND</small><b id="h-round">1/2</b></div>
+  <div class="box"><small>LEFT</small><b id="h-left">15</b></div>
+  <div class="box" id="bx-time"><small id="h-time-l">TIME</small><b id="h-time">0:00.0</b></div>
+  <div class="box team-only"><small>MOVES</small><b id="h-moves">2</b></div>
+  <button class="hbtn" id="b-pause" onclick="pauseGame()">Pause</button>
+  <button class="hbtn" id="b-sound" onclick="toggleSound()">Sound: On</button>
+</div>
+
+<div id="main">
+  <div id="boardwrap"><div id="board"><div id="banner"></div></div></div>
+  <div id="cardswrap"><div id="cards"></div></div>
+</div>
+
+<div class="screen on" id="s-start">
+  <h1 class="title">Gem Match</h1>
+  <p class="subtitle" id="unit-sub">Unit 1 - Friendship</p>
+  <div class="how">
+    Match each gem with its Turkish meaning. Three or more gems of the same colour that touch each other disappear and give bonus points. Their words fall again later!
+    <span class="t">Her taşı Türkçe karşılığıyla eşleştir. Aynı renkten, yan yana ya da alt alta 3 veya daha fazla taş birleşirse kaybolur ve bonus puan verir. Kelimeleri sonra tekrar düşer!</span>
+  </div>
+  <button class="hbtn" id="b-dir" onclick="toggleDir()" style="font-size:clamp(1rem,2.4vw,1.6rem)">Gems: English</button>
+  <div class="btn-row">
+    <button class="big-btn" onclick="startGame('solo')">Solo</button>
+    <button class="big-btn" onclick="startGame('team')">3 Teams</button>
+  </div>
+  <div id="best-start" class="subtitle" style="font-size:clamp(1rem,2.4vw,1.6rem)"></div>
+</div>
+
+<div class="screen dim" id="s-turn">
+  <div id="tt-name"></div>
+  <div class="ts" id="tt-info"></div>
+  <button class="big-btn" onclick="startTurn()">Go!</button>
+</div>
+
+<div class="screen dim" id="s-pause">
+  <h2 class="win-title">Paused</h2>
+  <button class="big-btn" onclick="resumeGame()">Resume</button>
+</div>
+
+<div class="screen dim" id="s-round">
+  <h2 class="win-title">Board Clear!</h2>
+  <div class="stats" id="r-stats"></div>
+  <button class="big-btn" onclick="nextRound()">Next Round</button>
+</div>
+
+<div class="screen dim" id="s-end">
+  <h2 class="win-title" id="e-title">Well Done!</h2>
+  <div id="e-solo">
+    <div class="stats">
+      <div class="stat"><small>SCORE</small><b id="e-score">0</b></div>
+      <div class="stat"><small>BEST</small><b id="e-best">0</b></div>
+      <div class="stat"><small>TIME</small><b id="e-time">0:00</b></div>
+      <div class="stat"><small>MISTAKES</small><b id="e-miss">0</b></div>
+      <div class="stat"><small>BEST CHAIN</small><b id="e-chain">0</b></div>
+    </div>
+    <div class="bk" id="e-bk" style="margin:14px auto 0"></div>
+    <div id="review" style="margin-top:10px"></div>
+  </div>
+  <div id="e-team" class="stats"></div>
+  <div class="btn-row">
+    <button class="big-btn" onclick="startGame(S.mode)">Play Again</button>
+    <button class="big-btn alt" onclick="showMenu()">Menu</button>
+  </div>
+</div>
+
+<script>
+/* ============ DATA: change only this block for another unit ============ */
+var UNIT_TITLE = 'Unit 1 - Friendship';
+var STORE_KEY = 'gemMatch_g8u1_best';
+var WORDS = [
+  { en: 'friendship', tr: 'arkadaşlık' },
+  { en: 'buddy', tr: 'dost, ahbap' },
+  { en: 'invitation', tr: 'davet' },
+  { en: 'invite', tr: 'davet etmek' },
+  { en: 'come over', tr: 'uğramak' },
+  { en: 'accept', tr: 'kabul etmek' },
+  { en: 'refuse', tr: 'reddetmek' },
+  { en: 'apologize', tr: 'özür dilemek' },
+  { en: 'explain', tr: 'açıklamak' },
+  { en: 'reason', tr: 'neden, sebep' },
+  { en: 'excuse', tr: 'bahane' },
+  { en: 'busy', tr: 'meşgul' },
+  { en: 'promise', tr: 'söz vermek' },
+  { en: 'share', tr: 'paylaşmak' },
+  { en: 'support', tr: 'desteklemek' },
+  { en: 'count on', tr: 'güvenmek' },
+  { en: 'respect', tr: 'saygı duymak' },
+  { en: 'honest', tr: 'dürüst' },
+  { en: 'loyal', tr: 'sadık' },
+  { en: 'reliable', tr: 'güvenilir' },
+  { en: 'unreliable', tr: 'güvenilmez' },
+  { en: 'punctual', tr: 'dakik' },
+  { en: 'jealous', tr: 'kıskanç' },
+  { en: 'selfish', tr: 'bencil' },
+  { en: 'rude', tr: 'kaba' },
+  { en: 'lazy', tr: 'tembel' },
+  { en: 'outgoing', tr: 'dışa dönük' },
+  { en: 'laid-back', tr: 'rahat, sakin' },
+  { en: 'cool', tr: 'havalı' },
+  { en: 'stuffed', tr: 'tıka basa tok' }
+];
+/* ============ TEAM MODE SETTINGS (easy to change) ============ */
+var TURN_SECONDS = 20;   /* a turn ends after this many seconds ... */
+var TURN_MOVES = 2;
+var TEAM_COMBOS = false; /* false: no luck-based combos in team mode, points come only from known words */      /* ... or after this many correct matches, whichever comes first */
+var TEAMS = [
+  { name: 'Red Team', short: 'RED', color: '#D62828' },
+  { name: 'Blue Team', short: 'BLUE', color: '#1F5FBF' },
+  { name: 'Green Team', short: 'GREEN', color: '#0A7A2F' }
+];
+/* ======================================================================== */
+
+var COLS = 3, ROWS = 5, PER_ROUND = 15, ROUNDS = 2, CLEAR_BONUS = 500, WRONG_PENALTY = 25;
+var SHAPES = [
+  '<path d="M18 4H182L196 20V80L182 96H18L4 80V20Z"/>',
+  '<rect x="4" y="4" width="192" height="92" rx="10"/>',
+  '<ellipse cx="100" cy="50" rx="96" ry="46"/>',
+  '<polygon points="4,50 26,4 174,4 196,50 174,96 26,96"/>'
+];
+var FACETS = '<polygon points="0,0 120,0 70,50 0,50" fill="#fff" opacity=".22"/><polygon points="200,100 80,100 130,50 200,50" fill="#000" opacity=".2"/><polygon points="70,50 130,50 100,100 40,100" fill="#fff" opacity=".1"/>';
+
+var REVERSE = false;
+var S = { mode: 'solo' }, grid = [], cards = [], audioCtx = null, soundOn = true, timerId = 0;
+
+function $(id) { return document.getElementById(id); }
+function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function toggleFullScreen() {
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    var el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+  } else { (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document); }
+}
+function fmt(ms, tenth) {
+  var t = Math.floor(ms / 100) / 10, m = Math.floor(t / 60), s = t - m * 60;
+  return m + ':' + (s < 10 ? '0' : '') + (tenth ? s.toFixed(1) : Math.floor(s));
+}
+function getBest() { try { return parseInt(localStorage.getItem(STORE_KEY) || '0', 10) || 0; } catch (e) { return 0; } }
+function setBest(v) { try { localStorage.setItem(STORE_KEY, String(v)); } catch (e) {} }
+
+/* ---------------- sound ---------------- */
+function beep(freq, dur, type, vol, delay) {
+  if (!soundOn) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    var o = audioCtx.createOscillator(), g = audioCtx.createGain(), t0 = audioCtx.currentTime + (delay || 0);
+    o.type = type || 'sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol || .15, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + dur);
+    o.connect(g); g.connect(audioCtx.destination); o.start(t0); o.stop(t0 + dur + .02);
+  } catch (e) {}
+}
+function sndOk() { beep(660, .12, 'triangle', .18); beep(880, .14, 'triangle', .18, .08); }
+function sndBad() { beep(170, .22, 'sawtooth', .12); }
+function sndChain(n) { for (var i = 0; i < 3; i++) beep(520 + n * 90 + i * 140, .13, 'square', .08, i * .07); }
+function sndClear() { [523, 659, 784, 1047].forEach(function (f, i) { beep(f, .18, 'triangle', .2, i * .11); }); }
+function sndTurn() { beep(440, .15, 'triangle', .16); beep(330, .22, 'triangle', .16, .12); }
+function toggleDir() { REVERSE = !REVERSE; $('b-dir').textContent = REVERSE ? 'Gems: Turkish' : 'Gems: English'; }
+function toggleSound() { soundOn = !soundOn; $('b-sound').textContent = 'Sound: ' + (soundOn ? 'On' : 'Off'); }
+
+/* ---------------- gems ---------------- */
+function randColor() { return Math.floor(Math.random() * 4); }
+function makeGemEl(w, ci) {
+  var el = document.createElement('div');
+  el.className = 'gem';
+  el.innerHTML = '<div class="gv"><svg viewBox="0 0 200 100" preserveAspectRatio="none">' +
+    '<g clip-path="url(#c' + ci + ')">' + SHAPES[ci].replace('/>', ' fill="url(#g' + ci + ')"/>') + FACETS + '</g>' +
+    SHAPES[ci].replace('/>', ' fill="none" stroke="#0B2F2C" stroke-width="5" vector-effect="non-scaling-stroke"/>') +
+    '</svg><div class="lb"></div></div>';
+  var lb = el.querySelector('.lb'), tx = REVERSE ? WORDS[w].tr : WORDS[w].en;
+  lb.textContent = tx; if (tx.length > 10) lb.style.fontSize = 'calc(var(--u) * .72)';
+  return el;
+}
+function setPos(g) { g.el.style.left = (g.c * 100 / COLS) + '%'; g.el.style.top = (g.r * 100 / ROWS) + '%'; }
+function addGem(w, ci, c, r, fromTop, delay) {
+  var g = { w: w, ci: ci, c: c, r: r, el: makeGemEl(w, ci) };
+  g.el.style.left = (c * 100 / COLS) + '%';
+  g.el.style.top = fromTop ? '-22%' : (r * 100 / ROWS) + '%';
+  g.el.addEventListener('click', function () { clickGem(g); });
+  $('board').appendChild(g.el);
+  grid[c][r] = g;
+  if (fromTop) {
+    void g.el.offsetHeight;
+    g.el.style.transitionDelay = (delay || 0) + 'ms';
+    setPos(g);
+    setTimeout(function () { g.el.style.transitionDelay = ''; }, (delay || 0) + 450);
+  }
+  return g;
+}
+function applyGravity() {
+  for (var c = 0; c < COLS; c++) {
+    var stack = [];
+    for (var r = ROWS - 1; r >= 0; r--) if (grid[c][r]) stack.push(grid[c][r]);
+    for (r = 0; r < ROWS; r++) grid[c][r] = null;
+    stack.forEach(function (g, i) { g.r = ROWS - 1 - i; grid[c][g.r] = g; setPos(g); });
+  }
+}
+function findGroups() {
+  var seen = {}, groups = [];
+  for (var c = 0; c < COLS; c++) for (var r = 0; r < ROWS; r++) {
+    var g = grid[c][r];
+    if (!g || seen[c + ',' + r]) continue;
+    var q = [g], comp = []; seen[c + ',' + r] = 1;
+    while (q.length) {
+      var cur = q.pop(); comp.push(cur);
+      [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (d) {
+        var nc = cur.c + d[0], nr = cur.r + d[1];
+        if (nc < 0 || nc >= COLS || nr < 0 || nr >= ROWS) return;
+        var ng = grid[nc][nr];
+        if (ng && ng.ci === g.ci && !seen[nc + ',' + nr]) { seen[nc + ',' + nr] = 1; q.push(ng); }
+      });
+    }
+    if (comp.length >= 3) groups.push(comp);
+  }
+  return groups;
+}
+function refill(list) {
+  list.forEach(function (w, i) {
+    var best = [], max = 0;
+    for (var c = 0; c < COLS; c++) {
+      var free = 0; for (var r = 0; r < ROWS; r++) if (!grid[c][r]) free++;
+      if (free > max) { max = free; best = [c]; } else if (free === max && free > 0) best.push(c);
+    }
+    var col = best[Math.floor(Math.random() * best.length)], row = -1;
+    for (var k = ROWS - 1; k >= 0; k--) if (!grid[col][k]) { row = k; break; }
+    addGem(w, randColor(), col, row, true, i * 90);
+  });
+}
+
+/* ---------------- round setup ---------------- */
+function buildRound() {
+  var words = S.order.slice((S.round - 1) * PER_ROUND, S.round * PER_ROUND);
+  $('board').querySelectorAll('.gem').forEach(function (e) { e.remove(); });
+  $('cards').innerHTML = ''; cards = [];
+  grid = []; for (var c = 0; c < COLS; c++) grid.push(new Array(ROWS).fill(null));
+
+  shuffle(words.slice()).forEach(function (w) {
+    var el = document.createElement('div');
+    el.className = 'card'; el.textContent = REVERSE ? WORDS[w].en : WORDS[w].tr;
+    var card = { w: w, el: el, done: false };
+    el.addEventListener('click', function () { clickCard(card); });
+    $('cards').appendChild(el); cards.push(card);
+  });
+
+  var ws = shuffle(words.slice()), tries = 0, cols;
+  do {
+    cols = ws.map(randColor); tries++;
+    for (c = 0; c < COLS; c++) for (var r = 0; r < ROWS; r++) { grid[c][r] = { ci: cols[c * ROWS + r], c: c, r: r }; }
+    var bad = findGroups().length > 0;
+    for (c = 0; c < COLS; c++) for (r = 0; r < ROWS; r++) grid[c][r] = null;
+  } while (bad && tries < 300);
+  var i = 0;
+  for (c = 0; c < COLS; c++) for (r = 0; r < ROWS; r++) { addGem(ws[i], cols[i], c, r, true, (ROWS - r) * 70 + c * 40); i++; }
+
+  S.cardsLeft = PER_ROUND; S.selGem = null; S.selCard = null; S.busy = false;
+  updateHUD();
+}
+
+/* ---------------- score helpers ---------------- */
+function curScore() { return S.mode === 'team' ? S.tscore[S.cur] : S.score; }
+function addScore(pts) {
+  if (S.mode === 'team') S.tscore[S.cur] = Math.max(0, S.tscore[S.cur] + pts);
+  else S.score = Math.max(0, S.score + pts);
+}
+
+/* ---------------- game flow ---------------- */
+function startGame(mode) {
+  mode = mode || 'solo';
+  ['s-start', 's-end', 's-round', 's-pause', 's-turn'].forEach(function (id) { $(id).classList.remove('on'); });
+  document.body.className = mode;
+  S = { mode: mode, score: 0, round: 1, streak: 0, miss: 0, bestChain: 0, missed: {}, elapsed: 0, running: true, last: Date.now(),
+        order: shuffle(WORDS.map(function (_, i) { return i; })), busy: true,
+        cur: 0, tscore: [0, 0, 0], tmiss: [0, 0, 0], turnActive: false, moves: TURN_MOVES, turnLeft: TURN_SECONDS * 1000,
+        bk: { match: 0, chain: 0, clear: 0, pen: 0 } };
+  if (mode === 'team') {
+    var box = $('h-teams'); box.innerHTML = '';
+    TEAMS.forEach(function (t, i) {
+      var d = document.createElement('div'); d.className = 'tbox'; d.id = 'tb' + i; d.style.background = t.color;
+      d.innerHTML = '<small>' + t.short + '</small><b>0</b>'; box.appendChild(d);
+    });
+    $('h-time-l').textContent = 'TURN';
+  } else {
+    $('h-time-l').textContent = 'TIME';
+  }
+  $('bx-time').classList.remove('warn');
+  buildRound();
+  S.busy = true;
+  S.last = Date.now();
+  clearInterval(timerId);
+  timerId = setInterval(tick, 100);
+  if (mode === 'team') { showTurn(); }
+  else { setTimeout(function () { S.busy = false; }, 1100); }
+}
+function showMenu() {
+  clearInterval(timerId);
+  ['s-end', 's-round', 's-pause', 's-turn'].forEach(function (id) { $(id).classList.remove('on'); });
+  var b = getBest(); $('best-start').textContent = b ? 'Best solo score: ' + b : '';
+  $('s-start').classList.add('on');
+}
+function tick() {
+  var now = Date.now(), dt = now - S.last; S.last = now;
+  if (S.running) {
+    S.elapsed += dt;
+    if (S.mode === 'team' && S.turnActive && !S.busy) {
+      S.turnLeft -= dt;
+      if (S.turnLeft <= 0) { S.turnLeft = 0; updateTurnBox(); endTurn('time'); return; }
+    }
+  }
+  if (S.mode === 'team') updateTurnBox(); else $('h-time').textContent = fmt(S.elapsed, true);
+}
+function updateTurnBox() {
+  var s = Math.max(0, Math.ceil(S.turnLeft / 1000));
+  $('h-time').textContent = S.turnActive ? s : '-';
+  $('bx-time').classList.toggle('warn', S.turnActive && s <= 5);
+}
+function updateHUD() {
+  $('h-round').textContent = S.round + '/' + ROUNDS;
+  $('h-left').textContent = S.cardsLeft;
+  if (S.mode === 'team') {
+    TEAMS.forEach(function (t, i) {
+      var d = $('tb' + i); if (!d) return;
+      d.querySelector('b').textContent = S.tscore[i];
+      d.classList.toggle('cur', i === S.cur);
+    });
+    $('h-moves').textContent = S.moves;
+  } else {
+    $('h-score').textContent = S.score;
+  }
+}
+function pauseGame() { if (!S.running) return; S.running = false; $('s-pause').classList.add('on'); }
+function resumeGame() { S.last = Date.now(); S.running = true; $('s-pause').classList.remove('on'); }
+function canPlay() { return !S.busy && S.running && (S.mode === 'solo' || S.turnActive); }
+
+/* ---------------- team turns ---------------- */
+function showTurn() {
+  var t = TEAMS[S.cur];
+  S.turnActive = false; S.busy = true; S.turnLeft = TURN_SECONDS * 1000; S.moves = TURN_MOVES;
+  var n = $('tt-name'); n.textContent = t.name; n.style.background = t.color;
+  $('tt-info').innerHTML = 'Send one player to the board! ' + TURN_MOVES + ' moves, ' + TURN_SECONDS + ' seconds.' +
+    '<small>Tahtaya bir oyuncu gönderin! ' + TURN_MOVES + ' hamle, ' + TURN_SECONDS + ' saniye.</small>';
+  updateHUD(); updateTurnBox(); sndTurn();
+  $('s-turn').classList.add('on');
+}
+function startTurn() {
+  $('s-turn').classList.remove('on');
+  S.turnActive = true; S.busy = false; S.streak = 0; S.last = Date.now();
+  updateHUD(); updateTurnBox();
+}
+async function endTurn(reason) {
+  S.busy = true; S.turnActive = false; clearSel(); S.streak = 0; updateTurnBox();
+  banner(reason === 'time' ? "Time's up!" : reason === 'wrong' ? 'Oops!' : 'Turn over!');
+  await sleep(1150);
+  S.cur = (S.cur + 1) % TEAMS.length;
+  showTurn();
+}
+
+/* ---------------- selection and matching ---------------- */
+function clearSel() {
+  if (S.selGem) S.selGem.el.classList.remove('sel');
+  if (S.selCard) S.selCard.el.classList.remove('sel');
+  S.selGem = null; S.selCard = null;
+}
+function clickGem(g) {
+  if (!canPlay()) return;
+  if (S.selGem === g) { clearSel(); return; }
+  if (S.selGem) S.selGem.el.classList.remove('sel');
+  S.selGem = g; g.el.classList.add('sel');
+  if (S.selCard) check();
+}
+function clickCard(c) {
+  if (!canPlay() || c.done) return;
+  if (S.selCard === c) { clearSel(); return; }
+  if (S.selCard) S.selCard.el.classList.remove('sel');
+  S.selCard = c; c.el.classList.add('sel');
+  if (S.selGem) check();
+}
+function floatAt(text, x, y, bad) {
+  var f = document.createElement('div');
+  f.className = 'float' + (bad ? ' bad' : ''); f.textContent = text;
+  f.style.left = x + '%'; f.style.top = y + '%';
+  $('board').appendChild(f); setTimeout(function () { f.remove(); }, 1000);
+}
+function banner(text) {
+  var b = $('banner'); b.textContent = text; b.classList.remove('show'); void b.offsetWidth; b.classList.add('show');
+}
+
+async function check() {
+  var g = S.selGem, c = S.selCard;
+  S.busy = true;
+  if (g.w === c.w) {
+    S.streak++;
+    var pts = 100 + Math.min(S.streak - 1, 10) * 10;
+    addScore(pts); S.bk.match += pts; sndOk();
+    floatAt('+' + pts, (g.c + .5) * 100 / COLS, (g.r + .5) * 100 / ROWS);
+    c.done = true; c.el.classList.add('gone'); S.cardsLeft--;
+    grid[g.c][g.r] = null; g.el.classList.add('burst');
+    S.selGem = null; S.selCard = null;
+    updateHUD();
+    await sleep(300); g.el.remove();
+    await settle();
+    if (S.cardsLeft === 0) { roundClear(); return; }
+    if (S.mode === 'team') {
+      S.moves--; updateHUD();
+      if (S.moves <= 0) { endTurn('moves'); return; }
+    }
+    S.busy = false;
+  } else {
+    S.streak = 0; S.miss++; S.missed[g.w] = (S.missed[g.w] || 0) + 1;
+    if (S.mode === 'team') S.tmiss[S.cur]++;
+    var ded = Math.min(WRONG_PENALTY, curScore());
+    addScore(-ded); S.bk.pen += ded; sndBad();
+    floatAt('-' + WRONG_PENALTY, (g.c + .5) * 100 / COLS, (g.r + .5) * 100 / ROWS, true);
+    g.el.classList.remove('sel'); c.el.classList.remove('sel');
+    g.el.classList.add('wrong'); c.el.classList.add('wrong');
+    S.selGem = null; S.selCard = null;
+    updateHUD();
+    await sleep(420);
+    g.el.classList.remove('wrong'); c.el.classList.remove('wrong');
+    if (S.mode === 'team') { endTurn('wrong'); return; }
+    S.busy = false;
+  }
+}
+
+async function settle() {
+  var chain = 0;
+  applyGravity(); await sleep(400);
+  while (true) {
+    var groups = (S.mode === 'team' && !TEAM_COMBOS) ? [] : findGroups();
+    if (!groups.length) break;
+    chain++; S.bestChain = Math.max(S.bestChain, chain);
+    var orphans = [], n = 0;
+    groups.forEach(function (grp) {
+      grp.forEach(function (gm) {
+        grid[gm.c][gm.r] = null; gm.el.classList.add('burst'); orphans.push(gm.w); n++;
+        (function (el) { setTimeout(function () { el.remove(); }, 450); })(gm.el);
+      });
+    });
+    var pts = n * 50 * chain;
+    addScore(pts); S.bk.chain += pts; updateHUD(); sndChain(chain);
+    banner(chain > 1 ? 'Chain x' + chain + '  +' + pts : 'Combo!  +' + pts);
+    await sleep(480);
+    applyGravity(); await sleep(400);
+    shuffle(orphans); refill(orphans);
+    await sleep(600 + orphans.length * 90);
+  }
+}
+
+/* ---------------- round / end ---------------- */
+function teamStatsHTML() {
+  return TEAMS.map(function (t, i) {
+    return '<div class="tstat" style="background:' + t.color + '"><small>' + t.short + '</small><b>' + S.tscore[i] + '</b></div>';
+  }).join('');
+}
+function roundClear() {
+  addScore(CLEAR_BONUS); S.bk.clear += CLEAR_BONUS; sndClear(); updateHUD();
+  S.running = false; S.turnActive = false;
+  if (S.round >= ROUNDS) { endGame(); return; }
+  var h = '<div class="stat"><small>BONUS' + (S.mode === 'team' ? ' - ' + TEAMS[S.cur].short : '') + '</small><b>+' + CLEAR_BONUS + '</b></div>';
+  h += S.mode === 'team' ? teamStatsHTML() : '<div class="stat"><small>SCORE</small><b>' + S.score + '</b></div>';
+  $('r-stats').innerHTML = h;
+  $('s-round').classList.add('on');
+}
+function nextRound() {
+  $('s-round').classList.remove('on');
+  S.round++; S.running = true; S.last = Date.now(); S.streak = 0;
+  buildRound();
+  if (S.mode === 'team') { S.cur = (S.cur + 1) % TEAMS.length; showTurn(); }
+  else { S.busy = true; setTimeout(function () { S.busy = false; }, 1100); }
+}
+function endGame() {
+  clearInterval(timerId);
+  S.busy = true;
+  if (S.mode === 'team') {
+    var max = Math.max.apply(null, S.tscore), winners = [];
+    S.tscore.forEach(function (v, i) { if (v === max) winners.push(i); });
+    $('e-title').textContent = winners.length > 1 ? "It's a Tie!" : TEAMS[winners[0]].name + ' Wins!';
+    var order = [0, 1, 2].sort(function (a, b) { return S.tscore[b] - S.tscore[a]; });
+    var ranks = ['1ST', '2ND', '3RD'], h = '';
+    order.forEach(function (ti, pos) {
+      var t = TEAMS[ti], first = S.tscore[ti] === max;
+      h += '<div class="tstat' + (first ? ' win' : '') + '" style="background:' + t.color + '"><small>' + ranks[pos] + ' - ' + t.short + '</small><b>' + S.tscore[ti] + '</b><small>Mistakes: ' + S.tmiss[ti] + '</small></div>';
+    });
+    $('e-team').innerHTML = h;
+    $('e-solo').style.display = 'none'; $('e-team').style.display = 'flex';
+  } else {
+    var best = Math.max(getBest(), S.score); setBest(best);
+    $('e-title').textContent = 'Well Done!';
+    $('e-score').textContent = S.score; $('e-best').textContent = best;
+    $('e-time').textContent = fmt(S.elapsed, false); $('e-miss').textContent = S.miss; $('e-chain').textContent = S.bestChain;
+    $('e-bk').innerHTML = '<div><span>Matches</span><span>' + S.bk.match + '</span></div>' +
+      '<div><span>Chain bonuses</span><span>' + S.bk.chain + '</span></div>' +
+      '<div><span>Board clear bonuses</span><span>' + S.bk.clear + '</span></div>' +
+      '<div><span>Mistakes</span><span>-' + S.bk.pen + '</span></div>' +
+      '<div class="tot"><span>Your score</span><span>' + S.score + '</span></div>';
+    var ids = Object.keys(S.missed).sort(function (a, b) { return S.missed[b] - S.missed[a]; }).slice(0, 8);
+    var rv = $('review'); rv.innerHTML = '';
+    if (!ids.length) { rv.textContent = 'No mistakes - perfect!'; }
+    else {
+      rv.appendChild(document.createTextNode('Words to review: '));
+      ids.forEach(function (id) {
+        var s = document.createElement('span'); s.className = 'rv';
+        s.textContent = WORDS[id].en; var t = document.createElement('i'); t.textContent = WORDS[id].tr; s.appendChild(t); rv.appendChild(s);
+      });
+    }
+    $('e-team').style.display = 'none'; $('e-solo').style.display = 'block';
+  }
+  $('s-end').classList.add('on');
+}
+
+(function init() {
+  $('unit-sub').textContent = UNIT_TITLE;
+  var b = getBest();
+  $('best-start').textContent = b ? 'Best solo score: ' + b : '';
+  document.addEventListener('visibilitychange', function () { if (document.hidden && S.running && !S.busy && (S.mode === 'solo' || S.turnActive)) pauseGame(); });
+})();
+</script>
+</body>
+</html>
