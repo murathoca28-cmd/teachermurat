@@ -31,6 +31,11 @@
   .tbox.cur { opacity: 1; outline: 5px solid #FFD23F; outline-offset: 2px; transform: scale(1.06); }
   .hbtn { background: #FFD23F; border: 4px solid var(--ink); border-radius: 14px; padding: 4px 16px; font-size: calc(var(--u) * .8); font-weight: 900; color: var(--ink); box-shadow: 0 4px 0 var(--ink); }
   .hbtn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+  #ctrls { display: grid; grid-template-columns: auto auto; gap: 4px 6px; }
+  .hbtn.sm { font-size: calc(var(--u) * .5); padding: 0 10px; border-width: 3px; border-radius: 10px; box-shadow: 0 3px 0 var(--ink); line-height: 1.3;
+    display: flex; align-items: center; justify-content: center; gap: .35em; white-space: nowrap; }
+  .hbtn.sm:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+  .hbtn.sm svg { width: 1em; height: 1em; flex: none; }
 
   /* ---------- PLAY AREA ---------- */
   #main { flex: 1; min-height: 0; display: flex; gap: 14px; padding: 4px 14px 14px; }
@@ -101,6 +106,27 @@
   .ts { font-size: clamp(1.1rem, 3vw, 2rem); font-weight: 800; max-width: 800px; }
   .ts small { display: block; color: #9FE6DF; font-size: .8em; }
 
+  /* ---------- SETTINGS ---------- */
+  .srow { display: flex; align-items: center; justify-content: space-between; gap: 24px; width: min(760px, 92vw); background: #fff; border: 4px solid var(--ink);
+    border-radius: 14px; padding: 4px 16px; font-weight: 900; font-size: clamp(1.1rem, 2.4vw, 1.8rem); text-align: left; }
+  .srow small { display: block; font-size: .6em; color: #0B5C56; font-weight: 800; }
+  .sc { display: flex; align-items: center; gap: 12px; }
+  .sc b { min-width: 2.2em; text-align: center; font-size: 1.3em; font-variant-numeric: tabular-nums; }
+  .step { width: 2em; height: 2em; border-radius: 50%; border: 4px solid var(--ink); background: #FFD23F; color: var(--ink); font-size: 1em; font-weight: 900;
+    line-height: 1; padding: 0; box-shadow: 0 3px 0 var(--ink); }
+  .step:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+  .cbtn { min-width: 6.5em; font-size: 1em; }
+  .snote { max-width: 760px; font-size: clamp(.85rem, 1.7vw, 1.2rem); font-weight: 800; color: #E8FFFC; }
+
+  /* ---------- SHORT SCREENS (e.g. 720p smartboards) ---------- */
+  @media (max-height: 760px) {
+    .screen { gap: 1.2vh; }
+    .title { font-size: clamp(2rem, 6vw, 3.6rem); }
+    .subtitle { font-size: clamp(1.1rem, 2.6vw, 1.7rem); }
+    .how { font-size: clamp(.8rem, 1.6vw, 1.1rem); padding: 6px 14px; }
+    .big-btn { font-size: clamp(1.3rem, 3vw, 2rem); }
+  }
+
   /* ---------- PORTRAIT / SMALL PHONES ---------- */
   @media (orientation: portrait) {
     :root { --u: min(3.4vw, 2.2vh); }
@@ -130,6 +156,8 @@
     <clipPath id="c1"><rect x="4" y="4" width="192" height="92" rx="10"/></clipPath>
     <clipPath id="c2"><ellipse cx="100" cy="50" rx="96" ry="46"/></clipPath>
     <clipPath id="c3"><polygon points="4,50 26,4 174,4 196,50 174,96 26,96"/></clipPath>
+    <linearGradient id="g4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2DD4BF"/><stop offset=".55" stop-color="#0D9488"/><stop offset="1" stop-color="#0A6B66"/></linearGradient>
+    <clipPath id="c4"><rect x="4" y="4" width="192" height="92" rx="10"/></clipPath>
   </defs>
 </svg>
 
@@ -144,8 +172,12 @@
   <div class="box"><small>LEFT</small><b id="h-left">15</b></div>
   <div class="box" id="bx-time"><small id="h-time-l">TIME</small><b id="h-time">0:00.0</b></div>
   <div class="box team-only"><small>MOVES</small><b id="h-moves">2</b></div>
-  <button class="hbtn" id="b-pause" onclick="pauseGame()">Pause</button>
-  <button class="hbtn" id="b-sound" onclick="toggleSound()">Sound: On</button>
+  <div id="ctrls">
+    <button class="hbtn sm" id="b-pause" onclick="pauseGame()">Pause</button>
+    <button class="hbtn sm" id="b-sound" onclick="toggleSound()">Sound: On</button>
+    <button class="hbtn sm" id="b-restart" onclick="askConfirm('restart')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.5-5.8M20 3v6h-6"/></svg>Restart</button>
+    <button class="hbtn sm" id="b-menu" onclick="askConfirm('menu')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>Menu</button>
+  </div>
 </div>
 
 <div id="main">
@@ -157,10 +189,13 @@
   <h1 class="title">Gem Match</h1>
   <p class="subtitle" id="unit-sub">Unit 1 - Friendship</p>
   <div class="how">
-    Match each gem with its Turkish meaning. Three or more gems of the same colour that touch each other disappear and give bonus points. Their words fall again later!
-    <span class="t">Her taşı Türkçe karşılığıyla eşleştir. Aynı renkten, yan yana ya da alt alta 3 veya daha fazla taş birleşirse kaybolur ve bonus puan verir. Kelimeleri sonra tekrar düşer!</span>
+    <span id="how-en"></span>
+    <span class="t" id="how-tr"></span>
   </div>
-  <button class="hbtn" id="b-dir" onclick="toggleDir()" style="font-size:clamp(1rem,2.4vw,1.6rem)">Gems: English</button>
+  <div class="btn-row" style="gap:12px">
+    <button class="hbtn" id="b-dir" onclick="toggleDir()" style="font-size:clamp(1rem,2.4vw,1.6rem)">Gems: English</button>
+    <button class="hbtn" onclick="showSettings()" style="font-size:clamp(1rem,2.4vw,1.6rem)">Settings</button>
+  </div>
   <div class="btn-row">
     <button class="big-btn" onclick="startGame('solo')">Solo</button>
     <button class="big-btn" onclick="startGame('team')">3 Teams</button>
@@ -205,6 +240,30 @@
   </div>
 </div>
 
+<div class="screen" id="s-settings">
+  <h2 class="title" style="font-size:clamp(2rem,6vw,3.6rem)">Settings</h2>
+  <div class="srow"><div>Turn time (seconds)<small>Tur süresi (saniye) - 3 Teams</small></div>
+    <div class="sc"><button class="step" onclick="adj('sec',-5)">-</button><b id="v-sec">20</b><button class="step" onclick="adj('sec',5)">+</button></div></div>
+  <div class="srow"><div>Moves per turn<small>Tur başına hamle - 3 Teams</small></div>
+    <div class="sc"><button class="step" onclick="adj('moves',-1)">-</button><b id="v-moves">2</b><button class="step" onclick="adj('moves',1)">+</button></div></div>
+  <div class="srow"><div>Combos<small>Kombo - Solo</small></div>
+    <div class="sc"><button class="hbtn cbtn" id="v-combo" onclick="cycleCombo()">Normal</button></div></div>
+  <div class="snote" id="v-combo-d"></div>
+  <div class="btn-row">
+    <button class="big-btn" onclick="closeSettings()">Done</button>
+    <button class="big-btn alt" onclick="resetSettings()">Reset</button>
+  </div>
+</div>
+
+<div class="screen dim" id="s-confirm">
+  <h2 class="win-title" id="cf-title"></h2>
+  <div class="ts" id="cf-info"></div>
+  <div class="btn-row">
+    <button class="big-btn" onclick="doConfirm()">Yes</button>
+    <button class="big-btn alt" onclick="cancelConfirm()">No</button>
+  </div>
+</div>
+
 <script>
 /* ============ DATA: change only this block for another unit ============ */
 var UNIT_TITLE = 'Unit 1 - Friendship';
@@ -242,9 +301,19 @@ var WORDS = [
   { en: 'stuffed', tr: 'tıka basa tok' }
 ];
 /* ============ TEAM MODE SETTINGS (easy to change) ============ */
-var TURN_SECONDS = 20;   /* a turn ends after this many seconds ... */
-var TURN_MOVES = 2;
-var TEAM_COMBOS = false; /* false: no luck-based combos in team mode, points come only from known words */      /* ... or after this many correct matches, whichever comes first */
+var TURN_SECONDS = 20;   /* default: a turn ends after this many seconds ... */
+var TURN_MOVES = 2;      /* ... or after this many correct matches, whichever comes first (both changeable in Settings) */
+var TEAM_COMBOS = false; /* false: no luck-based combos in team mode, points come only from known words */
+var STREAK_STEP = 10;    /* each correct match in a row is worth this much more: 100, 110, 120 ... (a mistake resets it) */
+/* combo difficulty (changeable in Settings): min = gems of one colour needed, chain = max chain reactions (0 = unlimited) */
+var COMBO_LEVEL = 'normal';
+var COMBO_LEVELS = {
+  easy:   { min: 3, chain: 0, label: 'Easy',   en: '3+ gems, unlimited chain reactions (old mode)', tr: '3+ taş, sınırsız zincir (eski mod)' },
+  normal: { min: 3, chain: 2, label: 'Normal', en: '3+ gems, at most 2 chain reactions in a row',   tr: '3+ taş, arka arkaya en fazla 2 zincir' },
+  hard:   { min: 4, chain: 2, label: 'Hard',   en: '4+ gems of the same colour needed',            tr: 'En az 4 aynı renk taş gerekir' },
+  off:    { min: 0, chain: 0, label: 'Off',    en: 'No combos - points only from known words',     tr: 'Kombo yok - puan sadece bilinen kelimelerden' }
+};
+var COMBO_MIN = 3, MAX_CHAIN = 2;
 var TEAMS = [
   { name: 'Red Team', short: 'RED', color: '#D62828' },
   { name: 'Blue Team', short: 'BLUE', color: '#1F5FBF' },
@@ -257,11 +326,13 @@ var SHAPES = [
   '<path d="M18 4H182L196 20V80L182 96H18L4 80V20Z"/>',
   '<rect x="4" y="4" width="192" height="92" rx="10"/>',
   '<ellipse cx="100" cy="50" rx="96" ry="46"/>',
-  '<polygon points="4,50 26,4 174,4 196,50 174,96 26,96"/>'
+  '<polygon points="4,50 26,4 174,4 196,50 174,96 26,96"/>',
+  '<rect x="4" y="4" width="192" height="92" rx="10"/>'   /* 4 = the single turquoise gem used in 3 Teams mode */
 ];
 var FACETS = '<polygon points="0,0 120,0 70,50 0,50" fill="#fff" opacity=".22"/><polygon points="200,100 80,100 130,50 200,50" fill="#000" opacity=".2"/><polygon points="70,50 130,50 100,100 40,100" fill="#fff" opacity=".1"/>';
 
 var REVERSE = false;
+var RUN = 0; /* bumped on every restart / menu, so old animations stop touching the new game */
 var S = { mode: 'solo' }, grid = [], cards = [], audioCtx = null, soundOn = true, timerId = 0;
 
 function $(id) { return document.getElementById(id); }
@@ -299,7 +370,8 @@ function toggleDir() { REVERSE = !REVERSE; $('b-dir').textContent = REVERSE ? 'G
 function toggleSound() { soundOn = !soundOn; $('b-sound').textContent = 'Sound: ' + (soundOn ? 'On' : 'Off'); }
 
 /* ---------------- gems ---------------- */
-function randColor() { return Math.floor(Math.random() * 4); }
+function plainGems() { return S.mode === 'team' && !TEAM_COMBOS; } /* team mode has no combos, so every gem looks the same */
+function randColor() { return plainGems() ? 4 : Math.floor(Math.random() * 4); }
 function makeGemEl(w, ci) {
   var el = document.createElement('div');
   el.className = 'gem';
@@ -350,11 +422,22 @@ function findGroups() {
         if (ng && ng.ci === g.ci && !seen[nc + ',' + nr]) { seen[nc + ',' + nr] = 1; q.push(ng); }
       });
     }
-    if (comp.length >= 3) groups.push(comp);
+    if (comp.length >= (COMBO_MIN || 3)) groups.push(comp);
   }
   return groups;
 }
-function refill(list) {
+function safeColor(col, row) {
+  /* colour that does not form a combo group where the new gem lands (used after the last allowed chain) */
+  var order = shuffle([0, 1, 2, 3]);
+  for (var k = 0; k < order.length; k++) {
+    grid[col][row] = { ci: order[k], c: col, r: row };
+    var bad = findGroups().length > 0;
+    grid[col][row] = null;
+    if (!bad) return order[k];
+  }
+  return order[0];
+}
+function refill(list, safe) {
   list.forEach(function (w, i) {
     var best = [], max = 0;
     for (var c = 0; c < COLS; c++) {
@@ -363,7 +446,7 @@ function refill(list) {
     }
     var col = best[Math.floor(Math.random() * best.length)], row = -1;
     for (var k = ROWS - 1; k >= 0; k--) if (!grid[col][k]) { row = k; break; }
-    addGem(w, randColor(), col, row, true, i * 90);
+    addGem(w, safe ? safeColor(col, row) : randColor(), col, row, true, i * 90);
   });
 }
 
@@ -386,7 +469,7 @@ function buildRound() {
   do {
     cols = ws.map(randColor); tries++;
     for (c = 0; c < COLS; c++) for (var r = 0; r < ROWS; r++) { grid[c][r] = { ci: cols[c * ROWS + r], c: c, r: r }; }
-    var bad = findGroups().length > 0;
+    var bad = !plainGems() && findGroups().length > 0;
     for (c = 0; c < COLS; c++) for (r = 0; r < ROWS; r++) grid[c][r] = null;
   } while (bad && tries < 300);
   var i = 0;
@@ -403,14 +486,18 @@ function addScore(pts) {
   else S.score = Math.max(0, S.score + pts);
 }
 
+function getStreak() { return S.mode === 'team' ? S.tstreak[S.cur] : S.streak; }
+function setStreak(v) { if (S.mode === 'team') S.tstreak[S.cur] = v; else S.streak = v; }
+
 /* ---------------- game flow ---------------- */
 function startGame(mode) {
   mode = mode || 'solo';
-  ['s-start', 's-end', 's-round', 's-pause', 's-turn'].forEach(function (id) { $(id).classList.remove('on'); });
+  RUN++; var run = RUN;
+  ['s-start', 's-end', 's-round', 's-pause', 's-turn', 's-confirm', 's-settings'].forEach(function (id) { $(id).classList.remove('on'); });
   document.body.className = mode;
   S = { mode: mode, score: 0, round: 1, streak: 0, miss: 0, bestChain: 0, missed: {}, elapsed: 0, running: true, last: Date.now(),
         order: shuffle(WORDS.map(function (_, i) { return i; })), busy: true,
-        cur: 0, tscore: [0, 0, 0], tmiss: [0, 0, 0], turnActive: false, moves: TURN_MOVES, turnLeft: TURN_SECONDS * 1000,
+        cur: 0, tstreak: [0, 0, 0], tscore: [0, 0, 0], tmiss: [0, 0, 0], turnActive: false, moves: TURN_MOVES, turnLeft: TURN_SECONDS * 1000,
         bk: { match: 0, chain: 0, clear: 0, pen: 0 } };
   if (mode === 'team') {
     var box = $('h-teams'); box.innerHTML = '';
@@ -429,11 +516,13 @@ function startGame(mode) {
   clearInterval(timerId);
   timerId = setInterval(tick, 100);
   if (mode === 'team') { showTurn(); }
-  else { setTimeout(function () { S.busy = false; }, 1100); }
+  else { setTimeout(function () { if (run === RUN) S.busy = false; }, 1100); }
 }
 function showMenu() {
-  clearInterval(timerId);
-  ['s-end', 's-round', 's-pause', 's-turn'].forEach(function (id) { $(id).classList.remove('on'); });
+  RUN++; clearInterval(timerId);
+  S.running = false; S.busy = true; S.turnActive = false;
+  ['s-end', 's-round', 's-pause', 's-turn', 's-confirm', 's-settings'].forEach(function (id) { $(id).classList.remove('on'); });
+  updateHow();
   var b = getBest(); $('best-start').textContent = b ? 'Best solo score: ' + b : '';
   $('s-start').classList.add('on');
 }
@@ -483,13 +572,15 @@ function showTurn() {
 }
 function startTurn() {
   $('s-turn').classList.remove('on');
-  S.turnActive = true; S.busy = false; S.streak = 0; S.last = Date.now();
+  S.turnActive = true; S.busy = false; S.last = Date.now();
   updateHUD(); updateTurnBox();
 }
 async function endTurn(reason) {
-  S.busy = true; S.turnActive = false; clearSel(); S.streak = 0; updateTurnBox();
+  var run = RUN;
+  S.busy = true; S.turnActive = false; clearSel(); updateTurnBox();
   banner(reason === 'time' ? "Time's up!" : reason === 'wrong' ? 'Oops!' : 'Turn over!');
   await sleep(1150);
+  if (run !== RUN) return;
   S.cur = (S.cur + 1) % TEAMS.length;
   showTurn();
 }
@@ -525,11 +616,12 @@ function banner(text) {
 }
 
 async function check() {
+  var run = RUN;
   var g = S.selGem, c = S.selCard;
   S.busy = true;
   if (g.w === c.w) {
-    S.streak++;
-    var pts = 100 + Math.min(S.streak - 1, 10) * 10;
+    setStreak(getStreak() + 1);
+    var pts = 100 + (getStreak() - 1) * STREAK_STEP;
     addScore(pts); S.bk.match += pts; sndOk();
     floatAt('+' + pts, (g.c + .5) * 100 / COLS, (g.r + .5) * 100 / ROWS);
     c.done = true; c.el.classList.add('gone'); S.cardsLeft--;
@@ -537,7 +629,9 @@ async function check() {
     S.selGem = null; S.selCard = null;
     updateHUD();
     await sleep(300); g.el.remove();
+    if (run !== RUN) return;
     await settle();
+    if (run !== RUN) return;
     if (S.cardsLeft === 0) { roundClear(); return; }
     if (S.mode === 'team') {
       S.moves--; updateHUD();
@@ -545,7 +639,7 @@ async function check() {
     }
     S.busy = false;
   } else {
-    S.streak = 0; S.miss++; S.missed[g.w] = (S.missed[g.w] || 0) + 1;
+    setStreak(0); S.miss++; S.missed[g.w] = (S.missed[g.w] || 0) + 1;
     if (S.mode === 'team') S.tmiss[S.cur]++;
     var ded = Math.min(WRONG_PENALTY, curScore());
     addScore(-ded); S.bk.pen += ded; sndBad();
@@ -555,6 +649,7 @@ async function check() {
     S.selGem = null; S.selCard = null;
     updateHUD();
     await sleep(420);
+    if (run !== RUN) return;
     g.el.classList.remove('wrong'); c.el.classList.remove('wrong');
     if (S.mode === 'team') { endTurn('wrong'); return; }
     S.busy = false;
@@ -562,10 +657,11 @@ async function check() {
 }
 
 async function settle() {
-  var chain = 0;
+  var run = RUN, chain = 0;
   applyGravity(); await sleep(400);
+  if (run !== RUN) return;
   while (true) {
-    var groups = (S.mode === 'team' && !TEAM_COMBOS) ? [] : findGroups();
+    var groups = ((S.mode === 'team' && !TEAM_COMBOS) || !COMBO_MIN) ? [] : findGroups();
     if (!groups.length) break;
     chain++; S.bestChain = Math.max(S.bestChain, chain);
     var orphans = [], n = 0;
@@ -579,9 +675,14 @@ async function settle() {
     addScore(pts); S.bk.chain += pts; updateHUD(); sndChain(chain);
     banner(chain > 1 ? 'Chain x' + chain + '  +' + pts : 'Combo!  +' + pts);
     await sleep(480);
+    if (run !== RUN) return;
     applyGravity(); await sleep(400);
-    shuffle(orphans); refill(orphans);
+    if (run !== RUN) return;
+    /* after the last allowed chain reaction, new gems avoid forming another group */
+    shuffle(orphans); refill(orphans, MAX_CHAIN > 0 && chain >= MAX_CHAIN);
     await sleep(600 + orphans.length * 90);
+    if (run !== RUN) return;
+    if (MAX_CHAIN > 0 && chain >= MAX_CHAIN) break;
   }
 }
 
@@ -592,20 +693,22 @@ function teamStatsHTML() {
   }).join('');
 }
 function roundClear() {
-  addScore(CLEAR_BONUS); S.bk.clear += CLEAR_BONUS; sndClear(); updateHUD();
+  var bonus = S.mode === 'team' ? 0 : CLEAR_BONUS; /* team mode: points only from known words */
+  addScore(bonus); S.bk.clear += bonus; sndClear(); updateHUD();
   S.running = false; S.turnActive = false;
   if (S.round >= ROUNDS) { endGame(); return; }
-  var h = '<div class="stat"><small>BONUS' + (S.mode === 'team' ? ' - ' + TEAMS[S.cur].short : '') + '</small><b>+' + CLEAR_BONUS + '</b></div>';
+  var h = S.mode === 'team' ? '' : '<div class="stat"><small>BONUS</small><b>+' + CLEAR_BONUS + '</b></div>';
   h += S.mode === 'team' ? teamStatsHTML() : '<div class="stat"><small>SCORE</small><b>' + S.score + '</b></div>';
   $('r-stats').innerHTML = h;
   $('s-round').classList.add('on');
 }
 function nextRound() {
   $('s-round').classList.remove('on');
-  S.round++; S.running = true; S.last = Date.now(); S.streak = 0;
+  S.round++; S.running = true; S.last = Date.now();
+  var run = RUN;
   buildRound();
   if (S.mode === 'team') { S.cur = (S.cur + 1) % TEAMS.length; showTurn(); }
-  else { S.busy = true; setTimeout(function () { S.busy = false; }, 1100); }
+  else { S.busy = true; setTimeout(function () { if (run === RUN) S.busy = false; }, 1100); }
 }
 function endGame() {
   clearInterval(timerId);
@@ -647,7 +750,71 @@ function endGame() {
   $('s-end').classList.add('on');
 }
 
+/* ---------------- settings ---------------- */
+var SETTINGS_KEY = STORE_KEY + '_settings';
+function applyCombo() { var L = COMBO_LEVELS[COMBO_LEVEL] || COMBO_LEVELS.normal; COMBO_MIN = L.min; MAX_CHAIN = L.chain; }
+function loadSettings() {
+  try {
+    var o = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+    if (o.sec >= 5 && o.sec <= 90) TURN_SECONDS = o.sec | 0;
+    if (o.moves >= 1 && o.moves <= 9) TURN_MOVES = o.moves | 0;
+    if (COMBO_LEVELS[o.combo]) COMBO_LEVEL = o.combo;
+  } catch (e) {}
+  applyCombo();
+}
+function saveSettings() {
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify({ sec: TURN_SECONDS, moves: TURN_MOVES, combo: COMBO_LEVEL })); } catch (e) {}
+}
+function renderSettings() {
+  var L = COMBO_LEVELS[COMBO_LEVEL];
+  $('v-sec').textContent = TURN_SECONDS; $('v-moves').textContent = TURN_MOVES;
+  $('v-combo').textContent = L.label;
+  $('v-combo-d').innerHTML = L.en + '<br>' + L.tr;
+}
+function showSettings() { renderSettings(); $('s-settings').classList.add('on'); }
+function closeSettings() { $('s-settings').classList.remove('on'); updateHow(); }
+function adj(k, d) {
+  if (k === 'sec') TURN_SECONDS = Math.min(90, Math.max(5, TURN_SECONDS + d));
+  else TURN_MOVES = Math.min(9, Math.max(1, TURN_MOVES + d));
+  saveSettings(); renderSettings();
+}
+function cycleCombo() {
+  var keys = Object.keys(COMBO_LEVELS);
+  COMBO_LEVEL = keys[(keys.indexOf(COMBO_LEVEL) + 1) % keys.length];
+  applyCombo(); saveSettings(); renderSettings();
+}
+function resetSettings() { TURN_SECONDS = 20; TURN_MOVES = 2; COMBO_LEVEL = 'normal'; applyCombo(); saveSettings(); renderSettings(); }
+function updateHow() {
+  var en = 'Match each gem with its Turkish meaning. ', tr = 'Her taşı Türkçe karşılığıyla eşleştir. ';
+  if (COMBO_MIN) {
+    en += 'In Solo mode, ' + COMBO_MIN + ' or more gems of the same colour that touch each other disappear and give bonus points. Their words fall again later!';
+    tr += 'Solo modda aynı renkten, yan yana ya da alt alta ' + COMBO_MIN + ' veya daha fazla taş birleşirse kaybolur ve bonus puan verir. Kelimeleri sonra tekrar düşer!';
+  } else { en += 'Every correct match scores points!'; tr += 'Her doğru eşleşme puan kazandırır!'; }
+  en += ' Correct in a row: 100, 110, 120... points!'; tr += ' Art arda doğru: 100, 110, 120... puan!';
+  $('how-en').textContent = en; $('how-tr').textContent = tr;
+}
+
+/* ---------------- restart / menu confirmation ---------------- */
+var confirmKind = '', confirmWasRunning = false;
+function askConfirm(kind) {
+  confirmKind = kind; confirmWasRunning = S.running; S.running = false;
+  if (kind === 'restart') {
+    $('cf-title').textContent = 'Restart the game?';
+    $('cf-info').innerHTML = 'All scores will be reset.<small>Oyunu yeniden başlatmak istiyor musun? Puanlar sıfırlanır.</small>';
+  } else {
+    $('cf-title').textContent = 'Back to the menu?';
+    $('cf-info').innerHTML = 'The current game will end.<small>Ana menüye dönülsün mü? Oyun sona erer.</small>';
+  }
+  $('s-confirm').classList.add('on');
+}
+function cancelConfirm() { $('s-confirm').classList.remove('on'); S.last = Date.now(); S.running = confirmWasRunning; }
+function doConfirm() {
+  $('s-confirm').classList.remove('on');
+  if (confirmKind === 'restart') startGame(S.mode); else showMenu();
+}
+
 (function init() {
+  loadSettings(); updateHow();
   $('unit-sub').textContent = UNIT_TITLE;
   var b = getBest();
   $('best-start').textContent = b ? 'Best solo score: ' + b : '';
